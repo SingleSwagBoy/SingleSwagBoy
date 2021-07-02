@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Form, Input, Button } from 'antd';
 import {connect} from 'react-redux'
 import { doLoginAsync } from 'store/user/actionCreators'
-import './index.css'
+import './index.less'
 
 const mapStateToProps = (state) => {
   return {

@@ -60,6 +60,9 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+// 关键代码这是新增加的  开始
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/;
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
     return false;
@@ -531,22 +534,35 @@ module.exports = function (webpackEnv) {
               ),
             },
             {
-              test: /\.less$/,
-              use: [{
-                loader: 'style-loader',
-              }, {
-                loader: 'css-loader', // translates CSS into CommonJS
-              }, {
-                loader: 'less-loader', // compiles Less to CSS
-                options: {
-                  modifyVars: {
-                    'primary-color': '#f9c700',
-                    'link-color': '#1DA57A',
-                    'border-radius-base': '2px',
+              test: lessRegex,
+              exclude: sassModuleRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 2,
+                  sourceMap: isEnvProduction && shouldUseSourceMap,
+                },
+                'less-loader'
+              ),
+              // Don't consider CSS imports dead code even if the
+              // containing package claims to have no side effects.
+              // Remove this when webpack adds a warning or an error for this.
+              // See https://github.com/webpack/webpack/issues/6571
+              sideEffects: true,
+            },
+            // Adds support for CSS Modules, but using SASS
+            // using the extension .module.scss or .module.sass
+            {
+              test: lessModuleRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 2,
+                  sourceMap: isEnvProduction && shouldUseSourceMap,
+                  modules: {
+                    getLocalIdent: getCSSModuleLocalIdent,
                   },
-                  javascriptEnabled: true,
-                }
-              }]
+                },
+                'less-loader'
+              ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.

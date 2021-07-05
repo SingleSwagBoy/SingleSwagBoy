@@ -11,12 +11,14 @@ export default class App extends Component {
         <Route path="/admin" render={(routeProps)=>{
           // 判断是否登录，登录了可以访问，否则补鞥呢访问
           const token = localStorage.getItem('token')
-          if(token) {
-            // console.log('/App')
-            return <Admin {...routeProps}/>
-          }else {
-            return <Redirect to="/login" />
-          }
+          return <Admin {...routeProps}/>
+          // if(token) {
+          //   // console.log('/App')
+          //   return <Admin {...routeProps}/>
+          // }else {
+          //   return <Redirect to="/login" />
+           
+          // }
         }} />
         <Route path="/login" component={Login} />
         <Route path="/404" component={NotFound} />

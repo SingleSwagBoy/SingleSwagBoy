@@ -45,25 +45,29 @@ class Login extends Component {
   }
   DDlogin(){
     let base = "http://" + window.location.host;
-    if (this.state.dingdParam.redirect_uri.indexOf(base) == -1){
-        this.state.dingdParam.redirect_uri = base + this.state.dingdParam.redirect_uri;
+    let a = this.state.dingdParam
+    if (this.state.dingdParam.redirect_uri.indexOf(base) === -1){
+        a.redirect_uri = base + this.state.dingdParam.redirect_uri;
+        this.setState({
+          dingdParam:a
+        })
     }
-    if (base.indexOf("localhost") != -1) {
-        this.state.dingdParam.appid = this.state.devAppid["appidDev"]
-    } else if (window.location.host == "cms.tvplus.club") {
-        this.state.dingdParam.appid = this.state.devAppid["appidProd"]
-    } else if (window.location.host == "test2.cms.tvplus.club") {
-        this.state.dingdParam.appid = this.state.devAppid["appidTest2"]
-    } else if (window.location.host == "cms2.tvplus.club") {
-        this.state.dingdParam.appid = this.state.devAppid["appidProd2"]
+    if (base.indexOf("localhost") !== -1) {
+      a.appid = this.state.devAppid["appidDev"]
+    } else if (window.location.host === "cms.tvplus.club") {
+        a.appid = this.state.devAppid["appidProd"]
+    } else if (window.location.host === "test2.cms.tvplus.club") {
+        a.appid = this.state.devAppid["appidTest2"]
+    } else if (window.location.host === "cms2.tvplus.club") {
+        a.appid = this.state.devAppid["appidProd2"]
     } else {
-        this.state.dingdParam.appid = this.state.devAppid["appidTest"]
+        a.appid = this.state.devAppid["appidTest"]
     }
-    this.state.dingdParam.uri = "https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=" + this.state.dingdParam.appid + "&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=" + this.state.dingdParam.redirect_uri;
-    //2.2.扫码触发事件
+    a.uri = "https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=" + a.appid + "&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=" + a.redirect_uri;
     this.setState({
-      dingdParam:this.state.dingdParam
+      dingdParam:a
     })
+    //2.2.扫码触发事件
     window.DDLogin({
         id: "login_container",
         goto: encodeURIComponent(this.state.dingdParam.uri),
@@ -72,16 +76,16 @@ class Login extends Component {
     });
   }
   DDListen(){
-    if (typeof window.addEventListener != 'undefined') {
+    if (typeof window.addEventListener !== 'undefined') {
       window.addEventListener('message', this.getDingCode, false);
-    } else if (typeof window.attachEvent != 'undefined') {
+    } else if (typeof window.attachEvent !== 'undefined') {
       window.attachEvent('onmessage', this.getDingCode);
     }
   }
   getDingCode(event){
     console.log(event,"event")
     let origin = event.origin;
-    if (origin == "https://login.dingtalk.com") { //判断是否来自ddLogin扫码事件。
+    if (origin === "https://login.dingtalk.com") { //判断是否来自ddLogin扫码事件。
         let loginTmpCode = event.data; //拿到loginTmpCode后就可以在这里构造跳转链接进行跳转了
         let redirect_uri_check = "https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=" + this.state.dingdParam.appid +
             "&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=" + this.state.dingdParam.redirect_uri + "&loginTmpCode=";

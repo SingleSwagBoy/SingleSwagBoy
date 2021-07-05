@@ -35,7 +35,8 @@ export default class Admin extends Component {
                         // 可以访问
                         return <route.component {...routeProps} />
                        }else{
-                         return <Redirect to="/admin/noPermission"/>
+                        //  return <Redirect to="/admin/noPermission"/>
+                         return <route.component {...routeProps} />
                        }
                       }
                     }

@@ -17,7 +17,7 @@ const NoPermission = lazy(()=>import('pages/NoPermission/index.jsx'))
 
 const adminRoutes = [
   {
-    path: '/mms/dashBoard',
+    path: '/admin/dashBoard',
     component: DashBoard,
     name: '仪表盘',
     meta: {
@@ -27,7 +27,7 @@ const adminRoutes = [
     icon: LineChartOutlined
   },
   {
-    path: '/mms/artLists',
+    path: '/admin/artLists',
     component: ArtLists,
     name: '文章管理',
     meta: {

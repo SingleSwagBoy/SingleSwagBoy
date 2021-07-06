@@ -23,7 +23,7 @@ class Login extends Component {
   state={
     dingdParam: {
       "appid": "",
-      "redirect_uri": "mms/artLists",
+      "redirect_uri": "admin/dashBoard",
       "uri": "",
     },
     devAppid:{

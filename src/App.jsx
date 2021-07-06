@@ -8,7 +8,7 @@ export default class App extends Component {
   render() {
     return (
       <Switch>
-        <Route path="/admin" render={(routeProps)=>{
+        <Route path="/mms" render={(routeProps)=>{
           // 判断是否登录，登录了可以访问，否则补鞥呢访问
           const token = localStorage.getItem('token')
           return <Admin {...routeProps}/>
@@ -22,7 +22,7 @@ export default class App extends Component {
         }} />
         <Route path="/login" component={Login} />
         <Route path="/404" component={NotFound} />
-        <Redirect to="/admin" from="/" exact />
+        <Redirect to="/mms" from="/" exact />
         <Redirect to="/404" />
       </Switch>
     )

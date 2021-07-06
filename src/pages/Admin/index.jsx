@@ -24,7 +24,7 @@ export default class Admin extends Component {
                         /*
                         判断用户角色 是否可以访问当前路由
                         */
-                        <route.component {...routeProps} />
+                        return <route.component {...routeProps} />
                       //  if(route.meta.roles === '*'){
                       //    return <route.component {...routeProps} />
                       //  }

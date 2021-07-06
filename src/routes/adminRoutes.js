@@ -17,7 +17,7 @@ const NoPermission = lazy(()=>import('pages/NoPermission/index.jsx'))
 
 const adminRoutes = [
   {
-    path: '/admin/dashBoard',
+    path: '/mms/dashBoard',
     component: DashBoard,
     name: '仪表盘',
     meta: {
@@ -27,7 +27,7 @@ const adminRoutes = [
     icon: LineChartOutlined
   },
   {
-    path: '/admin/artLists',
+    path: '/mms/artLists',
     component: ArtLists,
     name: '文章管理',
     meta: {
@@ -37,7 +37,7 @@ const adminRoutes = [
     icon: UnorderedListOutlined
   },
   {
-    path: '/admin/artEdit/:artId',
+    path: '/mms/artEdit/:artId',
     component: ArtEdit,
     name: '编辑文章',
     meta: {
@@ -46,12 +46,12 @@ const adminRoutes = [
     }
   },
   {
-    path: '/admin/artAdd',
+    path: '/mms/artAdd',
     component: ArtAdd,
     name: '增加文章',
     meta: {
       isNav: false,
-      roles: ['admin', 'superAdmin', 'editor']
+      roles: ['mms', 'superAdmin', 'editor']
     }
   },
   {
@@ -60,12 +60,12 @@ const adminRoutes = [
     name: '消息中心',
     meta: {
       isNav: true,
-      roles: ['admin', 'superAdmin', 'editor']
+      roles: ['mms', 'superAdmin', 'editor']
     },
     icon: MessageOutlined
   },
   {
-    path: '/admin/settings',
+    path: '/mms/settings',
     component: Settings,
     name: '设置',
     meta: {
@@ -75,7 +75,7 @@ const adminRoutes = [
     icon: SettingOutlined
   },
   {
-    path: '/admin/noPermission',
+    path: '/mms/noPermission',
     component: NoPermission,
     name: '没有权限',
     meta: {

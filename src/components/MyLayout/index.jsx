@@ -139,7 +139,7 @@ class MyLayout extends Component {
   loginOut = ()=>{
     this.props.logout();
     message.success('退出成功', 1, ()=>{
-      this.props.history.go(0)
+      this.props.history.push("/login")
     })
   }
   selectKeys = ()=>{

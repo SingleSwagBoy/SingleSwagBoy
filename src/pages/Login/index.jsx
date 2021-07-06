@@ -94,7 +94,8 @@ class Login extends Component {
     if (origin === "https://login.dingtalk.com") { //判断是否来自ddLogin扫码事件。
         let loginTmpCode = event.data; //拿到loginTmpCode后就可以在这里构造跳转链接进行跳转了
         let redirect_uri_check = `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${info.appid}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${info.redirect_uri}&loginTmpCode=${loginTmpCode}`
-        window.location.href = (redirect_uri_check)
+        // window.location.href = (redirect_uri_check)
+        console.log(redirect_uri_check,"redirect_uri_check")
     }
   }
   render() {

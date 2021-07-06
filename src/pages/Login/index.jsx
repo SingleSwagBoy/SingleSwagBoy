@@ -51,7 +51,7 @@ class Login extends Component {
     let base = "http://" + window.location.host;
     let a = this.state.dingdParam
     if (this.state.dingdParam.redirect_uri.indexOf(base) === -1){
-        a.redirect_uri = base + this.state.dingdParam.redirect_uri;
+        a.redirect_uri = base+"new-mms/#/" + this.state.dingdParam.redirect_uri;
         this.setState({
           dingdParam:a
         })

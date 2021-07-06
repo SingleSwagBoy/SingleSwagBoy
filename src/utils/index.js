@@ -22,7 +22,8 @@ function GetUrlParam(paraName) {
       return "";
   }
 }
-export {
+let objFun = {
   splitStr,
   GetUrlParam
 }
+export default objFun

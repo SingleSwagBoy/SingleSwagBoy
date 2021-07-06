@@ -52,10 +52,10 @@ export default class ArtEdit extends Component {
         <Card title={
           <Breadcrumb>
             <Breadcrumb.Item>
-              <Link to="/admin/dashBoard">首页</Link>
+              <Link to="/mms/dashBoard">首页</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <Link to="/admin/artLists">文章列表</Link>
+              <Link to="/mms/artLists">文章列表</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>编辑文章</Breadcrumb.Item>
           </Breadcrumb>
@@ -166,7 +166,7 @@ export default class ArtEdit extends Component {
       if(res.data.code === 200) {
         // 弹出提示框提醒增加结果
         message.success(res.data.msg, 2, ()=>{
-          this.props.history.push('/admin/artLists')
+          this.props.history.push('/mms/artLists')
         });
       }
     })

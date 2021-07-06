@@ -4,7 +4,7 @@ import { fetchArtLists, delArtById } from 'api'
 import { Card, Breadcrumb, Button, Table, Tooltip, Image, Tag, Modal, message } from 'antd'
 import { Link } from 'react-router-dom'
 import { DownloadOutlined } from "@ant-design/icons"
-import { splitStr } from 'utils'
+import  util from 'utils'
 import dayjs from 'dayjs'
 import XLSX from 'xlsx'
 
@@ -37,7 +37,7 @@ export default class ArtLists extends Component {
             return ( 
               <Tooltip title={rowValue}>
               <span>
-                { splitStr(rowValue, 20) }
+                { util.splitStr(rowValue, 20) }
               </span>
               </Tooltip>
             )
@@ -91,7 +91,7 @@ export default class ArtLists extends Component {
                   size="small"
                   onClick = { () => {
                     // 点击跳转到编辑页，传ID
-                    this.props.history.push(`/admin/artEdit/${row.id}`)
+                    this.props.history.push(`/mms/artEdit/${row.id}`)
                   } }
                   >编辑</Button>
               </div>
@@ -108,7 +108,7 @@ export default class ArtLists extends Component {
         <Card title={
           <Breadcrumb>
             <Breadcrumb.Item>
-              <Link to="/admin/dashBoard">首页</Link>
+              <Link to="/mms/dashBoard">首页</Link>
             </Breadcrumb.Item>
             
             <Breadcrumb.Item>文章列表</Breadcrumb.Item>
@@ -124,7 +124,7 @@ export default class ArtLists extends Component {
         >
           <Button
            type="primary"
-           onClick={ ()=>{ this.props.history.push('/admin/artAdd') } }
+           onClick={ ()=>{ this.props.history.push('/mms/artAdd') } }
           >增加文章</Button>
           <Table 
             dataSource={this.state.lists}

@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import { doLoginAsync } from 'store/user/actionCreators'
 import './index.css';
 import BGParticle from '../../utils/BGParticle'
+import util from "../../utils/index"
 const mapStateToProps = (state) => {
   return {
     
@@ -23,12 +24,12 @@ class Login extends Component {
   state={
     dingdParam: {
       "appid": "",
-      "redirect_uri": "mms/login/ding",
+      "redirect_uri": "/mms/login/new_ding",
       "uri": "",
     },
     devAppid:{
       "appidDev": "dingoaaoqasyxflot45f87",
-      "appidTest": "dingoayvn0ii7s3zswzcds",
+      "appidTest": "dingoa79hazduekdhw6oyb",
       "appidTest2": "dingoa09ucxedcx85kgpjl",
       "appidProd": "dingoajfgp2ovgefsctzuq",
       "appidProd2": "dingoaulkihfjnml7eezqz",
@@ -51,7 +52,7 @@ class Login extends Component {
     let base = "http://" + window.location.host;
     let a = this.state.dingdParam
     if (this.state.dingdParam.redirect_uri.indexOf(base) === -1){
-        a.redirect_uri = base+"/new-mms/#/" + this.state.dingdParam.redirect_uri;
+        a.redirect_uri = base + this.state.dingdParam.redirect_uri;
         this.setState({
           dingdParam:a
         })
@@ -85,6 +86,16 @@ class Login extends Component {
     } else if (typeof window.attachEvent !== 'undefined') {
       window.attachEvent('onmessage', this.getDingCode);
     }
+
+    //2.5.后端返回token,存储到cookie
+    let authorization = util.GetUrlParam("authorization");
+    let userid = util.GetUrlParam("userid");
+    let name = util.GetUrlParam("name");
+    let id = util.GetUrlParam("id");
+    console.log(authorization,"authorization")
+    if(authorization && userid){
+
+    }
   }
   getDingCode(event){
     console.log(event,"event")
@@ -94,10 +105,7 @@ class Login extends Component {
     if (origin === "https://login.dingtalk.com") { //判断是否来自ddLogin扫码事件。
         let loginTmpCode = event.data; //拿到loginTmpCode后就可以在这里构造跳转链接进行跳转了
         let redirect_uri_check = `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${info.appid}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${info.redirect_uri}&loginTmpCode=${loginTmpCode}`
-        setTimeout((r)=>{
-          window.location.href = redirect_uri_check
-        },10000)
-        console.log(redirect_uri_check,"redirect_uri_check")
+        window.location.href = redirect_uri_check
     }
   }
   render() {

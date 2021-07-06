@@ -12,8 +12,12 @@
 
 #admin .logo {
   height: 32px;
-  background: rgba(255, 255, 255, 0.3);
+  /* background: rgba(255, 255, 255, 0.3); */
   margin: 16px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .site-layout .site-layout-background {

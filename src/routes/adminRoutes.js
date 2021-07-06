@@ -17,7 +17,7 @@ const NoPermission = lazy(()=>import('pages/NoPermission/index.jsx'))
 
 const adminRoutes = [
   {
-    path: '/admin/dashBoard',
+    path: '/mms/channel',
     component: DashBoard,
     name: '仪表盘',
     meta: {
@@ -83,6 +83,36 @@ const adminRoutes = [
       roles: '*'
     }
   }
+  // {
+  //   code: "SourceManage",
+  //   children:[
+  //     {
+  //       code: "streamNet",
+  //       createTime: 0,
+  //       deleted: 2,
+  //       id: 31,
+  //       level: 2,
+  //       name: "网络源",
+  //       parentId: 2,
+  //       path: "/admin/artLists",
+  //       sortOrder: 31,
+  //       status: 1,
+  //       updateTime: 1563779334,
+  //     }
+  //   ],
+  //   createTime: 0,
+  //   deleted: 2,
+  //   id: 2,
+  //   level: 1,
+  //   name: "源管理",
+  //   parentId: 0,
+  //   // path: "/admin/dashBoard",
+  //   sortOrder: 2,
+  //   status: 1,
+  //   updateTime: 1563779666,
+  //   icon: SettingOutlined,
+  // }
+
 ]
 
 export default adminRoutes

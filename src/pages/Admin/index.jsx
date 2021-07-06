@@ -24,20 +24,21 @@ export default class Admin extends Component {
                         /*
                         判断用户角色 是否可以访问当前路由
                         */
-                       if(route.meta.roles === '*'){
-                         return <route.component {...routeProps} />
-                       }
-                       const role = localStorage.getItem('role');
-                       const roles = route.meta.roles;
-                       // includes
-                       const hasPermission = roles.includes(role)
-                       if(hasPermission){
-                        // 可以访问
-                        return <route.component {...routeProps} />
-                       }else{
-                        //  return <Redirect to="/admin/noPermission"/>
-                         return <route.component {...routeProps} />
-                       }
+                        <route.component {...routeProps} />
+                      //  if(route.meta.roles === '*'){
+                      //    return <route.component {...routeProps} />
+                      //  }
+                      //  const role = localStorage.getItem('role');
+                      //  const roles = route.meta.roles;
+                      //  // includes
+                      //  const hasPermission = roles.includes(role)
+                      //  if(hasPermission){
+                      //   // 可以访问
+                      //   return <route.component {...routeProps} />
+                      //  }else{
+                      //   //  return <Redirect to="/admin/noPermission"/>
+                      //    return <route.component {...routeProps} />
+                      //  }
                       }
                     }
                   />

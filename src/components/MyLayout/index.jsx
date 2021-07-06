@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { Layout, Menu, Avatar, Dropdown, message, Badge } from 'antd';
 import {
   MenuUnfoldOutlined,
-  MenuFoldOutlined
+  MenuFoldOutlined,
+  UserOutlined
 } from '@ant-design/icons';
+
 import './style.css'
 import adminRoutes from '../../routes/adminRoutes.js'
 import { withRouter } from 'react-router-dom'
@@ -11,6 +13,7 @@ import { connect } from 'react-redux'
 import { logout } from '../../store/user/actionCreators'
 
 const { Header, Sider, Content } = Layout;
+const { SubMenu } = Menu;
 const mapStateToProps = (state)=>{
   return {
     userInfo: state.user.userInfo
@@ -40,10 +43,11 @@ class MyLayout extends Component {
 
   render() {
     // console.log('==MyLayout==')
-    let navRoutes = adminRoutes.filter(route => route.meta.isNav)
+    let navRoutes = JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.parentId === 0)
     // 二次过滤
-    const role = localStorage.getItem('role')
-    navRoutes = navRoutes.filter(route => route.meta.roles.includes(role))
+    // const role = localStorage.getItem('role')
+    const role = "admin" 
+    // navRoutes = navRoutes.filter(route => route.meta.roles.includes(role))
     const menu = (
       <Menu>
         <Menu.Item onClick={()=>{
@@ -61,13 +65,14 @@ class MyLayout extends Component {
            collapsed={this.state.collapsed}
           >
             <div className="logo">
-              顶级UI
+              电视家CMS
             </div>
             <Menu 
              theme="dark" 
              mode="inline" 
              onClick = { ({key}) => {
               // 点击导航跳转
+              console.log(key)
               this.props.history.push(key)
              } }
              defaultSelectedKeys={this.props.location.pathname}
@@ -75,9 +80,21 @@ class MyLayout extends Component {
               {
                 navRoutes.map(nav => {
                   return (
-                    <Menu.Item key={nav.path} icon={<nav.icon />}>
+                    nav.children.length>0?
+                    <SubMenu icon={<UserOutlined />} title={nav.name} key={nav.name}>
+                      {
+                        nav.children.map(child => {
+                          return(
+                            <Menu.Item key={child.path}>{child.name}</Menu.Item>
+                          )
+                        })
+                      }
+                    </SubMenu>
+                    :
+                    <Menu.Item icon={<nav.icon />}>
                       {nav.name}
                     </Menu.Item>
+                    
                   )
                 })
               }

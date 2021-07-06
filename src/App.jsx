@@ -8,7 +8,7 @@ export default class App extends Component {
   render() {
     return (
       <Switch>
-        <Route path="/madminms" render={(routeProps)=>{
+        <Route path="/admin" render={(routeProps)=>{
           // 判断是否登录，登录了可以访问，否则补鞥呢访问
           const token = localStorage.getItem('token')
           return <Admin {...routeProps}/>

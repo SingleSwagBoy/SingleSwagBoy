@@ -32,7 +32,11 @@ class Login extends Component {
       "appidTest2": "dingoa09ucxedcx85kgpjl",
       "appidProd": "dingoajfgp2ovgefsctzuq",
       "appidProd2": "dingoaulkihfjnml7eezqz",
+    }
   }
+  constructor(props){
+    super(props);
+    this.getDingCode = this.getDingCode.bind(this);
   }
   componentDidMount () {
     this.initPage()

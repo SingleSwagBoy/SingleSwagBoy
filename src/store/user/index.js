@@ -1,32 +1,29 @@
 import { SETUSERINFO, LOGOUT } from './actionTypes'
 let defaultState = {
-  token: '',
+  authorization: '',
   userInfo: {},
-  role: ''
 }
 // 刷新时取缓存 赋值给state user
 const user = localStorage.getItem('user')
-if(user) {
+if(JSON.parse(user).authorization) {
   // 不是第一次打开程序，user已经备份
   defaultState = JSON.parse(user)
 }
 const reducer = (state=defaultState, action) => {
   // console.log(state)
   let newState = JSON.parse(JSON.stringify(state))
-  // console.log(newState)
   switch (action.type) {
     case SETUSERINFO:
-      newState.token = action.value.token
-      newState.userInfo = action.value.userInfo
-      newState.role = action.value.role
+      newState.authorization = action.params.authorization
+      newState.userInfo = {
+        userName:action.params.name,
+        userId:action.params.userid,
+        id:action.params.id
+      }
       break;
     case LOGOUT:
-      newState.token = ''
+      newState.authorization = ''
       newState.userInfo = {}
-      newState.role = ''
-      localStorage.removeItem('token')
-      localStorage.removeItem('role')
-      // localStorage.removeItem('user')
       break;
     default:
       break;

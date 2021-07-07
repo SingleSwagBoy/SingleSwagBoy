@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {  } from 'antd';
 import {connect} from 'react-redux'
-import { doLoginAsync } from 'store/user/actionCreators'
+import { doLogin } from 'store/user/actionCreators'
 import './index.css';
 import BGParticle from '../../utils/BGParticle'
 import util from "../../utils/index"
@@ -13,7 +13,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     doLogin: (params) => {
-      dispatch(doLoginAsync(params))
+      dispatch(doLogin(params))
     }
   }
 }
@@ -94,12 +94,20 @@ class Login extends Component {
     let id = util.GetUrlParam("id");
     console.log(authorization,"authorization")
     if(authorization && userid){
-
+      let params ={
+        authorization,
+        userid,
+        name,
+        id,
+      }
+      this.props.doLogin(params)
+      setTimeout(r=>{
+        this.props.history.push("/mms")
+      },2000)
     }
   }
   getDingCode(event){
     console.log(event,"event")
-    console.log(this.state.dingdParam,"this.state.dingdParam")
     let origin = event.origin;
     let info = this.state.dingdParam
     if (origin === "https://login.dingtalk.com") { //判断是否来自ddLogin扫码事件。
@@ -115,9 +123,6 @@ class Login extends Component {
         <div id="login_container" className="login_container"></div>
       </div>
     )
-  }
-  login = (value) => {
-    this.props.doLogin(value)
   }
 }
 

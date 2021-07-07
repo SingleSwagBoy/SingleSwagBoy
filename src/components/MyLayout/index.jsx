@@ -106,14 +106,14 @@ class MyLayout extends Component {
                 className: 'trigger',
                 onClick: this.toggle,
               })}
-              <div style={{float: 'right', marginRight: 50}}>\
+              <div style={{float: 'right', marginRight: 50}}>
                 <Badge count={5}>
                   <Dropdown overlay={menu}>
                   <div style={{color: "#555"}}>
                     <Avatar
-                      src={this.props.userInfo.avatar}
+                      src="http://test.cdn.dianshihome.com/test/ic_launcher.png"
                     />
-                    <span style={{marginLeft: 10}}>{this.props.userInfo.nickName}</span>
+                    <span style={{marginLeft: 10}}>{this.props.userInfo.userName}</span>
                   </div>
                   </Dropdown>
                 </Badge>

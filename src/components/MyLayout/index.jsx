@@ -107,13 +107,13 @@ class MyLayout extends Component {
                 onClick: this.toggle,
               })}
               <div style={{float: 'right', marginRight: 50}}>
-                <Badge count={5}>
+                <Badge count={0}>
                   <Dropdown overlay={menu}>
                   <div style={{color: "#555"}}>
                     <Avatar
                       src="http://test.cdn.dianshihome.com/test/ic_launcher.png"
                     />
-                    <span style={{marginLeft: 10}}>{this.props.userInfo.userName}</span>
+                    <span style={{marginLeft: 10}}>{decodeURI(this.props.userInfo.userName)}</span>
                   </div>
                   </Dropdown>
                 </Badge>

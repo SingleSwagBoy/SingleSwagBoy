@@ -1,0 +1,17 @@
+.edit_channel .ant-picker,.ant-input{
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+}
+.edit_channel .ant-select-selector{
+    border-radius: 5px !important;
+    padding: 6px 11px !important;
+    height: fit-content !important;
+}
+.edit_channel .ant-select-selection-search-input{
+    height: 100% !important;
+}
+.edit_channel .ant-form-item-label > label{
+    padding: 10px 0;
+    height: auto;
+}

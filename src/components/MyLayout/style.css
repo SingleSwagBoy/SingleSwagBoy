@@ -5,11 +5,16 @@
   cursor: pointer;
   transition: color 0.3s;
 }
-
+#admin{
+  background: url("http://47.99.130.140/imgs/wallhaven-g83v2e.jpg") no-repeat !important;
+  background-size: 100% 100% !important;
+}
 #admin .trigger:hover {
   color: #1890ff;
 }
-
+#admin .ant-layout-sider{
+  background: rgba(0,21,41,1);
+}
 #admin .logo {
   height: 32px;
   /* background: rgba(255, 255, 255, 0.3); */
@@ -19,7 +24,9 @@
   align-items: center;
   justify-content: center;
 }
-
+.ant-layout{
+  background: transparent !important;
+}
 .site-layout .site-layout-background {
   background: #fff;
 }

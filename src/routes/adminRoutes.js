@@ -7,23 +7,25 @@
 // import NoPermission from 'pages/NoPermission'
 import {lazy} from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
-const DashBoard = lazy(()=>import('pages/DashBoard/index.jsx'))
+const AyhChannel = lazy(()=>import('pages/ayh/channel/index.jsx'))
 const ArtLists = lazy(()=>import('pages/ArtLists/index.jsx'))
-const ArtEdit = lazy(()=>import('pages/ArtEdit/index.jsx'))
 const ArtAdd = lazy(()=>import('pages/ArtAdd/index.jsx'))
 const MsgLists = lazy(()=>import('pages/MsgLists/index.jsx'))
 const Settings = lazy(()=>import('pages/Settings/index.jsx'))
 const NoPermission = lazy(()=>import('pages/NoPermission/index.jsx'))
+const WinningNews = lazy(()=>import('pages/ayh/winningNews/index.jsx'))
 
 const adminRoutes = [
   {
-    path: '/mms/dashBoard',
-    component: DashBoard,
-    name: '仪表盘',
-    meta: {
-      isNav: true,
-      roles: ['admin', 'superAdmin', 'editor']
-    },
+    path: '/mms/Ayh/channel',
+    component: AyhChannel,
+    name: '奥运会节目单',
+    icon: LineChartOutlined
+  },
+  {
+    path: '/mms/Ayh/winningNews',
+    component: WinningNews,
+    name: '夺奖快讯',
     icon: LineChartOutlined
   },
   {
@@ -35,15 +37,6 @@ const adminRoutes = [
       roles: ['admin', 'superAdmin', 'editor']
     },
     icon: UnorderedListOutlined
-  },
-  {
-    path: '/mms/artEdit/:artId',
-    component: ArtEdit,
-    name: '编辑文章',
-    meta: {
-      isNav: false,
-      roles: ['admin', 'superAdmin', 'editor']
-    }
   },
   {
     path: '/mms/artAdd',
@@ -83,35 +76,6 @@ const adminRoutes = [
       roles: '*'
     }
   }
-  // {
-  //   code: "SourceManage",
-  //   children:[
-  //     {
-  //       code: "streamNet",
-  //       createTime: 0,
-  //       deleted: 2,
-  //       id: 31,
-  //       level: 2,
-  //       name: "网络源",
-  //       parentId: 2,
-  //       path: "/admin/artLists",
-  //       sortOrder: 31,
-  //       status: 1,
-  //       updateTime: 1563779334,
-  //     }
-  //   ],
-  //   createTime: 0,
-  //   deleted: 2,
-  //   id: 2,
-  //   level: 1,
-  //   name: "源管理",
-  //   parentId: 0,
-  //   // path: "/admin/dashBoard",
-  //   sortOrder: 2,
-  //   status: 1,
-  //   updateTime: 1563779666,
-  //   icon: SettingOutlined,
-  // }
 
 ]
 

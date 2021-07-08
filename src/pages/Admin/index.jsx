@@ -45,9 +45,9 @@ export default class Admin extends Component {
                 )
               })
             }
-            <Route path="/admin/404" component={NotFound} />
-            <Redirect to="/admin/dashBoard" from="/admin" exact />
-            <Redirect to="/admin/404" from="/admin" />
+            <Route path="/mms/404" component={NotFound} />
+            <Redirect to="/mms/dashBoard" from="/mms" exact />
+            <Redirect to="/mms/404" from="/mms" />
           </Switch>
           </Suspense>
         </MyLayout>

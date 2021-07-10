@@ -333,7 +333,7 @@ export default class AyhChannel extends Component {
     let param={
       channelId:this.state.currentChannelItem.channelCode,
       // date:util.formatTime(new Date().getTime(),"",8)
-      date:this.state.timeSwiper[this.state.currentIndex]
+      date:this.state.timeSwiper[this.state.currentIndex]("-","")
     }
     updateListChannelInfo(param).then(res=>{
       if(res.data.errCode === 0){

@@ -338,13 +338,14 @@ export default class AyhChannel extends Component {
     }
     updateListChannelInfo(param).then(res=>{
       if(res.data.errCode === 0){
+        message.success(`更新成功`);
+        this.getListChannelInfo(this.state.currentChannelItem,this.state.timeSwiper[this.state.currentIndex])
         this.setState({
-          lists:res.data.data,
           loading:false
         })
       }else{
+        message.error(`更新失败.`);
         this.setState({
-          lists:[],
           loading:false
         })
       }

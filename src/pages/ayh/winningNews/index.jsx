@@ -1,17 +1,14 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { fetchArtLists, delArtById } from 'api'
-import { Card, Breadcrumb, Button, Table, Image, Modal, message,Input, Space,DatePicker} from 'antd'
-import { Link } from 'react-router-dom'
+import {  } from 'api'
+import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form} from 'antd'
+import {  } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
-import ChannelEdit from "../../../components/channelEdit/index"
-
 import  util from 'utils'
 import "./style.css"
-const { Search } = Input;
 const { confirm } = Modal
 
-export default class AyhChannel extends Component {
+export default class WinningNews extends Component {
   constructor(){
     super();
     this.state = {
@@ -21,6 +18,13 @@ export default class AyhChannel extends Component {
       data: [],
       loading:false,
       lists: [],
+      layout: {
+        labelCol: { span: 4 },
+        wrapperCol: { span: 20 },
+      },
+      tailLayout: {
+        wrapperCol: { offset: 4, span: 20 },
+      },
       columns: [
         {
           title: "ID",
@@ -30,7 +34,14 @@ export default class AyhChannel extends Component {
         {
           title: "发送时间",
           dataIndex: "sendTime",
-          key: "sendTime"
+          key: "sendTime",
+          render: (rowValue, row, index) => {
+            return (
+              <span>
+                {util.formatTime(row.sendTime,"",1)}
+              </span>
+            )
+          }
         },
         {
           title: "发送信息",
@@ -65,6 +76,14 @@ export default class AyhChannel extends Component {
           <Breadcrumb>
             <Breadcrumb.Item>夺奖快讯</Breadcrumb.Item>
           </Breadcrumb>
+          
+        }
+        extra={
+          <Button type="primary"
+          onClick={()=>{
+            this.setState({visible:true})
+          }}
+          >新增</Button>
         }
         >
           <Table 
@@ -79,14 +98,33 @@ export default class AyhChannel extends Component {
          
         </Card>
         <Modal
-            title="插入节目单"
+            title="新增夺奖快讯"
             centered
             visible={this.state.visible}
             onCancel={() => {this.closeModel()}}
-            width={1000}
             footer={null}
           >
-            <ChannelEdit closeModel={this.closeModel.bind(this)} channelItem={this.state.channelItem} />
+            {
+              <Form
+                {...this.state.layout}
+                name="basic"
+                onFinish={this.submitForm.bind(this)}
+              >
+                <Form.Item
+                  label="夺奖快讯"
+                  name="name1"
+                  rules={[{ required: true, message: '请填写夺奖快讯' }]}
+                >
+                  {/* <Input.TextArea /> */}
+                  <Input placeholder="请填写夺奖快讯" />
+                </Form.Item>
+                <Form.Item {...this.state.tailLayout}>
+                  <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
+                    确定
+                  </Button>
+                </Form.Item>
+              </Form> 
+            }
           </Modal>
       </div>
     )
@@ -102,19 +140,18 @@ export default class AyhChannel extends Component {
       visible:false
     })
   }
+  // 新增
+  submitForm(params){
+    console.log(params)
+    this.closeModel()
+  }
   // 删除文章
   delArt(id) {
     Modal.confirm({
-      title: '删除文章',
+      title: '删除此夺奖快讯',
       content: '确认删除？',
       onOk: ()=>{
-        delArtById(id).then(res=>{
-          if(res.data.code === 200) {
-            message.success(res.data.msg, 2, ()=> {
-              this.props.history.go(0)
-            })
-          }
-        })
+        
       },
       onCancel: ()=>{
 
@@ -130,15 +167,20 @@ export default class AyhChannel extends Component {
     this.fetchArtLists()
   }
   fetchArtLists = () => {
-    // 请求文章列表接口
-    fetchArtLists({page: this.state.page, pageSize: this.state.pageSize}).then(res => {
-      if(res.data.code === 200) {
-        const { lists, total } = res.data.data
-        this.setState({
-          lists,
-          total
-        })
-      }
+    this.setState({
+      lists:[
+        {id:1,sendTime:1625734263540,sendMessage:"中国队夺冠啦中国队夺冠啦中国队夺冠啦中国队夺冠啦中国队夺冠啦中国队夺冠啦中国队夺冠啦"}
+      ]
     })
+    // 请求文章列表接口
+    // fetchArtLists({page: this.state.page, pageSize: this.state.pageSize}).then(res => {
+    //   if(res.data.code === 200) {
+    //     const { lists, total } = res.data.data
+    //     this.setState({
+    //       lists,
+    //       total
+    //     })
+    //   }
+    // })
   }
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Card, Breadcrumb, Form, Input, Button, message, Upload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom'
-import { addArt } from 'api'
+import {  } from 'api'
 import E from 'wangeditor'
 
 
@@ -136,13 +136,6 @@ export default class ArtAdd extends Component {
       thumb: this.state.thumb,
       content: this.state.editor.txt.html()
     }
-    addArt(params).then(res=>{
-      if(res.data.code === 200) {
-        // 弹出提示框提醒增加结果
-        message.success(res.data.msg, 2, ()=>{
-          this.props.history.go(0)
-        });
-      }
-    })
+    
   }
 }

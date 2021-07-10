@@ -14,6 +14,7 @@ const MsgLists = lazy(()=>import('pages/MsgLists/index.jsx'))
 const Settings = lazy(()=>import('pages/Settings/index.jsx'))
 const NoPermission = lazy(()=>import('pages/NoPermission/index.jsx'))
 const WinningNews = lazy(()=>import('pages/ayh/winningNews/index.jsx'))
+const SportsProgram = lazy(()=>import('pages/ayh/sportsProgram/index.jsx'))
 
 const adminRoutes = [
   {
@@ -25,6 +26,12 @@ const adminRoutes = [
   {
     path: '/mms/Ayh/winningNews',
     component: WinningNews,
+    name: '夺奖快讯',
+    icon: LineChartOutlined
+  },
+  {
+    path: '/mms/Ayh/sportsProgram',
+    component: SportsProgram,
     name: '夺奖快讯',
     icon: LineChartOutlined
   },

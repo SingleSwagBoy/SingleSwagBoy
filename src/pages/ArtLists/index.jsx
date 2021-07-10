@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { fetchArtLists, delArtById } from 'api'
+import {  } from 'api'
 import { Card, Breadcrumb, Button, Table, Tooltip, Image, Tag, Modal, message } from 'antd'
 import { Link } from 'react-router-dom'
 import { DownloadOutlined } from "@ant-design/icons"
@@ -147,13 +147,7 @@ export default class ArtLists extends Component {
       title: '删除文章',
       content: '确认删除？',
       onOk: ()=>{
-        delArtById(id).then(res=>{
-          if(res.data.code === 200) {
-            message.success(res.data.msg, 2, ()=> {
-              this.props.history.go(0)
-            })
-          }
-        })
+        
       },
       onCancel: ()=>{
 
@@ -188,18 +182,10 @@ export default class ArtLists extends Component {
       page,
       pageSize
     })
-    this.fetchArtLists()
+    // this.fetchArtLists()
   }
   fetchArtLists = () => {
     // 请求文章列表接口
-    fetchArtLists({page: this.state.page, pageSize: this.state.pageSize}).then(res => {
-      if(res.data.code === 200) {
-        const { lists, total } = res.data.data
-        this.setState({
-          lists,
-          total
-        })
-      }
-    })
+    
   }
 }

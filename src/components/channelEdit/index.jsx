@@ -1,20 +1,33 @@
 import React, { Component } from 'react'
-import { Card, Breadcrumb, Form, Input, Button, message, Upload, Image,DatePicker,TimePicker,Select } from 'antd'
+import { Card, Form, Input, Button, message, Upload, Image,DatePicker,TimePicker,Select } from 'antd'
 import { UploadOutlined,LoadingOutlined, PlusOutlined} from '@ant-design/icons';
 import { Link } from 'react-router-dom'
-import {  updateArt } from 'api'
+import { baseUrl,getChannelGroupChannel,searchPrograms ,updateChannelProgram,addChannelProgram} from 'api'
 import "./style.css"
 import moment from 'moment';
+import util  from 'utils';
 const { Option } = Select;
-
-
-export default class ArtEdit extends Component {
-  constructor(){
-    super();
+const normFile = (e) => {
+  if (Array.isArray(e)) {
+    return e;
+  }
+  return e && e.fileList;
+};
+let privateData = {
+  inputTimeOutVal: null
+};
+export default class ChannelEdit extends Component {
+  formRef = React.createRef();
+  constructor(props){
+    super(props);
     const _this = this;
+    console.log(props)
+   
     this.state={
       loading: false,
-      art: null,
+      formData:{},
+      status:null,
+      channelGroup:[],
       layout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
@@ -33,18 +46,19 @@ export default class ArtEdit extends Component {
           console.log('onSearch')
         }
       },
-      props: {
-        name:"avatar",
+      updateTime:"",
+      updateTime_hours:"",
+      updateProps: {
+        name:"file",
         listType:"picture-card",
         className:"avatar-uploader",
         showUploadList:false,
-        action: 'http://rap2api.taobao.org/app/mock/275069/api/v1/upload',
+        action: `${baseUrl}/mms/file/upload?dir=ad`,
         headers: {
-          authorization: 'authorization-text',
+          authorization: JSON.parse(localStorage.getItem("user")).authorization,
         },
         onChange(info) {  // 监控上传状态的回调
           if (info.file.status !== 'uploading') {
-            // console.log(info.file, info.fileList);
             _this.setState({ loading: true });
           }
           if (info.file.status === 'done') {
@@ -54,7 +68,10 @@ export default class ArtEdit extends Component {
                 loading: false,
               }),
             );
-            message.success(`${info.file.name} 上传成功`);
+            let a = _this.state.formData
+             a.image= info.file.response.data.fileUrl
+             _this.formRef.current.setFieldsValue(_this.state.formData)
+            message.success(`上传成功`);
           } else if (info.file.status === 'error') {
             message.error(`${info.file.name} 上传失败.`);
           }
@@ -71,8 +88,32 @@ export default class ArtEdit extends Component {
           return isJpgOrPng && isLt2M;
         }
       },
-
+      programGrounp:[],
     }
+  }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.channelItem){
+      this.setState({
+        formData:nextProps.channelItem,
+        status:1
+      },()=>{
+        this.formRef.current.setFieldsValue(this.state.formData)
+        this.searchPrograms(this.state.formData.programName)
+      })
+    }else{
+      console.log("晴空")
+      this.setState({
+        formData:{},
+        status:2
+      })
+      this.formRef.current.resetFields()
+    }
+    if(nextProps.channelGroup){
+      this.setState({
+        channelGroup:nextProps.channelGroup
+      })
+    }
+    
   }
   getBase64(img, callback) {
     const reader = new FileReader();
@@ -94,44 +135,61 @@ export default class ArtEdit extends Component {
             {
              <Form
              {...this.state.layout}
+             ref = {this.formRef}
              name="basic"
              onFinish={this.submitForm}
-             initialValues = {{
-               ...this.props.channelItem
+             initialValue = {{
+               ...this.state.formData
              }}
            >
              <Form.Item label="频道" style={{ marginBottom: 0 }} rules={[{ required: true }]}>
                <Form.Item
-                 name="year"
-                 rules={[{ required: true,message: '请选择电视台' }]}
+                 name="channelGroupId"
+                 rules={[{ required: true,message: '请选择频道' }]}
                  style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
                >
-                 <Select
-                   placeholder="请选择电视台"
-                   onChange={this.onGenderChange}
-                   {...this.state.selectProps}
-                   allowClear
-                 >
-                   <Option value="male">male</Option>
-                   <Option value="female">female</Option>
-                   <Option value="other">other</Option>
-                   
-                 </Select>
+                 {/* {getFieldDecorator('name', {
+                    getValueFromEvent: val => {
+                            // 进行你想要的操作
+                            return val;
+                    }
+                  })(
+                    
+                  )} */}
+                  <Select
+                      placeholder="请选择频道"
+                      onChange={this.onGenderChange.bind(this,1,"channelGroupId")}
+                      {...this.state.selectProps}
+                      allowClear
+                    >
+                      {
+                        this.props.channel.map(r=>{
+                          return(
+                            <Option value={r.channelGroupId} key={r.channelGroupId}>{r.channelName}</Option>
+                          )
+                        })
+                      }
+                      
+                    </Select>
                </Form.Item>
                <Form.Item
-                 name="month"
-                 rules={[{ required: true,message: '请选择频道'  }]}
+                 name="channelCode"
+                 rules={[{ required: true,message: '请选择频道组'  }]}
                  style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
                >
                  <Select
-                   placeholder="请选择频道"
-                   onChange={this.onGenderChange}
+                   placeholder="请选择频道组"
+                   onChange={this.onGenderChange.bind(this,2,"channelCode")}
                    {...this.state.selectProps}
                    allowClear
                  >
-                   <Option value="male">male</Option>
-                   <Option value="female">female</Option>
-                   <Option value="other">other</Option>
+                   {
+                     this.state.channelGroup.map(r=>{
+                       return(
+                        <Option value={r.channelCode} key={r.channelCode}>{r.channelName}</Option>
+                       )
+                     })
+                   }
                  </Select>
                </Form.Item>
              </Form.Item>
@@ -150,28 +208,45 @@ export default class ArtEdit extends Component {
                name="time"
                rules={[{ required: true, message: '请填写开始时间' }]}
              >
-               {/* <Input.TextArea /> */}
-               <TimePicker onChange={this.startTime.bind(this)} initialValues={moment('00:00:00', 'HH:mm:ss')} />
+               <TimePicker onChange={this.startTime.bind(this)} />
              </Form.Item>
              <Form.Item
                label="关联节目"
-               name="channel"
+               name="programName"
              >
                {/* <Input.TextArea /> */}
                <Select
                  placeholder="请选择关联节目"
-                 onChange={this.onGenderChange}
+                 onChange={this.onGenderChange.bind(this,3,"programName")}
                  allowClear
                  {...this.state.selectProps}
+                 onSearch={(val)=>{
+                   console.log(val)
+                   if(privateData.inputTimeOutVal) {
+                    clearTimeout(privateData.inputTimeOutVal);
+                    privateData.inputTimeOutVal = null;
+                    }
+                    privateData.inputTimeOutVal = setTimeout(() => {
+                        if(!privateData.inputTimeOutVal) return;
+                        this.searchPrograms(val)
+                    }, 1000)
+                 }}
                >
-                 <Option value="male">male</Option>
-                 <Option value="female">female</Option>
-                 <Option value="other">other</Option>
+                 {
+                   this.state.programGrounp.map(r=>{
+                     return(
+                      <Option value={r.name}>{r.name}</Option>
+                     )
+                   })
+                  
+                 }
+                 
+                 
                </Select>
              </Form.Item>
              <Form.Item
                label="关联分集"
-               name="desc1"
+               name="season"
              >
                {/* <Input.TextArea /> */}
                <Select
@@ -180,28 +255,31 @@ export default class ArtEdit extends Component {
                  allowClear
                  {...this.state.selectProps}
                >
-                 <Option value="male">male</Option>
-                 <Option value="female">female</Option>
-                 <Option value="other">other</Option>
+                 
                </Select>
              </Form.Item>
              <Form.Item
                label="显示名称"
-               name="name1"
+               name="name"
                rules={[{ required: true, message: '请填写显示名称' }]}
              >
                {/* <Input.TextArea /> */}
                <Input placeholder="请填写显示名称" />
              </Form.Item>
-             
+
              <Form.Item
                label="封面图片"
-               // name="desc"
+               name="image"
+               valuePropName="fileList" 
+                // 如果没有下面这一句会报错
+                getValueFromEvent={normFile} 
              >
                {/* 上传文件的控件 */}
-               <Upload {...this.state.props}>
-                {imageUrl ? <img src={imageUrl} alt="avatar" preview={true} style={{ width: '100%' }} /> : uploadButton}
+               <Upload {...this.state.updateProps}>
+                 {/* <Image /> */}
+                {this.state.formData ? <img src={this.state.formData.image} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                </Upload>
+               <Image />
              </Form.Item>
 
              <Form.Item {...this.state.tailLayout}>
@@ -228,28 +306,99 @@ export default class ArtEdit extends Component {
   }
   startDay(value){
     console.log(value)
+    console.log(value.toDate())
+    this.setState({
+      updateTime:new Date(value.toDate())
+    })
   }
   startTime(time, timeString){
     console.log(time, timeString)
+    console.log(time.toDate())
+    this.setState({
+      updateTime_hours:new Date(time.toDate())
+    })
   }
-  onGenderChange(value){
-    console.log(value,"关联节目")
+  onGenderChange(type,name,value){
+    
+    if(type === 1){
+      this.getChannelGroupChannel(value)
+      this.state.formData[name] = value
+      this.formRef.current.setFieldsValue(this.state.formData)
+    }else if(type === 2){
+      this.state.formData[name] = value
+      this.formRef.current.setFieldsValue(this.state.formData)
+    }else if(type === 3){
+      console.log(type,name,value)
+      this.searchPrograms(value)
+    }
   }
 
   submitForm = (params) => {
     console.log(params,"params")
-    this.props.closeModel()
-    params = {                                                                                                                                                       
-      ...params,
-      id: this.props.match.params.ardId,
+    // a = {                                                                                                                                                       
+    //   ...params,
+    //   params["image"]: this.props.match.params.ardId,
+    // }
+    let a = params
+    a["image"] =Array.isArray(a.image)?a.image.join(","):a.image
+    let b = this.state.programGrounp.filter(item=>item.name===a.programName)
+    if(b.length>0){
+      a["programId"] = b[0].program_id
+    }else{
+      a["programId"] = ""
     }
-    return
-    updateArt(params).then(res=>{
-      if(res.data.code === 200) {
-        // 弹出提示框提醒增加结果
-        message.success(res.data.msg, 2, ()=>{
-          this.props.history.push('/mms/artLists')
-        });
+    a["openId"] = this.state.formData.openId
+    a["h_image"] = this.state.formData.h_image
+    a["channelId"] = this.state.formData.channelCode
+    let c = new Date(a["startTime"].toDate())
+    a["startTime"] = parseInt(new Date(a["time"].toDate().setFullYear(c.getFullYear(),c.getMonth(),c.getDate())).getTime() /1000)
+    console.log(a,"a")
+    this.props.closeModel()
+    if(this.state.status ==1){
+      this.updateChannelProgram(a)
+    }else{
+      this.addChannelProgram(a)
+    }
+    
+    
+  }
+  getChannelGroupChannel(id){//获取频道组
+    let param={
+      channelGroupId:id
+    }
+    getChannelGroupChannel(param).then(res=>{
+      if(res.data.errCode === 0){
+        this.setState({
+          channelGroup:res.data.data
+        })
+        // this.formRef.current.setFieldsValue(this.state.formData)
+      }
+    })
+  }
+  searchPrograms(val){
+    if(!val)return
+    let param={
+      word:val
+    }
+    searchPrograms(param).then(res=>{
+      if(res.data.errCode === 0){
+        this.setState({
+          programGrounp:res.data.data
+        })
+      }
+    })
+  }
+  updateChannelProgram(param){
+    updateChannelProgram({...param}).then(res=>{
+      if(res.data.errCode == 0){
+
+      }
+    })
+  }
+  addChannelProgram(param){
+    addChannelProgram({...param}).then(res=>{
+      if(res.data.errCode == 0){
+        
       }
     })
   }

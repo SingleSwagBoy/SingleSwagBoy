@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { fetchArtLists, delArtById } from 'api'
+import { getChannelGroupChannel,getListChannelInfo ,updateListChannelInfo} from 'api'
 import { Card, Breadcrumb, Button, Table, Image, Modal, message,Input, Space,DatePicker} from 'antd'
 import { Link } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
@@ -8,70 +8,71 @@ import ChannelEdit from "../../../components/channelEdit/index"
 
 import  util from 'utils'
 import "./style.css"
+import moment from 'moment';
+// import { utils } from 'xlsx/types'
 const { Search } = Input;
-const { confirm } = Modal
+
 
 export default class AyhChannel extends Component {
   constructor(){
     super();
     this.state = {
       page: 1,
-      pageSize: 10,
+      pageSize: 1000,
       total: 0,
       data: [],
       loading:false,
       lists: [],
-      channelItem:"",
+      channelItem:{},
+      currentChannelItem:"",
+      channelGroup:[],
       mySwiper:"",
-      timeSwiper:[
-        "2020-07-06",
-        "2020-07-07",
-        "2020-07-08",
-        "2020-07-09",
-        "2020-07-10",
-        "2020-07-11",
-        "2020-07-12",
-      ],
-      currentItem:[{child:[]}],
+      timeSwiper:[],
+      currentItem:{channelGroupId:1495,channelName:"央视"},
       channel:[
-        "央视","卫视","地方台","其他"
-      ],
-      channel_info:[
-        {name:"央视",child:["cctv1","cctv2"]},
-        {name:"卫视",child:["cctv3","cctv4"]},
-        {name:"地方台",child:["cctv5","cctv6"]},
-        {name:"其他",child:["cctv7","cctv8"]},
+        {channelName:"央视",channelGroupId:1495},
+        {channelName:"卫视",channelGroupId:1496}
       ],
       currentIndex:0,
       columns: [
         {
           title: "开始时间",
-          dataIndex: "title",
-          key: "title",
+          dataIndex: "startTime",
+          key: "startTime",
           sorter: {
-            compare: (a, b) => a.title - b.title,
+            compare: (a, b) => a.startTime - b.startTime,
             multiple: 1,
+          },
+          render: (rowValue,row,index) => {
+            return (
+              <span>{util.formatTime(String(row.startTime).length==10? row.startTime* 1000:row.startTime,"",7)}</span>
+            )
           },
         },
         {
           title: "显示名称",
-          dataIndex: "author",
-          key: "author"
+          dataIndex: "name",
+          key: "name"
         },
         {
           title: "关联节目",
-          dataIndex: "desc",
-          key: "desc",
+          dataIndex: "programName",
+          key: "programName",
         },
         {
           title: "关联分集",
-          dataIndex: "author",
-          key: "author",
+          dataIndex: "season",
+          key: "season",
+          render: (rowValue) => {
+            return (
+              <div>{rowValue?rowValue:"-"}</div>
+            )
+          },
         },
         {
           title: "列表封面",
-          dataIndex: "thumb",
-          key: "thumb",
+          dataIndex: "image",
+          key: "image",
           render: (rowValue) => {
             return (
               <Image
@@ -83,10 +84,10 @@ export default class AyhChannel extends Component {
         },
         {
           title: "更新时间",
-          dataIndex: "createAt",
-          key: "createAt",
+          dataIndex: "lastUpdateTime",
+          key: "lastUpdateTime",
           sorter: {
-            compare: (a, b) => a.createAt - b.createAt,
+            compare: (a, b) => a.lastUpdateTime - b.lastUpdateTime,
             multiple: 1,
           },
         },
@@ -100,10 +101,20 @@ export default class AyhChannel extends Component {
                   size="small"
                   onClick = { () => {
                     // 点击跳转到编辑页，传ID
+                    let time = String(row.startTime).length==10? row.startTime* 1000:row.startTime
+                    row.channelGroupId = this.state.currentItem.channelGroupId
+                    row.channelCode = this.state.currentChannelItem.channelCode
+                    // row.startTime = util.formatTime(row.startTime* 1000,"",3)
+                    row.startTime = moment(time)
+                    row.time = moment(time)
+                    row.image = Array.isArray(row.image)?row.image:[row.image]
                     this.setState({
-                      visible:true,
                       channelItem:row
+                    },()=>{
+                      this.setState({ visible:true})
+                      console.log(this.state.channelItem,"channelItem")
                     })
+                   
                   } }
                   >编辑</Button>
                 <Button 
@@ -124,19 +135,22 @@ export default class AyhChannel extends Component {
   render() {
     return (
       <div>
-        <Card title={
-          <Breadcrumb>
-            <Breadcrumb.Item>节目单</Breadcrumb.Item>
-          </Breadcrumb>
-        }
-        >
+        <Card >
           <div className="time_choose">
             <div className="icon_left"><LeftOutlined /></div>
             <div className="swiper_box">
               {
                 this.state.timeSwiper.map((r,i)=>{
                   return(
-                    <div style={{backgroundColor:this.state.currentIndex == i?"#1890ff":"#ccc"}} onClick={()=>{this.setState({currentIndex:i})}} key={i}>{r}</div>
+                    <div style={{backgroundColor:this.state.currentIndex == i?"#1890ff":"#ccc"}} 
+                    onClick={()=>{
+                      this.setState({currentIndex:i})
+                      this.getListChannelInfo(this.state.currentChannelItem,r)
+                      }
+                    } key={i}
+                    >
+                      {r}
+                    </div>
                   )
                 })
               }
@@ -144,7 +158,7 @@ export default class AyhChannel extends Component {
             <div className="icon_right">
               {/* <ClockCircleOutlined /> */}
               <Space direction="vertical" size={12}>
-                <DatePicker bordered={false} />
+                <DatePicker bordered={false} onChange={this.timeChange.bind(this)} />
               </Space>
               </div>
           </div>
@@ -163,20 +177,25 @@ export default class AyhChannel extends Component {
                     this.state.channel.map((r,i)=>{
                       return(
                         <div key={i} onClick={()=>{
-                          let arr = this.state.channel_info.filter(item=>item.name == r)
-                          // console.log(arr)
-                          this.setState({currentItem:arr})}
+                          this.setState({currentItem:r})
+                          this.getChannelGroupChannel(r.channelGroupId)
+                          }
                         }  
-                        className={[this.state.currentItem[0].name == r?"activeItem":""]}>{r}</div>
+                        className={[this.state.currentItem.channelGroupId == r.channelGroupId?"activeItem":""]}>{r.channelName}</div>
                       )
                     })
                   } 
                 </div>
                 <div className="right">
                   {
-                    this.state.currentItem[0].child.map((r,i)=>{
+                    this.state.channelGroup.map((r,i)=>{
                       return(
-                        <div key={i}>{r}</div>
+                        <div key={r.id} onClick={()=>{
+                          this.setState({currentChannelItem:r})
+                          this.getListChannelInfo(r,this.state.timeSwiper[this.state.currentIndex])
+                        }} 
+                        className={[this.state.currentChannelItem.id == r.id?"activeItem":""]}
+                        >{r.channelName}</div>
                       )
                     })
                   } 
@@ -185,9 +204,9 @@ export default class AyhChannel extends Component {
             </div>
             <div className="right_box">
               <div className="action_box">
-                <div>{this.state.currentItem[0].name}节目单</div>
+                <div>{this.state.currentItem.channelName}节目单</div>
                 <div className="btn_box">
-                  <div>更新</div>
+                  <div onClick={()=>{this.updateListChannelInfo()}}>更新</div>
                   <div onClick={()=>{
                     this.setState({visible:true,channelItem:null})
                   }}>插入新节目</div>
@@ -196,10 +215,12 @@ export default class AyhChannel extends Component {
               <Table 
               dataSource={this.state.lists}
               loading={this.state.loading}
+              rowKey={record => record.startTime}
               pagination={{
                 pageSize: this.state.pageSize,
                 total: this.state.total,
-                onChange: this.changeSize
+                onChange: this.changeSize,
+                hideOnSinglePage:true
               }}
               columns={this.state.columns} />
             </div>
@@ -214,13 +235,21 @@ export default class AyhChannel extends Component {
             width={1000}
             footer={null}
           >
-            <ChannelEdit closeModel={this.closeModel.bind(this)} channelItem={this.state.channelItem} />
+            <ChannelEdit 
+            closeModel={this.closeModel.bind(this)} 
+            channelItem={this.state.channelItem} 
+            channel={this.state.channel}
+            channelGroup={this.state.channelGroup}
+            getChannelGroupChannel={this.getChannelGroupChannel.bind(this)}
+            />
           </Modal>
       </div>
     )
   }
   componentDidMount(){
     this.fetchArtLists()
+    this.getChannelGroupChannel(this.state.currentItem.channelGroupId,1)
+    this.timeChange()
   }
   onSearch(e){
     console.log(e,"e")
@@ -236,37 +265,98 @@ export default class AyhChannel extends Component {
       title: '删除文章',
       content: '确认删除？',
       onOk: ()=>{
-        delArtById(id).then(res=>{
-          if(res.data.code === 200) {
-            message.success(res.data.msg, 2, ()=> {
-              this.props.history.go(0)
-            })
-          }
-        })
+        
       },
       onCancel: ()=>{
 
       }
     })
   }
-  changeSize = (page, pageSize) => {
-    // 分页获取
-    this.setState({
-      page,
-      pageSize
-    })
-    this.fetchArtLists()
-  }
+  // changeSize = (page, pageSize) => {
+  //   // 分页获取
+  //   this.setState({
+  //     page,
+  //     pageSize
+  //   })
+  //   this.fetchArtLists()
+  // }
   fetchArtLists = () => {
     // 请求文章列表接口
-    fetchArtLists({page: this.state.page, pageSize: this.state.pageSize}).then(res => {
-      if(res.data.code === 200) {
-        const { lists, total } = res.data.data
+    
+  }
+  getChannelGroupChannel(id,type){//获取频道组
+    let param={
+      channelGroupId:id
+    }
+    getChannelGroupChannel(param).then(res=>{
+      if(res.data.errCode === 0){
         this.setState({
-          lists,
-          total
+          channelGroup:res.data.data
+        })
+        if(type == 1){
+          this.setState({
+            currentChannelItem:res.data.data[0]
+          })
+        }
+      }
+    })
+  }
+  getListChannelInfo(item,time){
+    this.setState({
+      loading:true
+    })
+    let param={
+      channelId:item.channelCode,
+      // date:util.formatTime(new Date().getTime(),"",8)
+      // date:"20210708"
+      date:time.replaceAll("-","")
+    }
+    console.log(param)
+    getListChannelInfo(param).then(res=>{
+      if(res.data.errCode === 0){
+        this.setState({
+          lists:res.data.data,
+          loading:false
+        })
+      }else{
+        this.setState({
+          lists:[],
+          loading:false
         })
       }
     })
+  }
+  updateListChannelInfo(){
+    this.setState({
+      loading:true
+    })
+    let param={
+      channelId:this.state.currentChannelItem.channelCode,
+      // date:util.formatTime(new Date().getTime(),"",8)
+      date:this.state.timeSwiper[this.state.currentIndex]
+    }
+    updateListChannelInfo(param).then(res=>{
+      if(res.data.errCode === 0){
+        this.setState({
+          lists:res.data.data,
+          loading:false
+        })
+      }else{
+        this.setState({
+          lists:[],
+          loading:false
+        })
+      }
+    })
+  }
+  timeChange(val){
+    let arr = []
+    for(let i =0;i<=6;++i){
+      arr.push(util.getEveryTime(val?new Date(val.toDate()).getTime():new Date().getTime(),i))
+    }
+    this.setState({
+      timeSwiper:arr
+    })
+    this.getListChannelInfo(this.state.currentChannelItem,arr[this.state.currentIndex])
   }
 }

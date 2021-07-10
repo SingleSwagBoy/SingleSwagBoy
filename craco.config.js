@@ -3,12 +3,14 @@ module.exports = {
   devServer: {
     port: 9528,
     open: true,
+    disableHostCheck: true,
+    https: false, // https:{type:Boolean}
     proxy: {
-      '/api': {
-        target: 'http://rap2api.taobao.org/app/mock/275070',
+      '/mms': {
+        target: 'http://test.cms.tvplus.club',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': '/api'
+          '^/mms': '/mms'
         }
       }
     }

@@ -2,9 +2,10 @@ import axios from 'axios'
 import { message } from 'antd'
 import { createHashHistory } from 'history'
 const history = createHashHistory()
+
 const request = axios.create({
-  baseURL: "",
-  // baseURL: "http://rap2api.taobao.org/app/mock/275070",
+  // baseURL: "",
+  // baseURL: "http://test.cms.tvplus.club",
   timeout: 8000
 })
 
@@ -13,9 +14,9 @@ let hide = null;
 request.interceptors.request.use(function (config) {
   // 请求头中添加token
   hide = message.loading('加载中...', 0);
-  const token = localStorage.getItem('token')
-  if(token) {
-    config.headers.access_token = token
+  const user = localStorage.getItem('user')
+  if(JSON.parse(user).authorization) {
+    config.headers.authorization = JSON.parse(user).authorization
   }
   hide()
   return config;

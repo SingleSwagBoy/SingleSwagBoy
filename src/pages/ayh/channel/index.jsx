@@ -249,7 +249,6 @@ export default class AyhChannel extends Component {
   componentDidMount(){
     this.fetchArtLists()
     this.getChannelGroupChannel(this.state.currentItem.channelGroupId,1)
-    this.timeChange()
   }
   onSearch(e){
     console.log(e,"e")
@@ -296,6 +295,8 @@ export default class AyhChannel extends Component {
         if(type == 1){
           this.setState({
             currentChannelItem:res.data.data[0]
+          },()=>{
+            this.timeChange()
           })
         }
       }

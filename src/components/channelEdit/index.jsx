@@ -233,9 +233,9 @@ export default class ChannelEdit extends Component {
                  }}
                >
                  {
-                   this.state.programGrounp.map(r=>{
+                   this.state.programGrounp.map((r,i)=>{
                      return(
-                      <Option value={r.name}>{r.name}</Option>
+                      <Option value={r.name} key={i}>{r.name}</Option>
                      )
                    })
                   

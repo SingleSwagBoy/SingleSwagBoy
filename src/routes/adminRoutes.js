@@ -15,6 +15,10 @@ const Settings = lazy(()=>import('pages/Settings/index.jsx'))
 const NoPermission = lazy(()=>import('pages/NoPermission/index.jsx'))
 const WinningNews = lazy(()=>import('pages/ayh/winningNews/index.jsx'))
 const SportsProgram = lazy(()=>import('pages/ayh/sportsProgram/index.jsx'))
+const MedalList = lazy(()=>import('pages/ayh/medalList/index.jsx'))
+const EventList = lazy(()=>import('pages/ayh/eventList/index.jsx'))
+const SpecialList = lazy(()=>import('pages/ayh/specialList/index.jsx'))
+const ShortVideo = lazy(()=>import('pages/ayh/shortVideo/index.jsx'))
 
 const adminRoutes = [
   {
@@ -33,6 +37,30 @@ const adminRoutes = [
     path: '/mms/Ayh/sportsProgram',
     component: SportsProgram,
     name: '夺奖快讯',
+    icon: LineChartOutlined
+  },
+  {
+    path: '/mms/Ayh/medalList',
+    component: MedalList,
+    name: '奖牌榜',
+    icon: LineChartOutlined
+  },
+  {
+    path: '/mms/Ayh/eventList',
+    component: EventList,
+    name: '赛事列表',
+    icon: LineChartOutlined
+  },
+  {
+    path: '/mms/Ayh/specialList',
+    component: SpecialList,
+    name: '赛事列表',
+    icon: LineChartOutlined
+  },
+  {
+    path: '/mms/Ayh/shortVideo',
+    component: ShortVideo,
+    name: '短视频搜索',
     icon: LineChartOutlined
   },
   {

@@ -108,6 +108,9 @@ export const update_column = (params) => { //新增
 export const cvideos = (params) => { //查找合集短视频
   return request.get(`${baseUrl}/mms/shortVideo/cvideos`,{params:params})
 };
+export const getColumnInfo = (params) => { //查找合集短视频
+  return request.get(`${baseUrl}/mms/shortVideo/column/list`,{params:params})
+};
 
 
 

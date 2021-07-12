@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { searchVideo,shortVideoSearch,update_column } from 'api'
+import { searchVideo,shortVideoSearch,update_column,getColumnInfo } from 'api'
 import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,InputNumber} from 'antd'
 import {  } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
@@ -24,6 +24,7 @@ export default class SportsProgram extends Component {
       loading:false,
       lists: [],
       currentId:"",//编辑行的id
+      defaultSelect:"",
       layout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
@@ -60,8 +61,17 @@ export default class SportsProgram extends Component {
                     onClick={()=>{
                       this.setState({
                         currentId:row,
-                        visible:true
+                        visible:true,
+                        modelKey:Math.random()
                       })
+                      if(row.columnId !== 0){
+                        this.getColumnInfo(row.columnId)
+                      }else{
+                        console.log(111111)
+                        this.setState({
+                          defaultSelect:{name:""}
+                        })
+                      }
                     }}
                     >添加到专题</Button>
               </div>
@@ -71,6 +81,7 @@ export default class SportsProgram extends Component {
       ],
       visible:false,
       selectOptions:[],
+      modelKey:Math.random(), //防止model里面数据缓存
       selectProps:{
         optionFilterProp:"children",
         filterOption(input, option){
@@ -88,9 +99,6 @@ export default class SportsProgram extends Component {
       <div>
         <Card title={
           <div>
-             {/* <Breadcrumb>
-              <Breadcrumb.Item>短视频搜索</Breadcrumb.Item>
-            </Breadcrumb> */}
             <Input.Search allowClear style={{ width: '20%',marginTop:"10px" }} 
             placeholder="请输入搜索短视频的名称"
             onSearch={(val)=>{
@@ -101,19 +109,11 @@ export default class SportsProgram extends Component {
           </div>
          
         }
-        // extra={
-        //   <div>
-        //    <Button type="primary"
-        //     onClick={()=>{
-        //       this.setState({visible:true})
-        //     }}
-        //     >新增</Button>
-        //   </div> 
-        // }
         >
           <Table 
               dataSource={this.state.lists}
               loading={this.state.loading}
+              rowKey={record => record.pid}
               pagination={{
                 pageSize: this.state.pageSize,
                 total: this.state.total,
@@ -126,6 +126,7 @@ export default class SportsProgram extends Component {
             title="添加到专题"
             centered
             visible={this.state.visible}
+            key={this.state.modelKey}
             onCancel={() => {this.closeModel()}}
             footer={null}
           >
@@ -145,7 +146,9 @@ export default class SportsProgram extends Component {
                   //  onChange={this.onGenderChange}
                    {...this.state.selectProps}
                    allowClear
-                   mode="multiple"
+                   key={this.state.defaultSelect.name}
+                  //  mode="multiple"
+                  defaultValue={[this.state.defaultSelect.name]}
                    onSearch={(val)=>{
                     console.log(val)
                     if(privateData.inputTimeOutVal) {
@@ -254,7 +257,24 @@ export default class SportsProgram extends Component {
     }
     update_column(params).then(res=>{
       if(res.data.errCode === 0){
-        
+        message.success("添加成功")
+      }else{
+        message.success("添加失败")
+      }
+    })
+  }
+  getColumnInfo(id){
+    let params={
+      column_id:id
+    }
+    getColumnInfo(params).then(res=>{
+      if(res.data.errCode === 0){
+       this.setState({
+         defaultSelect:{
+           name:res.data.data.columnName,
+           pid:res.data.data.pid
+         }
+       })
       }
     })
   }

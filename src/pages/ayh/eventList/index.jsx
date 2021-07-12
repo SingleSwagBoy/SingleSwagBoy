@@ -16,7 +16,7 @@ export default class SportsProgram extends Component {
     super();
     this.state = {
       page: 1,
-      pageSize: 10,
+      pageSize: 1000,
       total: 0,
       data: [],
       loading:false,
@@ -291,7 +291,7 @@ export default class SportsProgram extends Component {
   // 删除文章
   delArt(id) {
     Modal.confirm({
-      title: '删除此夺奖快讯',
+      title: '删除此时间的赛事',
       content: '确认删除？',
       onOk: ()=>{
         this.deleteGameSchedule(id)

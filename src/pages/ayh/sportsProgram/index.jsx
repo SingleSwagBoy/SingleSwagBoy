@@ -311,9 +311,9 @@ export default class SportsProgram extends Component {
                 {...this.state.layout}
                 name="basic"
                 onFinish={this.submitForm.bind(this,2)}
-                // initialValues={
-                //   // {entranceUrl:this.state.entranceUrl,ip:this.state.ip,thirdJumpUrl:this.state.thirdJumpUrl}
-                // }
+                initialValues={
+                  {entranceUrl:this.state.entranceUrl,ip:this.state.ip,thirdJumpUrl:this.state.thirdJumpUrl}
+                }
               >
                 <Form.Item
                   label="支持地域"
@@ -512,7 +512,7 @@ export default class SportsProgram extends Component {
             })
           }else{
             this.setState({
-              area:res.data.data.area
+              area:res.data.data.area.split(",")
             })
           }
         }
@@ -530,7 +530,7 @@ export default class SportsProgram extends Component {
       }else if(i === 2){
         params.ip = val.ip?val.ip:this.state.ip
       }else{
-        params.area =this.state.area
+        params.area =this.state.area.join(",")
       }
       
       setConfig({key:r},params).then(res=>{

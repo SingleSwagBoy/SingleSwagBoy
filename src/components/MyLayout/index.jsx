@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {getMenu} from "../../api/index"
 import { Layout, Menu, Avatar, Dropdown, message, Badge } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -33,6 +34,7 @@ const mapDispatchToProps = (dispatch)=>{
 class MyLayout extends Component {
   state = {
     collapsed: false,
+    navRoutes:[]
   };
 
   toggle = () => {
@@ -40,14 +42,46 @@ class MyLayout extends Component {
       collapsed: !this.state.collapsed,
     });
   };
-
+  componentDidMount(){
+    if(window.localStorage.getItem("routesList_tmp")){
+      this.setState({
+        navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.parentId === 0 && route.code === "OlympicGames")
+      })
+    }else{
+      this.getMenu()
+    }
+  }
+  getMenu(){
+    getMenu({id:1}).then(res=>{
+      if(res.data.errCode === 0){
+        let tmp = res.data.data;
+        let list = []
+        let tmpChild = [];
+        for (let i in tmp) {
+            let t = tmp[i];
+            if (t.level == 1) {
+                list.push(t)
+            } else if (t.level == 2) {
+                tmpChild.push(t)
+            }
+        }
+        for (let j in list) {
+            list[j].children = [];
+            for (let i in tmpChild) {
+                if (list[j].id == tmpChild[i].parentId) {
+                    list[j].children.push(tmpChild[i])
+                }
+            }
+        }
+        console.log(list,"list")
+        window.localStorage.setItem("routesList_tmp",list)
+        this.setState({
+          navRoutes:list.filter(item=>item.code === "OlympicGames")
+        })
+      }
+    })
+  }
   render() {
-    // console.log('==MyLayout==')
-    let navRoutes = JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.parentId === 0)
-    // 二次过滤
-    // const role = localStorage.getItem('role')
-    const role = "admin" 
-    // navRoutes = navRoutes.filter(route => route.meta.roles.includes(role))
     const menu = (
       <Menu>
         <Menu.Item onClick={()=>{
@@ -75,10 +109,11 @@ class MyLayout extends Component {
               console.log(key)
               this.props.history.push(key)
              } }
-             defaultSelectedKeys={this.props.location.pathname}
-             selectedKeys={this.selectKeys()}>
+            //  defaultSelectedKeys={this.props.location.pathname}
+            //  selectedKeys={this.selectKeys()}
+             >
               {
-                navRoutes.map(nav => {
+                this.state.navRoutes.map(nav => {
                   return (
                     nav.children.length>0?
                     <SubMenu icon={<UserOutlined />} title={nav.name} key={nav.name}>

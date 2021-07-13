@@ -102,7 +102,7 @@ class Login extends Component {
       }
       this.props.doLogin(params)
       setTimeout(r=>{
-        this.props.history.push("/mms")
+        this.props.history.push("/mms/ayh/channel")
       },2000)
     }
   }

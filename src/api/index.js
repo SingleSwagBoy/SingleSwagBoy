@@ -33,6 +33,9 @@ export {baseUrl}
 // const doLogin = (params) => request.post('/api/v1/login', params)
 
 
+export const getMenu = params => { //获取菜单
+  return request.post(`${baseUrl}/mms/sys/user/menu`, params)
+};
 export const getPlace = params => { //获取地域
   return request.post(`${baseUrl}/mms/region/areaInfo`, params)
 };

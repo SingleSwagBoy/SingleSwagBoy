@@ -122,7 +122,9 @@ export const syn_config = (params) => { //查找合集短视频
 export const syn_slice = (params) => { //查找合集短视频
   return request.get(`${baseUrl}/mms/config/common/syn_slice`,{params:params})
 };
-
+export const editColumn = (params) => { //编辑专题
+  return request.post(`${baseUrl}/mms/shortVideo/column`,params)
+};
 
 // export {
 //   fetchArtLists,

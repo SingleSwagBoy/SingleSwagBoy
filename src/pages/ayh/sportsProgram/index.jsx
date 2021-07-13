@@ -514,7 +514,7 @@ export default class SportsProgram extends Component {
         console.log(a,"a")
         let b = []
         for (const [key, value] of a) {
-          b.push({label: value.start_time +  " " +value.name  + " " + value.channel_id, value: key})
+          b.push({label: util.formatTime(value.start_time,"",2)  +  " " +value.name  + " " + value.channel_id, value: key})
         }
         this.setState({
           programGrounp:b,

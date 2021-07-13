@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { shortVideoSearch,addColumn } from 'api'
+import { shortVideoSearch,addColumn,cvideos,update_column,editColumn } from 'api'
 import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,InputNumber} from 'antd'
 import {  } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
@@ -22,6 +22,7 @@ export default class SportsProgram extends Component {
       loading:false,
       lists: [],
       currentId:"",//编辑行的id
+      newData:{},
       layout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
@@ -29,6 +30,7 @@ export default class SportsProgram extends Component {
       tailLayout: {
         wrapperCol: { offset: 4, span: 20 },
       },
+      linkVideoList:[],
       columns: [
         {
           title: "专题名",
@@ -39,7 +41,12 @@ export default class SportsProgram extends Component {
               <div>
                 {
                   this.state.currentId == row.id?
-                  <Input defaultValue={row.name} />
+                  <Input defaultValue={row.name} onChange={(val)=>{
+                    this.state.newData.name = val.target.value
+                    this.setState({
+                      newData:this.state.newData
+                    })
+                  }} />
                   :row.name
                 }
               </div>
@@ -57,6 +64,10 @@ export default class SportsProgram extends Component {
                   this.state.currentId == row.id?
                   <InputNumber defaultValue={row.sort} onChange={(val)=>{
                     console.log(val)
+                    this.state.newData.sort = val
+                    this.setState({
+                      newData:this.state.newData
+                    })
                   }} />
                   :row.sort||"-"
                 }
@@ -71,7 +82,7 @@ export default class SportsProgram extends Component {
           render: (rowValue, row, index)=>{
             return (
               <div>
-                {
+                {/* {
                   this.state.currentId == row.id?
                   <Select
                     mode="multiple"
@@ -93,7 +104,15 @@ export default class SportsProgram extends Component {
                     
                   </Select>
                   :row.video
-                }
+                } */}
+                <Button size="small"type="primary"
+                onClick={()=>{
+                  this.cvideos(row.id)
+                  this.setState({
+                    videoVisible:true
+                  })
+                }}
+                >查看关联视频</Button>
               </div>
             )
           }
@@ -112,9 +131,7 @@ export default class SportsProgram extends Component {
                     size="small"
                     type="primary"
                     onClick={()=>{
-                      this.setState({
-                        
-                      })
+                      this.editColumn(row)
                     }}
                     >确认</Button>
                     <Button 
@@ -141,7 +158,7 @@ export default class SportsProgram extends Component {
                       <Button 
                         size="small"
                         danger
-                        onClick={()=>{this.delArt(row.id)}}
+                        onClick={()=>{this.delArt(row.id,1)}}
                         >删除</Button>
                     </div>
                 }
@@ -151,6 +168,34 @@ export default class SportsProgram extends Component {
         }
       ],
       visible:false,
+      videoVisible:false,
+      videoColumns:[
+        {
+          title: "名称",
+          dataIndex: "title",
+          key: "title",
+        },
+        {
+          title: "id",
+          dataIndex: "pid",
+          key: "pid",
+        },
+        {
+          title: "操作",
+          key: "action",
+          render: (rowValue, row, index)=>{
+            return (
+              <div>
+                 <Button 
+                  size="small"
+                  danger
+                  onClick={()=>{this.delArt(row,2)}}
+                  >删除</Button>
+              </div>
+            )
+          }
+        }
+      ]
     }
   }
   
@@ -194,7 +239,7 @@ export default class SportsProgram extends Component {
             title="新增专题"
             centered
             visible={this.state.visible}
-            onCancel={() => {this.closeModel()}}
+            onCancel={() => {this.closeModel(1)}}
             footer={null}
           >
             {
@@ -224,6 +269,18 @@ export default class SportsProgram extends Component {
               </Form> 
             }
           </Modal>
+          <Modal
+            title="关联视频"
+            centered
+            visible={this.state.videoVisible}
+            onCancel={() => {this.closeModel(2)}}
+            footer={null}
+            width={1000}
+          >
+            <Table 
+              dataSource={this.state.linkVideoList}
+              columns={this.state.videoColumns} />
+          </Modal>
       </div>
     )
   }
@@ -233,23 +290,32 @@ export default class SportsProgram extends Component {
   onSearch(e){
     console.log(e,"e")
   }
-  closeModel(val){
-    this.setState({
-      visible:false
-    })
+  closeModel(type){
+    if(type === 1){
+      this.setState({
+        visible:false
+      })
+    }else{
+      this.setState({
+        videoVisible:false
+      })
+    }
   }
   // 新增
   submitForm(params){
     console.log(params)
     this.addColumn(params)
-    this.closeModel()
+    this.closeModel(1)
   }
   // 删除文章
-  delArt(id) {
+  delArt(val,type) {
     Modal.confirm({
-      title: '删除此夺奖快讯',
+      title: `${type === 2?"删除此关联视频":"删除此专题"}`,
       content: '确认删除？',
       onOk: ()=>{
+        if(type === 2){
+          this.update_column(val)
+        }
         
       },
       onCancel: ()=>{
@@ -294,6 +360,47 @@ export default class SportsProgram extends Component {
       }else{
         message.error("新增成功")
       }
+    })
+  }
+  cvideos(id){
+    cvideos({column_id:id}).then(res=>{
+      if(res.data.errCode === 0){
+        this.setState({
+          linkVideoList:res.data.data
+        })
+      }
+    })
+  }
+  update_column(val){
+    let params={
+      id:Number(val.pid),
+      column_id:0
+    }
+    update_column(params).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("删除成功")
+        this.cvideos(val.columnId)
+      }else{
+        message.error("删除失败")
+      }
+    })
+  }
+  editColumn(val){
+    console.log(val,"val")
+    if(this.state.newData.name){
+      val.name = this.state.newData.name
+    }
+    if(this.state.newData.sort){
+      val.sort = this.state.newData.sort
+    }
+    editColumn({...val}).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("更新成功")
+        this.cvideos(val.id)
+      }else{
+        message.error("更新失败")
+      }
+      this.setState({currentId:null})
     })
   }
 }

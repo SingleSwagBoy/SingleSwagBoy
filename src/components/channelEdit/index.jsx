@@ -213,6 +213,7 @@ export default class ChannelEdit extends Component {
              <Form.Item
                label="关联节目"
                name="programName"
+               rules={[{ required: true, message: '请填写关联节目' }]}
              >
                {/* <Input.TextArea /> */}
                <Select
@@ -289,9 +290,9 @@ export default class ChannelEdit extends Component {
                <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
                  保存
                </Button>
-               <Button type="primary" danger htmlType="submit">
+               {/* <Button type="primary" danger htmlType="submit">
                 保存并插入下一条
-               </Button>
+               </Button> */}
              </Form.Item>
            </Form>
               

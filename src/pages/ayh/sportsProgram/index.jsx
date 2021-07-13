@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getPlace ,addList,getList,getConfig,setConfig,getProgramsList,deleteConfig,updateList} from 'api'
+import { getPlace ,addList,getList,getConfig,setConfig,getProgramsList,deleteConfig,updateList,syn_config,syn_slice} from 'api'
 import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,Tree} from 'antd'
 import {  } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
@@ -20,6 +20,7 @@ export default class SportsProgram extends Component {
       total: 0,
       data: [],
       loading:false,
+      dataLoading:false,
       programGrounp:[],
       lists: [],
       currentId:{indexId:null},//编辑行的id
@@ -233,6 +234,17 @@ export default class SportsProgram extends Component {
               this.setState({addressVisible:true})
             }}
             >地域配置</Button>
+             <Button type="primary"
+              style={{margin:"0 0 0 20px"}}
+              loading={this.state.dataLoading}
+              onClick={()=>{
+                this.setState({
+                  dataLoading:true
+                })
+                this.syn_config(["OLYMPIC.H5.ENTRANCE","OLYMPIC.THIRD.JUMP.URL","OLYMPIC.IP.WHITELIST","OLYMPIC.AREA.CODE"])
+                this.syn_slice("OLYMPIC.PROGRAMS")
+              }}
+            >数据同步</Button>
           </div> 
         }
         >
@@ -574,6 +586,39 @@ export default class SportsProgram extends Component {
       }else{
         message.error("更新失败")
       }
+    })
+  }
+  syn_config(key){
+    if(Array.isArray(key)){
+      key.forEach(r=>{
+        syn_config({key:r}).then(res=>{
+          if(res.data.errCode === 0){
+            // message.success("同步成功")
+          }else{
+            // message.error("同步失败")
+          }
+        })
+      })
+    }else{
+      syn_config({key:key}).then(res=>{
+        if(res.data.errCode === 0){
+          // message.success("同步成功")
+        }else{
+          // message.error("同步失败")
+        }
+      })
+    }
+  }
+  syn_slice(key){
+    syn_slice({key:key}).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("同步成功")
+      }else{
+        message.error("同步失败")
+      }
+      this.setState({
+        dataLoading:false
+      })
     })
   }
 }

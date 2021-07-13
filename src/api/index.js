@@ -114,8 +114,14 @@ export const cvideos = (params) => { //查找合集短视频
 export const getColumnInfo = (params) => { //查找合集短视频
   return request.get(`${baseUrl}/mms/shortVideo/column/list`,{params:params})
 };
-
-
+//数据同步 set/get /mms/config/common/syn_config?key=
+export const syn_config = (params) => { //查找合集短视频
+  return request.get(`${baseUrl}/mms/config/common/syn_config`,{params:params})
+};
+// add/list
+export const syn_slice = (params) => { //查找合集短视频
+  return request.get(`${baseUrl}/mms/config/common/syn_slice`,{params:params})
+};
 
 
 // export {

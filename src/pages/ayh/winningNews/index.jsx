@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { baseUrl,getList , addList,setConfig,getConfig,deleteConfig } from 'api'
+import { baseUrl,getList , addList,setConfig,getConfig,deleteConfig,syn_config,syn_slice } from 'api'
 import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Upload,Image} from 'antd'
 import {  } from 'react-router-dom'
 import { LoadingOutlined,PlusOutlined } from "@ant-design/icons"
@@ -24,6 +24,7 @@ export default class WinningNews extends Component {
       total: 0,
       data: [],
       loading:false,
+      dataLoading:false,
       lists: [],
       layout: {
         labelCol: { span: 4 },
@@ -158,6 +159,17 @@ export default class WinningNews extends Component {
                 this.setState({h5BackVisible:true})
               }}
             >头图</Button>
+             <Button type="primary"
+              style={{margin:"0 0 0 20px"}}
+              loading={this.state.dataLoading}
+              onClick={()=>{
+                this.setState({
+                  dataLoading:true
+                })
+                this.syn_config("OLYMPIC.H5.BG.IMG")
+                this.syn_slice("OLYMPIC.MEDAL.NEWS")
+              }}
+            >数据同步</Button>
           </div>
          
         }
@@ -341,6 +353,27 @@ export default class WinningNews extends Component {
       }else{
         message.error("删除失败")
       }
+    })
+  }
+  syn_config(key){
+    syn_config({key:key}).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("同步成功")
+      }else{
+        message.error("同步失败")
+      }
+    })
+  }
+  syn_slice(key){
+    syn_slice({key:key}).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("同步成功")
+      }else{
+        message.error("同步失败")
+      }
+      this.setState({
+        dataLoading:false
+      })
     })
   }
 }

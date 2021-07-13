@@ -173,7 +173,10 @@ class MyLayout extends Component {
   }
   loginOut = ()=>{
     this.props.logout();
+
     message.success('退出成功', 1, ()=>{
+      window.localStorage.removeItem("routesList_tmp")
+      window.localStorage.removeItem("user")
       this.props.history.push("/login")
     })
   }

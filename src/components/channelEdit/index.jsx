@@ -335,10 +335,6 @@ export default class ChannelEdit extends Component {
 
   submitForm = (params) => {
     console.log(params,"params")
-    // a = {                                                                                                                                                       
-    //   ...params,
-    //   params["image"]: this.props.match.params.ardId,
-    // }
     let a = params
     a["image"] =Array.isArray(a.image)?a.image.join(","):a.image
     let b = this.state.programGrounp.filter(item=>item.name===a.programName)
@@ -391,7 +387,7 @@ export default class ChannelEdit extends Component {
   updateChannelProgram(param){
     updateChannelProgram({...param}).then(res=>{
       if(res.data.errCode == 0){
-
+        this.props.updateList()
       }
     })
   }

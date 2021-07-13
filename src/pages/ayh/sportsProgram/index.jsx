@@ -229,13 +229,13 @@ export default class SportsProgram extends Component {
             }}
             >新增</Button>
              <Button type="primary"
-             style={{margin:"0 40px"}}
+             style={{margin:"0 20px"}}
             onClick={()=>{
               this.setState({addressVisible:true})
             }}
             >地域配置</Button>
              <Button type="primary"
-              style={{margin:"0 0 0 20px"}}
+              style={{margin:"0 0 0 0px"}}
               loading={this.state.dataLoading}
               onClick={()=>{
                 this.setState({

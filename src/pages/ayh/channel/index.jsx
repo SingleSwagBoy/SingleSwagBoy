@@ -104,7 +104,6 @@ export default class AyhChannel extends Component {
                     let time = String(row.startTime).length==10? row.startTime* 1000:row.startTime
                     row.channelGroupId = this.state.currentItem.channelGroupId
                     row.channelCode = this.state.currentChannelItem.channelCode
-                    // row.startTime = util.formatTime(row.startTime* 1000,"",3)
                     row.startTime = moment(time)
                     row.time = moment(time)
                     row.image = Array.isArray(row.image)?row.image:[row.image]
@@ -241,6 +240,7 @@ export default class AyhChannel extends Component {
             channel={this.state.channel}
             channelGroup={this.state.channelGroup}
             getChannelGroupChannel={this.getChannelGroupChannel.bind(this)}
+            updateList={this.updateList.bind(this)}
             />
           </Modal>
       </div>
@@ -360,5 +360,8 @@ export default class AyhChannel extends Component {
       timeSwiper:arr
     })
     this.getListChannelInfo(this.state.currentChannelItem,arr[this.state.currentIndex])
+  }
+  updateList(){
+    this.getListChannelInfo(this.state.currentChannelItem,this.state.timeSwiper[this.state.currentIndex])
   }
 }

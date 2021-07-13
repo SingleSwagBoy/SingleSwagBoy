@@ -74,7 +74,7 @@ class MyLayout extends Component {
             }
         }
         console.log(list,"list")
-        window.localStorage.setItem("routesList_tmp",list)
+        window.localStorage.setItem("routesList_tmp",JSON.stringify(list))
         this.setState({
           navRoutes:list.filter(item=>item.code === "OlympicGames")
         })

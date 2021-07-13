@@ -1,24 +1,31 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { shortVideoSearch,addColumn,cvideos,update_column,editColumn } from 'api'
-import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,InputNumber} from 'antd'
+import { baseUrl, getList } from 'api'
+import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,Image,InputNumber,Upload} from 'antd'
 import {  } from 'react-router-dom'
-import { LeftOutlined } from "@ant-design/icons"
+import { LoadingOutlined,PlusOutlined } from "@ant-design/icons"
 import  util from 'utils'
 import "./style.css"
 import moment from 'moment';
 const { confirm } = Modal
+const { TextArea } = Input;
 const { Option } = Select;
 
-
+const normFile = (e) => {
+  if (Array.isArray(e)) {
+    return e;
+  }
+  return e && e.fileList;
+};
 export default class SportsProgram extends Component {
+  formRef = React.createRef();
   constructor(){
     super();
+    let _this = this
     this.state = {
       page: 1,
       pageSize: 10000,
       total: 0,
-      data: [],
       loading:false,
       lists: [],
       currentId:"",//编辑行的id
@@ -31,25 +38,41 @@ export default class SportsProgram extends Component {
         wrapperCol: { offset: 4, span: 20 },
       },
       linkVideoList:[],
+      selectProps:{
+        optionFilterProp:"children",
+        filterOption(input, option){
+          return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        },
+        showSearch(){
+          console.log('onSearch')
+        }
+      },
       columns: [
         {
-          title: "专题名",
+          title: "id",
+          dataIndex: "indexId",
+          key: "indexId",
+        },
+        {
+          title: "权益名称",
           dataIndex: "name",
           key: "name",
+        },
+        {
+          title: "商品备注",
+          dataIndex: "memo",
+          key: "memo",
+        },
+        {
+          title: "权益icon",
+          dataIndex: "iconUrl",
+          key: "iconUrl",
           render: (rowValue, row, index)=>{
             return (
-              <div>
-                {
-                  this.state.currentId == row.id?
-                  <Input defaultValue={row.name} onChange={(val)=>{
-                    this.state.newData.name = val.target.value
-                    this.setState({
-                      newData:this.state.newData
-                    })
-                  }} />
-                  :row.name
-                }
-              </div>
+              rowValue?<Image
+              width={100}
+              src={rowValue}
+            />:"-"
             )
           }
         },
@@ -57,62 +80,15 @@ export default class SportsProgram extends Component {
           title: "排序",
           dataIndex: "sort",
           key: "sort",
-          render: (rowValue, row, index)=>{
-            return (
-              <div>
-                {
-                  this.state.currentId == row.id?
-                  <InputNumber defaultValue={row.sort} onChange={(val)=>{
-                    console.log(val)
-                    this.state.newData.sort = val
-                    this.setState({
-                      newData:this.state.newData
-                    })
-                  }} />
-                  :row.sort
-                }
-              </div>
-            )
-          }
         },
         {
-          title: "关联视频",
-          dataIndex: "video",
-          key: "video",
+          title: "状态",
+          dataIndex: "status",
+          key: "status",
           render: (rowValue, row, index)=>{
             return (
               <div>
-                {/* {
-                  this.state.currentId == row.id?
-                  <Select
-                    mode="multiple"
-                    placeholder="Please select"
-                    defaultValue={row.video}
-                    onChange={(value)=>{
-                      console.log(value)
-                    }}
-                    style={{ width: '100%' }}
-                  >
-                    {
-                      Array.isArray(row.video) &&
-                      row.video.map((r,i)=>{
-                        return(
-                          <Option key={i} value={r} >{r}</Option>
-                        )
-                      })
-                    }
-                    
-                  </Select>
-                  :row.video
-                } */}
-                <Button size="small"type="primary"
-                onClick={()=>{
-                  this.cvideos(row.id)
-                  this.setState({
-                    videoVisible:true
-                  })
-                }}
-                >查看关联视频</Button>
+                {rowValue === 1?"有效":"无效"}
               </div>
             )
           }
@@ -124,43 +100,28 @@ export default class SportsProgram extends Component {
             return (
               <div>
                 {
-                  this.state.currentId===row.id?
                   <div>
                     <Button 
-                     style={{margin:"0 10px"}}
+                    style={{margin:"0 10px"}}
                     size="small"
                     type="primary"
                     onClick={()=>{
-                      this.editColumn(row)
+                      this.setState({
+                        visible:true,
+                        currentId:row
+                      },()=>{
+                        this.formRef.current.setFieldsValue(row)
+                      })
+                      
                     }}
-                    >确认</Button>
+                    >编辑</Button>
                     <Button 
                       size="small"
                       danger
-                      onClick={()=>{
-                        this.setState({
-                          currentId:null
-                        })
-                      }}
-                      >取消</Button>
-                  </div>:
-                    <div>
-                      <Button 
-                      style={{margin:"0 10px"}}
-                      size="small"
-                      type="primary"
-                      onClick={()=>{
-                        this.setState({
-                          currentId:row.id
-                        })
-                      }}
-                      >编辑</Button>
-                      <Button 
-                        size="small"
-                        danger
-                        onClick={()=>{this.delArt(row.id,1)}}
-                        >删除</Button>
-                    </div>
+                      onClick={()=>{this.delArt(row.id,1)}}
+                      >删除</Button>
+                  </div>
+                    
                 }
               </div>
             )
@@ -168,57 +129,71 @@ export default class SportsProgram extends Component {
         }
       ],
       visible:false,
-      videoVisible:false,
-      videoColumns:[
-        {
-          title: "名称",
-          dataIndex: "title",
-          key: "title",
+      updateProps: {
+        name:"file",
+        listType:"picture-card",
+        className:"avatar-uploader",
+        showUploadList:false,
+        action: `${baseUrl}/mms/file/upload?dir=ad`,
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("user")).authorization,
         },
-        {
-          title: "id",
-          dataIndex: "pid",
-          key: "pid",
-        },
-        {
-          title: "操作",
-          key: "action",
-          render: (rowValue, row, index)=>{
-            return (
-              <div>
-                 <Button 
-                  size="small"
-                  danger
-                  onClick={()=>{this.delArt(row,2)}}
-                  >删除</Button>
-              </div>
-            )
+        onChange(info) {  // 监控上传状态的回调
+          if (info.file.status !== 'uploading') {
+            _this.setState({ loading: true });
           }
+          if (info.file.status === 'done') {
+            util.getBase64(info.file.originFileObj, imageUrl =>
+              _this.setState({
+                imageUrl,
+                loading: false,
+              }),
+            );
+            // let a = _this.state.formData
+            //  a.image= info.file.response.data.fileUrl
+            //  _this.formRef.current.setFieldsValue(_this.state.formData)
+            message.success(`上传成功`);
+          } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} 上传失败.`);
+          }
+        },
+        beforeUpload(file){
+          const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+          if (!isJpgOrPng) {
+            message.error('You can only upload JPG/PNG file!');
+          }
+          const isLt2M = file.size / 1024 / 1024 < 2;
+          if (!isLt2M) {
+            message.error('Image must smaller than 2MB!');
+          }
+          return isJpgOrPng && isLt2M;
         }
-      ]
+      },
     }
   }
   
   render() {
+    const { loading } = this.state;
+    const uploadButton = (
+      <div>
+        {loading ? <LoadingOutlined /> : <PlusOutlined />}
+        <div style={{ marginTop: 8 }}>Upload</div>
+      </div>
+    );
     return (
       <div>
         <Card title={
           <div>
-             {/* <Breadcrumb>
-              <Breadcrumb.Item>奥运专题</Breadcrumb.Item>
-            </Breadcrumb> */}
-             <Input.Search allowClear style={{ width: '20%',marginTop:"10px" }} 
-            placeholder="请输入搜索专题的名称"
-            onSearch={(val)=>{
-              this.shortVideoSearch(val)
-            }} />
+             <Breadcrumb>
+              <Breadcrumb.Item>权益配置</Breadcrumb.Item>
+            </Breadcrumb>
           </div>
         }
         extra={
           <div>
            <Button type="primary"
             onClick={()=>{
-              this.setState({visible:true})
+              // this.setState({visible:true})
             }}
             >新增</Button>
           </div> 
@@ -227,16 +202,17 @@ export default class SportsProgram extends Component {
           <Table 
               dataSource={this.state.lists}
               loading={this.state.loading}
+              rowKey={record => record.indexId}
               pagination={{
-                pageSize: this.state.pageSize,
-                total: this.state.total,
-                onChange: this.changeSize
+                // pageSize: this.state.pageSize,
+                // total: this.state.total,
+                // onChange: this.changeSize
               }}
               columns={this.state.columns} />
          
         </Card>
         <Modal
-            title="新增专题"
+            title="编辑商品"
             centered
             visible={this.state.visible}
             onCancel={() => {this.closeModel(1)}}
@@ -246,21 +222,107 @@ export default class SportsProgram extends Component {
               <Form
                 {...this.state.layout}
                 name="basic"
+                ref = {this.formRef}
                 onFinish={this.submitForm.bind(this)}
               >
                 <Form.Item
-                  label="专题名"
+                  label="权益名称"
                   name="name"
-                  rules={[{ required: true, message: '请填写专题名' }]}
+                  rules={[{ required: true, message: '请填写权益名称' }]}
                 >
-                 <Input placeholder="请填写专题名" />
+                 <Input placeholder="请填写权益名称" />
                 </Form.Item>
-                {/* <Form.Item
-                  label="短视频ID"
-                  name="shortVideoId"
+                <Form.Item
+                  label="权益类型"
+                  name="type"
+                  rules={[{ required: true, message: '请选择权益类型' }]}
                 >
-                 <Input placeholder="请填写短视频ID" />
-                </Form.Item> */}
+                 <Select
+                      placeholder="请选择权益类型"
+                      onChange={()=>{}}
+                      {...this.state.selectProps}
+                      // allowClear
+                    >
+                      <Option value={1} key={1}>普通权益</Option>
+                      <Option value={2} key={2}>秒杀权益</Option>
+                    </Select>
+                </Form.Item>
+                <Form.Item
+                  label="跳转类型"
+                  // rules={[{ required: true, message: '请选择跳转类型' }]}
+                >
+                  <Form.Item
+                    name="skipType"
+                    style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+                    // rules={[{ required: true, message: '请选择跳转类型' }]}
+                  >
+                    <Select
+                      placeholder="请选择权益类型"
+                      onChange={()=>{}}
+                      {...this.state.selectProps}
+                      // allowClear
+                    >
+                      <Option value={1} key={1}>h5</Option>
+                      <Option value={2} key={2}>小程序</Option>
+                      <Option value={3} key={3}>赚赚页</Option>
+                      <Option value={4} key={4}>套餐页</Option>
+                    </Select>
+                    </Form.Item>
+                    <Form.Item name="skipUrl"  style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}>
+                      <Input />
+                    </Form.Item>
+                </Form.Item>
+                 <Form.Item
+                  label="排序"
+                  name="sort"
+                >
+                  <InputNumber onChange={(val)=>{
+                    console.log(val)
+                    // this.state.newData.sort = val
+                    // this.setState({
+                    //   newData:this.state.newData
+                    // })
+                  }} />
+                 </Form.Item>
+                
+                 <Form.Item
+                  label="权益图标"
+                  name="iconUrl"
+                  valuePropName="fileList" 
+                    // 如果没有下面这一句会报错
+                    getValueFromEvent={normFile} 
+                >
+                  {/* 上传文件的控件 */}
+                  <Upload {...this.state.updateProps}>
+                    {/* <Image /> */}
+                    {this.state.currentId ? <img src={this.state.currentId.iconUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                  </Upload>
+                  <Image />
+                </Form.Item>
+                <Form.Item
+                  label="等级"
+                  name="level"
+                  rules={[{ required: true, message: '请选择等级' }]}
+                >
+                 <Select
+                      placeholder="请选择用户等级"
+                      onChange={()=>{}}
+                      {...this.state.selectProps}
+                      // allowClear
+                    >
+                      <Option value={1} key={1}>Lv1</Option>
+                      <Option value={2} key={2}>Lv2</Option>
+                      <Option value={3} key={3}>Lv3</Option>
+                      <Option value={4} key={4}>Lv4</Option>
+                    </Select>
+                 </Form.Item>
+                 <Form.Item
+                  label="活动规则"
+                  name="rule"
+                  rules={[{ required: true, message: '请输入活动规则' }]}
+                >
+                 <TextArea showCount maxLength={500} onChange={()=>{}} />
+                 </Form.Item>
                 <Form.Item {...this.state.tailLayout}>
                   <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
                     确定
@@ -269,42 +331,23 @@ export default class SportsProgram extends Component {
               </Form> 
             }
           </Modal>
-          <Modal
-            title="关联视频"
-            centered
-            visible={this.state.videoVisible}
-            onCancel={() => {this.closeModel(2)}}
-            footer={null}
-            width={1000}
-          >
-            <Table 
-              dataSource={this.state.linkVideoList}
-              columns={this.state.videoColumns} />
-          </Modal>
       </div>
     )
   }
   componentDidMount(){
-   
+    this.getList()
   }
   onSearch(e){
     console.log(e,"e")
   }
   closeModel(type){
-    if(type === 1){
-      this.setState({
-        visible:false
-      })
-    }else{
-      this.setState({
-        videoVisible:false
-      })
-    }
+    this.setState({
+      visible:false
+    })
   }
   // 新增
   submitForm(params){
     console.log(params)
-    this.addColumn(params)
     this.closeModel(1)
   }
   // 删除文章
@@ -331,76 +374,13 @@ export default class SportsProgram extends Component {
     })
     
   }
-  shortVideoSearch(val){
-    if(!val)return
-    let params={
-      is_tv:false,
-      keywords:val,
-      page:{
-        currentPage: 1,
-        pageSize: 2000
-      }
-    }
-    shortVideoSearch(params).then(res=>{
+  getList(){
+    getList({key:"USER.EQUITY"}).then(res=>{
       if(res.data.errCode === 0){
         this.setState({
-          lists:res.data.data.list || []
+          lists:res.data.data
         })
       }
-    })
-  }
-  addColumn(val){
-    let params={
-      name:val.name,
-      type:1
-    }
-    addColumn(params).then(res=>{
-      if(res.data.errCode === 0){
-        message.success("新增成功")
-      }else{
-        message.error("新增成功")
-      }
-    })
-  }
-  cvideos(id){
-    cvideos({column_id:id}).then(res=>{
-      if(res.data.errCode === 0){
-        this.setState({
-          linkVideoList:res.data.data
-        })
-      }
-    })
-  }
-  update_column(val){
-    let params={
-      id:Number(val.pid),
-      column_id:0
-    }
-    update_column(params).then(res=>{
-      if(res.data.errCode === 0){
-        message.success("删除成功")
-        this.cvideos(val.columnId)
-      }else{
-        message.error("删除失败")
-      }
-    })
-  }
-  editColumn(val){
-    console.log(val,"val")
-    if(this.state.newData.name){
-      val.name = this.state.newData.name
-    }
-    if(this.state.newData.sort){
-      val.sort = this.state.newData.sort
-    }
-    editColumn({...val}).then(res=>{
-      if(res.data.errCode === 0){
-        message.success("更新成功")
-        this.cvideos(val.id)
-      }else{
-        message.error("更新失败")
-      }
-      this.setState({currentId:null})
     })
   }
 }

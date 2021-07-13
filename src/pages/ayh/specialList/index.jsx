@@ -153,7 +153,8 @@ export default class SportsProgram extends Component {
                       danger
                       onClick={()=>{
                         this.setState({
-                          currentId:null
+                          currentId:null,
+                          newData:{}
                         })
                       }}
                       >取消</Button>
@@ -165,7 +166,8 @@ export default class SportsProgram extends Component {
                       type="primary"
                       onClick={()=>{
                         this.setState({
-                          currentId:row.id
+                          currentId:row.id,
+                          newData:{}
                         })
                       }}
                       >编辑</Button>
@@ -354,6 +356,7 @@ export default class SportsProgram extends Component {
   shortVideoSearch(val){
     // if(!val)return
     let params={
+      type:1,
       is_tv:false,
       keywords:val,
       page:{

@@ -22,6 +22,7 @@ export default class SportsProgram extends Component {
       total: 0,
       data: [],
       loading:false,
+      searchWord:"",
       lists: [],
       currentId:"",//编辑行的id
       defaultSelect:"",
@@ -67,7 +68,6 @@ export default class SportsProgram extends Component {
                       if(row.columnId !== 0){
                         this.getColumnInfo(row.columnId)
                       }else{
-                        console.log(111111)
                         this.setState({
                           defaultSelect:{name:""}
                         })
@@ -103,6 +103,9 @@ export default class SportsProgram extends Component {
             placeholder="请输入搜索短视频的名称"
             onSearch={(val)=>{
               console.log(val)
+              this.setState({
+                searchWord:val
+              })
               this.searchVideo(val)
             }}
              />
@@ -235,6 +238,7 @@ export default class SportsProgram extends Component {
   shortVideoSearch(val){
     if(!val)return
     let params={
+      type:1,
       is_tv:false,
       keywords:val,
       page:{
@@ -258,8 +262,9 @@ export default class SportsProgram extends Component {
     update_column(params).then(res=>{
       if(res.data.errCode === 0){
         message.success("添加成功")
+        this.searchVideo(this.state.searchWord)
       }else{
-        message.success("添加失败")
+        message.error("添加失败")
       }
     })
   }

@@ -71,8 +71,8 @@ export default class AyhChannel extends Component {
         },
         {
           title: "列表封面",
-          dataIndex: "image",
-          key: "image",
+          dataIndex: "h_image",
+          key: "h_image",
           render: (rowValue) => {
             return (
               <Image
@@ -106,7 +106,7 @@ export default class AyhChannel extends Component {
                     row.channelCode = this.state.currentChannelItem.channelCode
                     row.startTime = moment(time)
                     row.time = moment(time)
-                    row.image = Array.isArray(row.image)?row.image:[row.image]
+                    row.h_image = Array.isArray(row.h_image)?row.h_image:[row.h_image]
                     this.setState({
                       channelItem:row
                     },()=>{

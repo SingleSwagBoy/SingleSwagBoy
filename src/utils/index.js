@@ -29,7 +29,7 @@ const formatNumber = n => {
 //时间转换
 function formatTime(dataParmas,type,needSec){
   let types = type ? type : '-'
-  var date = new Date(dataParmas);
+  var date = new Date(String(dataParmas).length===10?dataParmas*1000:dataParmas);
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
@@ -91,7 +91,13 @@ function getEveryTime(dataParmas,len){
   tDate = formatNumber(tDate);
   return tYear+"-"+tMonth+"-"+tDate;
 }
-let objFun = {
-  splitStr,GetUrlParam,formatTime,getEveryTime
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
 }
+let objFun = {
+  splitStr,GetUrlParam,formatTime,getEveryTime,getBase64
+}
+
 export default objFun

@@ -69,7 +69,7 @@ export default class ChannelEdit extends Component {
               }),
             );
             let a = _this.state.formData
-             a.image= info.file.response.data.fileUrl
+             a.h_image= info.file.response.data.fileUrl
              _this.formRef.current.setFieldsValue(_this.state.formData)
             message.success(`上传成功`);
           } else if (info.file.status === 'error') {
@@ -270,7 +270,7 @@ export default class ChannelEdit extends Component {
 
              <Form.Item
                label="封面图片"
-               name="image"
+               name="h_image"
                valuePropName="fileList" 
                 // 如果没有下面这一句会报错
                 getValueFromEvent={normFile} 
@@ -278,7 +278,7 @@ export default class ChannelEdit extends Component {
                {/* 上传文件的控件 */}
                <Upload {...this.state.updateProps}>
                  {/* <Image /> */}
-                {this.state.formData ? <img src={this.state.formData.image} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                {this.state.formData ? <img src={this.state.formData.h_image} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                </Upload>
                <Image />
              </Form.Item>
@@ -337,7 +337,7 @@ export default class ChannelEdit extends Component {
   submitForm = (params) => {
     console.log(params,"params")
     let a = params
-    a["image"] =Array.isArray(a.image)?a.image.join(","):a.image
+    a["h_image"] =Array.isArray(a.h_image)?a.h_image.join(","):a.h_image
     let b = this.state.programGrounp.filter(item=>item.name===a.programName)
     if(b.length>0){
       a["programId"] = b[0].program_id
@@ -345,7 +345,7 @@ export default class ChannelEdit extends Component {
       a["programId"] = ""
     }
     a["openId"] = this.state.formData.openId
-    a["h_image"] = this.state.formData.h_image
+    a["image"] = this.state.formData.image
     a["channelId"] = this.state.formData.channelCode
     let c = new Date(a["startTime"].toDate())
     a["startTime"] = parseInt(new Date(a["time"].toDate().setFullYear(c.getFullYear(),c.getMonth(),c.getDate())).getTime() /1000)

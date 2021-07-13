@@ -94,3 +94,7 @@ export const syn_slice = (params) => { //查找合集短视频
 export const editColumn = (params) => { //编辑专题
   return request.post(`${baseUrl}/mms/shortVideo/column`,params)
 };
+
+
+//等级权益
+

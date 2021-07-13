@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Card, Form, Input, Button, message, Upload, Image,DatePicker,TimePicker,Select } from 'antd'
-import { UploadOutlined,LoadingOutlined, PlusOutlined} from '@ant-design/icons';
-import { Link } from 'react-router-dom'
+import { LoadingOutlined, PlusOutlined} from '@ant-design/icons';
+import {  } from 'react-router-dom'
 import { baseUrl,getChannelGroupChannel,searchPrograms ,updateChannelProgram,addChannelProgram} from 'api'
 import "./style.css"
-import moment from 'moment';
-import util  from 'utils';
+// import moment from 'moment';
+// import util  from 'utils';
 const { Option } = Select;
 const normFile = (e) => {
   if (Array.isArray(e)) {
@@ -121,7 +121,7 @@ export default class ChannelEdit extends Component {
     reader.readAsDataURL(img);
   }
   render() {
-    const { loading, imageUrl } = this.state;
+    const { loading } = this.state;
     const uploadButton = (
       <div>
         {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -351,7 +351,7 @@ export default class ChannelEdit extends Component {
     a["startTime"] = parseInt(new Date(a["time"].toDate().setFullYear(c.getFullYear(),c.getMonth(),c.getDate())).getTime() /1000)
     console.log(a,"a")
     this.props.closeModel()
-    if(this.state.status ==1){
+    if(this.state.status ===1){
       this.updateChannelProgram(a)
     }else{
       this.addChannelProgram(a)
@@ -387,14 +387,14 @@ export default class ChannelEdit extends Component {
   }
   updateChannelProgram(param){
     updateChannelProgram({...param}).then(res=>{
-      if(res.data.errCode == 0){
+      if(res.data.errCode === 0){
         this.props.updateList()
       }
     })
   }
   addChannelProgram(param){
     addChannelProgram({...param}).then(res=>{
-      if(res.data.errCode == 0){
+      if(res.data.errCode === 0){
         
       }
     })

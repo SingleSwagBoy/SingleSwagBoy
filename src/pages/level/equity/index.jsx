@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
 import { shortVideoSearch,addColumn,cvideos,update_column,editColumn } from 'api'
-import { Card, Image, Button, Table, Modal, message,Input, Form,Select,InputNumber} from 'antd'
+import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,InputNumber} from 'antd'
 import {  } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
 import  util from 'utils'
@@ -16,11 +16,10 @@ export default class SportsProgram extends Component {
     super();
     this.state = {
       page: 1,
-      pageSize: 10,
+      pageSize: 10000,
       total: 0,
       data: [],
       loading:false,
-      searchWords:"",
       lists: [],
       currentId:"",//编辑行的id
       newData:{},
@@ -75,19 +74,6 @@ export default class SportsProgram extends Component {
               </div>
             )
           }
-        },
-        {
-          title: "列表封面",
-          dataIndex: "image",
-          key: "image",
-          render: (rowValue) => {
-            return (
-              <Image
-                width={100}
-                src={rowValue}
-              />
-            )
-          },
         },
         {
           title: "关联视频",
@@ -224,9 +210,6 @@ export default class SportsProgram extends Component {
              <Input.Search allowClear style={{ width: '20%',marginTop:"10px" }} 
             placeholder="请输入搜索专题的名称"
             onSearch={(val)=>{
-              this.setState({
-                searchWords:val
-              })
               this.shortVideoSearch(val)
             }} />
           </div>
@@ -302,7 +285,7 @@ export default class SportsProgram extends Component {
     )
   }
   componentDidMount(){
-   this.shortVideoSearch(this.state.searchWords)
+   
   }
   onSearch(e){
     console.log(e,"e")
@@ -342,30 +325,26 @@ export default class SportsProgram extends Component {
   }
   changeSize = (page, pageSize) => {
     // 分页获取
-    console.log(page,pageSize)
     this.setState({
       page,
       pageSize
-    },()=>{
-      this.shortVideoSearch(this.state.searchWords)
     })
-   
+    
   }
   shortVideoSearch(val){
-    // if(!val)return
+    if(!val)return
     let params={
       is_tv:false,
       keywords:val,
       page:{
-        currentPage: this.state.page,
-        pageSize: this.state.pageSize
+        currentPage: 1,
+        pageSize: 2000
       }
     }
     shortVideoSearch(params).then(res=>{
       if(res.data.errCode === 0){
         this.setState({
-          lists:res.data.data.list || [],
-          total:res.data.data.total
+          lists:res.data.data.list || []
         })
       }
     })

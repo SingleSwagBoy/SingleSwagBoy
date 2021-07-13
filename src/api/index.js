@@ -1,37 +1,6 @@
 import request from 'utils/request.js'
 let baseUrl = "http://test.cms.tvplus.club"
 export {baseUrl} 
-// 获取文章列表
-// const fetchArtLists = ( params={} ) => request.get('/api/v1/artList', {params})
-
-
-// // 增加文章
-// const addArt = (params) => request.post('/api/v1/addArt', params)
-
-// // 获取文章详情
-// const getArtById = (id) =>request.get('/api/v1/getArt', {
-//   params: {
-//     id
-//   }
-// })
-
-// // 更新文章
-// const updateArt = (params) => request.post('/api/v1/updateArt', params)
-// // 删除文章
-// const delArtById = (id) =>request.get('/api/v1/delArt', {
-//   params: {
-//     id
-//   }
-// })
-
-// // 登录接口
-// const doLogin = (params) => request.post('/api/v1/login', params)
-
-
-
-// // 登录接口
-// const doLogin = (params) => request.post('/api/v1/login', params)
-
 
 export const getMenu = params => { //获取菜单
   return request.post(`${baseUrl}/mms/sys/user/menu`, params)
@@ -112,7 +81,7 @@ export const cvideos = (params) => { //查找合集短视频
   return request.get(`${baseUrl}/mms/shortVideo/cvideos`,{params:params})
 };
 export const getColumnInfo = (params) => { //查找合集短视频
-  return request.get(`${baseUrl}/mms/shortVideo/column/list`,{params:params})
+  return request.get(`${baseUrl}/mms/shortVideo/column/detail`,{params:params})
 };
 //数据同步 set/get /mms/config/common/syn_config?key=
 export const syn_config = (params) => { //查找合集短视频
@@ -125,12 +94,3 @@ export const syn_slice = (params) => { //查找合集短视频
 export const editColumn = (params) => { //编辑专题
   return request.post(`${baseUrl}/mms/shortVideo/column`,params)
 };
-
-// export {
-//   fetchArtLists,
-//   addArt,
-//   getArtById,
-//   updateArt,
-//   delArtById,
-//   doLogin
-// }

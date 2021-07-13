@@ -1,6 +1,6 @@
 import React, { Component, Suspense } from 'react'
 import MyLayout from 'components/MyLayout'
-import { Switch, Route, Redirect,Router } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 import adminRoutes from '../../routes/adminRoutes.js'
 import NotFound from 'pages/NotFound'

@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 
 import './style.css'
-import adminRoutes from '../../routes/adminRoutes.js'
+// import adminRoutes from '../../routes/adminRoutes.js'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logout } from '../../store/user/actionCreators'
@@ -45,7 +45,7 @@ class MyLayout extends Component {
   componentDidMount(){
     if(window.localStorage.getItem("routesList_tmp")){
       this.setState({
-        navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.parentId === 0 && route.code === "OlympicGames")
+        navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.code === "OlympicGames" || route.code === "LevelManage" )
       })
     }else{
       this.getMenu()
@@ -59,16 +59,16 @@ class MyLayout extends Component {
         let tmpChild = [];
         for (let i in tmp) {
             let t = tmp[i];
-            if (t.level == 1) {
+            if (t.level === 1) {
                 list.push(t)
-            } else if (t.level == 2) {
+            } else if (t.level === 2) {
                 tmpChild.push(t)
             }
         }
         for (let j in list) {
             list[j].children = [];
             for (let i in tmpChild) {
-                if (list[j].id == tmpChild[i].parentId) {
+                if (list[j].id === tmpChild[i].parentId) {
                     list[j].children.push(tmpChild[i])
                 }
             }
@@ -76,7 +76,7 @@ class MyLayout extends Component {
         console.log(list,"list")
         window.localStorage.setItem("routesList_tmp",JSON.stringify(list))
         this.setState({
-          navRoutes:list.filter(item=>item.code === "OlympicGames")
+          navRoutes:list.filter(item=>item.code === "OlympicGames" || item.code === "LevelManage" )
         })
       }
     })

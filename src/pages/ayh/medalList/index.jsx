@@ -33,11 +33,13 @@ export default class SportsProgram extends Component {
           title: "排名",
           dataIndex: "rank",
           key: "rank",
+          width: 100,
         },
         {
           title: "国家",
           dataIndex: "country",
           key: "country",
+          width: 100,
         },
         {
           title: "国旗",
@@ -110,6 +112,7 @@ export default class SportsProgram extends Component {
         {
           title: "操作",
           key: "action",
+          width: 300,
           render: (rowValue, row, index)=>{
             return (
               <div>
@@ -118,14 +121,14 @@ export default class SportsProgram extends Component {
                   <div>
                     <Button 
                      style={{margin:"0 10px"}}
-                    size="small"
+                    
                     type="primary"
                     onClick={()=>{
                       this.setMedalList()
                     }}
                     >确认</Button>
                     <Button 
-                      size="small"
+                      
                       danger
                       onClick={()=>{
                         this.setState({

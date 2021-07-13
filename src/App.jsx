@@ -14,8 +14,12 @@ export default class App extends Component {
             // 判断是否登录，登录了可以访问，否则补鞥呢访问
             const token = localStorage.getItem('user')
             console.log(token,"token")
-            if(JSON.parse(token).authorization) {
-              return <Admin {...routeProps}/>
+            if(token) {
+              if(JSON.parse(token).authorization){
+                return <Admin {...routeProps}/>
+              }else{
+                return <Redirect to="/login" />
+              }
             }else {
               return <Redirect to="/login" />
             

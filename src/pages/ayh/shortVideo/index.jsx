@@ -44,9 +44,9 @@ export default class SportsProgram extends Component {
           key: "title",
         },
         {
-          title: "关联视频",
-          dataIndex: "video",
-          key: "video",
+          title: "播放源",
+          dataIndex: "source",
+          key: "source",
         },
         {
           title: "操作",

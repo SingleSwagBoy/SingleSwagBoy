@@ -210,12 +210,12 @@ export default class SportsProgram extends Component {
                 >
                  <Input placeholder="请填写专题名" />
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                   label="短视频ID"
                   name="shortVideoId"
                 >
                  <Input placeholder="请填写短视频ID" />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item {...this.state.tailLayout}>
                   <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
                     确定

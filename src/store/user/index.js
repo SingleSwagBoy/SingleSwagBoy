@@ -5,9 +5,12 @@ let defaultState = {
 }
 // 刷新时取缓存 赋值给state user
 const user = localStorage.getItem('user')
-if(JSON.parse(user).authorization) {
+if(user) {
+  if(JSON.parse(user).authorization){
+    defaultState = JSON.parse(user)
+  }
   // 不是第一次打开程序，user已经备份
-  defaultState = JSON.parse(user)
+  
 }
 const reducer = (state=defaultState, action) => {
   // console.log(state)

@@ -69,7 +69,7 @@ export default class SportsProgram extends Component {
                       newData:this.state.newData
                     })
                   }} />
-                  :row.sort||"-"
+                  :row.sort
                 }
               </div>
             )

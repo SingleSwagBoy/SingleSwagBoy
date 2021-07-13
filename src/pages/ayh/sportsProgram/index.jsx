@@ -22,6 +22,7 @@ export default class SportsProgram extends Component {
       loading:false,
       dataLoading:false,
       programGrounp:[],
+      defaultProgram:"",
       lists: [],
       currentId:{indexId:null},//编辑行的id
       layout: {
@@ -99,8 +100,8 @@ export default class SportsProgram extends Component {
         },
         {
           title: "赛事",
-          dataIndex: "name",
-          key: "name",
+          dataIndex: "competitionName",
+          key: "competitionName",
         },
         {
           title: "标签",
@@ -125,20 +126,20 @@ export default class SportsProgram extends Component {
         },
         {
           title: "节目信息",
-          dataIndex: "competitionName",
-          key: "competitionName",
+          dataIndex: "name",
+          key: "name",
           render: (rowValue, row, index)=>{
             return (
               <div>
                 {
                   this.state.currentId.indexId == row.indexId?
-                  <Input placeholder={row.competitionName} defaultValue={row.competitionName} onChange={(val)=>{
-                    this.state.currentId.competitionName = val.target.value
+                  <Input placeholder={row.name} defaultValue={row.name} onChange={(val)=>{
+                    this.state.currentId.name = val.target.value
                     this.setState({
                       currentId:this.state.currentId
                     })
                   }}  />
-                  :row.competitionName||"-"
+                  :row.name||"-"
                 }
               </div>
             )
@@ -266,6 +267,7 @@ export default class SportsProgram extends Component {
             visible={this.state.visible}
             onCancel={() => {this.closeModel(1)}}
             footer={null}
+            width={1000}
           >
             {
               <Form
@@ -275,7 +277,7 @@ export default class SportsProgram extends Component {
               >
                 <Form.Item
                   label="节目信息"
-                  name="programInfo"
+                  name="value"
                   rules={[{ required: true, message: '请填写节目信息' }]}
                 >
                  <Select
@@ -297,7 +299,7 @@ export default class SportsProgram extends Component {
                    {
                     this.state.programGrounp.map((r,i)=>{
                       return(
-                        <Option value={r.name} key={i}>{r.name}</Option>
+                        <Option value={r.value} key={r.value}>{r.label}</Option>
                       )
                     })
                    }
@@ -479,28 +481,44 @@ export default class SportsProgram extends Component {
   addList(val){
     console.log(val)
     let params={
-      text:val.name,
-      createTime:parseInt(new Date().getTime() / 1000)
+      "date": "",
+      "startTime": this.state.defaultProgram[val.value].start_time,
+      "channelName": this.state.defaultProgram[val.value].channel_id,
+      "channelId": this.state.defaultProgram[val.value].channel_id,
+      "stage": "",
+      "cateName": "",
+      "cateId": "",
+      "competitionName": "",
+      "name": this.state.defaultProgram[val.value].name,
+      "tag": "",
+      "endTime": this.state.defaultProgram[val.value].end_time
     }
     addList({key:"OLYMPIC.PROGRAMS"},params).then(res=>{
       if(res.data.errCode == 0){
-        this.setState({
-          lists:res.data.data
-        })
+        message.success("新增成功")
+        this.getList()
+      }else{
+        message.error("新增失败")
       }
     })
   }
   getProgramsList(val){
-    console.log(val)
     if(!val)return
     let param={
       keyword:val,
       channelId:4
     }
     getProgramsList(param).then(res=>{
-      if(res.data.errCode === 0 && Array.isArray(res.data.data)){
+      if(res.data.errCode === 0 ){
+        let a = Object.entries(res.data.data)
+        console.log(a,"a")
+        let b = []
+        for (const [key, value] of a) {
+          b.push({label: value.start_time +  " " +value.name  + " " + value.channel_id, value: key})
+        }
         this.setState({
-          programGrounp:res.data.data
+          programGrounp:b,
+          defaultProgram:res.data.data
         })
       }
     })

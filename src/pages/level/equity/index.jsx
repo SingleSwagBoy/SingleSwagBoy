@@ -314,8 +314,6 @@ export default class SportsProgram extends Component {
                     >
                       <Option value={1} key={1}>h5</Option>
                       <Option value={2} key={2}>小程序</Option>
-                      <Option value={3} key={3}>赚赚页</Option>
-                      <Option value={4} key={4}>套餐页</Option>
                     </Select>
                     </Form.Item>
                     <Form.Item name="skipUrl"  style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}>

@@ -9,6 +9,7 @@ const EventList = lazy(()=>import('pages/ayh/eventList/index.jsx'))
 const SpecialList = lazy(()=>import('pages/ayh/specialList/index.jsx'))
 const ShortVideo = lazy(()=>import('pages/ayh/shortVideo/index.jsx'))
 const Equity = lazy(()=>import('pages/level/equity/index.jsx'))
+const LevelConfig = lazy(()=>import('pages/level/levelConfig/index.jsx'))
 
 const adminRoutes = [
   {
@@ -57,6 +58,12 @@ const adminRoutes = [
     path: '/mms/level/equity',
     component: Equity,
     name: '权益配置',
+    icon: UnorderedListOutlined
+  },
+  {
+    path: '/mms/level/levelConfig',
+    component: LevelConfig,
+    name: '等级配置',
     icon: UnorderedListOutlined
   },
   {

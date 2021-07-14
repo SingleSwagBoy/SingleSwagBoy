@@ -41,6 +41,7 @@ export default class SportsProgram extends Component {
       tailLayout: {
         wrapperCol: { offset: 4, span: 20 },
       },
+      editType:1,//1 是新增 2是编辑
       linkVideoList:[],
       selectProps:{
         optionFilterProp:"children",
@@ -125,6 +126,7 @@ export default class SportsProgram extends Component {
                       this.setState({
                         visible:true,
                         currentItem:row,
+                        editType:2,
                         newData:{type:row.type}
                       },()=>{
                         this.formRef.current.setFieldsValue(row)
@@ -221,7 +223,7 @@ export default class SportsProgram extends Component {
           <div>
            <Button type="primary"
             onClick={()=>{
-              this.setState({visible:true,newData:{},currentItem:{}},()=>{
+              this.setState({visible:true,editType:1,newData:{},currentItem:{}},()=>{
                 this.formRef.current.resetFields()
               })
             }}
@@ -483,7 +485,7 @@ export default class SportsProgram extends Component {
       ...params,
       ...this.state.newData
     }
-    if(this.state.currentItem){
+    if(this.state.editType== 2){
       this.updateList(allParams) // 更新
     }else{
       allParams.status = 2

@@ -484,18 +484,24 @@ export default class SportsProgram extends Component {
   }
   addList(val){
     console.log(val)
+    let a = this.state.defaultProgram[val.value]
     let params={
-      "date": "",
-      "startTime": this.state.defaultProgram[val.value].start_time,
-      "channelName": this.state.defaultProgram[val.value].channel_id,
-      "channelId": this.state.defaultProgram[val.value].channel_id,
-      "stage": "",
-      "cateName": "",
-      "cateId": "",
-      "competitionName": "",
-      "name": this.state.defaultProgram[val.value].name,
-      "tag": "",
-      "endTime": this.state.defaultProgram[val.value].end_time
+      ...a,
+      competitionName:a.competition_name,
+      channelName:a.channel_name,
+      startTime:a.start_time,
+      endTime:a.end_time,
+      // "date": "",
+      // "startTime": this.state.defaultProgram[val.value].start_time,
+      // "channelName": this.state.defaultProgram[val.value].channel_id,
+      // "channelId": this.state.defaultProgram[val.value].channel_Name,
+      // "stage": "",
+      // "cateName": "",
+      // "cateId": "",
+      // "competitionName": "",
+      // "name": this.state.defaultProgram[val.value].name,
+      // "tag": "",
+      // "endTime": this.state.defaultProgram[val.value].end_time
     }
     addList({key:"OLYMPIC.PROGRAMS"},params).then(res=>{
       if(res.data.errCode == 0){

@@ -75,6 +75,7 @@ export default class SportsProgram extends Component {
             return (
               rowValue?<Image
               width={100}
+              height={100}
               src={rowValue}
             />:"-"
             )
@@ -224,6 +225,7 @@ export default class SportsProgram extends Component {
             visible={this.state.visible}
             onCancel={() => {this.closeModel(1)}}
             footer={null}
+            width={800}
           >
             {
               // this.state.currentItem.
@@ -335,7 +337,7 @@ export default class SportsProgram extends Component {
                         }
                      } 
                     >
-                      {this.state.newData.iconUrl?<img src={this.state.newData.iconUrl} alt="avatar" style={{ width: '100%' }} />:this.state.currentItem ? <img src={this.state.currentItem.iconUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                      {this.state.newData.iconUrl?<img src={this.state.newData.iconUrl} alt="avatar" style={{ width: '100%',height:"100%" }} />:this.state.currentItem ? <img src={this.state.currentItem.iconUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                     </Upload>
                     <Image />
                   </Form.Item>
@@ -400,7 +402,7 @@ export default class SportsProgram extends Component {
                          }
                       } 
                       >
-                        {this.state.newData.secKillUrl?<img src={this.state.newData.secKillUrl} alt="avatar" style={{ width: '100%' }} />:this.state.currentItem ? <img src={this.state.currentItem.secKillUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                        {this.state.newData.secKillUrl?<img src={this.state.newData.secKillUrl} alt="avatar" style={{ width: '100%',height:"100%" }} />:this.state.currentItem ? <img src={this.state.currentItem.secKillUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                       </Upload>
                       <Image />
                     </Form.Item>

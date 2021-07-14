@@ -43,6 +43,10 @@ export default class SportsProgram extends Component {
           title: "开始时间",
           dataIndex: "startTime",
           key: "startTime",
+          sorter: {
+            compare: (a, b) => a.startTime - b.startTime,
+            multiple: 1,
+          },
           render: (rowValue, row, index) => {
             return (
               <span>

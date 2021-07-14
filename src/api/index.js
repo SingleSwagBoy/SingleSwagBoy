@@ -44,7 +44,7 @@ export const deleteConfig = params => { //删除夺奖快讯
 export const getProgramsList = params => { //删除夺奖快讯
   return request.get(`${baseUrl}/mms/channel/programs/list`,{params:params})
 };
-export const updateList = (params,body) => { //删除夺奖快讯
+export const updateList = (params,body) => { //
   return request.post(`${baseUrl}/mms/config/common/update?key=${params.key}&id=${params.id}`,body)
 };
 export const getMedalList = params => { //获取奖牌榜

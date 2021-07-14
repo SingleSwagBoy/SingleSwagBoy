@@ -22,7 +22,7 @@ export default class SportsProgram extends Component {
       loading:false,
       searchWords:"",
       lists: [],
-      currentId:"",//编辑行的id
+      currentItem:"",//编辑行的id
       newData:{},
       layout: {
         labelCol: { span: 4 },
@@ -41,7 +41,7 @@ export default class SportsProgram extends Component {
             return (
               <div>
                 {
-                  this.state.currentId == row.id?
+                  this.state.currentItem == row.id?
                   <Input defaultValue={row.name} onChange={(val)=>{
                     this.state.newData.name = val.target.value
                     this.setState({
@@ -62,7 +62,7 @@ export default class SportsProgram extends Component {
             return (
               <div>
                 {
-                  this.state.currentId == row.id?
+                  this.state.currentItem == row.id?
                   <InputNumber defaultValue={row.sort} onChange={(val)=>{
                     console.log(val)
                     this.state.newData.sort = val
@@ -97,7 +97,7 @@ export default class SportsProgram extends Component {
             return (
               <div>
                 {/* {
-                  this.state.currentId == row.id?
+                  this.state.currentItem == row.id?
                   <Select
                     mode="multiple"
                     placeholder="Please select"
@@ -138,7 +138,7 @@ export default class SportsProgram extends Component {
             return (
               <div>
                 {
-                  this.state.currentId===row.id?
+                  this.state.currentItem===row.id?
                   <div>
                     <Button 
                      style={{margin:"0 10px"}}
@@ -153,7 +153,7 @@ export default class SportsProgram extends Component {
                       danger
                       onClick={()=>{
                         this.setState({
-                          currentId:null,
+                          currentItem:null,
                           newData:{}
                         })
                       }}
@@ -166,7 +166,7 @@ export default class SportsProgram extends Component {
                       type="primary"
                       onClick={()=>{
                         this.setState({
-                          currentId:row.id,
+                          currentItem:row.id,
                           newData:{}
                         })
                       }}
@@ -174,7 +174,9 @@ export default class SportsProgram extends Component {
                       <Button 
                         size="small"
                         danger
-                        onClick={()=>{this.delArt(row.id,1)}}
+                        onClick={()=>{
+                          this.delArt(row,1)
+                        }}
                         >删除</Button>
                     </div>
                 }
@@ -334,8 +336,15 @@ export default class SportsProgram extends Component {
       onOk: ()=>{
         if(type === 2){
           this.update_column(val)
+        }else{
+          //删除专题
+         this.state.newData.status = 2
+         this.setState({
+          newData:this.state.newData
+         },()=>{
+          this.editColumn(val)
+         })
         }
-        
       },
       onCancel: ()=>{
 
@@ -411,20 +420,19 @@ export default class SportsProgram extends Component {
   }
   editColumn(val){
     console.log(val,"val")
-    if(this.state.newData.name){
-      val.name = this.state.newData.name
+    let params={
+      ...val,
+      ...this.state.newData
     }
-    if(this.state.newData.sort){
-      val.sort = this.state.newData.sort
-    }
-    editColumn({...val}).then(res=>{
+    editColumn(params).then(res=>{
       if(res.data.errCode === 0){
         message.success("更新成功")
-        this.cvideos(val.id)
+        // this.cvideos(val.id)
+        this.shortVideoSearch(this.state.searchWords)
       }else{
         message.error("更新失败")
       }
-      this.setState({currentId:null})
+      this.setState({currentItem:null})
     })
   }
 }

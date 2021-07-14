@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { baseUrl, getList } from 'api'
-import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,Image,InputNumber,Upload} from 'antd'
+import { baseUrl, getList,addList,updateList } from 'api'
+import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,Image,InputNumber,Upload,DatePicker} from 'antd'
 import {  } from 'react-router-dom'
 import { LoadingOutlined,PlusOutlined } from "@ant-design/icons"
 import  util from 'utils'
 import "./style.css"
 import moment from 'moment';
+const { RangePicker } = DatePicker;
 const { confirm } = Modal
 const { TextArea } = Input;
 const { Option } = Select;
@@ -17,8 +18,10 @@ const normFile = (e) => {
   }
   return e && e.fileList;
 };
+// @Form.create()
 export default class SportsProgram extends Component {
   formRef = React.createRef();
+  
   constructor(){
     super();
     let _this = this
@@ -28,7 +31,7 @@ export default class SportsProgram extends Component {
       total: 0,
       loading:false,
       lists: [],
-      currentId:"",//编辑行的id
+      currentItem:"",//编辑行的id
       newData:{},
       layout: {
         labelCol: { span: 4 },
@@ -47,6 +50,7 @@ export default class SportsProgram extends Component {
           console.log('onSearch')
         }
       },
+      levelList:[],
       columns: [
         {
           title: "id",
@@ -108,7 +112,8 @@ export default class SportsProgram extends Component {
                     onClick={()=>{
                       this.setState({
                         visible:true,
-                        currentId:row
+                        currentItem:row,
+                        newData:{}
                       },()=>{
                         this.formRef.current.setFieldsValue(row)
                       })
@@ -138,25 +143,26 @@ export default class SportsProgram extends Component {
         headers: {
           authorization: JSON.parse(localStorage.getItem("user")).authorization,
         },
-        onChange(info) {  // 监控上传状态的回调
-          if (info.file.status !== 'uploading') {
-            _this.setState({ loading: true });
-          }
-          if (info.file.status === 'done') {
-            util.getBase64(info.file.originFileObj, imageUrl =>
-              _this.setState({
-                imageUrl,
-                loading: false,
-              }),
-            );
-            // let a = _this.state.formData
-            //  a.image= info.file.response.data.fileUrl
-            //  _this.formRef.current.setFieldsValue(_this.state.formData)
-            message.success(`上传成功`);
-          } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} 上传失败.`);
-          }
-        },
+        // onChange(info) {  // 监控上传状态的回调
+        //   if (info.file.status !== 'uploading') {
+        //     _this.setState({ loading: true });
+        //   }
+        //   if (info.file.status === 'done') {
+        //     util.getBase64(info.file.originFileObj, imageUrl =>
+        //       _this.setState({
+        //         imageUrl,
+        //         loading: false,
+        //       }),
+        //     );
+        //     console.log(info.file)
+        //     // let a = _this.state.formData
+        //     //  a.image= info.file.response.data.fileUrl
+        //     //  _this.formRef.current.setFieldsValue(_this.state.formData)
+        //     message.success(`上传成功`);
+        //   } else if (info.file.status === 'error') {
+        //     message.error(`${info.file.name} 上传失败.`);
+        //   }
+        // },
         beforeUpload(file){
           const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
           if (!isJpgOrPng) {
@@ -174,6 +180,7 @@ export default class SportsProgram extends Component {
   
   render() {
     const { loading } = this.state;
+    // const { getFieldDecorator } = this.props.form
     const uploadButton = (
       <div>
         {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -219,6 +226,7 @@ export default class SportsProgram extends Component {
             footer={null}
           >
             {
+              // this.state.currentItem.
               <Form
                 {...this.state.layout}
                 name="basic"
@@ -232,14 +240,30 @@ export default class SportsProgram extends Component {
                 >
                  <Input placeholder="请填写权益名称" />
                 </Form.Item>
+                {
+                  this.state.newData.type ===2 &&
+                  <Form.Item
+                    label="商品备注"
+                    name="memo"
+                    rules={[{ required: true, message: '请填写商品备注' }]}
+                  >
+                  <Input placeholder="请填写权益名称" />
+                  </Form.Item>
+                }
                 <Form.Item
                   label="权益类型"
                   name="type"
-                  rules={[{ required: true, message: '请选择权益类型' }]}
+                  // rules={[{ required: true, message: '请选择权益类型' }]}
                 >
                  <Select
                       placeholder="请选择权益类型"
-                      onChange={()=>{}}
+                      onChange={(val)=>{
+                        console.log(val)
+                        this.state.newData.type = val
+                        this.setState({
+                          newData:this.state.newData
+                        })
+                      }}
                       {...this.state.selectProps}
                       // allowClear
                     >
@@ -284,24 +308,108 @@ export default class SportsProgram extends Component {
                     // })
                   }} />
                  </Form.Item>
-                
                  <Form.Item
-                  label="权益图标"
-                  name="iconUrl"
-                  valuePropName="fileList" 
-                    // 如果没有下面这一句会报错
-                    getValueFromEvent={normFile} 
-                >
-                  {/* 上传文件的控件 */}
-                  <Upload {...this.state.updateProps}>
-                    {/* <Image /> */}
-                    {this.state.currentId ? <img src={this.state.currentId.iconUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-                  </Upload>
-                  <Image />
-                </Form.Item>
+                    label="权益图标"
+                    name="iconUrl"
+                    valuePropName="fileList" 
+                      // 如果没有下面这一句会报错
+                      getValueFromEvent={normFile} 
+                  >
+                    {/* 上传文件的控件 */}
+                    <Upload {...this.state.updateProps}
+                     onChange = {(info)=>{
+                       // 监控上传状态的回调
+                          if (info.file.status !== 'uploading') {
+                            this.setState({ loading: true });
+                          }
+                          if (info.file.status === 'done') {
+                            this.state.newData.iconUrl = info.file.response.data.fileUrl
+                            this.setState({
+                              newData:this.state.newData,
+                              loading: false
+                            })
+                            message.success(`上传成功`);
+                          } else if (info.file.status === 'error') {
+                            message.error(`${info.file.name} 上传失败.`);
+                          }
+                        }
+                     } 
+                    >
+                      {this.state.newData.iconUrl?<img src={this.state.newData.iconUrl} alt="avatar" style={{ width: '100%' }} />:this.state.currentItem ? <img src={this.state.currentItem.iconUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                    </Upload>
+                    <Image />
+                  </Form.Item>
+                 {
+                  this.state.newData.type ===2 &&
+                  <div>
+                    <Form.Item
+                      label="秒杀商品名称"
+                      name="goodName"
+                      rules={[{ required: true, message: '请填写秒杀商品名称' }]}
+                    >
+                      <Input placeholder="请填写权益名称" />
+                    </Form.Item>
+                    <Form.Item
+                      label="秒杀时间"
+                      // name="startTime"
+                      rules={[{ required: true, message: '请选择秒杀时间' }]}
+                    >
+                      <RangePicker
+                        defaultValue={[moment(util.formatTime(this.state.currentItem.startTime,"/",3), 'YYYY/MM/DD'), moment(util.formatTime(this.state.currentItem.endTime,"/",3), 'YYYY/MM/DD')]}
+                        onChange={(val)=>{
+                          console.log(val)
+                          this.state.newData.startTime = new Date(val[0].toDate()).getTime()
+                          this.state.newData.endTime = new Date(val[1].toDate()).getTime()
+                          this.setState({
+                            newData:this.state.newData
+                          })
+                        }}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      label="库存"
+                      name="storeNum"
+                      rules={[{ required: true, message: '请填写库存' }]}
+                    >
+                      <Input placeholder="请填写库存" />
+                    </Form.Item>
+                    <Form.Item
+                      label="秒杀商品图片"
+                      name="secKillUrl"
+                      valuePropName="fileList" 
+                        // 如果没有下面这一句会报错
+                        getValueFromEvent={normFile} 
+                    >
+                      {/* 上传文件的控件 */}
+                      <Upload {...this.state.updateProps}
+                      onChange = {(info)=>{
+                        // 监控上传状态的回调
+                           if (info.file.status !== 'uploading') {
+                             this.setState({ loading: true });
+                           }
+                           if (info.file.status === 'done') {
+                             this.state.newData.secKillUrl = info.file.response.data.fileUrl
+                             this.setState({
+                               newData:this.state.newData,
+                               loading: false
+                             })
+                             message.success(`上传成功`);
+                           } else if (info.file.status === 'error') {
+                             message.error(`${info.file.name} 上传失败.`);
+                           }
+                         }
+                      } 
+                      >
+                        {this.state.newData.secKillUrl?<img src={this.state.newData.secKillUrl} alt="avatar" style={{ width: '100%' }} />:this.state.currentItem ? <img src={this.state.currentItem.secKillUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                      </Upload>
+                      <Image />
+                    </Form.Item>
+                  </div>
+                }
+                 
                 <Form.Item
                   label="等级"
-                  name="level"
+                  name="userLevelId"
                   rules={[{ required: true, message: '请选择等级' }]}
                 >
                  <Select
@@ -310,10 +418,13 @@ export default class SportsProgram extends Component {
                       {...this.state.selectProps}
                       // allowClear
                     >
-                      <Option value={1} key={1}>Lv1</Option>
-                      <Option value={2} key={2}>Lv2</Option>
-                      <Option value={3} key={3}>Lv3</Option>
-                      <Option value={4} key={4}>Lv4</Option>
+                      {
+                        this.state.levelList.map(r=>{
+                          return(
+                            <Option value={r.indexId} key={r.indexId}>{r.name}</Option>
+                          )
+                        })
+                      }
                     </Select>
                  </Form.Item>
                  <Form.Item
@@ -335,6 +446,7 @@ export default class SportsProgram extends Component {
     )
   }
   componentDidMount(){
+    this.getLevel()
     this.getList()
   }
   onSearch(e){
@@ -348,6 +460,18 @@ export default class SportsProgram extends Component {
   // 新增
   submitForm(params){
     console.log(params)
+    let allParams = {
+      ...this.state.currentItem,
+      ...params,
+      ...this.state.newData
+    }
+    if(this.state.currentItem){
+      this.updateList(allParams) // 更新
+    }else{
+      this.addList(allParams) // 新增
+    }
+    // console.log(allParams,"allParams")
+   
     this.closeModel(1)
   }
   // 删除文章
@@ -374,12 +498,41 @@ export default class SportsProgram extends Component {
     })
     
   }
+  getLevel(){
+    getList({key:"USER.LEVEL"}).then(res=>{
+      if(res.data.errCode === 0){
+        this.setState({
+          levelList:res.data.data
+        })
+      }
+    })
+  }
   getList(){
     getList({key:"USER.EQUITY"}).then(res=>{
       if(res.data.errCode === 0){
         this.setState({
           lists:res.data.data
         })
+      }
+    })
+  }
+  addList(params){
+    addList({key:"USER.EQUITY"},params).then(res=>{
+      if(res.data.errCode == 0){
+        message.success("新增成功")
+        this.getList()
+      }else{
+        message.error("新增失败")
+      }
+    })
+  }
+  updateList(params){
+    updateList({key:"USER.EQUITY",id:params.indexId},params).then(res=>{
+      if(res.data.errCode == 0){
+        message.success("更新成功")
+        this.getList()
+      }else{
+        message.error("更新失败")
       }
     })
   }

@@ -109,7 +109,7 @@ class MyLayout extends Component {
               console.log(key)
               this.props.history.push(key)
              } }
-             defaultSelectedKeys={this.props.location.pathname}
+             defaultselectedkeys={this.props.location.pathname}
             //  selectedKeys={this.selectKeys()}
              defaultOpenKeys={["/mms/ayh"]}
              >
@@ -118,7 +118,7 @@ class MyLayout extends Component {
                   return (
                     nav.children.length>0?
                     <SubMenu icon={<UserOutlined />} title={nav.name} key={nav.path}  
-                    defaultSelectedKeys={[nav.children[0].path]}
+                    defaultselectedkeys={[nav.children[0].path]}
                     >
                       {
                         nav.children.map(child => {

@@ -12,6 +12,7 @@ const { Option } = Select;
 
 
 export default class SportsProgram extends Component {
+  formRef = React.createRef();
   constructor(){
     super();
     this.state = {
@@ -239,7 +240,9 @@ export default class SportsProgram extends Component {
           <div>
            <Button type="primary"
             onClick={()=>{
-              this.setState({visible:true})
+              this.setState({visible:true},()=>{
+                this.formRef.current.resetFields()
+              })
             }}
             >新增</Button>
           </div> 
@@ -267,6 +270,7 @@ export default class SportsProgram extends Component {
               <Form
                 {...this.state.layout}
                 name="basic"
+                ref = {this.formRef}
                 onFinish={this.submitForm.bind(this)}
               >
                 <Form.Item
@@ -385,10 +389,12 @@ export default class SportsProgram extends Component {
   addColumn(val){
     let params={
       name:val.name,
-      type:1
+      type:1,
+      sort:100
     }
     addColumn(params).then(res=>{
       if(res.data.errCode === 0){
+        this.shortVideoSearch(this.state.searchWords)
         message.success("新增成功")
       }else{
         message.error("新增成功")

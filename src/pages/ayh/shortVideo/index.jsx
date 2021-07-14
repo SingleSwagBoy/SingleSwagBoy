@@ -65,12 +65,14 @@ export default class SportsProgram extends Component {
                         visible:true,
                         modelKey:Math.random()
                       })
+                      this.shortVideoSearch("")
                       if(row.columnId !== 0){
                         this.getColumnInfo(row.columnId)
                       }else{
                         this.setState({
                           defaultSelect:{name:""}
                         })
+                        // this.shortVideoSearch("")
                       }
                     }}
                     >添加到专题</Button>
@@ -236,7 +238,7 @@ export default class SportsProgram extends Component {
     })
   }
   shortVideoSearch(val){
-    if(!val)return
+    // if(!val)return
     let params={
       type:1,
       is_tv:false,

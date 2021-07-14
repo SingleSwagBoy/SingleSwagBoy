@@ -94,7 +94,10 @@ export const syn_slice = (params) => { //查找合集短视频
 export const editColumn = (params) => { //编辑专题
   return request.post(`${baseUrl}/mms/shortVideo/column`,params)
 };
+//同步秒杀数据
 
-
+export const hotStock = (params) => { //查找合集短视频
+  return request.get(`${baseUrl}/mms/activity/levelMs/hotStock`,{params:params})
+};
 //等级权益
 

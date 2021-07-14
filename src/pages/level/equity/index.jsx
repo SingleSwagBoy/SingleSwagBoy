@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { baseUrl, getList,addList,updateList } from 'api'
-import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,Image,InputNumber,Upload,DatePicker} from 'antd'
+import { baseUrl, getList,addList,updateList,hotStock,deleteConfig } from 'api'
+import { Card, Breadcrumb, Button, Table, Modal,
+   message,Input, Form,Select,Image,InputNumber,Upload,DatePicker,Switch} from 'antd'
 import {  } from 'react-router-dom'
 import { LoadingOutlined,PlusOutlined } from "@ant-design/icons"
 import  util from 'utils'
 import "./style.css"
 import moment from 'moment';
 const { RangePicker } = DatePicker;
-const { confirm } = Modal
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -30,6 +30,7 @@ export default class SportsProgram extends Component {
       pageSize: 10000,
       total: 0,
       loading:false,
+      buttonLaoding:false,
       lists: [],
       currentItem:"",//编辑行的id
       newData:{},
@@ -93,7 +94,18 @@ export default class SportsProgram extends Component {
           render: (rowValue, row, index)=>{
             return (
               <div>
-                {rowValue === 1?"有效":"无效"}
+                {/* {rowValue === 1?"有效":"无效"} */}
+                <Switch checkedChildren="有效" unCheckedChildren="无效" defaultChecked={rowValue === 1?true:false}
+                onChange={(val)=>{
+                  console.log(val)
+                  this.setState({
+                    currentItem:row
+                  },()=>{
+                    row.status = val?1:2
+                    this.updateList(row)
+                  })
+                }}
+                 />
               </div>
             )
           }
@@ -107,14 +119,13 @@ export default class SportsProgram extends Component {
                 {
                   <div>
                     <Button 
-                    style={{margin:"0 10px"}}
                     size="small"
                     type="primary"
                     onClick={()=>{
                       this.setState({
                         visible:true,
                         currentItem:row,
-                        newData:{}
+                        newData:{type:row.type}
                       },()=>{
                         this.formRef.current.setFieldsValue(row)
                       })
@@ -122,10 +133,19 @@ export default class SportsProgram extends Component {
                     }}
                     >编辑</Button>
                     <Button 
+                     style={{margin:"0 10px"}}
                       size="small"
                       danger
-                      onClick={()=>{this.delArt(row.id,1)}}
+                      onClick={()=>{this.delArt(row)}}
                       >删除</Button>
+                      <Button 
+                      size="small"
+                      loading={row.buttonLaoding}
+                      dashed
+                      onClick={()=>{
+                        this.hotStock(row)}
+                      }
+                      >同步数据</Button>
                   </div>
                     
                 }
@@ -201,7 +221,7 @@ export default class SportsProgram extends Component {
           <div>
            <Button type="primary"
             onClick={()=>{
-              // this.setState({visible:true})
+              this.setState({visible:true})
             }}
             >新增</Button>
           </div> 
@@ -302,13 +322,7 @@ export default class SportsProgram extends Component {
                   label="排序"
                   name="sort"
                 >
-                  <InputNumber onChange={(val)=>{
-                    console.log(val)
-                    // this.state.newData.sort = val
-                    // this.setState({
-                    //   newData:this.state.newData
-                    // })
-                  }} />
+                  <InputNumber />
                  </Form.Item>
                  <Form.Item
                     label="权益图标"
@@ -337,7 +351,7 @@ export default class SportsProgram extends Component {
                         }
                      } 
                     >
-                      {this.state.newData.iconUrl?<img src={this.state.newData.iconUrl} alt="avatar" style={{ width: '100%',height:"100%" }} />:this.state.currentItem ? <img src={this.state.currentItem.iconUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                      {this.state.newData.iconUrl?<img src={this.state.newData.iconUrl} alt="avatar" style={{ width: '100%',height:"100%" }} />:this.state.currentItem ? <img src={this.state.currentItem.iconUrl} alt="avatar" style={{ width: '100%',height:"100%"}} /> : uploadButton}
                     </Upload>
                     <Image />
                   </Form.Item>
@@ -357,7 +371,7 @@ export default class SportsProgram extends Component {
                       rules={[{ required: true, message: '请选择秒杀时间' }]}
                     >
                       <RangePicker
-                        defaultValue={[moment(util.formatTime(this.state.currentItem.startTime,"/",3), 'YYYY/MM/DD'), moment(util.formatTime(this.state.currentItem.endTime,"/",3), 'YYYY/MM/DD')]}
+                        defaultValue={[moment(util.formatTime(this.state.currentItem.startTime || new Date().getTime(),"/",3), 'YYYY/MM/DD'), moment(util.formatTime(this.state.currentItem.endTime || new Date().getTime(),"/",3), 'YYYY/MM/DD')]}
                         onChange={(val)=>{
                           console.log(val)
                           this.state.newData.startTime = new Date(val[0].toDate()).getTime()
@@ -373,7 +387,7 @@ export default class SportsProgram extends Component {
                       name="storeNum"
                       rules={[{ required: true, message: '请填写库存' }]}
                     >
-                      <Input placeholder="请填写库存" />
+                       <InputNumber />
                     </Form.Item>
                     <Form.Item
                       label="秒杀商品图片"
@@ -402,7 +416,7 @@ export default class SportsProgram extends Component {
                          }
                       } 
                       >
-                        {this.state.newData.secKillUrl?<img src={this.state.newData.secKillUrl} alt="avatar" style={{ width: '100%',height:"100%" }} />:this.state.currentItem ? <img src={this.state.currentItem.secKillUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                        {this.state.newData.secKillUrl?<img src={this.state.newData.secKillUrl} alt="avatar" style={{ width: '100%',height:"100%" }} />:this.state.currentItem ? <img src={this.state.currentItem.secKillUrl} alt="avatar" style={{ width: '100%',height:"100%" }} /> : uploadButton}
                       </Upload>
                       <Image />
                     </Form.Item>
@@ -470,6 +484,7 @@ export default class SportsProgram extends Component {
     if(this.state.currentItem){
       this.updateList(allParams) // 更新
     }else{
+      allParams.status = 2
       this.addList(allParams) // 新增
     }
     // console.log(allParams,"allParams")
@@ -477,15 +492,12 @@ export default class SportsProgram extends Component {
     this.closeModel(1)
   }
   // 删除文章
-  delArt(val,type) {
+  delArt(val) {
     Modal.confirm({
-      title: `${type === 2?"删除此关联视频":"删除此专题"}`,
+      title: `删除权益配置`,
       content: '确认删除？',
       onOk: ()=>{
-        if(type === 2){
-          this.update_column(val)
-        }
-        
+        this.deleteConfig(val)
       },
       onCancel: ()=>{
 
@@ -535,6 +547,44 @@ export default class SportsProgram extends Component {
         this.getList()
       }else{
         message.error("更新失败")
+      }
+    })
+  }
+  deleteConfig(row){
+    deleteConfig({key:"USER.EQUITY",id:row.indexId},{}).then(res=>{
+      if(res.data.errCode == 0){
+        message.success("删除成功")
+        this.getList()
+        this.hotStock(row)
+      }else{
+        message.error("删除失败")
+      }
+    })
+  }
+  hotStock(row){
+    this.state.lists.forEach(r=>{
+      if(r.indexId == row.indexId){
+        r.buttonLaoding = true
+      }
+    })
+    this.setState({
+      lists:this.state.lists
+    })
+    hotStock({rightId:row.indexId}).then(res=>{
+      if(res.data.errCode === 0 && res.data.data){
+        setTimeout(()=>{
+          this.state.lists.forEach(r=>{
+            if(r.indexId == row.indexId){
+              r.buttonLaoding = false
+            }
+          })
+          this.setState({
+            lists:this.state.lists
+          })
+          message.success("同步数据成功")
+        },1000)
+      }else{
+        message.error("同步数据失败")
       }
     })
   }

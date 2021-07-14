@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getList,updateList} from 'api'
+import { getList,updateList,syn_slice} from 'api'
 import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,InputNumber} from 'antd'
 import {  } from 'react-router-dom'
 import {  } from "@ant-design/icons"
@@ -95,8 +95,7 @@ export default class WinningNews extends Component {
                 this.setState({
                   dataLoading:true
                 })
-                this.syn_config("OLYMPIC.H5.BG.IMG")
-                this.syn_slice("OLYMPIC.MEDAL.NEWS")
+                this.syn_slice("USER.LEVEL")
               }}
             >数据同步</Button>
           </div>
@@ -105,6 +104,7 @@ export default class WinningNews extends Component {
         >
           <Table 
               dataSource={this.state.lists}
+              rowKey={item=>item.indexId}
               loading={this.state.loading}
               columns={this.state.columns} />
          
@@ -196,6 +196,21 @@ export default class WinningNews extends Component {
       }else{
         message.error("更新失败")
       }
+    })
+  }
+  syn_slice(key){
+    syn_slice({key:key}).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("同步成功")
+      }else{
+        message.error("同步失败")
+      }
+      setTimeout(()=>{
+        this.setState({
+          dataLoading:false
+        })
+      },1000)
+     
     })
   }
 }

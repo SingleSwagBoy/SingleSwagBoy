@@ -10,6 +10,7 @@ const SpecialList = lazy(()=>import('pages/ayh/specialList/index.jsx'))
 const ShortVideo = lazy(()=>import('pages/ayh/shortVideo/index.jsx'))
 const Equity = lazy(()=>import('pages/level/equity/index.jsx'))
 const LevelConfig = lazy(()=>import('pages/level/levelConfig/index.jsx'))
+const GrowConfig = lazy(()=>import('pages/level/growConfig/index.jsx'))
 
 const adminRoutes = [
   {
@@ -63,6 +64,12 @@ const adminRoutes = [
   {
     path: '/mms/level/levelConfig',
     component: LevelConfig,
+    name: '等级配置',
+    icon: UnorderedListOutlined
+  },
+  {
+    path: '/mms/level/growConfig',
+    component: GrowConfig,
     name: '等级配置',
     icon: UnorderedListOutlined
   },

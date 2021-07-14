@@ -221,7 +221,9 @@ export default class SportsProgram extends Component {
           <div>
            <Button type="primary"
             onClick={()=>{
-              this.setState({visible:true})
+              this.setState({visible:true,newData:{},currentItem:{}},()=>{
+                this.formRef.current.resetFields()
+              })
             }}
             >新增</Button>
           </div> 

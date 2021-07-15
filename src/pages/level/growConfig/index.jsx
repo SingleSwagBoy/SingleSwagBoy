@@ -161,7 +161,7 @@ export default class WinningNews extends Component {
                   name="integrateNum"
                   rules={[{ required: true, message: '请填写成长值' }]}
                 >
-                  <InputNumber />
+                  <InputNumber min={0} />
                 </Form.Item>
                 <Form.Item
                   label="任务介绍"
@@ -175,7 +175,7 @@ export default class WinningNews extends Component {
                   name="sort"
                   // rules={[{ required: true, message: '请填写' }]}
                 >
-                  <InputNumber />
+                  <InputNumber min={0} />
                 </Form.Item>
                 <Form.Item
                   label="三端配置"

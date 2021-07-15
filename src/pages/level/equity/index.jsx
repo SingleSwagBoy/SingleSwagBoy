@@ -163,7 +163,7 @@ export default class SportsProgram extends Component {
                       <Button 
                       size="small"
                       loading={row.buttonLaoding}
-                      dashed
+                      dashed="true"
                       onClick={()=>{
                         this.hotStock(row)}
                       }
@@ -392,7 +392,7 @@ export default class SportsProgram extends Component {
                       // name="startTime"
                       rules={[{ required: true, message: '请选择秒杀时间' }]}
                     >
-                      <RangePicker
+                      <RangePicker showTime
                         defaultValue={[moment(util.formatTime(this.state.currentItem.startTime || new Date().getTime(),"/",3), 'YYYY/MM/DD'), moment(util.formatTime(this.state.currentItem.endTime || new Date().getTime(),"/",3), 'YYYY/MM/DD')]}
                         onChange={(val)=>{
                           console.log(val)

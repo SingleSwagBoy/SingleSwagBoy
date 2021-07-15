@@ -17,7 +17,7 @@ export default class WinningNews extends Component {
       data: [],
       loading:false,
       dataLoading:false,
-      currentItem:{skipList:[{skipType:""},{skipType:""},{skipType:""}]},
+      currentItem:{skipList:[{skipType:"1"},{skipType:"1"},{skipType:"1"}]},
       lists: [],
       layout: {
         labelCol: { span: 4 },
@@ -183,7 +183,7 @@ export default class WinningNews extends Component {
                 </Form.Item>
                 <Form.Item
                   label="三端配置"
-                  name="skipList"
+                  // name="skipList"
                   // rules={[{ required: true, message: '请填写等级名称' }]}
                 >
                  <Tabs tabPosition={"left"} defaultActiveKey={this.state.activeKey}  activeKey={this.state.activeKey} 
@@ -199,8 +199,8 @@ export default class WinningNews extends Component {
                         <TabPane tab={r.name} key={r.id} >
                           <Select
                             style={{margin:"20px 0"}}
-                            defaultValue={this.state.currentItem.skipList[i].skipType}
                             key={this.state.currentItem.indexId}
+                            defaultValue={this.state.currentItem.skipList[i].skipType}
                             onChange={(val)=>{
                               this.state.currentItem.skipList[i].skipType = val
                               this.setState({
@@ -214,7 +214,7 @@ export default class WinningNews extends Component {
                             <Option value={3} key={3}>赚赚页</Option>
                             <Option value={4} key={4}>套餐页</Option>
                           </Select>
-                          <Input defaultValue={this.state.currentItem.skipList[i].skipUrl} placeholder={"请输入地址"} onChange={(val)=>{
+                          <Input defaultValue={this.state.currentItem.skipList[i].skipUrl} key={this.state.currentItem.skipList[i].skipUrl} placeholder={"请输入地址"} onChange={(val)=>{
                              this.state.currentItem.skipList[i].skipUrl = val.target.value
                              this.setState({
                               currentItem:this.state.currentItem
@@ -242,7 +242,7 @@ export default class WinningNews extends Component {
     this.getList() // 查询列表数据
   }
   closeModel(){
-    // this.formRef.current.resetFields()
+    this.formRef.current.resetFields()
     this.setState({
       visible:false
     })

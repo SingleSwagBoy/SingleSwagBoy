@@ -28,9 +28,9 @@ export default class WinningNews extends Component {
         wrapperCol: { offset: 4, span: 20 },
       },
       tabList:[
-        {name:"ios",id:1},
-        {name:"小程序",id:2},
-        {name:"安卓",id:3},
+        {name:"ios",id:1,platform:"ios"},
+        {name:"安卓",id:2,platform:"android"},
+        {name:"小程序",id:3,platform:"mini"},
       ],
       columns: [
         {
@@ -59,10 +59,20 @@ export default class WinningNews extends Component {
                   size="small"
                   type="primary"
                   onClick={()=>{
+                    let a =[]
+                    row.skipList.forEach((r,i)=>{
+                      this.state.tabList.forEach(l=>{
+                        if(r.platform === l.platform){
+                          l.id = i+1
+                          a.push(l)
+                        }
+                      })
+                    })
                     this.setState({
                       visible:true,
                       currentItem:row,
                       activeKey:"1",
+                      tabList:a
                     },()=>{
                       this.formRef.current.setFieldsValue(row)
                     })

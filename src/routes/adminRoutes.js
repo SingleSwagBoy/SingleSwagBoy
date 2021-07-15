@@ -15,43 +15,43 @@ const UserDemote = lazy(()=>import('pages/level/userDemote/index.jsx'))
 
 const adminRoutes = [
   {
-    path: '/mms/Ayh/channel',
+    path: '/mms/ayh/channel',
     component: AyhChannel,
     name: '奥运会节目单',
     icon: LineChartOutlined
   },
   {
-    path: '/mms/Ayh/winningNews',
+    path: '/mms/ayh/winningNews',
     component: WinningNews,
     name: '夺奖快讯',
     icon: LineChartOutlined
   },
   {
-    path: '/mms/Ayh/sportsProgram',
+    path: '/mms/ayh/sportsProgram',
     component: SportsProgram,
     name: '夺奖快讯',
     icon: LineChartOutlined
   },
   {
-    path: '/mms/Ayh/medalList',
+    path: '/mms/ayh/medalList',
     component: MedalList,
     name: '奖牌榜',
     icon: LineChartOutlined
   },
   {
-    path: '/mms/Ayh/eventList',
+    path: '/mms/ayh/eventList',
     component: EventList,
     name: '赛事列表',
     icon: LineChartOutlined
   },
   {
-    path: '/mms/Ayh/specialList',
+    path: '/mms/ayh/specialList',
     component: SpecialList,
     name: '赛事列表',
     icon: LineChartOutlined
   },
   {
-    path: '/mms/Ayh/shortVideo',
+    path: '/mms/ayh/shortVideo',
     component: ShortVideo,
     name: '短视频搜索',
     icon: LineChartOutlined

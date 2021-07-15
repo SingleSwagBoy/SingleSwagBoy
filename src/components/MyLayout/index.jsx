@@ -110,8 +110,10 @@ class MyLayout extends Component {
               this.props.history.push(key)
              } }
              defaultselectedkeys={this.props.location.pathname}
-            //  selectedKeys={this.selectKeys()}
-             defaultOpenKeys={["/mms/ayh"]}
+             selectedKeys={this.selectKeys()}
+            //  defaultOpenKeys={["/mms/ayh"]}
+            key={this.defaultOpenKeys()}
+             defaultOpenKeys={this.defaultOpenKeys()}
              >
               {
                 this.state.navRoutes.map(nav => {
@@ -185,12 +187,14 @@ class MyLayout extends Component {
   }
   selectKeys = ()=>{
     const pathName = this.props.location.pathname;
-    if(['/admin/artLists', '/admin/artAdd', '/admin/artEdit'].findIndex((value) => {
-      return pathName.startsWith(value)
-    }) !== -1){
-      return '/admin/artLists'
-    } else {
-      return pathName
+    return pathName
+  }
+  defaultOpenKeys(){
+    let a = this.state.navRoutes.filter(item=>this.props.location.pathname.indexOf(item.path) !== -1)
+    if(a.length>0){
+      return [a[0].path]
+    }else{
+      return ["/mms/level"]
     }
   }
 }

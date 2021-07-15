@@ -273,6 +273,9 @@ export default class SportsProgram extends Component {
     )
   }
   componentDidMount(){
+    this.setState({
+      loading:true
+    })
     this.getGameSchedule()
   }
   onSearch(e){
@@ -314,6 +317,10 @@ export default class SportsProgram extends Component {
       if(res.data.errCode === 0){
         this.setState({
           lists:res.data.data,
+          loading:false
+        })
+      }else{
+        this.setState({
           loading:false
         })
       }

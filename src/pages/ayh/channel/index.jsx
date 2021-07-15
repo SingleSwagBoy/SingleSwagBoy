@@ -73,11 +73,11 @@ export default class AyhChannel extends Component {
           title: "列表封面",
           dataIndex: "h_image",
           key: "h_image",
-          render: (rowValue) => {
+          render: (rowValue,row) => {
             return (
               <Image
                 width={100}
-                src={rowValue}
+                src={row.h_image}
               />
             )
           },

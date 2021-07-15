@@ -111,7 +111,6 @@ class MyLayout extends Component {
              } }
              defaultselectedkeys={this.props.location.pathname}
              selectedKeys={this.selectKeys()}
-            //  defaultOpenKeys={["/mms/ayh"]}
             key={this.defaultOpenKeys()}
              defaultOpenKeys={this.defaultOpenKeys()}
              >

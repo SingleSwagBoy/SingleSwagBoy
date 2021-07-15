@@ -30,3 +30,15 @@
 .site-layout .site-layout-background {
   background: rgba(255,255,255,0.5);
 }
+/* .ant-menu-item-selected{
+  animation: changeBackColor 4s forwards !important;
+}
+
+@keyframes changeBackColor{
+  0%{
+    background-color:#000c17 !important;
+  }
+  100%{
+    background-color:#1890ff !important;
+  }
+} */

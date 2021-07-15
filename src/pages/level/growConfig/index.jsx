@@ -29,8 +29,8 @@ export default class WinningNews extends Component {
       },
       tabList:[
         {name:"ios",id:1},
-        {name:"安卓",id:2},
-        {name:"小程序",id:3},
+        {name:"小程序",id:2},
+        {name:"安卓",id:3},
       ],
       columns: [
         {

@@ -59,7 +59,11 @@ export default class WinningNews extends Component {
                   size="small"
                   type="primary"
                   onClick={()=>{
-                    this.setState({visible:true,currentItem:row,activeKey:"1"},()=>{
+                    this.setState({
+                      visible:true,
+                      currentItem:row,
+                      activeKey:"1",
+                    },()=>{
                       this.formRef.current.setFieldsValue(row)
                     })
                   }}
@@ -125,7 +129,7 @@ export default class WinningNews extends Component {
             title="编辑等级配置"
             centered
             visible={this.state.visible}
-            onCancel={() => {this.closeModel(1)}}
+            onCancel={() => {this.closeModel()}}
             footer={null}
           >
             {
@@ -179,7 +183,7 @@ export default class WinningNews extends Component {
                 </Form.Item>
                 <Form.Item
                   label="三端配置"
-                  // name="introduce"
+                  name="skipList"
                   // rules={[{ required: true, message: '请填写等级名称' }]}
                 >
                  <Tabs tabPosition={"left"} defaultActiveKey={this.state.activeKey}  activeKey={this.state.activeKey} 
@@ -196,19 +200,19 @@ export default class WinningNews extends Component {
                           <Select
                             style={{margin:"20px 0"}}
                             defaultValue={this.state.currentItem.skipList[i].skipType}
+                            key={this.state.currentItem.indexId}
                             onChange={(val)=>{
-                              console.log(val)
                               this.state.currentItem.skipList[i].skipType = val
                               this.setState({
                                 currentItem:this.state.currentItem
                               })
                             }}
                             >
-                          {/* "skipType": 1, //  跳转类型 1=h5, 2=小程序，3=赚赚页，4=套餐页 */}
-                            <Option value={1}>h5</Option>
-                            <Option value={2}>小程序</Option>
-                            <Option value={3}>赚赚页</Option>
-                            <Option value={4}>套餐页</Option>
+                         
+                            <Option value={1} key={1}>h5</Option>
+                            <Option value={2} key={2}>小程序</Option>
+                            <Option value={3} key={3}>赚赚页</Option>
+                            <Option value={4} key={4}>套餐页</Option>
                           </Select>
                           <Input defaultValue={this.state.currentItem.skipList[i].skipUrl} placeholder={"请输入地址"} onChange={(val)=>{
                              this.state.currentItem.skipList[i].skipUrl = val.target.value
@@ -237,7 +241,8 @@ export default class WinningNews extends Component {
   componentDidMount(){
     this.getList() // 查询列表数据
   }
-  closeModel(type){
+  closeModel(){
+    // this.formRef.current.resetFields()
     this.setState({
       visible:false
     })

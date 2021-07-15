@@ -100,4 +100,6 @@ export const hotStock = (params) => { //查找合集短视频
   return request.get(`${baseUrl}/mms/activity/levelMs/hotStock`,{params:params})
 };
 //等级权益
-
+export const realStock = (params) => { //查找合集短视频
+  return request.get(`${baseUrl}/mms/activity/levelMs/realStock`,{params:params})
+};

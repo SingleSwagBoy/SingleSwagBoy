@@ -491,6 +491,7 @@ export default class SportsProgram extends Component {
       channelName:a.channel_name,
       startTime:a.start_time,
       endTime:a.end_time,
+      channelId:a.channel_id
       // "date": "",
       // "startTime": this.state.defaultProgram[val.value].start_time,
       // "channelName": this.state.defaultProgram[val.value].channel_id,

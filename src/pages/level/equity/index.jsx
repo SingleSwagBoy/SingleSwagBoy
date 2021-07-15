@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { baseUrl, getList,addList,updateList,hotStock,deleteConfig } from 'api'
+import { baseUrl, getList,addList,updateList,hotStock,deleteConfig,realStock } from 'api'
 import { Card, Breadcrumb, Button, Table, Modal,
    message,Input, Form,Select,Image,InputNumber,Upload,DatePicker,Switch} from 'antd'
 import {  } from 'react-router-dom'
@@ -80,6 +80,26 @@ export default class SportsProgram extends Component {
               height={100}
               src={rowValue}
             />:"-"
+            )
+          }
+        },
+        {
+          title: "实时库存",
+          dataIndex: "realStock",
+          key: "realStock",
+          render: (rowValue, row, index)=>{
+            return (
+              <div>
+                <div style={{width:"60%","textAlign":"center"}}>{row.realStock}</div>
+                <Button 
+                size="small"
+                type="primary"
+                onClick={()=>{
+                  this.realStock(row)
+                }}
+                >查看实时库存</Button>
+              </div>
+              
             )
           }
         },
@@ -587,6 +607,25 @@ export default class SportsProgram extends Component {
         },1000)
       }else{
         message.error("同步数据失败")
+      }
+    })
+  }
+  realStock(row){
+    realStock({rightId:row.indexId}).then(res=>{
+      if(res.data.errCode === 0){
+        setTimeout(()=>{
+          this.state.lists.forEach(r=>{
+            if(r.indexId == row.indexId){
+              r.realStock = res.data.data
+            }
+          })
+          this.setState({
+            lists:this.state.lists
+          })
+          message.success("更新成功")
+        },1000)
+      }else{
+        message.error("更新失败")
       }
     })
   }

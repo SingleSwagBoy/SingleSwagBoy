@@ -23,6 +23,7 @@ export default class WinningNews extends Component {
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
       },
+      activeKey:"1",
       tailLayout: {
         wrapperCol: { offset: 4, span: 20 },
       },
@@ -58,7 +59,7 @@ export default class WinningNews extends Component {
                   size="small"
                   type="primary"
                   onClick={()=>{
-                    this.setState({visible:true,currentItem:row},()=>{
+                    this.setState({visible:true,currentItem:row,activeKey:"1"},()=>{
                       this.formRef.current.setFieldsValue(row)
                     })
                   }}
@@ -181,11 +182,17 @@ export default class WinningNews extends Component {
                   // name="introduce"
                   // rules={[{ required: true, message: '请填写等级名称' }]}
                 >
-                 <Tabs tabPosition={"left"}>
+                 <Tabs tabPosition={"left"} defaultActiveKey={this.state.activeKey}  activeKey={this.state.activeKey} 
+                  onTabClick={(val)=>{
+                    this.setState({
+                      activeKey:val
+                    })
+                  }}
+                 >
                    {
                      this.state.tabList.map((r,i)=>{
                        return(
-                        <TabPane tab={r.name} key={r.id}>
+                        <TabPane tab={r.name} key={r.id} >
                           <Select
                             style={{margin:"20px 0"}}
                             defaultValue={this.state.currentItem.skipList[i].skipType}

@@ -90,16 +90,21 @@ export default class SportsProgram extends Component {
           render: (rowValue, row, index)=>{
             return (
               <div>
-                <div style={{width:"60%","textAlign":"center"}}>{row.realStock}</div>
-                <Button 
-                size="small"
-                type="primary"
-                onClick={()=>{
-                  this.realStock(row)
-                }}
-                >查看实时库存</Button>
+                {
+                  row.type === 2 &&
+                   <div>
+                    <div style={{width:"60%","textAlign":"center"}}>{row.realStock || 0}</div>
+                    <Button 
+                    size="small"
+                    type="primary"
+                    onClick={()=>{
+                      this.realStock(row)
+                    }}
+                    >查看实时库存</Button>
+                  </div>
+                }
               </div>
-              
+             
             )
           }
         },

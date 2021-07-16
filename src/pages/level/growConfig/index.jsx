@@ -141,9 +141,12 @@ export default class GrowConfig extends Component {
         <Modal
             title="成长值配置"
             centered
+            // key={new Date().getTime()}
             visible={this.state.visible}
             onCancel={() => {this.closeModel()}}
             footer={null}
+            // forceRender={true}
+            // destroyOnClose={true}
           >
             {
               <Form
@@ -207,6 +210,7 @@ export default class GrowConfig extends Component {
                   }}
                  >
                    {
+                     this.state.currentItem.skipList &&
                      this.state.tabList.map((r,i)=>{
                        return(
                         <TabPane tab={r.name} key={r.id} >
@@ -216,9 +220,6 @@ export default class GrowConfig extends Component {
                             defaultValue={this.state.currentItem.skipList[i].skipType}
                             onChange={(val)=>{
                               this.state.currentItem.skipList[i].skipType = val
-                              this.setState({
-                                currentItem:this.state.currentItem
-                              })
                             }}
                             >
                          
@@ -227,12 +228,9 @@ export default class GrowConfig extends Component {
                             <Option value={3} key={3}>赚赚页</Option>
                             <Option value={4} key={4}>套餐页</Option>
                           </Select>
-                          <Input defaultValue={this.state.buttonType===2?this.state.currentItem.skipList[i].skipUrl:""} key={this.state.currentItem.skipType} placeholder={"请输入地址"} 
+                          <Input defaultValue={this.state.currentItem.skipList[i].skipUrl} key={new Date().getTime()} placeholder={"请输入地址"} 
                           onChange={(val)=>{
                              this.state.currentItem.skipList[i].skipUrl = val.target.value
-                            //  this.setState({
-                            //   currentItem:this.state.currentItem
-                            //  })
                           }} />
                         </TabPane>
                        )
@@ -257,8 +255,12 @@ export default class GrowConfig extends Component {
   }
   closeModel(){
     this.formRef.current.resetFields()
+    // this.state.currentItem.skipList[0].skipUrl = ""
+    // this.state.currentItem.skipList[1].skipUrl = ""
+    // this.state.currentItem.skipList[2].skipUrl = ""
     this.setState({
-      visible:false
+      visible:false,
+      // currentItem:{},
     })
   }
   // 新增

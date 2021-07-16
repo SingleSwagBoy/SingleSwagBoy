@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getList,updateList,syn_slice} from 'api'
+import { getList,updateList,syn_slice,addList,deleteConfig} from 'api'
 import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,InputNumber,Select,Tabs} from 'antd'
 import {  } from 'react-router-dom'
 import {  } from "@ant-design/icons"
@@ -9,7 +9,7 @@ import "./style.css"
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
-export default class WinningNews extends Component {
+export default class GrowConfig extends Component {
   formRef = React.createRef();
   constructor(props){
     super(props);
@@ -17,7 +17,8 @@ export default class WinningNews extends Component {
       data: [],
       loading:false,
       dataLoading:false,
-      currentItem:{skipList:[{skipType:"1"},{skipType:"1"},{skipType:"1"}]},
+      buttonType:1,
+      currentItem:{skipList:[{skipType:""},{skipType:""},{skipType:""}]},
       lists: [],
       layout: {
         labelCol: { span: 4 },
@@ -72,6 +73,7 @@ export default class WinningNews extends Component {
                       visible:true,
                       currentItem:row,
                       activeKey:"1",
+                      buttonType:2,
                       tabList:a
                     },()=>{
                       this.formRef.current.setFieldsValue(row)
@@ -81,11 +83,7 @@ export default class WinningNews extends Component {
                   <Button 
                   size="small"
                   danger
-                  onClick={()=>{
-                    // this.setState({visible:true,currentItem:row},()=>{
-                    //   this.formRef.current.setFieldsValue(row)
-                    // })
-                  }}
+                  onClick={()=>{this.delArt(row)}}
                   >删除</Button>
               </div>
             )
@@ -101,19 +99,24 @@ export default class WinningNews extends Component {
       <div>
         <Card title={
           <Breadcrumb>
-            <Breadcrumb.Item>等级配置</Breadcrumb.Item>
+            <Breadcrumb.Item>成长值配置</Breadcrumb.Item>
           </Breadcrumb>
           
         }
         extra={
           <div>
-            {/* <Button type="primary"
+            <Button type="primary"
               onClick={()=>{
-                this.setState({visible:true},()=>{
-                  this.formRef.current.resetFields()
+                this.setState({
+                  visible:true,
+                  buttonType:1,
+                  activeKey:"1",
+                  currentItem:{skipList:[{skipType:""},{skipType:""},{skipType:""}]},
+                },()=>{
+                  this.formRef.current.setFieldsValue(this.state.currentItem)
                 })
               }}
-            >新增</Button> */}
+            >新增</Button>
              <Button type="primary"
               style={{margin:"0 0 0 20px"}}
               loading={this.state.dataLoading}
@@ -136,7 +139,7 @@ export default class WinningNews extends Component {
          
         </Card>
         <Modal
-            title="编辑等级配置"
+            title="成长值配置"
             centered
             visible={this.state.visible}
             onCancel={() => {this.closeModel()}}
@@ -150,7 +153,7 @@ export default class WinningNews extends Component {
                 ref = {this.formRef}
               >
                 <Form.Item
-                  label="等级名称"
+                  label="名称"
                   name="name"
                   rules={[{ required: true, message: '请填写等级名称' }]}
                 >
@@ -224,11 +227,12 @@ export default class WinningNews extends Component {
                             <Option value={3} key={3}>赚赚页</Option>
                             <Option value={4} key={4}>套餐页</Option>
                           </Select>
-                          <Input defaultValue={this.state.currentItem.skipList[i].skipUrl} key={this.state.currentItem.skipList[i].skipUrl} placeholder={"请输入地址"} onChange={(val)=>{
+                          <Input defaultValue={this.state.buttonType===2?this.state.currentItem.skipList[i].skipUrl:""} key={this.state.currentItem.skipType} placeholder={"请输入地址"} 
+                          onChange={(val)=>{
                              this.state.currentItem.skipList[i].skipUrl = val.target.value
-                             this.setState({
-                              currentItem:this.state.currentItem
-                            })
+                            //  this.setState({
+                            //   currentItem:this.state.currentItem
+                            //  })
                           }} />
                         </TabPane>
                        )
@@ -260,7 +264,11 @@ export default class WinningNews extends Component {
   // 新增
   submitForm(params){
     console.log(params)
-    this.updateList(params)
+    if(this.state.buttonType === 1){
+      this.addList(params)
+    }else{
+      this.updateList(params)
+    }
     this.closeModel()
   }
   getList(){
@@ -269,6 +277,16 @@ export default class WinningNews extends Component {
        this.setState({
          lists:res.data.data
        })
+      }
+    })
+  }
+  addList(params){
+    addList({key:"USER.POINT_CONF"},params).then(res=>{
+      if(res.data.errCode == 0){
+        message.success("新增成功")
+        this.getList()
+      }else{
+        message.error("新增失败")
       }
     })
   }
@@ -299,6 +317,28 @@ export default class WinningNews extends Component {
         })
       },1000)
      
+    })
+  }
+  delArt(val) {
+    Modal.confirm({
+      title: `删除成长值配置`,
+      content: '确认删除？',
+      onOk: ()=>{
+        this.deleteConfig(val)
+      },
+      onCancel: ()=>{
+
+      }
+    })
+  }
+  deleteConfig(row){
+    deleteConfig({key:"USER.POINT_CONF",id:row.indexId},{}).then(res=>{
+      if(res.data.errCode == 0){
+        message.success("删除成功")
+        this.getList()
+      }else{
+        message.error("删除失败")
+      }
     })
   }
 }

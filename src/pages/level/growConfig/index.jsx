@@ -70,14 +70,18 @@ export default class GrowConfig extends Component {
                       })
                     })
                     this.setState({
-                      visible:true,
                       currentItem:row,
-                      activeKey:"1",
-                      buttonType:2,
-                      tabList:a
                     },()=>{
-                      this.formRef.current.setFieldsValue(row)
+                      this.setState({
+                        visible:true,
+                        activeKey:"1",
+                        buttonType:2,
+                        tabList:a
+                      },()=>{
+                        this.formRef.current.setFieldsValue(row)
+                      })
                     })
+                    
                   }}
                   >编辑</Button>
                   <Button 
@@ -111,7 +115,7 @@ export default class GrowConfig extends Component {
                   visible:true,
                   buttonType:1,
                   activeKey:"1",
-                  currentItem:{skipList:[{skipType:""},{skipType:""},{skipType:""}]},
+                  currentItem:{skipList:[{skipType:"",platform:"ios"},{skipType:"",platform:"android"},{skipType:"",platform:"mini"}]},
                 },()=>{
                   this.formRef.current.setFieldsValue(this.state.currentItem)
                 })
@@ -220,9 +224,9 @@ export default class GrowConfig extends Component {
                             defaultValue={this.state.currentItem.skipList[i].skipType}
                             onChange={(val)=>{
                               this.state.currentItem.skipList[i].skipType = val
+                              // this.state.currentItem.skipList[i].platform = r.platform
                             }}
                             >
-                         
                             <Option value={1} key={1}>h5</Option>
                             <Option value={2} key={2}>小程序</Option>
                             <Option value={3} key={3}>赚赚页</Option>
@@ -231,6 +235,7 @@ export default class GrowConfig extends Component {
                           <Input defaultValue={this.state.currentItem.skipList[i].skipUrl} key={new Date().getTime()} placeholder={"请输入地址"} 
                           onChange={(val)=>{
                              this.state.currentItem.skipList[i].skipUrl = val.target.value
+                            //  this.state.currentItem.skipList[i].platform = r.platform
                           }} />
                         </TabPane>
                        )
@@ -255,9 +260,6 @@ export default class GrowConfig extends Component {
   }
   closeModel(){
     this.formRef.current.resetFields()
-    // this.state.currentItem.skipList[0].skipUrl = ""
-    // this.state.currentItem.skipList[1].skipUrl = ""
-    // this.state.currentItem.skipList[2].skipUrl = ""
     this.setState({
       visible:false,
       // currentItem:{},
@@ -283,7 +285,11 @@ export default class GrowConfig extends Component {
     })
   }
   addList(params){
-    addList({key:"USER.POINT_CONF"},params).then(res=>{
+    let a={
+      ...this.state.currentItem,
+      ...params
+    }
+    addList({key:"USER.POINT_CONF"},a).then(res=>{
       if(res.data.errCode == 0){
         message.success("新增成功")
         this.getList()

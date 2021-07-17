@@ -1,5 +1,6 @@
 import request from 'utils/request.js'
-let baseUrl = "http://test.cms.tvplus.club"
+// let baseUrl = "http://test.cms.tvplus.club"
+let baseUrl = "http://cms.tvplus.club"
 export {baseUrl} 
 
 export const getMenu = params => { //获取菜单

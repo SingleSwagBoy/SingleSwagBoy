@@ -31,7 +31,7 @@ class Login extends Component {
       "appidDev": "dingoaaoqasyxflot45f87",
       "appidTest": "dingoa79hazduekdhw6oyb",
       "appidTest2": "dingoa09ucxedcx85kgpjl",
-      "appidProd": "dingoajfgp2ovgefsctzuq",
+      "appidProd": "dingoatekbebkig2bsnjlb",
       "appidProd2": "dingoaulkihfjnml7eezqz",
     }
   }

@@ -22,7 +22,6 @@ export default class ChannelEdit extends Component {
     super(props);
     const _this = this;
     console.log(props)
-   
     this.state={
       loading: false,
       formData:{},
@@ -97,7 +96,7 @@ export default class ChannelEdit extends Component {
         formData:nextProps.channelItem,
         status:1
       },()=>{
-        this.formRef.current.setFieldsValue(this.state.formData)
+        // this.formRef.current.setFieldsValue(nextProps.channelItem)
         this.searchPrograms(this.state.formData.programName)
       })
     }else{
@@ -138,9 +137,9 @@ export default class ChannelEdit extends Component {
              ref = {this.formRef}
              name="basic"
              onFinish={this.submitForm}
-             initialValue = {{
-               ...this.state.formData
-             }}
+            //  initialValue = {{
+            //    ...this.state.formData
+            //  }}
            >
              <Form.Item label="频道" style={{ marginBottom: 0 }} rules={[{ required: true }]}>
                <Form.Item
@@ -278,7 +277,7 @@ export default class ChannelEdit extends Component {
                {/* 上传文件的控件 */}
                <Upload {...this.state.updateProps}>
                  {/* <Image /> */}
-                {this.state.formData ? <img src={this.state.formData.h_image} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                {this.state.formData ? <img referrer="no-referrer|origin|unsafe-url" src={this.state.formData.h_image} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                </Upload>
                <Image />
              </Form.Item>
@@ -304,6 +303,7 @@ export default class ChannelEdit extends Component {
   }
 
   componentDidMount(){
+    this.formRef.current.setFieldsValue(this.props.channelItem)
   }
   startDay(value){
     console.log(value)

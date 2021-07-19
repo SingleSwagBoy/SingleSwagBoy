@@ -38,6 +38,7 @@ export default class SportsProgram extends Component {
           title: "短视频ID",
           dataIndex: "id",
           key: "id",
+          width:150
         },
         {
           title: "名字",
@@ -48,10 +49,13 @@ export default class SportsProgram extends Component {
           title: "播放源",
           dataIndex: "source",
           key: "source",
+          // width: "10%",
         },
         {
           title: "操作",
           key: "action",
+          fixed: 'right',
+          width: 200,
           render: (rowValue, row, index)=>{
             return (
               <div>
@@ -124,6 +128,7 @@ export default class SportsProgram extends Component {
                 total: this.state.total,
                 onChange: this.changeSize
               }}
+              scroll={{x: "100%"}}
               columns={this.state.columns} />
          
         </Card>

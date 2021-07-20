@@ -178,11 +178,11 @@ class Login extends Component {
                       <Input.Password placeholder={"请输入密码"} />
                     </Form.Item>
 
-                    <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
+                    <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 4, span: 18 }}>
                       <Checkbox>记住我</Checkbox>
                     </Form.Item>
 
-                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                    <Form.Item wrapperCol={{ offset: 4, span: 18 }}>
                       <Button type="primary" htmlType="submit">
                         登录
                       </Button>

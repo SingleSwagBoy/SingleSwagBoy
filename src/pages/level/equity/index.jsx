@@ -30,7 +30,6 @@ export default class SportsProgram extends Component {
       pageSize: 10000,
       total: 0,
       loading:false,
-      buttonLaoding:false,
       lists: [],
       currentItem:"",//编辑行的id
       newData:{},
@@ -558,6 +557,7 @@ export default class SportsProgram extends Component {
     })
   }
   addList(params){
+    delete params.buttonLaoding
     addList({key:"USER.EQUITY"},params).then(res=>{
       if(res.data.errCode == 0){
         message.success("新增成功")
@@ -568,6 +568,7 @@ export default class SportsProgram extends Component {
     })
   }
   updateList(params){
+    delete params.buttonLaoding
     updateList({key:"USER.EQUITY",id:params.indexId},params).then(res=>{
       if(res.data.errCode == 0){
         message.success("更新成功")
@@ -590,7 +591,7 @@ export default class SportsProgram extends Component {
   }
   hotStock(row){
     this.state.lists.forEach(r=>{
-      if(r.indexId == row.indexId){
+      if(r.indexId === row.indexId){
         r.buttonLaoding = true
       }
     })
@@ -601,7 +602,7 @@ export default class SportsProgram extends Component {
       if(res.data.errCode === 0 && res.data.data){
         setTimeout(()=>{
           this.state.lists.forEach(r=>{
-            if(r.indexId == row.indexId){
+            if(r.indexId === row.indexId){
               r.buttonLaoding = false
             }
           })

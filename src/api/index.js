@@ -1,8 +1,11 @@
 import request from 'utils/request.js'
-// let baseUrl = "http://test.cms.tvplus.club"
-let baseUrl = "http://cms.tvplus.club"
+let baseUrl = "http://test.cms.tvplus.club"
+// let baseUrl = "http://cms.tvplus.club"
 export {baseUrl} 
 
+export const loginSystem = params => { //获取菜单
+  return request.post(`${baseUrl}/mms/login`, params)
+};
 export const getMenu = params => { //获取菜单
   return request.post(`${baseUrl}/mms/sys/user/menu`, params)
 };

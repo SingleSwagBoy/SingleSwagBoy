@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import {  } from 'antd';
+import { Tabs,Form, Input, Button, Checkbox, message } from 'antd';
 import {connect} from 'react-redux'
 import { doLogin } from 'store/user/actionCreators'
+import {loginSystem} from "../../api/index"
 import './index.css';
 import BGParticle from '../../utils/BGParticle'
 import util from "../../utils/index"
+const { TabPane } = Tabs;
 const mapStateToProps = (state) => {
   return {
     
@@ -78,6 +80,7 @@ class Login extends Component {
         goto: encodeURIComponent(this.state.dingdParam.uri),
         style: "border:none;background-color:rgba(0,0,0,0.4);",
         height: "350",
+        width:"350"
     });
   }
   DDListen(){
@@ -116,12 +119,83 @@ class Login extends Component {
         window.location.href = redirect_uri_check
     }
   }
+  callback(key) {
+    console.log(key);
+  }
+  onFinish(params) {
+    console.log(params)
+    this.loginSystem(params)
+  }
+  loginSystem(params){
+    loginSystem(params).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("登录成功")
+        this.props.doLogin(res.data.data)
+        setTimeout(r=>{
+          this.props.history.push("/mms/ayh/channel")
+        },1500)
+      }else{
+        message.error(res.data.msg)
+      }
+    })
+  }
   render() {
     return (
-      <div className="login">
-        <div id='backgroundBox' className="backgroundBox"></div>
-        <div id="login_container" className="login_container"></div>
-      </div>
+      <>
+       <div className="login">
+            <div id='backgroundBox' className="backgroundBox"></div>
+            <Tabs defaultActiveKey="1" onChange={this.callback()} tabPosition={"left"}>
+              <TabPane tab="扫码登录" key="1">
+                <div className="common_box">
+                  <div id="login_container" className="login_container"></div>
+                </div>
+              </TabPane>
+              <TabPane tab="密码登录" key="2">
+                <div className="common_box">
+                  <Form
+                    name="basic"
+                    labelCol={{ span: 4 }}
+                    wrapperCol={{ span: 18 }}
+                    // width={"100%"}
+                    style={{width:"350px",backgroundColor:"rgba(255,255,255,0.4)",paddingTop:"50px"}}
+                    initialValues={{ remember: true }}
+                    onFinish={this.onFinish.bind(this)}
+                    // onFinishFailed={onFinishFailed}
+                  >
+                    <Form.Item
+                      label="姓名"
+                      name="username"
+                      rules={[{ required: true, message: '请输入账号' }]}
+                    >
+                      <Input placeholder={"请输入账号"} />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="密码"
+                      name="password"
+                      rules={[{ required: true, message: '请输入密码' }]}
+                    >
+                      <Input.Password placeholder={"请输入密码"} />
+                    </Form.Item>
+
+                    <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
+                      <Checkbox>记住我</Checkbox>
+                    </Form.Item>
+
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                      <Button type="primary" htmlType="submit">
+                        登录
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </div>
+                
+              </TabPane>
+            </Tabs>
+        </div>
+          
+      </>
+     
     )
   }
 }

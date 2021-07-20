@@ -96,7 +96,7 @@ export default class ChannelEdit extends Component {
         formData:nextProps.channelItem,
         status:1
       },()=>{
-        // this.formRef.current.setFieldsValue(nextProps.channelItem)
+        this.formRef.current.setFieldsValue(nextProps.channelItem)
         this.searchPrograms(this.state.formData.programName)
       })
     }else{

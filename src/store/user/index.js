@@ -19,7 +19,7 @@ const reducer = (state=defaultState, action) => {
     case SETUSERINFO:
       newState.authorization = action.params.authorization
       newState.userInfo = {
-        userName:action.params.name,
+        userName:action.params.name || action.params.userName,
         userId:action.params.userid,
         id:action.params.id
       }

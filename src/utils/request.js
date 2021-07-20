@@ -15,9 +15,12 @@ request.interceptors.request.use(function (config) {
   // 请求头中添加token
   // hide = message.loading('加载中...', 0);
   const user = localStorage.getItem('user')
-  if(JSON.parse(user).authorization) {
-    config.headers.authorization = JSON.parse(user).authorization
+  if(user){
+    if(JSON.parse(user).authorization) {
+      config.headers.authorization = JSON.parse(user).authorization
+    }
   }
+  
   // hide()
   return config;
 }, function (error) {

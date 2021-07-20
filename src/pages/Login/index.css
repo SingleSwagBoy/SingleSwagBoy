@@ -14,11 +14,24 @@
     height: 100vh;
     background: url("http://47.99.130.140/imgs/wallhaven-g83v2e.jpg") no-repeat;
     background-size: 100% 100%;
+    z-index: -1;
     transition:all .5s;
 }
 .login_container{
     position: relative;
     z-index: 99;
     background-color: transparent;
+}
+.common_box{
+    width: 400px;
+    height: 400px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    /* background-color: red; */
+}
+.login .ant-tabs-tab-btn{
+    font-size: 25px;
+    color: #fff;
 }
 

@@ -116,3 +116,9 @@ export const updateGold = (params) => { //奥运会返现奖牌更新
 export const sendAward = (params) => { //奥运会发奖接口
   return request.post(`${baseUrl}/mms/cash/olympic/award`,params)
 };
+export const getRecords = (params) => { //获取用户秒杀地址列表
+  return request.post(`${baseUrl}/mms/activity/levelMs/records`,params)
+};
+export const importFile = (params) => { //到处用户地址file
+  return request.post(`${baseUrl}/mms/activity/levelMs/import`,params)
+};

@@ -13,6 +13,7 @@ const LevelConfig = lazy(()=>import('pages/level/levelConfig/index.jsx'))
 const GrowConfig = lazy(()=>import('pages/level/growConfig/index.jsx'))
 const UserDemote = lazy(()=>import('pages/level/userDemote/index.jsx'))
 const BonusPayment = lazy(()=>import('pages/ayh/bonusPayment/index.jsx'))
+const AddressList = lazy(()=>import('pages/level/addressList/index.jsx'))
 
 const adminRoutes = [
   {
@@ -84,6 +85,12 @@ const adminRoutes = [
   {
     path: '/mms/level/userDemote',
     component: UserDemote,
+    name: '用户降级',
+    icon: UnorderedListOutlined
+  },
+  {
+    path: '/mms/level/addressList',
+    component: AddressList,
     name: '用户降级',
     icon: UnorderedListOutlined
   },

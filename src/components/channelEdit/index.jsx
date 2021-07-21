@@ -383,14 +383,22 @@ export default class ChannelEdit extends Component {
     })
   }
   updateChannelProgram(param){
-    updateChannelProgram({...param}).then(res=>{
+    let a={
+      ...param,
+      channelId:param.channelCode
+    }
+    updateChannelProgram(a).then(res=>{
       if(res.data.errCode === 0){
         this.props.updateList()
       }
     })
   }
   addChannelProgram(param){
-    addChannelProgram({...param}).then(res=>{
+    let a={
+      ...param,
+      channelId:param.channelCode
+    }
+    addChannelProgram(a).then(res=>{
       if(res.data.errCode === 0){
         
       }

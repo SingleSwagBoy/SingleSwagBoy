@@ -25,7 +25,6 @@ export default class ChannelEdit extends Component {
     this.state={
       loading: false,
       formData:{},
-      status:null,
       channelGroup:[],
       layout: {
         labelCol: { span: 4 },
@@ -94,7 +93,6 @@ export default class ChannelEdit extends Component {
     if(nextProps.channelItem){
       this.setState({
         formData:nextProps.channelItem,
-        status:1
       },()=>{
         this.formRef.current.setFieldsValue(nextProps.channelItem)
         this.searchPrograms(this.state.formData.programName)
@@ -103,7 +101,6 @@ export default class ChannelEdit extends Component {
       console.log("晴空")
       this.setState({
         formData:{},
-        status:2
       })
       this.formRef.current.resetFields()
     }
@@ -351,7 +348,7 @@ export default class ChannelEdit extends Component {
     a["startTime"] = parseInt(new Date(a["time"].toDate().setFullYear(c.getFullYear(),c.getMonth(),c.getDate())).getTime() /1000)
     console.log(a,"a")
     this.props.closeModel()
-    if(this.state.status ===1){
+    if(!!this.props.channelItem){
       this.updateChannelProgram(a)
     }else{
       this.addChannelProgram(a)

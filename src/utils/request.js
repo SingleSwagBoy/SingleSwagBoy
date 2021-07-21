@@ -6,7 +6,7 @@ const history = createHashHistory()
 const request = axios.create({
   // baseURL: "",
   // baseURL: "http://test.cms.tvplus.club",
-  timeout: 8000
+  timeout: 60000
 })
 
 let hide = null;

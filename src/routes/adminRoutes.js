@@ -12,6 +12,7 @@ const Equity = lazy(()=>import('pages/level/equity/index.jsx'))
 const LevelConfig = lazy(()=>import('pages/level/levelConfig/index.jsx'))
 const GrowConfig = lazy(()=>import('pages/level/growConfig/index.jsx'))
 const UserDemote = lazy(()=>import('pages/level/userDemote/index.jsx'))
+const BonusPayment = lazy(()=>import('pages/ayh/bonusPayment/index.jsx'))
 
 const adminRoutes = [
   {
@@ -54,6 +55,12 @@ const adminRoutes = [
     path: '/mms/ayh/shortVideo',
     component: ShortVideo,
     name: '短视频搜索',
+    icon: LineChartOutlined
+  },
+  {
+    path: '/mms/ayh/bonusPayment',
+    component: BonusPayment,
+    name: '奖金发放',
     icon: LineChartOutlined
   },
   {

@@ -1,6 +1,6 @@
 import request from 'utils/request.js'
-// let baseUrl = "http://test.cms.tvplus.club"
-let baseUrl = "http://cms.tvplus.club"
+let baseUrl = "http://test.cms.tvplus.club"
+// let baseUrl = "http://cms.tvplus.club"
 export {baseUrl} 
 
 export const loginSystem = params => { //获取菜单
@@ -106,4 +106,13 @@ export const hotStock = (params) => { //查找合集短视频
 //等级权益
 export const realStock = (params) => { //查找合集短视频
   return request.get(`${baseUrl}/mms/activity/levelMs/realStock`,{params:params})
+};
+export const getBonusList = (params) => { //奥运会返现列表拉取
+  return request.get(`${baseUrl}/mms/cash/olympic/days/list`,{params:params})
+};
+export const updateGold = (params) => { //奥运会返现奖牌更新
+  return request.post(`${baseUrl}/mms/cash/olympic/days/update`,params)
+};
+export const sendAward = (params) => { //奥运会发奖接口
+  return request.post(`${baseUrl}/mms/cash/olympic/award`,params)
 };

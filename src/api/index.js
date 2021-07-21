@@ -1,6 +1,6 @@
 import request from 'utils/request.js'
-// let baseUrl = "http://test.cms.tvplus.club"
-let baseUrl = "http://cms.tvplus.club"
+let baseUrl = "http://test.cms.tvplus.club"
+// let baseUrl = "http://cms.tvplus.club"
 export {baseUrl} 
 
 export const loginSystem = params => { //获取菜单
@@ -23,6 +23,9 @@ export const updateListChannelInfo = params => { //刷新指定频道和时间�
 };
 export const updateChannelProgram = params => { //刷新指定频道和时间的节目单信息
   return request.post(`${baseUrl}/mms/channel/programs/updateChannelProgram`,params)
+};
+export const deleteChannelProgram = params => { //删除节目单某个节目
+  return request.post(`${baseUrl}/mms/channel/programs/deleteChannelProgram`,params)
 };
 export const searchPrograms = params => { //查询关联节目
   return request.get(`${baseUrl}/mms/channel/programGuides/search`,{params:params})

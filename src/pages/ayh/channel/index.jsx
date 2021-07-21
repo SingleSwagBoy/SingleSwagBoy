@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getChannelGroupChannel,getListChannelInfo ,updateListChannelInfo} from 'api'
+import { getChannelGroupChannel,getListChannelInfo ,updateListChannelInfo,deleteChannelProgram} from 'api'
 import { Card, Breadcrumb, Button, Table, Image, Modal, message,Input, Space,DatePicker} from 'antd'
 import { Link } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
@@ -119,7 +119,7 @@ export default class AyhChannel extends Component {
                 <Button 
                   size="small"
                   danger
-                  onClick={()=>{this.delArt(row.id)}}
+                  onClick={()=>{this.delArt(row)}}
                   >删除</Button>
                 
               </div>
@@ -259,12 +259,12 @@ export default class AyhChannel extends Component {
     })
   }
   // 删除文章
-  delArt(id) {
+  delArt(row) {
     Modal.confirm({
-      title: '删除文章',
+      title: '删除此节目吗',
       content: '确认删除？',
       onOk: ()=>{
-        
+        this.deleteChannelProgram(row)
       },
       onCancel: ()=>{
 
@@ -363,5 +363,16 @@ export default class AyhChannel extends Component {
   }
   updateList(){
     this.getListChannelInfo(this.state.currentChannelItem,this.state.timeSwiper[this.state.currentIndex])
+  }
+  deleteChannelProgram(param){
+    let a={
+      ...param,
+      channelId:this.state.currentChannelItem.channelCode
+    }
+    deleteChannelProgram(a).then(res=>{
+      if(res.data.errCode === 0){
+        this.getListChannelInfo(this.state.currentChannelItem,this.state.timeSwiper[this.state.currentIndex])
+      }
+    })
   }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getList,getRecords} from 'api'
-import { Card, Button, Table, message, DatePicker,Select} from 'antd'
+import { baseUrl,getList,getRecords,importFile} from 'api'
+import { Card, Button, Table, message, DatePicker,Select,Upload} from 'antd'
 import {  } from 'react-router-dom'
 import {  } from "@ant-design/icons"
 import  util from 'utils'
@@ -9,11 +9,15 @@ import XLSX from 'xlsx'
 import "./style.css"
 const { Option } = Select;
 const { RangePicker } = DatePicker;
+const url =  {
+  downloadUrl: '/file/template.xlsx',
+}
 
 export default class WinningNews extends Component {
   formRef = React.createRef();
   constructor(props){
     super(props);
+    let _this = this
     this.state = {
       data: [],
       loading:false,
@@ -32,19 +36,28 @@ export default class WinningNews extends Component {
       },
       columns: [
         {
+          title: "商品sn",
+          dataIndex: "sn",
+          key: "sn",
+          width:150,
+        },
+        {
           title: "商品名称",
           dataIndex: "goodName",
           key: "goodName",
+          width:150,
         },
         {
           title: "userid",
           dataIndex: "userId",
           key: "userId",
+          width:150,
         },
         {
           title: "秒杀时间",
           dataIndex: "createTime",
           key: "createTime",
+          width:150,
           render: (rowValue,row,index) => {
             return (
               <span>{util.formatTime(String(row.createTime).length==10? row.createTime* 1000:row.createTime,"","")}</span>
@@ -55,31 +68,37 @@ export default class WinningNews extends Component {
           title: "昵称",
           dataIndex: "userName",
           key: "userName",
+          width:150,
         },
         {
           title: "联系人",
           dataIndex: "contactorName",
           key: "contactorName",
+          width:150,
         },
         {
           title: "手机",
           dataIndex: "contactorMobile",
           key: "contactorMobile",
+          width:150,
         },
         {
           title: "收货地址",
           dataIndex: "contactorAddress",
           key: "contactorAddress",
+          width:150,
         },
         {
           title: "用户备注",
           dataIndex: "contactorNote",
           key: "contactorNote",
+          width:150,
         },
         {
           title: "发货状态",
           dataIndex: "state",
           key: "state",
+          width:150,
           render: (rowValue,row,index) => {
             return (
               <span>{row.state === 20?"待发货":row.state === 30?"已发货":"-"}</span>
@@ -90,9 +109,53 @@ export default class WinningNews extends Component {
           title: "物流单号",
           dataIndex: "shippingCode",
           key: "shippingCode",
+          width:150,
         },
       ],
       visible:false,
+      updateProps: {
+        name:"file",
+        // listType:"picture-card",
+        className:"uploader_file",
+        action: `${baseUrl}/mms/activity/levelMs/import`,
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("user")).authorization,
+        },
+        onChange(info) {  // 监控上传状态的回调
+          if (info.file.status !== 'uploading') {
+            _this.setState({ loading: true });
+          }
+          if (info.file.status === 'done') {
+            console.log(info.file)
+            if(info.file.response.errCode === 0){
+              message.success(info.file.response.msg);
+              setTimeout(()=>{
+                _this.setState({ loading: false,screen:{}},()=>{
+                  _this.getRecords()
+                });
+              },1500)
+             
+            }else{
+              _this.setState({ loading: false});
+              message.error(info.file.response.msg);
+            }
+          } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} 上传失败.`);
+            _this.setState({ loading: false});
+          }
+        },
+        beforeUpload(file){
+          // const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+          // if (!isJpgOrPng) {
+          //   message.error('You can only upload JPG/PNG file!');
+          // }
+          // const isLt2M = file.size / 1024 / 1024 < 2;
+          // if (!isLt2M) {
+          //   message.error('Image must smaller than 2MB!');
+          // }
+          // return isJpgOrPng && isLt2M;
+        }
+      },
     }
   }
   render() {
@@ -157,13 +220,22 @@ export default class WinningNews extends Component {
         extra={
           <div>
             <Button type="primary" onClick={()=>{this.exportExcel(1)}}>导出</Button>
-             <Button type="primary" style={{margin:"0 20px"}} onClick={()=>{}}>导入数据（发货）</Button>
-             <Button type="primary"onClick={()=>{this.exportExcel(2)}}>下载导入模版</Button>
+             <Button type="primary" style={{margin:"0 20px"}}  loading={this.state.loading}>
+                  <Upload {...this.state.updateProps}>
+                      导入数据（发货）
+                   </Upload>
+               </Button>
+             <Button type="primary"><a href={url.downloadUrl} download >下载导入模版</a></Button>
           </div>
         }
         >
           <Table 
               dataSource={this.state.lists}
+              // scroll={{ x: 1500 }}
+              scroll={{
+                // y: 300,
+                x: '100vw',
+              }}
               rowKey={item=>item.indexId}
               loading={this.state.loading}
               columns={this.state.columns} />
@@ -174,7 +246,7 @@ export default class WinningNews extends Component {
   }
   componentDidMount(){
     this.getList() // 查询列表数据
-    this.getRecords("")
+    this.getRecords()
   }
  
   getList(){
@@ -212,19 +284,21 @@ export default class WinningNews extends Component {
     }else{
       keys = ['编号sn', '物流单号', '物流公司']
     }
-    // data.push(keys)
-    let a =[]
+    data.push(keys)
+   
     if(type === 1){
-      this.state.lists.forEach(l => {
+      this.state.lists.forEach(l=>{
+        let obj =[]
         exportKey.forEach(r=>{
-          // if(l.){
-
-          // }
+          if(r === "createTime"){
+            obj.push(l[r].toString())
+          }else{
+            obj.push(l[r])
+          }
         })
+        data.push(obj)
       })
     }
-    console.log(data)
-    return
     this.setState({
       excelData:data
     }, ()=>{
@@ -237,5 +311,8 @@ export default class WinningNews extends Component {
 		const wb = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
 		XLSX.writeFile(wb, type===1?"用户列表.xlsx":"导入模版.xlsx")
+  }
+  importFile(){
+
   }
 }

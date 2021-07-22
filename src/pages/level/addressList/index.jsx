@@ -230,7 +230,7 @@ export default class WinningNews extends Component {
             </div> */}
             <div className="everyBody">
               <div>用户userid:</div>
-              <Input.Search placeholder="请输入用户userid" onSearch={(val)=>{
+              <Input.Search allowClear placeholder="请输入用户userid" onSearch={(val)=>{
                 if(val){
                   this.state.screen.userId = val
                 }else{

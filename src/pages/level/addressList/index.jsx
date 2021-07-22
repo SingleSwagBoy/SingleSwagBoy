@@ -47,7 +47,7 @@ export default class WinningNews extends Component {
           title: "商品名称",
           dataIndex: "goodName",
           key: "goodName",
-          width:250,
+          width:"8%",
         },
         {
           title: "userid",
@@ -59,7 +59,7 @@ export default class WinningNews extends Component {
           title: "秒杀时间",
           dataIndex: "createTime",
           key: "createTime",
-          width:150,
+          width:"10%",
           render: (rowValue,row,index) => {
             return (
               <span>{util.formatTime(String(row.createTime).length==10? row.createTime* 1000:row.createTime,"","")}</span>
@@ -76,7 +76,7 @@ export default class WinningNews extends Component {
           title: "联系人",
           dataIndex: "contactorName",
           key: "contactorName",
-          width:150,
+          width:"5%",
         },
         {
           title: "手机",
@@ -100,7 +100,7 @@ export default class WinningNews extends Component {
           title: "发货状态",
           dataIndex: "state",
           key: "state",
-          width:150,
+          width:"5%",
           render: (rowValue,row,index) => {
             return (
               <span>{row.state === 20?"待发货":row.state === 30?"已发货":"-"}</span>
@@ -111,7 +111,13 @@ export default class WinningNews extends Component {
           title: "物流单号",
           dataIndex: "shippingCode",
           key: "shippingCode",
-          width:150,
+          width:500,
+        },
+        {
+          title: "物流公司",
+          dataIndex: "shippingCompany",
+          key: "shippingCompany",
+          width:"10%",
         },
       ],
       visible:false,

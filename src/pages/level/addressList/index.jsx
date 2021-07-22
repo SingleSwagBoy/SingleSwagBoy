@@ -10,9 +10,8 @@ import "./style.css"
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const url =  {
-  downloadUrl: '/file/template.xlsx',
+  downloadUrl: './file/template.xlsx',
 }
-
 export default class WinningNews extends Component {
   formRef = React.createRef();
   constructor(props){

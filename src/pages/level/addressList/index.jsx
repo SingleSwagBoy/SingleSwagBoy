@@ -18,6 +18,9 @@ export default class WinningNews extends Component {
     super(props);
     let _this = this
     this.state = {
+      page: 1,
+      pageSize: 10,
+      total: 0,
       data: [],
       loading:false,
       dataLoading:false,
@@ -44,7 +47,7 @@ export default class WinningNews extends Component {
           title: "商品名称",
           dataIndex: "goodName",
           key: "goodName",
-          width:150,
+          width:250,
         },
         {
           title: "userid",
@@ -130,7 +133,7 @@ export default class WinningNews extends Component {
               message.success(info.file.response.msg);
               setTimeout(()=>{
                 _this.setState({ loading: false,screen:{}},()=>{
-                  _this.getRecords()
+                  _this.getRecords(1)
                 });
               },1500)
              
@@ -171,13 +174,13 @@ export default class WinningNews extends Component {
                   }else{
                     delete this.state.screen.rightId
                   }
-                  this.getRecords()
+                  this.getRecords(1)
                 }}
               >
                 {
                   this.state.optionList.map(r=>{
                     return(
-                      <Option value={r.indexId}>{r.name}</Option>
+                      <Option value={r.indexId} key={r.indexId}>{r.name}</Option>
                     )
                   })
                 }
@@ -194,7 +197,7 @@ export default class WinningNews extends Component {
                     delete this.state.screen.startTime
                     delete this.state.screen.endTime
                   }
-                  this.getRecords()
+                  this.getRecords(1)
                 }}
               />
             </div>
@@ -207,11 +210,11 @@ export default class WinningNews extends Component {
                   }else{
                     delete this.state.screen.state
                   }
-                  this.getRecords()
+                  this.getRecords(1)
                 }}
               >
-                <Option value={30}>已发货</Option>
-                <Option value={20}>待发货</Option>
+                <Option value={30} key={30}>已发货</Option>
+                <Option value={20} key={20}>待发货</Option>
               </Select>
             </div>
           </div>
@@ -230,12 +233,17 @@ export default class WinningNews extends Component {
         >
           <Table 
               dataSource={this.state.lists}
-              // scroll={{ x: 1500 }}
               scroll={{
                 // y: 300,
                 x: '100vw',
               }}
-              rowKey={item=>item.indexId}
+              pagination={{
+                current:this.state.page,
+                pageSize: this.state.pageSize,
+                total: this.state.total,
+                onChange: this.changeSize
+              }}
+              rowKey={item=>item.id}
               loading={this.state.loading}
               columns={this.state.columns} />
          
@@ -245,9 +253,18 @@ export default class WinningNews extends Component {
   }
   componentDidMount(){
     this.getList() // 查询列表数据
-    this.getRecords()
+    this.getRecords(1)
   }
- 
+  changeSize = (page, pageSize) => {
+    // 分页获取
+    this.setState({
+      page,
+      pageSize
+    },()=>{
+      this.getRecords()
+    })
+  
+  }
   getList(){
     getList({key:"USER.EQUITY"}).then(res=>{
       if(res.data.errCode == 0){
@@ -257,14 +274,25 @@ export default class WinningNews extends Component {
       }
     })
   }
-  getRecords(){
+  getRecords(type){
+    if(type){
+      this.setState({
+        page:type
+      })
+    }
     let params={
-      ...this.state.screen
+      ...this.state.screen,
+      "page": {
+        "currentPage": type?type:this.state.page,
+        "pageSize": this.state.pageSize,
+        // "pageSize": 10,
+      }
     }
     getRecords(params).then(res=>{
       if(res.data.errCode == 0){
        this.setState({
-         lists:res.data.data.data
+         lists:res.data.data.data,
+         total:res.data.data.page.totalCount
        })
       }
     })
@@ -275,29 +303,24 @@ export default class WinningNews extends Component {
     let data = [];
     let keys = []
     let exportKey = []
-    if(type === 1){
-      this.state.columns.forEach(r=>{
-        keys.push(r.title)
-        exportKey.push(r.key)
-      })
-    }else{
-      keys = ['编号sn', '物流单号', '物流公司']
-    }
+    this.state.columns.forEach(r=>{
+      keys.push(r.title)
+      exportKey.push(r.key)
+    })
     data.push(keys)
-   
-    if(type === 1){
-      this.state.lists.forEach(l=>{
-        let obj =[]
-        exportKey.forEach(r=>{
-          if(r === "createTime"){
-            obj.push(l[r].toString())
-          }else{
-            obj.push(l[r])
-          }
-        })
-        data.push(obj)
+    this.state.lists.forEach(l=>{
+      let obj =[]
+      exportKey.forEach(r=>{
+        if(r === "createTime"){
+          obj.push(util.formatTime(l[r],"",""))
+        }else if(r === "state"){
+          obj.push(l[r] === 20?"待发货":l[r] === 30?"已发货":"未知")
+        }else{
+          obj.push(l[r])
+        }
       })
-    }
+      data.push(obj)
+    })
     this.setState({
       excelData:data
     }, ()=>{
@@ -309,7 +332,7 @@ export default class WinningNews extends Component {
 		const ws = XLSX.utils.aoa_to_sheet(this.state.excelData);
 		const wb = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
-		XLSX.writeFile(wb, type===1?"用户列表.xlsx":"导入模版.xlsx")
+		XLSX.writeFile(wb, "用户列表.xlsx")
   }
   importFile(){
 

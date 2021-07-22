@@ -1,6 +1,11 @@
 import request from 'utils/request.js'
-// let baseUrl = "http://test.cms.tvplus.club"
-let baseUrl = "http://cms.tvplus.club"
+let baseUrl = ""
+console.log(window.location.host,"api")
+if(window.location.host.includes("localhost")|| window.location.host.includes("test")){
+  baseUrl = "http://test.cms.tvplus.club"
+}else if(window.location.host.includes("cms.tvplus.club")){
+  baseUrl = "http://cms.tvplus.club"
+}
 export {baseUrl} 
 
 export const loginSystem = params => { //获取菜单

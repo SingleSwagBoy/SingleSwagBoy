@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
 import { baseUrl,getList,getRecords,importFile} from 'api'
-import { Card, Button, Table, message, DatePicker,Select,Upload} from 'antd'
+import { Card, Button, Table, message, DatePicker,Select,Upload,Input} from 'antd'
 import {  } from 'react-router-dom'
 import {  } from "@ant-design/icons"
 import  util from 'utils'
@@ -88,7 +88,7 @@ export default class WinningNews extends Component {
           title: "收货地址",
           dataIndex: "contactorAddress",
           key: "contactorAddress",
-          width:150,
+          width:"10%",
         },
         {
           title: "用户备注",
@@ -192,7 +192,7 @@ export default class WinningNews extends Component {
                 }
               </Select>
             </div>
-            <div className="everyBody" style={{margin:"0 20px"}}>
+            <div className="everyBody">
               <div>秒杀时间:</div>
               <RangePicker   
               showTime
@@ -223,6 +223,21 @@ export default class WinningNews extends Component {
                 <Option value={30} key={30}>已发货</Option>
                 <Option value={20} key={20}>待发货</Option>
               </Select>
+            </div>
+            {/* <div className="everyBody">
+              <div>商品sn:</div>
+              <Input placeholder="请输入商品sn"  />
+            </div> */}
+            <div className="everyBody">
+              <div>用户userid:</div>
+              <Input.Search placeholder="请输入用户userid" onSearch={(val)=>{
+                if(val){
+                  this.state.screen.userId = val
+                }else{
+                  delete this.state.screen.userId
+                }
+                this.getRecords(1)
+              }} />
             </div>
           </div>
         }

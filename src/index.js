@@ -14,7 +14,7 @@ String.prototype.replaceAll = function(targetStr, newStr) { //兼容360浏览器
   }
   return sourceStr
 }
-
+window.$store = store;
 render(
   <HashRouter>
     <ConfigProvider locale={zhCN}>

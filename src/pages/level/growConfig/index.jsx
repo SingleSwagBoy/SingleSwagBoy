@@ -257,6 +257,7 @@ export default class GrowConfig extends Component {
   }
   componentDidMount(){
     this.getList() // 查询列表数据
+    console.log(window.$store.getState())
   }
   closeModel(){
     this.formRef.current.resetFields()

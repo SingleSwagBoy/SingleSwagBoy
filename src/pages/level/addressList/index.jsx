@@ -263,7 +263,10 @@ export default class WinningNews extends Component {
                 current:this.state.page,
                 pageSize: this.state.pageSize,
                 total: this.state.total,
-                onChange: this.changeSize
+                onChange: this.changeSize,
+                pageSizeOptions:[10,50,100,1000,5000],
+                // hideOnSinglePage:true,
+                showSizeChanger:true
               }}
               rowKey={item=>item.id}
               loading={this.state.loading}

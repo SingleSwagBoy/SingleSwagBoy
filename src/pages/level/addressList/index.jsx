@@ -189,6 +189,7 @@ export default class WinningNews extends Component {
             <div className="everyBody" style={{margin:"0 20px"}}>
               <div>秒杀时间:</div>
               <RangePicker   
+              showTime
                 onChange={(val)=>{
                   if(val){
                     this.state.screen.startTime = Number(new Date(val[0].toDate()).getTime())

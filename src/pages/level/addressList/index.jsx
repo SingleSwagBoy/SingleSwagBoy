@@ -291,7 +291,7 @@ export default class WinningNews extends Component {
     getRecords(params).then(res=>{
       if(res.data.errCode == 0){
        this.setState({
-         lists:res.data.data.data || res.data.data,
+         lists:res.data.data.data,
          total:res.data.data.page.totalCount
        })
       }

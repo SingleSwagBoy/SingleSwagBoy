@@ -124,7 +124,7 @@ export default class SportsProgram extends Component {
       <div>
         <Card title={
           <Breadcrumb>
-            <Breadcrumb.Item>奖牌榜</Breadcrumb.Item>
+            <Breadcrumb.Item>奥运奖金发放</Breadcrumb.Item>
           </Breadcrumb>
         }
         // extra={

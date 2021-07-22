@@ -28,10 +28,33 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
+    position: relative;
+    top: 0px;
+    opacity: 1;
+    animation: showBox .5s forwards;
     /* background-color: red; */
 }
+@keyframes showBox {
+    0%{
+        top: 50px;
+        opacity: 0;
+    }
+    100%{
+        top: 0;
+        opacity: 1;
+    }
+}
+
 .login .ant-tabs-tab-btn{
     font-size: 25px;
     color: #fff;
+    width: 100%;
 }
 
+.login .ant-tabs-nav-list{
+    width: 100%;
+}
+.login .ant-tabs-tab{
+    width: 50%;
+    text-align: center;
+}

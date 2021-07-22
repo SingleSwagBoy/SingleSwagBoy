@@ -144,7 +144,7 @@ class Login extends Component {
       <>
        <div className="login">
             <div id='backgroundBox' className="backgroundBox"></div>
-            <Tabs defaultActiveKey="1" onChange={this.callback()} tabPosition={"left"}>
+            <Tabs defaultActiveKey="1" onChange={this.callback()} tabPosition={"top"} centered>
               <TabPane tab="扫码登录" key="1">
                 <div className="common_box">
                   <div id="login_container" className="login_container"></div>

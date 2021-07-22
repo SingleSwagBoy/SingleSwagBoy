@@ -105,7 +105,7 @@ class Login extends Component {
       }
       this.props.doLogin(params)
       setTimeout(r=>{
-        this.props.history.push("/mms/ayh/channel")
+        this.props.history.push("/mms/transition")
       },2000)
     }
   }
@@ -132,7 +132,7 @@ class Login extends Component {
         message.success("登录成功")
         this.props.doLogin(res.data.data)
         setTimeout(r=>{
-          this.props.history.push("/mms/ayh/channel")
+          this.props.history.push("/mms/transition")
         },1500)
       }else{
         message.error(res.data.msg)

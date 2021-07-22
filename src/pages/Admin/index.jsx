@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 
 import adminRoutes from '../../routes/adminRoutes.js'
 import NotFound from 'pages/NotFound'
+import Transition from 'pages/transition'
 import { Spin } from 'antd';
 export default class Admin extends Component {
   render() {
@@ -46,6 +47,7 @@ export default class Admin extends Component {
               })
             }
             <Route path="/mms/404" component={NotFound} />
+            <Route path="/mms/transition" component={Transition} />
             <Redirect to="/mms/dashBoard" from="/mms" exact />
             <Redirect to="/mms/404" from="/mms" />
           </Switch>

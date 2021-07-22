@@ -178,7 +178,8 @@ class MyLayout extends Component {
                 padding: 24,
                 minHeight: 280
                 ,height: "88vh"
-                ,overflowY: "auto"
+                ,overflowY: "auto",
+                position:"relative"
               }}
             >
               { this.props.children }

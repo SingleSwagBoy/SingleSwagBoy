@@ -341,6 +341,7 @@ export default class ChannelEdit extends Component {
       a["programId"] = b[0].program_id
       a["openId"] = b[0].open_id
     }else{
+      a["programId"] = this.props.channelItem.programId
       a["openId"] = this.props.channelItem.openId
     } 
     a["channelId"] = params.channelCode

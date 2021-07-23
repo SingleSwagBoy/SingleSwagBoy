@@ -216,7 +216,7 @@ export default class AyhChannel extends Component {
               <Table 
               dataSource={this.state.lists}
               loading={this.state.loading}
-              rowKey={record => record.programId}
+              // rowKey={record => record.openId}
               pagination={{
                 pageSize: this.state.pageSize,
                 total: this.state.total,

@@ -62,6 +62,10 @@ class MyLayout extends Component {
         id = 1
     } else if (window.location.host === "cms2.tvplus.club") {
         id = 61
+    } else if (window.location.host === "bak04.tvplus.club") {
+        id = 61
+    } else if (window.location.host === "bak03.tvplus.club") {
+        id = 61
     } else {
         id = 1
     }

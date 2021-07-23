@@ -20,6 +20,7 @@ export default class AyhChannel extends Component {
       page: 1,
       pageSize: 1000,
       total: 0,
+      type:null,
       data: [],
       loading:false,
       lists: [],
@@ -108,7 +109,8 @@ export default class AyhChannel extends Component {
                     row.time = moment(time)
                     row.h_image = Array.isArray(row.h_image)?row.h_image:[row.h_image]
                     this.setState({
-                      channelItem:row
+                      channelItem:row,
+                      type:1
                     },()=>{
                       this.setState({ visible:true})
                       console.log(this.state.channelItem,"channelItem")
@@ -207,7 +209,7 @@ export default class AyhChannel extends Component {
                 <div className="btn_box">
                   <div onClick={()=>{this.updateListChannelInfo()}}>更新</div>
                   <div onClick={()=>{
-                    this.setState({visible:true,channelItem:null})
+                    this.setState({visible:true,channelItem:null,type:2})
                   }}>插入新节目</div>
                 </div>
               </div>
@@ -238,6 +240,7 @@ export default class AyhChannel extends Component {
             closeModel={this.closeModel.bind(this)} 
             channelItem={this.state.channelItem} 
             channel={this.state.channel}
+            type={this.state.type}
             channelGroup={this.state.channelGroup}
             getChannelGroupChannel={this.getChannelGroupChannel.bind(this)}
             updateList={this.updateList.bind(this)}

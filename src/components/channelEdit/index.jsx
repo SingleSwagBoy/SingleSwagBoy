@@ -336,25 +336,24 @@ export default class ChannelEdit extends Component {
     let a = params
     a["h_image"] =Array.isArray(a.h_image)?a.h_image.join(","):a.h_image
     let b = this.state.programGrounp.filter(item=>item.name===a.programName)
+    console.log(b)
     if(b.length>0){
       a["programId"] = b[0].program_id
+      a["openId"] = b[0].open_id
     }else{
-      a["programId"] = ""
-    }
-    a["openId"] = this.state.formData.openId
+      a["openId"] = this.props.channelItem.openId
+    } 
+    a["channelId"] = params.channelCode
     a["image"] = this.state.formData.image
-    a["channelId"] = this.state.formData.channelCode
     let c = new Date(a["startTime"].toDate())
     a["startTime"] = parseInt(new Date(a["time"].toDate().setFullYear(c.getFullYear(),c.getMonth(),c.getDate())).getTime() /1000)
-    console.log(a,"a")
     this.props.closeModel()
-    if(!!this.props.channelItem){
+    if(this.props.type === 1){ //更新
       this.updateChannelProgram(a)
-    }else{
+    }else{ //新增
       this.addChannelProgram(a)
     }
-    
-    
+    console.log(a,"aaaaaaaa")
   }
   getChannelGroupChannel(id){//获取频道组
     let param={
@@ -384,9 +383,7 @@ export default class ChannelEdit extends Component {
   }
   updateChannelProgram(param){
     let a={
-      ...param,
-      channelId:param.channelCode,
-      openId:this.props.channelItem.openId
+      ...param
     }
     updateChannelProgram(a).then(res=>{
       if(res.data.errCode === 0){
@@ -397,12 +394,10 @@ export default class ChannelEdit extends Component {
   addChannelProgram(param){
     let a={
       ...param,
-      channelId:param.channelCode,
-      openId:this.props.channelItem.openId
     }
     addChannelProgram(a).then(res=>{
       if(res.data.errCode === 0){
-        
+        this.props.updateList()
       }
     })
   }

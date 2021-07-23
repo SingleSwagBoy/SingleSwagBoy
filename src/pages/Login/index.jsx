@@ -35,6 +35,8 @@ class Login extends Component {
       "appidTest2": "dingoa09ucxedcx85kgpjl",
       "appidProd": "dingoatekbebkig2bsnjlb",
       "appidProd2": "dingoaulkihfjnml7eezqz",
+      "bak03": "dingoaqmmzeoa6cmsltsb5",
+      "bak04": "dingoaiwgulonzto4vwh9v",
     }
   }
   constructor(props){
@@ -67,6 +69,10 @@ class Login extends Component {
         a.appid = this.state.devAppid["appidTest2"]
     } else if (window.location.host === "cms2.tvplus.club") {
         a.appid = this.state.devAppid["appidProd2"]
+    } else if (window.location.host === "bak04.tvplus.club") {
+        a.appid = this.state.devAppid["bak04"]
+    } else if (window.location.host === "bak03.tvplus.club") {
+        a.appid = this.state.devAppid["bak03"]
     } else {
         a.appid = this.state.devAppid["appidTest"]
     }

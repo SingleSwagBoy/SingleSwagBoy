@@ -73,7 +73,7 @@ export default class SportsProgram extends Component {
               <div>
                 {
                   this.state.currentItem.id == row.id?
-                  <Input.TextArea defaultValue={row.memo}  onChange={(val)=>{
+                  <Input.TextArea defaultValue={row.memo} maxLength={32}  onChange={(val)=>{
                     this.state.listData.memo = val.target.value
                     this.setState({
                       listData:this.state.listData
@@ -228,15 +228,16 @@ export default class SportsProgram extends Component {
     updateGold(params).then(res=>{
       if(res.data.errCode === 0){
        message.success("更新成功")
-       let lengthArr = this.state.lists.findIndex(r=>r.a_code === item.a_code)
-       if(lengthArr>=0){
-         this.state.lists[lengthArr].gold_num = this.state.listData.gold_num
-         this.state.lists[lengthArr].memo = this.state.listData.memo
-       }
+      //  let lengthArr = this.state.lists.findIndex(r=>r.a_code === item.a_code)
+      //  if(lengthArr>=0){
+      //    this.state.lists[lengthArr].gold_num = this.state.listData.gold_num
+      //    this.state.lists[lengthArr].memo = this.state.listData.memo
+      //  }
+      this.getBonusList()
        this.setState({
          currentItem:{id:null},
          listData:{},
-         lists:this.state.lists
+        //  lists:this.state.lists
        })
       //  this.getBonusList()
       }else{

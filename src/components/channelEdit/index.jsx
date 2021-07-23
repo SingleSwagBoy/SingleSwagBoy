@@ -385,7 +385,8 @@ export default class ChannelEdit extends Component {
   updateChannelProgram(param){
     let a={
       ...param,
-      channelId:param.channelCode
+      channelId:param.channelCode,
+      openId:this.props.channelItem.openId
     }
     updateChannelProgram(a).then(res=>{
       if(res.data.errCode === 0){
@@ -396,7 +397,8 @@ export default class ChannelEdit extends Component {
   addChannelProgram(param){
     let a={
       ...param,
-      channelId:param.channelCode
+      channelId:param.channelCode,
+      openId:this.props.channelItem.openId
     }
     addChannelProgram(a).then(res=>{
       if(res.data.errCode === 0){

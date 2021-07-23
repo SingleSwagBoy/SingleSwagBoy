@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
 import { getBonusList,updateGold,sendAward } from 'api'
-import { Card, Breadcrumb, Button, Table, Modal, message,InputNumber, Form,Select} from 'antd'
+import { Card, Breadcrumb, Button, Table, message,InputNumber, Input} from 'antd'
 import {  } from 'react-router-dom'
 import {  } from "@ant-design/icons"
 import  util from 'utils'
@@ -64,6 +64,28 @@ export default class SportsProgram extends Component {
           }
         },
         {
+          title: "转账备注",
+          dataIndex: "memo",
+          key: "memo",
+          width:"20%",
+          render: (rowValue, row, index)=>{
+            return (
+              <div>
+                {
+                  this.state.currentItem.id == row.id?
+                  <Input.TextArea defaultValue={row.memo}  onChange={(val)=>{
+                    this.state.listData.memo = val.target.value
+                    this.setState({
+                      listData:this.state.listData
+                    })
+                  }} />
+                  :row.memo
+                }
+              </div>
+            )
+          }
+        },
+        {
           title: "操作",
           key: "action",
           width: 300,
@@ -94,6 +116,7 @@ export default class SportsProgram extends Component {
                     <div>
                       <Button 
                       style={{margin:"0 10px"}}
+                      disabled={row.status === 1 ? false : true}
                       type="primary"
                       onClick={()=>{
                         this.state.listData.gold_num = row.gold_num
@@ -173,10 +196,10 @@ export default class SportsProgram extends Component {
   }
   sendAward(item){
     if(item.status === 2)return
+    if(!item.memo) return message.error("必须添加转账备注")
     this.setState({
       loading:true
     })
-    console.log(item)
     sendAward({id:item.id}).then(res=>{
       if(res.data.errCode === 0){
         message.success("发放成功")
@@ -208,6 +231,7 @@ export default class SportsProgram extends Component {
        let lengthArr = this.state.lists.findIndex(r=>r.a_code === item.a_code)
        if(lengthArr>=0){
          this.state.lists[lengthArr].gold_num = this.state.listData.gold_num
+         this.state.lists[lengthArr].memo = this.state.listData.memo
        }
        this.setState({
          currentItem:{id:null},

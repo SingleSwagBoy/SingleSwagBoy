@@ -388,7 +388,10 @@ export default class ChannelEdit extends Component {
     }
     updateChannelProgram(a).then(res=>{
       if(res.data.errCode === 0){
+        message.success(res.data.msg)
         this.props.updateList()
+      }else{
+        message.error(res.data.msg)
       }
     })
   }
@@ -398,7 +401,10 @@ export default class ChannelEdit extends Component {
     }
     addChannelProgram(a).then(res=>{
       if(res.data.errCode === 0){
+        message.success(res.data.msg)
         this.props.updateList()
+      }else{
+        message.error(res.data.msg)
       }
     })
   }

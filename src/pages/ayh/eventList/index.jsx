@@ -20,6 +20,7 @@ export default class SportsProgram extends Component {
       total: 0,
       data: [],
       loading:false,
+      newData:{},
       lists: [],
       currentItem:{id:null},//编辑行的id
       layout: {
@@ -80,10 +81,10 @@ export default class SportsProgram extends Component {
                 {
                   this.state.currentItem.id == row.id?
                   <Input placeholder={row.category1} defaultValue={row.category1} onChange={(val)=>{
-                    this.state.currentItem.category1 = val.target.value
-                    this.setState({
-                      currentItem:this.state.currentItem
-                    })
+                    this.state.newData.category1 = val.target.value
+                    // this.setState({
+                    //   currentItem:this.state.currentItem
+                    // })
                   }} />
                   :row.category1
                 }
@@ -101,10 +102,10 @@ export default class SportsProgram extends Component {
                 {
                   this.state.currentItem.id == row.id?
                   <Input placeholder={row.category2} defaultValue={row.category2} onChange={(val)=>{
-                    this.state.currentItem.category2 = val.target.value
-                    this.setState({
-                      currentItem:this.state.currentItem
-                    })
+                    this.state.newData.category2 = val.target.value
+                    // this.setState({
+                    //   currentItem:this.state.currentItem
+                    // })
                   }} />
                   :row.category2
                 }
@@ -122,16 +123,26 @@ export default class SportsProgram extends Component {
                 {
                   this.state.currentItem.id == row.id?
                   <Input placeholder={row.gameName} defaultValue={row.gameName} onChange={(val)=>{
-                    this.state.currentItem.gameName = val.target.value
-                    this.setState({
-                      currentItem:this.state.currentItem
-                    })
+                    this.state.newData.gameName = val.target.value
+                    // this.setState({
+                    //   currentItem:this.state.currentItem
+                    // })
                   }} />
                   :row.gameName
                 }
               </div>
             )
           }
+        },
+        {
+          title: "是否有中国队",
+          dataIndex: "isChinaEvent",
+          key: "isChinaEvent",
+        },
+        {
+          title: "是否决赛",
+          dataIndex: "isGoldEvent",
+          key: "isGoldEvent",
         },
         {
           title: "操作",
@@ -147,7 +158,7 @@ export default class SportsProgram extends Component {
                     size="small"
                     type="primary"
                     onClick={()=>{
-                      this.updateGameSchedule(row.id)
+                      this.updateGameSchedule(row)
                     }}
                     >确认</Button>
                     <Button 
@@ -169,7 +180,8 @@ export default class SportsProgram extends Component {
                       type="primary"
                       onClick={()=>{
                         this.setState({
-                          currentItem:row
+                          currentItem:row,
+                          newData:{}
                         })
                       }}
                       >编辑</Button>
@@ -331,26 +343,28 @@ export default class SportsProgram extends Component {
     let c = new Date(time.toDate())
     if(type === 1){ //日期
       let d = new Date(String(this.state.currentItem.startTime).length === 10?this.state.currentItem.startTime*1000:this.state.currentItem.startTime)
-      this.state.currentItem.startTime = c.setHours(d.getHours(),d.getMinutes()) / 1000
+      this.state.newData.startTime = c.setHours(d.getHours(),d.getMinutes()) / 1000
     }else{ //时分秒
       let d = new Date(String(this.state.currentItem.startTime).length === 10?this.state.currentItem.startTime*1000:this.state.currentItem.startTime)
-      this.state.currentItem.startTime = c.setFullYear(d.getFullYear(),d.getMonth(),d.getDate()) / 1000
+      this.state.newData.startTime = c.setFullYear(d.getFullYear(),d.getMonth(),d.getDate()) / 1000
     }
-    this.setState({
-      currentItem:this.state.currentItem
-    })
+    // this.setState({
+    //   currentItem:this.state.currentItem
+    // })
   }
    //编辑赛事列表
-  updateGameSchedule(id){
-    let params={id:id}
+  updateGameSchedule(item){
+    let params={id:item.id}
     let body ={
-      ...this.state.currentItem
+      ...this.state.currentItem,
+      ...this.state.newData
     }
     updateGameSchedule(params,body).then(res=>{
       if(res.data.errCode === 0){
         this.getGameSchedule()
         this.setState({
-          currentItem:{id:null}
+          currentItem:{id:null},
+          newData:{}
         })
         message.success("更新成功")
       }else{

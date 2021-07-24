@@ -347,11 +347,17 @@ export default class AyhChannel extends Component {
           loading:false
         })
       }else{
-        message.error(`更新失败.`);
+        message.error(`更新失败`);
         this.setState({
           loading:false
         })
       }
+    }).catch(err=>{
+      message.error(`更新超时`);
+      this.setState({
+        loading:false
+      })
+      console.log(err)
     })
   }
   timeChange(val){

@@ -71,8 +71,10 @@ class Login extends Component {
         a.appid = this.state.devAppid["appidProd2"]
     } else if (window.location.host === "bak04.tvplus.club") {
         a.appid = this.state.devAppid["bak04"]
+        a.redirect_uri = "/mms/login/ding"
     } else if (window.location.host === "bak03.tvplus.club") {
         a.appid = this.state.devAppid["bak03"]
+        a.redirect_uri = "/mms/login/ding"
     } else {
         a.appid = this.state.devAppid["appidTest"]
     }

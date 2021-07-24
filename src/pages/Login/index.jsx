@@ -55,12 +55,6 @@ class Login extends Component {
   DDlogin(){
     let base = "http://" + window.location.host;
     let a = this.state.dingdParam
-    if (this.state.dingdParam.redirect_uri.indexOf(base) === -1){
-        a.redirect_uri = base + this.state.dingdParam.redirect_uri;
-        this.setState({
-          dingdParam:a
-        })
-    }
     if (base.indexOf("localhost") !== -1) {
       a.appid = this.state.devAppid["appidDev"]
     } else if (window.location.host === "cms.tvplus.club") {
@@ -78,6 +72,12 @@ class Login extends Component {
     } else {
         a.appid = this.state.devAppid["appidTest"]
     }
+    if (a.redirect_uri.indexOf(base) === -1){
+      a.redirect_uri = base + a.redirect_uri;
+      // this.setState({
+      //   dingdParam:a
+      // })
+  }
     a.uri = "https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=" + a.appid + "&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=" + a.redirect_uri;
     this.setState({
       dingdParam:a

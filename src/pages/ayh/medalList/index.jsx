@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getConfig,getMedalList,setMedalList } from 'api'
-import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select} from 'antd'
+import { getConfig,getMedalList,setMedalList,getChinaTodayMedal,setChinaTodayMedal } from 'api'
+import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,InputNumber} from 'antd'
 import {  } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
 import  util from 'utils'
@@ -28,6 +28,7 @@ export default class SportsProgram extends Component {
       tailLayout: {
         wrapperCol: { offset: 4, span: 20 },
       },
+      setBody:"",//进入奖牌数
       columns: [
         {
           title: "排名",
@@ -181,15 +182,15 @@ export default class SportsProgram extends Component {
             <Breadcrumb.Item>奖牌榜</Breadcrumb.Item>
           </Breadcrumb>
         }
-        // extra={
-        //   <div>
-        //    <Button type="primary"
-        //     onClick={()=>{
-        //       this.setState({visible:true})
-        //     }}
-        //     >更新</Button>
-        //   </div> 
-        // }
+        extra={
+          <div>
+           <Button type="primary"
+            onClick={()=>{
+              this.setState({visible:true})
+            }}
+            >今日奖牌数</Button>
+          </div> 
+        }
         >
           <Table 
               dataSource={this.state.lists}
@@ -204,7 +205,7 @@ export default class SportsProgram extends Component {
          
         </Card>
         <Modal
-            title="新增夺奖快讯"
+            title="今日奖牌数"
             centered
             visible={this.state.visible}
             onCancel={() => {this.closeModel()}}
@@ -217,18 +218,13 @@ export default class SportsProgram extends Component {
                 onFinish={this.submitForm.bind(this)}
               >
                 <Form.Item
-                  label="节目信息"
-                  name="name1"
-                  rules={[{ required: true, message: '请填写节目信息' }]}
+                  label="今日奖牌数"
+                  name="gold"
+                  // rules={[{ required: true, message: '请填写节目信息' }]}
                 >
-                 <Select
-                   placeholder="请选择电视台"
-                   onChange={this.onGenderChange}
-                   {...this.state.selectProps}
-                   allowClear
-                 >
-                   <Option value="male">male</Option>
-                 </Select>
+                 <InputNumber min={0} defaultValue={this.state.setBody.gold} onChange={(val)=>{
+                   console.log(val)
+                 }} />
                 </Form.Item>
                 <Form.Item {...this.state.tailLayout}>
                   <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
@@ -243,6 +239,7 @@ export default class SportsProgram extends Component {
   }
   componentDidMount(){
     this.getMedalList()
+    this.getChinaTodayMedal()
   }
   onSearch(e){
     console.log(e,"e")
@@ -255,6 +252,7 @@ export default class SportsProgram extends Component {
   // 新增
   submitForm(params){
     console.log(params)
+    this.setChinaTodayMedal(params)
     this.closeModel()
   }
   // 删除文章
@@ -306,6 +304,31 @@ export default class SportsProgram extends Component {
         message.success("更新成功")
       }else{
         message.success("更新失败")
+      }
+    })
+  }
+  getChinaTodayMedal(){
+    getChinaTodayMedal({}).then(res=>{
+      if(res.data.errCode === 0){
+        this.setState({
+          setBody:res.data.data
+        })
+      }else{
+        message.error(res.data.msg)
+      }
+    })
+  }
+  setChinaTodayMedal(num){
+    let params={
+      ...this.state.setBody,
+      gold:num.gold
+    }
+    setChinaTodayMedal(params).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("设置成功")
+        this.state.setBody.gold = num.gold
+      }else{
+        message.error(res.data.msg)
       }
     })
   }

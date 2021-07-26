@@ -130,3 +130,9 @@ export const getRecords = (params) => { //获取用户秒杀地址列表
 export const importFile = (params) => { //到处用户地址file
   return request.post(`${baseUrl}/mms/activity/levelMs/import`,params)
 };
+export const getChinaTodayMedal = (params) => { //获取今日奖牌数
+  return request.get(`${baseUrl}/mms/olympic2021/getChinaTodayMedal`,{params:params})
+};
+export const setChinaTodayMedal = (params) => { //设置今日奖牌数
+  return request.post(`${baseUrl}/mms/olympic2021/setChinaTodayMedal`,params)
+};

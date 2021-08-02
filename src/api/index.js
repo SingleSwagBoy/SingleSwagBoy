@@ -179,3 +179,6 @@ export const editMini = (params) => { //类别列表
 export const addMini = (params) => { //类别列表
   return request.post(`${baseUrl}/mms/tv/lifeService/miniProgram/add`,params)
 };
+export const dataSyncCache = (params) => { //数据同步
+  return request.post(`${baseUrl}/mms/tv/lifeService/syncCache`,params)
+};

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import {baseUrl, miniList,getMiniInfo,getSelector,addMini,deleteItem,editMini,changeState } from 'api'
+import {baseUrl, miniList,getMiniInfo,getSelector,addMini,deleteItem,editMini,changeState,dataSyncCache } from 'api'
 import {Breadcrumb, Card, Image, Button, Table, Modal, message,Input, Form,Select,Switch,Upload} from 'antd'
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import {  } from 'react-router-dom'
@@ -225,6 +225,12 @@ export default class SportsProgram extends Component {
               this.getSelector("tag")
             }}
             >新增小程序</Button>
+           <Button type="primary"
+           style={{margin:"0 10px"}}
+            onClick={()=>{
+              this.dataSyncCache()
+            }}
+            >数据同步</Button>
           </div> 
         }
         >
@@ -579,6 +585,15 @@ export default class SportsProgram extends Component {
       if(res.data.errCode === 0){
         // message.success("成功")
         // this.miniList()
+      }else{
+        message.error(res.data.msg)
+      }
+    })
+  }
+  dataSyncCache(){
+    dataSyncCache({}).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("数据同步成功")
       }else{
         message.error(res.data.msg)
       }

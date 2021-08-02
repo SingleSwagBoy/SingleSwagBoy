@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getServiceList,addService,deleteItem,editService } from 'api'
+import { getServiceList,addService,deleteItem,editService,dataSyncCache } from 'api'
 import {Breadcrumb, Card, Image, Button, Table, Modal, message,Input, Form,Select,InputNumber} from 'antd'
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import {  } from 'react-router-dom'
@@ -191,6 +191,12 @@ export default class SportsProgram extends Component {
               })
             }}
             >新增分类</Button>
+            <Button type="primary"
+            style={{margin:"0 10px"}}
+              onClick={()=>{
+                this.dataSyncCache()
+            }}
+            >数据同步</Button>
           </div> 
         }
         >
@@ -338,6 +344,15 @@ export default class SportsProgram extends Component {
           currentItem:{id:null}
         })
         this.getServiceList()
+      }else{
+        message.error(res.data.msg)
+      }
+    })
+  }
+  dataSyncCache(){
+    dataSyncCache({}).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("数据同步成功")
       }else{
         message.error(res.data.msg)
       }

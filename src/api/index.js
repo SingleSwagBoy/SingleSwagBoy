@@ -136,3 +136,46 @@ export const getChinaTodayMedal = (params) => { //获取今日奖牌数
 export const setChinaTodayMedal = (params) => { //设置今日奖牌数
   return request.post(`${baseUrl}/mms/olympic2021/setChinaTodayMedal`,params)
 };
+
+
+//服务分类
+export const getServiceList = (params) => { //获取分类列表
+  return request.post(`${baseUrl}/mms/tv/lifeService/category/list`,params)
+};
+export const addService = (params) => { //新增分类
+  return request.post(`${baseUrl}/mms/tv/lifeService/category/add`,params)
+};
+export const editService = (params) => { //编辑分类
+  return request.post(`${baseUrl}/mms/tv/lifeService/category/edit`,params)
+};
+export const deleteItem = (params) => { //删除分类
+  return request.get(`${baseUrl}/mms/tv/lifeService/deleteItem`,{params:params})
+};
+export const getSelector = (params) => { //下啦列表
+  return request.get(`${baseUrl}/mms/tv/lifeService/selector`,{params:params})
+};
+export const getMiniInfo = (params) => { //获取小程序信息
+  return request.get(`${baseUrl}/mms/tv/lifeService/miniProgram/info`,{params:params})
+};
+export const changeState = (params) => { //获取小程序信息
+  return request.get(`${baseUrl}/mms/tv/lifeService/changeState`,{params:params})
+};
+//类别
+export const getTagList = (params) => { //类别列表
+  return request.post(`${baseUrl}/mms/tv/lifeService/tag/list`,params)
+};
+export const addTag = (params) => { //类别列表
+  return request.post(`${baseUrl}/mms/tv/lifeService/tag/add`,params)
+};
+export const editTag = (params) => { //类别列表
+  return request.post(`${baseUrl}/mms/tv/lifeService/tag/edit`,params)
+};
+export const miniList = (params) => { //类别列表
+  return request.post(`${baseUrl}/mms/tv/lifeService/miniProgram/list`,params)
+};
+export const editMini = (params) => { //类别列表
+  return request.post(`${baseUrl}/mms/tv/lifeService/miniProgram/edit`,params)
+};
+export const addMini = (params) => { //类别列表
+  return request.post(`${baseUrl}/mms/tv/lifeService/miniProgram/add`,params)
+};

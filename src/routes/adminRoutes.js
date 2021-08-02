@@ -14,6 +14,9 @@ const GrowConfig = lazy(()=>import('pages/level/growConfig/index.jsx'))
 const UserDemote = lazy(()=>import('pages/level/userDemote/index.jsx'))
 const BonusPayment = lazy(()=>import('pages/ayh/bonusPayment/index.jsx'))
 const AddressList = lazy(()=>import('pages/level/addressList/index.jsx'))
+const ServiceLog = lazy(()=>import('pages/service/serviceLog/index.jsx'))
+const ManageTag = lazy(()=>import('pages/service/manageTag/index.jsx'))
+const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
 
 const adminRoutes = [
   {
@@ -92,6 +95,24 @@ const adminRoutes = [
     path: '/mms/level/addressList',
     component: AddressList,
     name: '用户降级',
+    icon: UnorderedListOutlined
+  },
+  {
+    path: '/mms/service/serviceLog',
+    component: ServiceLog,
+    name: '服务分类',
+    icon: UnorderedListOutlined
+  },
+  {
+    path: '/mms/service/manageTag/:categoryId',
+    component: ManageTag,
+    name: '管理类别',
+    icon: UnorderedListOutlined
+  },
+  {
+    path: '/mms/service/miniInput',
+    component: MiniInput,
+    name: '小程序录入',
     icon: UnorderedListOutlined
   },
   {

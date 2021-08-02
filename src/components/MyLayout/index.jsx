@@ -45,7 +45,7 @@ class MyLayout extends Component {
   componentDidMount(){
     if(window.localStorage.getItem("routesList_tmp")){
       this.setState({
-        navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.code === "OlympicGames" || route.code === "LevelManage" )
+        navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.code === "OlympicGames" || route.code === "LevelManage" || route.code === "LifeService")
       })
     }else{
       this.getMenu()
@@ -93,7 +93,7 @@ class MyLayout extends Component {
         console.log(list,"list")
         window.localStorage.setItem("routesList_tmp",JSON.stringify(list))
         this.setState({
-          navRoutes:list.filter(item=>item.code === "OlympicGames" || item.code === "LevelManage" )
+          navRoutes:list.filter(item=>item.code === "OlympicGames" || item.code === "LevelManage" || item.code === "LifeService" )
         })
       }
     })
@@ -207,10 +207,12 @@ class MyLayout extends Component {
   }
   defaultOpenKeys(){
     let a = this.state.navRoutes.filter(item=>this.props.location.pathname.indexOf(item.path) !== -1)
+    // console.log(this.state.navRoutes,this.props.location.pathname,"a------------------aaaaaaa")
     if(a.length>0){
       return [a[0].path]
     }else{
-      return ["/mms/level"]
+      // return ["/mms/level"]
+      return []
     }
   }
 }

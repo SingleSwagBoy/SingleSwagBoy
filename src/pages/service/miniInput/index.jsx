@@ -366,7 +366,7 @@ export default class SportsProgram extends Component {
                   <Form.Item
                     label="所属类别"
                     name="tags"
-                    rules={[{ required: true, message: '请选择所属类别' }]}
+                    // rules={[{ required: true, message: '请选择所属类别' }]}
                   >
                   <Select
                         placeholder="请选择所属类别"
@@ -494,7 +494,16 @@ export default class SportsProgram extends Component {
             tagsList:res.data.data
           })
         }
-        
+      }else{
+        if(type === "category"){
+          this.setState({
+            categoriesList:[]
+          })
+        }else{
+          this.setState({
+            tagsList:[]
+          })
+        }
       }
     })
   }

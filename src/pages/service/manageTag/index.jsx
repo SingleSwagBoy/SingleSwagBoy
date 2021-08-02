@@ -267,7 +267,7 @@ export default class SportsProgram extends Component {
   }
   getTagList(){
     let params={
-      category_id:this.props.match.params.categoryId
+      categoryId:this.props.match.params.categoryId
     }
     getTagList(params).then(res=>{
       if(res.data.errCode === 0){

@@ -482,7 +482,8 @@ export default class SportsProgram extends Component {
   getSelector(type){
     let ids={}
     if(type==="tag"&&this.state.newData.categories){
-      let b = this.state.newData.categories
+      let b = Array.isArray(this.state.newData.categories)?this.state.newData.categories:[this.state.newData.categories]
+      console.log(b,"b")
       ids=b?b.includes(",")?b:b.join(","):""
     }
     let params={

@@ -104,7 +104,7 @@ export default class SportsProgram extends Component {
                       onClick={ ()=>{ this.props.history.push(`/mms/service/manageTag/${row.id}`) } }
                       >
                         {
-                        row.tagsCount>0?`添加类别(${row.tagsCount})`:"管理类别"
+                        row.tagsCount==0?`添加类别`:`管理类别(${row.tagsCount})`
                         }
                         </Button>
                     <Button 

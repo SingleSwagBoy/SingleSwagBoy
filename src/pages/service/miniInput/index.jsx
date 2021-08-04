@@ -356,7 +356,7 @@ export default class SportsProgram extends Component {
                           console.log(val)
                           this.state.newData.categories = val.join(",")
                         }}
-                        defaultValue={this.state.newData.categories}
+                        defaultValue={this.state.newData.categories||[]}
                         {...this.state.selectProps}
                         allowClear
                       >
@@ -481,7 +481,7 @@ export default class SportsProgram extends Component {
   }
   getSelector(type){
     let ids={}
-    if(type==="tag"){
+    if(type==="tag"&&this.state.newData.categories){
       let b = this.state.newData.categories
       ids=b?b.includes(",")?b:b.join(","):""
     }
@@ -533,6 +533,12 @@ export default class SportsProgram extends Component {
     }
     getMiniInfo(params).then(res=>{
       if(res.data.errCode === 0){
+        if(!res.data.data.categories){
+          res.data.data.categories =[]
+        }
+        if(!res.data.data.tags){
+          res.data.data.tags =[]
+        }
        this.setState({
          newData:res.data.data
        },()=>{

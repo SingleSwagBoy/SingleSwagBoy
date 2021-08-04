@@ -285,6 +285,7 @@ export default class SportsProgram extends Component {
     let params={
       ...name,
       sort:this.state.dataSource.length+1,
+      categoryId:Number(this.props.match.params.categoryId),
       state: 1 //:0=禁用;1=开启
     }
     addTag(params).then(res=>{

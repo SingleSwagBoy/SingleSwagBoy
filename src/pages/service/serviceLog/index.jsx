@@ -47,9 +47,9 @@ export default class SportsProgram extends Component {
         },
         {
           title: "序号",
-          dataIndex: "id",
+          dataIndex: "sort",
           className: 'drag-visible',
-          key: "id",
+          key: "sort",
         },
         {
           title: "分类名称",
@@ -371,7 +371,7 @@ export default class SportsProgram extends Component {
     }
     resetSort(params).then(res=>{
       if(res.data.errCode === 0){
-        
+        this.getServiceList(this.state.searchWords)
       }else{
         message.error(res.data.msg)
       }

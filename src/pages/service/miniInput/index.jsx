@@ -63,6 +63,7 @@ export default class SportsProgram extends Component {
           title: "小程序名称",
           dataIndex: "name",
           key: "name",
+          width:"20%",
         },
         {
           title: "所属分类",
@@ -82,9 +83,9 @@ export default class SportsProgram extends Component {
             return (
               <div>
                 {/* {rowValue === 1?"有效":"无效"} */}
-                <Switch checkedChildren="有效" unCheckedChildren="无效" defaultChecked={rowValue === 1?true:false}
+                <Switch disabled={row.categories?false:true} checkedChildren="有效" unCheckedChildren="无效" defaultChecked={rowValue === 1?true:false}
                 onChange={(val)=>{
-                  console.log(val)
+                  if(!row.categories)return
                   this.changeState(row)
                 }}
                  />
@@ -95,6 +96,7 @@ export default class SportsProgram extends Component {
         {
           title: "操作",
           key: "action",
+          width:"20%",
           render: (rowValue, row, index)=>{
             return (
               <div>

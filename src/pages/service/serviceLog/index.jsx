@@ -304,6 +304,7 @@ export default class SportsProgram extends Component {
     let params={
       ...name,
       // sort:this.state.dataSource.length+1,
+      sort:0,
       state: 1 //:0=禁用;1=开启
     }
     addService(params).then(res=>{

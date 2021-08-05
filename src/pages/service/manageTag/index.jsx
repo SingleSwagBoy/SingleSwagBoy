@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getTagList,addTag,deleteItem,editTag } from 'api'
+import { getTagList,addTag,deleteItem,editTag,resetSort} from 'api'
 import {Breadcrumb, Card, Image, Button, Table, Modal, message,Input, Form,Select,InputNumber} from 'antd'
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { Link } from 'react-router-dom'
@@ -131,6 +131,7 @@ export default class SportsProgram extends Component {
         const newData = arrayMove([].concat(dataSource), oldIndex, newIndex).filter(el => !!el);
         console.log('Sorted items: ', newData);
         this.setState({ dataSource: newData });
+        this.resetSort(newData)
       }
     };
   
@@ -284,7 +285,7 @@ export default class SportsProgram extends Component {
   addTag(name){
     let params={
       ...name,
-      sort:this.state.dataSource.length+1,
+      // sort:this.state.dataSource.length+1,
       categoryId:Number(this.props.match.params.categoryId),
       state: 1 //:0=禁用;1=开启
     }
@@ -324,6 +325,23 @@ export default class SportsProgram extends Component {
           currentItem:{id:null}
         })
         this.getTagList()
+      }else{
+        message.error(res.data.msg)
+      }
+    })
+  }
+  resetSort(item){
+    let arr = []
+    item.forEach(r=>{
+      arr.push(r.id.toString())
+    })
+    let params={
+      type:"tag",
+      ids:arr
+    }
+    resetSort(params).then(res=>{
+      if(res.data.errCode === 0){
+        
       }else{
         message.error(res.data.msg)
       }

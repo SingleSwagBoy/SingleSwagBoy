@@ -182,3 +182,6 @@ export const addMini = (params) => { //类别列表
 export const dataSyncCache = (params) => { //数据同步
   return request.post(`${baseUrl}/mms/tv/lifeService/syncCache`,params)
 };
+export const resetSort = (params) => { //拖动排序
+  return request.post(`${baseUrl}/mms/tv/lifeService/resetSort`,params)
+};

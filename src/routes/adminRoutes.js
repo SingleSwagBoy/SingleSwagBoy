@@ -17,8 +17,17 @@ const AddressList = lazy(()=>import('pages/level/addressList/index.jsx'))
 const ServiceLog = lazy(()=>import('pages/service/serviceLog/index.jsx'))
 const ManageTag = lazy(()=>import('pages/service/manageTag/index.jsx'))
 const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
+const RecommendPage = lazy (()=>import ('pages/recommend/index.jsx'));
 
+
+// const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
+    // {
+    //     path: '/mms/test',
+    //     component: Test,
+    //     name: '测试',
+    //     icon: LineChartOutlined
+    // },
   {
     path: '/mms/ayh/channel',
     component: AyhChannel,
@@ -97,6 +106,15 @@ const adminRoutes = [
     name: '用户降级',
     icon: UnorderedListOutlined
   },
+
+  {
+    path: '/mms/recommend/recommend',
+    component: RecommendPage,
+    name: '节目推荐',
+    icon: UnorderedListOutlined
+  },
+//   
+
   {
     path: '/mms/service/serviceLog',
     component: ServiceLog,
@@ -123,7 +141,9 @@ const adminRoutes = [
       isNav: false,
       roles: '*'
     }
-  }
+  },
+
+
 
 ]
 

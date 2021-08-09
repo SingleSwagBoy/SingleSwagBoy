@@ -116,12 +116,17 @@
 .right_box .action_box .btn_box{
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 .right_box .action_box .btn_box>:nth-child(1){
     color: #1890ff;
     margin-right: 20px;
 }
 .right_box .action_box .btn_box>:nth-child(2){
+    color: #1890ff;
+    margin-right: 20px;
+}
+.right_box .action_box .btn_box>:nth-child(3){
     color: #1890ff;
 }
 .activeItem{

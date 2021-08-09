@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
 import { getChannelGroupChannel,getListChannelInfo ,updateListChannelInfo,deleteChannelProgram} from 'api'
-import { Card, Breadcrumb, Button, Table, Image, Modal, message,Input, Space,DatePicker} from 'antd'
+import { Card, Breadcrumb, Button, Table, Image, Modal, message,Input, Space,DatePicker,Checkbox} from 'antd'
 import { Link } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
 import ChannelEdit from "../../../components/channelEdit/index"
@@ -40,6 +40,7 @@ export default class AyhChannel extends Component {
           title: "开始时间",
           dataIndex: "startTime",
           key: "startTime",
+          width: 100,
           sorter: {
             compare: (a, b) => a.startTime - b.startTime,
             multiple: 1,
@@ -53,16 +54,19 @@ export default class AyhChannel extends Component {
         {
           title: "显示名称",
           dataIndex: "name",
+          width: 200,
           key: "name"
         },
         {
           title: "关联节目",
           dataIndex: "programName",
+          width: 100,
           key: "programName",
         },
         {
           title: "关联分集",
           dataIndex: "season",
+          width: 100,
           key: "season",
           render: (rowValue) => {
             return (
@@ -73,6 +77,7 @@ export default class AyhChannel extends Component {
         {
           title: "列表封面",
           dataIndex: "h_image",
+          width: 140,
           key: "h_image",
           render: (rowValue,row) => {
             return (
@@ -86,15 +91,30 @@ export default class AyhChannel extends Component {
         {
           title: "更新时间",
           dataIndex: "lastUpdateTime",
+          width: 100,
           key: "lastUpdateTime",
           sorter: {
             compare: (a, b) => a.lastUpdateTime - b.lastUpdateTime,
             multiple: 1,
           },
         },
+        {title:'推送到尝鲜版',
+            key:'push_to_taste', width: 120, fixed: 'right',
+            render:(row)=>{
+                return(
+                    <div>
+                        <Checkbox onChange={()=>{ console.log('change'); }}>
+                            推送
+                        </Checkbox>
+                    </div>
+                )
+            }
+        },
         {
           title: "操作",
           key: "action",
+          width: 140,
+          fixed: 'right',
           render: (rowValue, row, index)=>{
             return (
               <div>
@@ -118,11 +138,9 @@ export default class AyhChannel extends Component {
                    
                   } }
                   >编辑</Button>
-                <Button 
-                  size="small"
-                  danger
-                  onClick={()=>{this.delArt(row)}}
-                  >删除</Button>
+                <Button style={{'margin-left':"5px"}} size="small" danger onClick={()=>{this.delArt(row)}}>
+                      删除
+                </Button>
                 
               </div>
             )
@@ -207,22 +225,19 @@ export default class AyhChannel extends Component {
               <div className="action_box">
                 <div>{this.state.currentItem.channelName}节目单</div>
                 <div className="btn_box">
+                  <div onClick={()=>{this.requestPushToTeast()}}>推送到尝鲜版</div>
                   <div onClick={()=>{this.updateListChannelInfo()}}>更新</div>
-                  <div onClick={()=>{
-                    this.setState({visible:true,channelItem:null,type:2})
-                  }}>插入新节目</div>
+                  <div onClick={()=>{this.setState({visible:true,channelItem:null,type:2})}}>插入新节目</div>
                 </div>
               </div>
-              <Table 
-              dataSource={this.state.lists}
-              loading={this.state.loading}
-              // rowKey={record => record.openId}
-              pagination={{
-                pageSize: this.state.pageSize,
-                total: this.state.total,
-                onChange: this.changeSize,
-                hideOnSinglePage:true
-              }}
+              {/* {{item}} */}
+              <Table scroll={{ x: 800 }} dataSource={this.state.lists}  loading={this.state.loading}
+                pagination={{
+                    pageSize: this.state.pageSize,
+                    total: this.state.total,
+                    onChange: this.changeSize,
+                    hideOnSinglePage:true
+                }}
               columns={this.state.columns} />
             </div>
           </div>
@@ -329,6 +344,10 @@ export default class AyhChannel extends Component {
         })
       }
     })
+  }
+  //推送到尝鲜版
+  requestPushToTeast(){
+    console.log('推送到尝鲜版按钮被点击')
   }
   updateListChannelInfo(){
     this.setState({

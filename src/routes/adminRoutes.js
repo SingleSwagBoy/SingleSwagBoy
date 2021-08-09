@@ -14,8 +14,17 @@ const GrowConfig = lazy(()=>import('pages/level/growConfig/index.jsx'))
 const UserDemote = lazy(()=>import('pages/level/userDemote/index.jsx'))
 const BonusPayment = lazy(()=>import('pages/ayh/bonusPayment/index.jsx'))
 const AddressList = lazy(()=>import('pages/level/addressList/index.jsx'))
+const RecommendPage = lazy (()=>import ('pages/recommend/index.jsx'));
 
+// const Test = lazy(()=>import('pages/level/addressList/index.jsx'))
+const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
+    {
+        path: '/mms/test',
+        component: Test,
+        name: '测试',
+        icon: LineChartOutlined
+    },
   {
     path: '/mms/ayh/channel',
     component: AyhChannel,
@@ -94,6 +103,15 @@ const adminRoutes = [
     name: '用户降级',
     icon: UnorderedListOutlined
   },
+
+  {
+    path: '/mms/recommend/recommend',
+    component: RecommendPage,
+    name: '节目推荐',
+    icon: UnorderedListOutlined
+  },
+//   
+
   {
     path: '/mms/noPermission',
     component: NoPermission,
@@ -102,7 +120,9 @@ const adminRoutes = [
       isNav: false,
       roles: '*'
     }
-  }
+  },
+
+
 
 ]
 

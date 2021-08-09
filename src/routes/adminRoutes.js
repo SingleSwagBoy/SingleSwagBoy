@@ -16,15 +16,14 @@ const BonusPayment = lazy(()=>import('pages/ayh/bonusPayment/index.jsx'))
 const AddressList = lazy(()=>import('pages/level/addressList/index.jsx'))
 const RecommendPage = lazy (()=>import ('pages/recommend/index.jsx'));
 
-// const Test = lazy(()=>import('pages/level/addressList/index.jsx'))
-const Test = lazy(() =>import('pages/test/test.jsx'));
+// const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
-    {
-        path: '/mms/test',
-        component: Test,
-        name: '测试',
-        icon: LineChartOutlined
-    },
+    // {
+    //     path: '/mms/test',
+    //     component: Test,
+    //     name: '测试',
+    //     icon: LineChartOutlined
+    // },
   {
     path: '/mms/ayh/channel',
     component: AyhChannel,

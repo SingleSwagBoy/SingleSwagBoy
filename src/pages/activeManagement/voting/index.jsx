@@ -130,7 +130,11 @@ export default class WinningNews extends Component {
                       size="small"
                       dashed="true"
                       onClick={()=>{
-
+                        this.setState({
+                          defaultAddress:row.area.includes(",")?row.area.split(","):row.area,
+                        },()=>{
+                          this.addVoting(row,2)
+                        })
                       }}
                       >复制</Button>
                     <Button 
@@ -678,7 +682,7 @@ export default class WinningNews extends Component {
     if(this.state.source === 2){
       this.editVoting(params)
     }else{
-      this.addVoting(params)
+      this.addVoting(params,1)
     }
     
   }
@@ -725,21 +729,23 @@ export default class WinningNews extends Component {
       }
     })
   }
-  addVoting(item){
+  addVoting(item,type){
+    if(type == 2) delete item.voteId
     let params={
       ...item,
-      area:this.state.defaultAddress.join(","),
-      startTime:parseInt(item.startTime.toDate().getTime() / 1000),
-      endTime:parseInt(item.endTime.toDate().getTime() /1000),
-      state:item.state?1:0,
-      tags:item.tags.join(","),
-      market:item.market.join(","),
-      product:item.product.join(",")
+      area:this.state.defaultAddress?this.state.defaultAddress.join(","):"",
+      startTime:type ==2?item.startTime:parseInt(item.startTime.toDate().getTime() / 1000),
+      endTime:type ==2?item.endTime:parseInt(item.endTime.toDate().getTime() /1000),
+      state:type ==2?item.state:item.state?1:0,
+      tags:item.tags?item.tags.join(","):'',
+      market:item.market?item.market.join(","):'',
+      product:item.product?item.product.join(","):''
     }
     // return console.log(params,"params")
     addVoting(params).then(res=>{
       if(res.data.errCode === 0){
-        message.success("新增成功")
+        if(type == 2) message.success("复制成功")
+        else message.success("新增成功")
         this.getVotingList()
       }else{
         message.error(res.data.msg)

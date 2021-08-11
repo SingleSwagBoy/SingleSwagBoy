@@ -185,3 +185,35 @@ export const dataSyncCache = (params) => { //数据同步
 export const resetSort = (params) => { //拖动排序
   return request.post(`${baseUrl}/mms/tv/lifeService/resetSort`,params)
 };
+
+//投票 
+export const getVotingList = (params) => { //获取投票列表
+  return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/list`,params)
+};
+export const addVoting = (params) => { //新增投票列表
+  return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/create`,params)
+};
+export const editVoting = (params) => { //编辑投票列表
+  return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/edit`,params)
+};
+export const getMyProduct = (params) => { //产品线
+  return request.post(`${baseUrl}/mms/product/get`,params)
+};
+export const getDict = (params) => { //渠道
+  return request.post(`${baseUrl}/mms/dict/cp/get`,params)
+};
+export const getUserTag = (params) => { //渠道
+  return request.post(`${baseUrl}/mms/ad/tag/get`,params)
+};
+export const getChannel = (params) => { //获取频道
+  return request.post(`${baseUrl}/mms/channel/get`,params)
+};
+export const deleteVote = (params) => { //删除
+  return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/deleteItem`,{params:params})
+};
+export const changeStateVote = (params) => { //修改table里面的switch
+  return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/changeState`,{params:params})
+};
+export const voteSyncCache = (params) => { //同步数据
+  return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/syncCache`,params)
+};

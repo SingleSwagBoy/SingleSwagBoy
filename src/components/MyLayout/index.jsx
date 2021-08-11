@@ -45,7 +45,8 @@ class MyLayout extends Component {
   componentDidMount(){
     if(window.localStorage.getItem("routesList_tmp")){
       this.setState({
-        navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.code === "OlympicGames" || route.code === "LevelManage" || route.code === "LifeService")
+        navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.code === "OlympicGames" || route.code === "LevelManage" 
+        || route.code === "LifeService" || route.code === "ActiveManagement")
       })
     }else{
       this.getMenu()
@@ -93,7 +94,8 @@ class MyLayout extends Component {
         console.log(list,"list")
         window.localStorage.setItem("routesList_tmp",JSON.stringify(list))
         this.setState({
-          navRoutes:list.filter(item=>item.code === "OlympicGames" || item.code === "LevelManage" || item.code === "LifeService" )
+          navRoutes:list.filter(item=>item.code === "OlympicGames" || item.code === "LevelManage"
+           || item.code === "LifeService" || item.code === "ActiveManagement")
         })
       }
     })

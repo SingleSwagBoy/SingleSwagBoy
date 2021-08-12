@@ -18,9 +18,14 @@ class Address extends Component {
     this.getPlace()
   }
   render() {
+    /* 
+    onCheckAddress====》点击tree的回调方法
+    checkedKeys=====》默认选中的数据
+    treeData====》tree的初始数据
+    */
     return (
       <>
-         <Tree height={250} checkable
+         <Tree height={300} checkable
             onCheck={this.props.onCheckAddress}
             checkedKeys={this.props.defaultAddress}
             // onSelect={this.onSelectAddress.bind(this)}

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 // import request from 'utils/request'
 import { baseUrl,addVoting,editVoting,deleteVote,getVotingList,
   getPlace,getMyProduct,getDict,getUserTag,getChannel,changeStateVote,voteSyncCache} from 'api'
-import { Card, Button, Table, message, DatePicker,Select,Upload,Input,InputNumber,Switch,Modal,Form,Image,Space,Tree,Radio} from 'antd'
+import { Card, Button, Table, message,Checkbox, DatePicker,Select,Upload,Input,InputNumber,Switch,Modal,Form,Image,Space,Tree,Radio,Row, Col} from 'antd'
 import {  } from 'react-router-dom'
 import { MinusCircleOutlined,LoadingOutlined,PlusOutlined  } from "@ant-design/icons"
 import  util from 'utils'
@@ -12,7 +12,7 @@ import moment from 'moment';
 const { Option } = Select;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
-
+const CheckboxGroup = Checkbox.Group;
 const normFile = (e) => {
   if (Array.isArray(e)) {
     return e;
@@ -442,10 +442,12 @@ export default class WinningNews extends Component {
                                   } 
                                   >
                                     {
+                                      this.formRef.current.getFieldValue("voters")[field.key]?
                                       <img src={this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""} 
                                       key={this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""}
-                                      style={{ width: '150px',height:"150px",backgroundColor:"#ccc"}}
+                                      style={{ width: '100%',height:"100%",backgroundColor:"#ccc"}}
                                       ></img>
+                                      : uploadButton
                                     }
                                     {/* {this.state.currentItem ? <img src={
                                       this.state.currentItem.voters && field.key<=this.state.currentItem.voters.length - 1?
@@ -552,7 +554,7 @@ export default class WinningNews extends Component {
                     name="market"
                     // rules={[{ required: true, message: '请选择所属类别' }]}
                   >
-                  <Select
+                  {/* <Select
                         placeholder="请选择渠道"
                         mode="multiple"
                         allowClear
@@ -564,7 +566,25 @@ export default class WinningNews extends Component {
                             )
                           })
                         }
-                      </Select>
+                      </Select> */}
+                      <CheckboxGroup 
+                        // options={this.state.dictList}
+                      //  value={this.state.dictList}
+                        onChange={(val)=>{
+                        console.log(val)
+                      }} >
+                        <Row>
+                          {
+                          this.state.dictList.map(r=>{
+                            return(
+                              <Col span={6} style={{margin:"0 0 10px 0"}}>
+                                <Checkbox value={r.value}>{r.label}</Checkbox>
+                              </Col>
+                            )
+                          })
+                        }
+                        </Row>
+                      </CheckboxGroup>
                   </Form.Item>
                   <Form.Item
                     label="产品线"
@@ -658,8 +678,13 @@ export default class WinningNews extends Component {
       prodType:1
     }
     getDict(params).then(res=>{
+      let arr = res.data.data
+      let list = []
+      arr.forEach(r=>{
+        list.push({label:r.name,value:r.code})
+      })
       this.setState({
-        dictList:res.data.data
+        dictList:list
       })
     })
   }

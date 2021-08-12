@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { baseUrl,addVoting,editVoting,deleteVote,getVotingList,
-  getPlace,getMyProduct,getDict,getUserTag,getChannel,changeStateVote,voteSyncCache} from 'api'
+import { baseUrl,addVoting,editVoting,deleteVote,getVotingList,getMyProduct,getDict,getUserTag,getChannel,changeStateVote,voteSyncCache} from 'api'
 import { Card, Button, Table, message,Checkbox, DatePicker,Select,Upload,Input,InputNumber,Switch,Modal,Form,Image,Space,Tree,Radio,Row, Col} from 'antd'
 import {  } from 'react-router-dom'
+
 import { MinusCircleOutlined,LoadingOutlined,PlusOutlined  } from "@ant-design/icons"
 import  util from 'utils'
 import XLSX from 'xlsx'
+import Address from "../../../components/address/index"
 import "./style.css"
 import moment from 'moment';
 const { Option } = Select;
@@ -41,7 +42,6 @@ export default class WinningNews extends Component {
       productList:[],
       dictList:[],
       userTagList:[],
-      treeData:[],
       channelList:[],
       defaultAddress:[],
       area:"",
@@ -535,7 +535,7 @@ export default class WinningNews extends Component {
                       name="area"
                       // rules={[{ required: true, message: '请选择地域' }]}
                     >
-                      <Tree
+                      {/* <Tree
                         height={250}
                         checkable
                         onCheck={this.onCheckAddress.bind(this)}
@@ -547,6 +547,9 @@ export default class WinningNews extends Component {
                         onSelect={this.onSelectAddress.bind(this)}
                         // defaultCheckedKeys={this.formRef.current?this.formRef.current.getFieldValue("area").split(","):[]}
                         treeData={this.state.treeData}
+                      /> */}
+                      <Address defaultAddress={this.state.defaultAddress}
+                        onCheckAddress={this.onCheckAddress.bind(this)}
                       />
                     </Form.Item>
                   <Form.Item
@@ -606,6 +609,7 @@ export default class WinningNews extends Component {
                       </Select>
                   </Form.Item>
                   
+                  
                 <Form.Item {...this.state.tailLayout}>
                   <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
                     确定
@@ -618,7 +622,6 @@ export default class WinningNews extends Component {
     )
   }
   componentDidMount(){
-    this.getPlace()
     this.getVotingList() // 查询列表数据
     this.getMyProduct() // 查询产品线
     this.getDict() // 查询渠道
@@ -635,32 +638,32 @@ export default class WinningNews extends Component {
     })
   
   }
-  //获取国家地区
-  getPlace(){
-    let params={
-      page:{isPage:9}
-    }
-    getPlace(params).then(res=>{
-      let address = Object.assign([],res.data.data)
-      let arr = address.filter(item=>item.parentCode === "CN")
-      arr.forEach(r=>{
-        r.title = r.name
-        r.key = r.code + "-"
-        r.children =[]
-        address.forEach(h=>{
-          if(r.code === h.parentCode){
-            r.children.push({title:h.name,key:h.code})
-          }
-        })
-      })
-      let tree =[
-        {title:"全选",key:"all",children:arr}
-      ]
-      this.setState({
-        treeData:tree
-      })
-    })
-  }
+  // //获取国家地区
+  // getPlace(){
+  //   let params={
+  //     page:{isPage:9}
+  //   }
+  //   getPlace(params).then(res=>{
+  //     let address = Object.assign([],res.data.data)
+  //     let arr = address.filter(item=>item.parentCode === "CN")
+  //     arr.forEach(r=>{
+  //       r.title = r.name
+  //       r.key = r.code + "-"
+  //       r.children =[]
+  //       address.forEach(h=>{
+  //         if(r.code === h.parentCode){
+  //           r.children.push({title:h.name,key:h.code})
+  //         }
+  //       })
+  //     })
+  //     let tree =[
+  //       {title:"全选",key:"all",children:arr}
+  //     ]
+  //     this.setState({
+  //       treeData:tree
+  //     })
+  //   })
+  // }
   getMyProduct(){ //获取产品线
     let params={
       page:{isPage:9},

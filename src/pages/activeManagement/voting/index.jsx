@@ -19,6 +19,9 @@ const normFile = (e) => {
   }
   return e && e.fileList;
 };
+let privateData = {
+  inputTimeOutVal: null
+};
 export default class WinningNews extends Component {
   formRef = React.createRef();
   constructor(props){
@@ -402,6 +405,22 @@ export default class WinningNews extends Component {
                                   this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""
                                   // this.formRef.current.getFieldValue("voters")[0]?"1":"2"
                                 }
+                                onChange={(val)=>{
+                                  if(this.formRef.current.getFieldValue("voters")[field.key]){
+                                    let arr = this.formRef.current.getFieldValue("voters")
+                                    arr[index].avtor = val.target.value
+                                    // this.state.currentItem.voters = arr
+                                    if(privateData.inputTimeOutVal) {
+                                      clearTimeout(privateData.inputTimeOutVal);
+                                      privateData.inputTimeOutVal = null;
+                                      }
+                                      privateData.inputTimeOutVal = setTimeout(() => {
+                                          if(!privateData.inputTimeOutVal) return;
+                                          this.formRef.current.setFieldsValue({"voters":arr})
+                                      }, 1000)
+                                    
+                                  }
+                                }}
                                    />
                                 <Upload {...this.state.updateProps}
                                   onChange = {(info)=>{
@@ -413,7 +432,7 @@ export default class WinningNews extends Component {
                                           console.log(info)
                                           let arr = this.formRef.current.getFieldValue("voters")
                                           arr[index].avtor = info.file.response.data.fileUrl
-                                          this.state.currentItem.voters = arr
+                                          // this.state.currentItem.voters = arr
                                           this.formRef.current.setFieldsValue({"voters":arr})
                                           message.success(`上传成功`);
                                         } else if (info.file.status === 'error') {

@@ -45,7 +45,8 @@ class MyLayout extends Component {
   componentDidMount(){
     if(window.localStorage.getItem("routesList_tmp")){
       this.setState({
-        navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.code === "OlympicGames" || route.code === "LevelManage" || route.code === "LifeService")
+        navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.code === "OlympicGames" || route.code === "LevelManage" 
+        || route.code === "LifeService" || route.code === "ActiveManagement" || route.code === "ChannelGroup")
       })
     }else{
       this.getMenu()
@@ -93,7 +94,8 @@ class MyLayout extends Component {
         console.log(list,"list")
         window.localStorage.setItem("routesList_tmp",JSON.stringify(list))
         this.setState({
-          navRoutes:list.filter(item=>item.code === "OlympicGames" || item.code === "LevelManage" || item.code === "LifeService" )
+          navRoutes:list.filter(item=>item.code === "OlympicGames" || item.code === "LevelManage"
+           || item.code === "LifeService" || item.code === "ActiveManagement" || item.code === "ChannelGroup")
         })
       }
     })
@@ -102,8 +104,8 @@ class MyLayout extends Component {
     const menu = (
       <Menu>
         <Menu.Item onClick={()=>{
-          this.props.history.push('/admin/msgLists')
-        }}>消息中心</Menu.Item>
+          this.props.history.push('/mms/transition')
+        }}>首页</Menu.Item>
         <Menu.Item onClick={this.loginOut}>退出登录</Menu.Item>
       </Menu>
     );

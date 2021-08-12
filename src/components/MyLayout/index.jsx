@@ -104,8 +104,8 @@ class MyLayout extends Component {
     const menu = (
       <Menu>
         <Menu.Item onClick={()=>{
-          this.props.history.push('/admin/msgLists')
-        }}>消息中心</Menu.Item>
+          this.props.history.push('/mms/transition')
+        }}>首页</Menu.Item>
         <Menu.Item onClick={this.loginOut}>退出登录</Menu.Item>
       </Menu>
     );

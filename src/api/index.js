@@ -217,3 +217,15 @@ export const changeStateVote = (params) => { //修改table里面的switch
 export const voteSyncCache = (params) => { //同步数据
   return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/syncCache`,params)
 };
+
+
+// 频道组
+export const getLockConfig = (params) => { //获取专项频道解锁配置
+  return request.get(`${baseUrl}/mms/channel/group/exclusive/get`,{params:params})
+};
+export const getLockList = (params) => { //获取专项频道未设置的频道列表
+  return request.post(`${baseUrl}/mms/channel/channelGroup/get`,params)
+};
+export const unlockChannel = (params) => { //专项频道解锁配置
+  return request.post(`${baseUrl}/mms/channel/group/exclusive/unlock`,params)
+};

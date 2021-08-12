@@ -46,7 +46,7 @@ class MyLayout extends Component {
     if(window.localStorage.getItem("routesList_tmp")){
       this.setState({
         navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.code === "OlympicGames" || route.code === "LevelManage" 
-        || route.code === "LifeService" || route.code === "ActiveManagement")
+        || route.code === "LifeService" || route.code === "ActiveManagement" || route.code === "ChannelGroup")
       })
     }else{
       this.getMenu()
@@ -95,7 +95,7 @@ class MyLayout extends Component {
         window.localStorage.setItem("routesList_tmp",JSON.stringify(list))
         this.setState({
           navRoutes:list.filter(item=>item.code === "OlympicGames" || item.code === "LevelManage"
-           || item.code === "LifeService" || item.code === "ActiveManagement")
+           || item.code === "LifeService" || item.code === "ActiveManagement" || item.code === "ChannelGroup")
         })
       }
     })

@@ -18,6 +18,7 @@ const ServiceLog = lazy(()=>import('pages/service/serviceLog/index.jsx'))
 const ManageTag = lazy(()=>import('pages/service/manageTag/index.jsx'))
 const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
 const Voting = lazy(()=>import('pages/activeManagement/voting/index.jsx'))
+const ChannelLock = lazy(()=>import('pages/channelGroup/channelLock/index.jsx'))
 // advertising management
 
 const adminRoutes = [
@@ -38,6 +39,7 @@ const adminRoutes = [
   {path:'/mms/service/manageTag/:categoryId',component:ManageTag,name:'管理类别',icon:UnorderedListOutlined},
   {path:'/mms/service/miniInput',component:MiniInput,name:'小程序录入',icon:UnorderedListOutlined},
   {path:'/mms/activeManagement/voting',component:Voting,name:'投票活动',icon:UnorderedListOutlined},
+  {path:'/mms/channelGroup/channelLock',component:ChannelLock,name:'专享台解锁',icon:UnorderedListOutlined},
   {path:'/mms/noPermission',component:NoPermission,name:'没有权限',meta:{isNav:false,roles:'*'}}
 
 ]

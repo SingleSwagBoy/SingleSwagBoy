@@ -17,7 +17,7 @@ const AddressList = lazy(()=>import('pages/level/addressList/index.jsx'))
 const ServiceLog = lazy(()=>import('pages/service/serviceLog/index.jsx'))
 const ManageTag = lazy(()=>import('pages/service/manageTag/index.jsx'))
 const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
-const RecommendPage = lazy (()=>import ('pages/recommend/index.jsx'));
+const RecommendPage = lazy (()=>import ('pages/recommend/recommend.jsx'));
 
 
 // const Test = lazy(() =>import('pages/test/test.jsx'));

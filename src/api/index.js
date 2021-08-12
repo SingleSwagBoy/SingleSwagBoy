@@ -185,3 +185,101 @@ export const dataSyncCache = (params) => { //数据同步
 export const resetSort = (params) => { //拖动排序
   return request.post(`${baseUrl}/mms/tv/lifeService/resetSort`,params)
 };
+
+
+
+
+//========== 尝鲜版 ==========
+export const requestTvTringAdList = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/list`, params); }                                 //广告-列表
+export const requestTvTringAdResetRatio = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/resetRatio`, params) }                      //广告-重设比例
+export const requestTvTringAdChangeState = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/changeState`, { params: params }) }         //广告-修改状态
+export const requestTvTringAdDuplicate = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/duplicate`, { params: params }) }             //广告-拷贝一行
+export const requestTvTringAdCreate = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/create`, params) }                              //广告-新增
+export const requestTvTringAdEdit = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/edit`, params) }                                  //广告-编辑
+export const requestTvTringAdDeleteItem = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/deleteItem`, { params: params }) }           //广告-删除
+export const requestTvTringAdConfigRatio = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/config/ratio`, { params: params }) }        //广告-配置节目单比例
+export const requestTvTringAdConfigDuration = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/config/duration`, params); }            //广告-配置节目单持续时间
+export const requestTvTringAdSyncCache = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/syncCache`, params) }                        //广告-数据同步-生成前台缓存
+
+
+//========== 基础数据 老CMS平台中数据整理 ==========
+//二维码类型
+export const requestQrcodeTypes = () => {
+    return new Promise((resolve, reject) => {
+        let params = [
+            { key: 1, value: '静态广告', },
+            { key: 2, value: 'gif广告', },
+            { key: 3, value: '支付广告', },
+            { key: 4, value: '到期不支付', },
+            { key: 5, value: '到期支付', },
+            { key: 6, value: '红包', },
+            { key: 7, value: '优惠券', },
+            { key: 8, value: '宣传内容', },
+            { key: 9, value: '家庭号' },
+            { key: 10, value: '登录', },
+            { key: 11, value: '小程序登录' },
+            { key: 12, value: 'TV端尝鲜版专属' }
+        ];
+        resolve(params);
+    });
+}
+
+//跳转类型
+export const requestJumpTypes = () => {
+    return new Promise((resolve, reject) => {
+        let params = [
+            { key: 1, value: '跳转到频道' },
+            { key: 2, value: '跳转到下载' },
+            { key: 3, value: '跳转到商品' },
+            { key: 4, value: '跳转到活动' },
+            { key: 5, value: '跳转到任务' },
+            { key: 6, value: '跳转到菜单' },          //对应接口 requestJumpMenuTypes
+            { key: 7, value: '跳转到二维码' },
+            { key: 8, value: '跳转到好看分类' },      //对应接口 requestGoodLookTypes
+        ];
+        resolve(params);
+    });
+}
+
+//跳转目录类型 跳转菜单类型 对应接口requestJumpTypes:6
+export const requestJumpMenuTypes = () => {
+    return new Promise((resolve, reject) => {
+        let params = [
+            { key: 1, value: '跳转到金币' },
+            { key: 2, value: '跳转到手机' },
+            { key: 3, value: '跳转到自建' },
+            { key: 4, value: '跳转到设置' },
+            { key: 5, value: '跳转到联系' },
+            { key: 6, value: '跳转到语音' },
+            { key: 7, value: '跳转到套餐' },
+            { key: 8, value: '跳转到小剧场列表页' },
+            { key: 100, value: '跳转到小剧场播放页' },
+        ];
+        resolve(params);
+    });
+}
+
+//好看类型 关联接口requestJumpTypes:8
+export const requestGoodLookTypes = () => {
+    return new Promise((resolve, reject) => {
+        let params = [
+            { key: 1, value: '点歌台' },
+            { key: 2, value: '电视相册' },
+            { key: 3, value: '公共相册' },
+        ];
+        resolve(params);
+    });
+}
+//投放类型
+export const requestDeliveryTypes = () => {
+    return new Promise((resolve, reject) => {
+        let params = [
+            { key: 1, value: '定向' },
+            { key: 2, value: '非定向' },
+        ];
+        resolve(params);
+    });
+}
+
+//套餐分类
+export const requestProductList = (params) => { return request.post(`${baseUrl}/mms/product/get`, params); };

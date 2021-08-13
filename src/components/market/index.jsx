@@ -31,7 +31,7 @@ class Market extends Component {
     */
     return (
       <>
-        <Checkbox defaultChecked={this.state.dictList.length === this.props.checkData.length}
+        <Checkbox defaultChecked={this.state.dictList.length === (this.props.checkData?this.props.checkData.length:0)}
           key={new Date().getTime()*6}
           onChange={(val)=>{
             if(val.target.checked){
@@ -50,7 +50,7 @@ class Market extends Component {
           this.props.getMarketReturn(val)
         }}
         key={new Date().getTime()}
-        defaultValue={Array.isArray(this.props.checkData)?this.props.checkData:this.props.checkData.split(",")}
+        defaultValue={Array.isArray(this.props.checkData)?this.props.checkData:this.props.checkData?this.props.checkData.split(","):[]}
         >
           <Row>
             {

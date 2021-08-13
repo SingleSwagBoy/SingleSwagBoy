@@ -110,19 +110,23 @@ export default class recommendModal extends Component {
                                 <Input className="input-wrapper-from" addonBefore="纵" placeholder="例如:200" addonAfter="px" />
                             </Form.Item>
                         </Form.Item>
-                        <Form.Item label="二维码颜色" name="qrColor" rules={[{ required: true, message: '请输入二维码颜色' }]}>
-                            <Input className="input-wrapper-from" />
-                        </Form.Item>
                         <Form.Item label="二维码地址" name="qrCodeUrl" rules={[{ required: true, message: '请输入二维码地址' }]}>
                             <Input className="input-wrapper-from" />
                         </Form.Item>
+                        <Form.Item label="二维码颜色" name="qrColor" rules={[{ required: true, message: '请输入二维码颜色' }]}>
+                            <Input className="input-wrapper-from" />
+                        </Form.Item>
+                        <Form.Item label="二维码背景颜色" name="qrBackGroundColor" rules={[{ required: true, message: '请输入二维码背景颜色' }]}>
+                            <Input className="input-wrapper-from" />
+                        </Form.Item>
+
 
 
                         <Divider orientation="left">广告配置</Divider>
                         <Form.Item label="图片" name="picUrl">
                             <div className="uplpad-image-box">
                                 <Upload {...this.buildAdImageUpload()}>上传图片</Upload>
-                                {ad_image_url ? <Image width={100} height={100} src={ad_image_url} /> : ''}
+                                {ad_image_url ? <Image height={100} src={ad_image_url} /> : ''}
                             </div>
 
                             <div>{ad_image_url}</div>

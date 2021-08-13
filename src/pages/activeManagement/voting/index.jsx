@@ -6,9 +6,9 @@ import {  } from 'react-router-dom'
 
 import { MinusCircleOutlined,LoadingOutlined,PlusOutlined  } from "@ant-design/icons"
 import  util from 'utils'
-import Address from "../../../components/address/index"
-import Market from "../../../components/market/index"
-import ImageUpload from "../../../components/ImageUpload/index"
+import Address from "../../../components/address/index" //地域组件
+import Market from "../../../components/market/index" //渠道组件
+import ImageUpload from "../../../components/ImageUpload/index" //图片组件
 import "./style.css"
 import moment from 'moment';
 const { Option } = Select;

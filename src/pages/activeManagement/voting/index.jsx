@@ -1,19 +1,18 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { baseUrl,addVoting,editVoting,deleteVote,getVotingList,getMyProduct,getUserTag,getChannel,changeStateVote,voteSyncCache} from 'api'
-import { Card, Button, Table, message, DatePicker,Select,Upload,Input,InputNumber,Switch,Modal,Form,Image,Space,Tree,Radio,Row, Col} from 'antd'
+import { addVoting,editVoting,deleteVote,getVotingList,getMyProduct,getUserTag,getChannel,changeStateVote,voteSyncCache} from 'api'
+import { Card, Button, Table, message, DatePicker,Select,Input,InputNumber,Switch,Modal,Form,Space,Radio} from 'antd'
 import {  } from 'react-router-dom'
 
 import { MinusCircleOutlined,LoadingOutlined,PlusOutlined  } from "@ant-design/icons"
 import  util from 'utils'
-import XLSX from 'xlsx'
 import Address from "../../../components/address/index"
 import Market from "../../../components/market/index"
+import ImageUpload from "../../../components/ImageUpload/index"
 import "./style.css"
 import moment from 'moment';
 const { Option } = Select;
 const { TextArea } = Input;
-const { RangePicker } = DatePicker;
 const normFile = (e) => {
   if (Array.isArray(e)) {
     return e;
@@ -182,26 +181,9 @@ export default class WinningNews extends Component {
         
       ],
       visible:false,
-      updateProps: {
-        name:"file",
-        listType:"picture-card",
-        className:"avatar-uploader",
-        showUploadList:false,
-        action: `${baseUrl}/mms/file/upload?dir=ad`,
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("user")).authorization,
-        },
-      },
     }
   }
   render() {
-    const { dataSource,loading } = this.state;
-    const uploadButton = (
-      <div>
-        {loading ? <LoadingOutlined /> : <PlusOutlined />}
-        <div style={{ marginTop: 8 }}>Upload</div>
-      </div>
-    );
     return (
       <div className="address">
         <Card title={
@@ -395,21 +377,13 @@ export default class WinningNews extends Component {
                               <div className="image_vote" style={{display:"flex","alignItems":"flex-start"}}>
                                 <TextArea autoSize 
                                 key={this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""}
-                                // defaultValue={
-                                //   this.state.currentItem.voters && field.key<=this.state.currentItem.voters.length - 1?
-                                //   this.state.currentItem.voters[field.key].avtor
-                                //   :""
-                                //   }
                                 defaultValue={
-                                  // console.log( this.formRef.current.getFieldValue("voters")[0]?"1":"2","avtor")
                                   this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""
-                                  // this.formRef.current.getFieldValue("voters")[0]?"1":"2"
                                 }
                                 onChange={(val)=>{
                                   if(this.formRef.current.getFieldValue("voters")[field.key]){
                                     let arr = this.formRef.current.getFieldValue("voters")
                                     arr[index].avtor = val.target.value
-                                    // this.state.currentItem.voters = arr
                                     if(privateData.inputTimeOutVal) {
                                       clearTimeout(privateData.inputTimeOutVal);
                                       privateData.inputTimeOutVal = null;
@@ -422,38 +396,9 @@ export default class WinningNews extends Component {
                                   }
                                 }}
                                    />
-                                <Upload {...this.state.updateProps}
-                                  onChange = {(info)=>{
-                                    // 监控上传状态的回调
-                                        if (info.file.status !== 'uploading') {
-                                          this.setState({ loading: true });
-                                        }
-                                        if (info.file.status === 'done') {
-                                          console.log(info)
-                                          let arr = this.formRef.current.getFieldValue("voters")
-                                          arr[index].avtor = info.file.response.data.fileUrl
-                                          // this.state.currentItem.voters = arr
-                                          this.formRef.current.setFieldsValue({"voters":arr})
-                                          message.success(`上传成功`);
-                                        } else if (info.file.status === 'error') {
-                                          message.error(`${info.file.name} 上传失败.`);
-                                        }
-                                      }
-                                  } 
-                                  >
-                                    {
-                                      this.formRef.current.getFieldValue("voters")[field.key]?
-                                      <img src={this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""} 
-                                      key={this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""}
-                                      style={{ width: '100%',height:"100%",backgroundColor:"#ccc"}}
-                                      ></img>
-                                      : uploadButton
-                                    }
-                                    {/* {this.state.currentItem ? <img src={
-                                      this.state.currentItem.voters && field.key<=this.state.currentItem.voters.length - 1?
-                                      this.formRef.current.getFieldValue("voters")[field.key].avtor
-                                      :""} alt="请点击上传图片" style={{ width: '150px',height:"150px",backgroundColor:"#ccc"}} /> : uploadButton} */}
-                                </Upload>
+                                <ImageUpload  getUploadFileUrl={this.getUploadFileUrl.bind(this,index)}
+                                imageUrl={this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""}
+                                 />
                               </div>
                               
                             </Form.Item>
@@ -535,19 +480,6 @@ export default class WinningNews extends Component {
                       name="area"
                       // rules={[{ required: true, message: '请选择地域' }]}
                     >
-                      {/* <Tree
-                        height={250}
-                        checkable
-                        onCheck={this.onCheckAddress.bind(this)}
-                        checkedKeys={
-                          this.state.defaultAddress
-                          // this.formRef.current?this.formRef.current.getFieldValue("area"):[]
-                          // console.log(this.formRef.current,"area")
-                        }
-                        onSelect={this.onSelectAddress.bind(this)}
-                        // defaultCheckedKeys={this.formRef.current?this.formRef.current.getFieldValue("area").split(","):[]}
-                        treeData={this.state.treeData}
-                      /> */}
                       <Address defaultAddress={this.state.defaultAddress}
                         onCheckAddress={this.onCheckAddress.bind(this)}
                       />
@@ -834,5 +766,12 @@ export default class WinningNews extends Component {
       currentItem:this.state.currentItem
     })
     this.formRef.current.setFieldsValue({"market":val})
+  }
+  //获取上传的图片路径
+  getUploadFileUrl(index,file){
+    console.log(file,"获取上传的图片路径")
+     let arr = this.formRef.current.getFieldValue("voters")
+     arr[index].avtor = file
+     this.formRef.current.setFieldsValue({"voters":arr})
   }
 }

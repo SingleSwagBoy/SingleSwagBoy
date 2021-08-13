@@ -3,6 +3,7 @@ import RecommendModal from "./recommend-modal"
 import moment from 'moment';
 import React, { Component } from 'react';
 import {
+    getUserTag,                         //获取用户设备标签
     requestQrcodeTypes,                 //二维码类型
     requestJumpTypes,                   //获取跳转类型
     requestJumpMenuTypes,               //获取跳转目录类型
@@ -117,6 +118,8 @@ export default class Teast extends Component {
                     totalCount: 0,
                 },
             },
+            user_tag: [],
+
             modal_box: {
                 is_show: false,
                 select_item: null,
@@ -142,10 +145,11 @@ export default class Teast extends Component {
     }
 
     render() {
-        const { sync_cache_code, teast_box, modal_box, qrcode_types, jump_types, jump_menu_types, good_look_types, ratio_box, duration_box } = this.state;
+        const { sync_cache_code, teast_box, modal_box, qrcode_types, jump_types, jump_menu_types, good_look_types, ratio_box, duration_box, user_tag, delivery_types } = this.state;
         return (
             <div>
                 <div>广告管理</div>
+
                 <Tabs defaultActiveKey="1">
                     <TabPane tab="尝鲜版广告" key="1">
                         <div className="teast-wrapper">
@@ -234,7 +238,8 @@ export default class Teast extends Component {
                             </div>
                         }
 
-                        <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
+                        <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} user_tag={user_tag} delivery_types={delivery_types}
+                            onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
 
 
 
@@ -295,9 +300,19 @@ export default class Teast extends Component {
             }
         });
 
+        //用户设备标签
+        getUserTag().then(res => {
+            console.log(res);
+            let errCode = res.data.errCode;
+            if (errCode === 0) {
+                that.setState({
+                    user_tag: res.data.data,
+                })
+            }
+        })
+
         //查看广告节目单配置
         requestTvTringShowConfig({}).then(res => {
-            let that = this;
             let errCode = res.data.errCode;
             if (errCode === 0) {
                 let data = res.data.data;

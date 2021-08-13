@@ -8,6 +8,7 @@ import { MinusCircleOutlined,LoadingOutlined,PlusOutlined  } from "@ant-design/i
 import  util from 'utils'
 import XLSX from 'xlsx'
 import Address from "../../../components/address/index"
+import Market from "../../../components/market/index"
 import "./style.css"
 import moment from 'moment';
 const { Option } = Select;
@@ -269,6 +270,7 @@ export default class WinningNews extends Component {
             visible={this.state.visible}
             onCancel={() => {this.closeModel()}}
             footer={null}
+            // forceRender={true}
             width={1200}
           >
             {
@@ -570,7 +572,7 @@ export default class WinningNews extends Component {
                           })
                         }
                       </Select> */}
-                      <CheckboxGroup 
+                      {/* <CheckboxGroup 
                         // options={this.state.dictList}
                       //  value={this.state.dictList}
                         onChange={(val)=>{
@@ -587,7 +589,10 @@ export default class WinningNews extends Component {
                           })
                         }
                         </Row>
-                      </CheckboxGroup>
+                      </CheckboxGroup> */}
+                      <Market getMarketReturn={this.getMarketReturn.bind(this)}
+                      checkData={this.state.currentItem.market}
+                       />
                   </Form.Item>
                   <Form.Item
                     label="产品线"
@@ -871,5 +876,12 @@ export default class WinningNews extends Component {
         message.error(res.data.msg)
       }
     })
+  }
+  getMarketReturn(val){
+    this.state.currentItem.market = val
+    this.setState({
+      currentItem:this.state.currentItem
+    })
+    this.formRef.current.setFieldsValue({"market":val})
   }
 }

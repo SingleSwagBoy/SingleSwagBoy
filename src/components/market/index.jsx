@@ -12,7 +12,8 @@ class Market extends Component {
     super(props)
     this.state = {
       dictList:[],
-      checkData:[]
+      checkData:[],
+      onlyValue:[],//全选值
     }
     
   }
@@ -34,11 +35,11 @@ class Market extends Component {
           key={new Date().getTime()*6}
           onChange={(val)=>{
             if(val.target.checked){
-              let arr = []
-              this.state.dictList.forEach(r=>{
-                arr.push(r.value)
-              })
-              this.props.getMarketReturn(arr)
+              // let arr = []
+              // this.state.dictList.forEach(r=>{
+              //   arr.push(r.value)
+              // })
+              this.props.getMarketReturn(this.state.onlyValue)
             }else{
               this.props.getMarketReturn([])
             }
@@ -75,11 +76,14 @@ class Market extends Component {
     getDict(params).then(res=>{
       let arr = res.data.data
       let list = []
+      let onlyValue = []
       arr.forEach(r=>{
         list.push({label:r.name,value:r.code})
+        onlyValue.push(r.code)
       })
       this.setState({
-        dictList:list
+        dictList:list,
+        onlyValue:onlyValue
       })
     })
   }

@@ -122,6 +122,8 @@ export default class WinningNews extends Component {
         {
           title: "操作",
           key: "action",
+          width: "20%",
+          fixed: 'right',
           render: (rowValue, row, index)=>{
             return (
               <div>
@@ -231,6 +233,10 @@ export default class WinningNews extends Component {
         >
           <Table 
               dataSource={this.state.lists}
+              // scroll={{
+              //   // y: 300,
+              //   x: `100%`,
+              // }}
               pagination={{
                 current:this.state.page,
                 pageSize: this.state.pageSize,
@@ -240,6 +246,7 @@ export default class WinningNews extends Component {
                 // // hideOnSinglePage:true,
                 // showSizeChanger:true
               }}
+
               rowKey={item=>item.voteId}
               // loading={this.state.loading}
               columns={this.state.columns} />
@@ -294,14 +301,14 @@ export default class WinningNews extends Component {
                 >
                   <Form.Item
                     name="startTime"
-                    rules={[{ required: true }]}
+                    rules={[{ required: true, message: '请选择开始时间' }]}
                     style={{ display: 'inline-block', margin: '0 8px 0 0' }}
                   >
                     <DatePicker showTime></DatePicker>
                   </Form.Item>
                   <Form.Item
                     name="endTime"
-                    rules={[{ required: true }]}
+                    rules={[{ required: true, message: '请选择结束时间' }]}
                     style={{ display: 'inline-block', }}
                   >
                     <DatePicker showTime></DatePicker>
@@ -335,7 +342,7 @@ export default class WinningNews extends Component {
                   <Form.Item
                     label="投票选项"
                     // name="voters"
-                    // rules={[{ required: true, message: '请选择所属分类' }]}
+                    // rules={[{ required: true, message: '投票选项' }]}
                   >
                   <Form.List name="voters">
                     {(fields, { add, remove }) => (
@@ -372,16 +379,19 @@ export default class WinningNews extends Component {
                               label="选项图片"
                               name={[field.name, 'avtor']}
                               fieldKey={[field.fieldKey, 'avtor']}
+                              // valuePropName="fileList" 
+                              // 如果没有下面这一句会报错
+                              getValueFromEvent={normFile} 
                               // rules={[{ required: true, message: '选项图片' }]}
                             >
                               <div className="image_vote" style={{display:"flex","alignItems":"flex-start"}}>
                                 <TextArea autoSize 
-                                key={this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""}
+                                key={this.formRef.current.getFieldValue("voters")[index]?this.formRef.current.getFieldValue("voters")[index].avtor:""}
                                 defaultValue={
-                                  this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""
+                                  this.formRef.current.getFieldValue("voters")[index]?this.formRef.current.getFieldValue("voters")[index].avtor:""
                                 }
                                 onChange={(val)=>{
-                                  if(this.formRef.current.getFieldValue("voters")[field.key]){
+                                  if(this.formRef.current.getFieldValue("voters")[index]){
                                     let arr = this.formRef.current.getFieldValue("voters")
                                     arr[index].avtor = val.target.value
                                     if(privateData.inputTimeOutVal) {
@@ -397,7 +407,7 @@ export default class WinningNews extends Component {
                                 }}
                                    />
                                 <ImageUpload  getUploadFileUrl={this.getUploadFileUrl.bind(this,index)}
-                                imageUrl={this.formRef.current.getFieldValue("voters")[field.key]?this.formRef.current.getFieldValue("voters")[field.key].avtor:""}
+                                imageUrl={this.formRef.current.getFieldValue("voters")[index]?this.formRef.current.getFieldValue("voters")[index].avtor:""}
                                  />
                               </div>
                               
@@ -769,8 +779,9 @@ export default class WinningNews extends Component {
   }
   //获取上传的图片路径
   getUploadFileUrl(index,file){
-    console.log(file,"获取上传的图片路径")
+    console.log(file,index,"获取上传的图片路径")
      let arr = this.formRef.current.getFieldValue("voters")
+     console.log(arr,"arr")
      arr[index].avtor = file
      this.formRef.current.setFieldsValue({"voters":arr})
   }

@@ -199,7 +199,7 @@ export const editVoting = (params) => { //编辑投票列表
 export const getMyProduct = (params) => { //产品线
     return request.post(`${baseUrl}/mms/product/get`, params)
 };
-export const getDict = (params) => { //渠道
+export const getDict = (params) => { //字典集
     return request.post(`${baseUrl}/mms/dict/cp/get`, params)
 };
 export const getUserTag = (params) => { //渠道
@@ -243,7 +243,7 @@ export const requestTvTringAdDeleteItem = (params) => { return request.get(`${ba
 export const requestTvTringAdConfigRatio = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/config/ratio`, { params: params }) }        //广告-配置节目单比例
 export const requestTvTringAdConfigDuration = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/config/duration`, params); }            //广告-配置节目单持续时间
 export const requestTvTringAdSyncCache = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/syncCache`, params) }                        //广告-数据同步-生成前台缓存
-
+export const requestTvTringShowConfig = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/showConfig`, params) }                         //广告-查看广告节目单配置
 
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

@@ -19,36 +19,31 @@ import {
     requestTvTringAdConfigRatio,        //广告-配置节目单比例
     requestTvTringAdConfigDuration,     //广告-配置节目单持续时间
     requestTvTringAdSyncCache,          //广告-数据同步-生成前台缓存
+    requestTvTringShowConfig,           //广告-查看广告节目单配置
 } from 'api';
-import { Input, DatePicker, Button, Tooltip, Table, Pagination, Switch, Modal, Image, Select, Alert, notification } from 'antd';
+import { Tabs, Input, DatePicker, Button, Tooltip, Table, Pagination, Switch, Modal, Image, Select, Alert, notification, message, Divider } from 'antd';
 import './style.css'
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { Search } = Input;
-
+const { TabPane } = Tabs;
 
 
 export default class Teast extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            refRecommendModal: null,
             qrcode_types: [],       //二维码类型
             jump_types: [],         //跳转类型
             jump_menu_types: [],    //跳转目录类型
             good_look_types: [],    //好看类型
             product_list: [],       //套餐分类
             delivery_types: [],     //投放类型
+            sync_cache_code: 0,     //异步缓存状态码 -1失败 0等待点击 1等待中 2同步成功
 
             teast_box: {
-                table_datas: [
-                    {
-                        key: '1',
-                        name: '这是广告名字',
-                        date: '7月13日',
-                        id: 1,
-                        rate: "2",
-                    },
-                ],
+                table_datas: [],
                 table_title: [
                     { title: 'id', dataIndex: 'id', key: 'id', width: 80, },
                     { title: '名称', dataIndex: 'name', key: 'name', width: 200, },
@@ -61,12 +56,12 @@ export default class Teast extends Component {
                     {
                         title: '开始时间 - 结束时间', dataIndex: 'date', key: 'date', width: 400,
                         render: (rowValue, row, index) => {
-                            let dateFormat = 'YYYY/MM/DD HH:mm:ss';
+                            let dateFormat = 'YYYY-MM-DD HH:mm:ss';
                             let open_time = moment(row.startTime).format(dateFormat)
                             let stop_time = moment(row.endTime).format(dateFormat)
 
                             return (
-                                <RangePicker showTime defaultValue={[moment(open_time, dateFormat), moment(stop_time, dateFormat)]} format={dateFormat} />
+                                <RangePicker showTime disabled defaultValue={[moment(open_time, dateFormat), moment(stop_time, dateFormat)]} format={dateFormat} />
                             )
                         }
                     },
@@ -96,10 +91,10 @@ export default class Teast extends Component {
                     { title: '比例', dataIndex: 'ratio', key: 'ratio', width: 100, },
                     { title: '二维码颜色', dataIndex: 'qrColor', key: 'qrColor', width: 200, },
                     {
-                        title: '状态', dataIndex: 'status', key: 'status', width: 80, fixed: 'right',
-                        render: () => {
+                        title: '状态', dataIndex: 'status', key: 'status', width: 120, fixed: 'right',
+                        render: (rowValue, row, index) => {
                             return (
-                                <Switch checkedChildren="有效" unCheckedChildren="无效"></Switch>
+                                <Switch defaultChecked={row.status} checkedChildren="有效" unCheckedChildren="无效" onChange={(checked) => this.onStateChange(row.id, checked)} />
                             )
                         }
                     },
@@ -127,73 +122,134 @@ export default class Teast extends Component {
                 select_item: null,
             },
 
-            screen: {
-                page_input: { width: 300, marginLeft: 10 },
+            //搜索框
+            search_box: {
+                startTime: '',
+                endTime: '',
+                currentPage: '',
+                name: '',
+            },
+            //比例输入框
+            ratio_box: {
+                programRatio: '',
+                adRatio: '',
+            },
+            //持续时间
+            duration_box: {
+                programDuration: '',
             }
         }
     }
 
     render() {
-        const { screen, teast_box, modal_box, qrcode_types, jump_types, jump_menu_types, good_look_types } = this.state;
+        const { sync_cache_code, teast_box, modal_box, qrcode_types, jump_types, jump_menu_types, good_look_types, ratio_box, duration_box } = this.state;
         return (
             <div>
                 <div>广告管理</div>
+                <Tabs defaultActiveKey="1">
+                    <TabPane tab="尝鲜版广告" key="1">
+                        <div className="teast-wrapper">
+                            <Divider orientation="left">时间管理</Divider>
+                            <div className="input-wrapper">
+                                <div className="title">频道与广告的比例:</div>
+                                <Input.Group className="input" compact>
+                                    <Input placeholder="频道" style={{ width: 100, textAlign: 'center' }} value={ratio_box.programRatio} onChange={(val) => {
+                                        let that = this;
+                                        ratio_box.programRatio = val.target.value;
+                                        that.setState({ ratio_box: ratio_box });
+                                    }} />
+                                    <Input placeholder=":" style={{ width: 25, borderLeft: 0, borderRight: 0, pointerEvents: 'none', }} disabled />
+                                    <Input placeholder="广告" style={{ width: 100, textAlign: 'center', }} value={ratio_box.adRatio} onChange={(val) => {
+                                        let that = this;
+                                        ratio_box.adRatio = val.target.value;
+                                        that.setState({ ratio_box: ratio_box });
+                                    }} />
+                                </Input.Group>
+                                <Button className="btn" type="primary" size='small' onClick={() => this.onRequestSaveRatioClick()}>保存</Button>
+                            </div>
+                            <div className="input-wrapper">
+                                <div className="title">频道展示时长:</div>
+                                <Input className="input" placeholder="请输入展示时长" suffix="秒" value={duration_box.programDuration} onChange={(val) => {
+                                    let that = this;
+                                    duration_box.programDuration = val.target.value;
+                                    that.setState({ duration_box: duration_box });
+                                }} />
+                                <Button className="btn" type="primary" size='small' onClick={() => this.onSaveDurationClick()}>保存</Button>
+                            </div>
 
-                <div className="teast-wrapper">
-                    <div className="input-wrapper">
-                        <div className="title">频道与广告的比例:</div>
-                        <Input className="input" placeholder="请输入比例" />
-                        <Button className="btn" type="primary" size='small'>保存</Button>
-                    </div>
-                    <div className="input-wrapper">
-                        <div className="title">频道展示时长:</div>
-                        <Input className="input" placeholder="请输入展示时长" suffix="秒" />
-                        <Button className="btn" type="primary" size='small'>保存</Button>
-                    </div>
+                            <Divider orientation="left">配置列表</Divider>
+
+                            <div className="input-wrapper">
+                                <div className="title">广告时间选择:</div>
+                                <Tooltip title='请选择开始时间' placement="top" >
+                                    <RangePicker className="date-picker" showTime onChange={(val) => {
+                                        let that = this;
+                                        let search_box = that.state.search_box;
+                                        search_box.startTime = val[0].valueOf();
+                                        search_box.endTime = val[1].valueOf();
+                                        that.setState({ search_box: search_box });
+                                    }} />
+                                </Tooltip>
+                            </div>
+                            <div className="input-wrapper">
+                                <div className="title">搜索频道名称:</div>
+                                <Tooltip title='筛选搜索频道名称' placement="top" >
+                                    <Input className="input" placeholder="请输入搜索频道名称" onChange={(val) => {
+                                        let that = this;
+                                        let search_box = that.state.search_box;
+                                        search_box.name = val.target.value;
+                                        that.setState({ search_box: search_box });
+                                    }} />
+                                </Tooltip>
+                                <Button className="btn" type="primary" size='small'
+                                    onClick={() => {
+                                        let that = this;
+                                        let search_box = that.state.search_box;
+                                        search_box.currentPage = 0;
+                                        that.setState({ search_box: search_box });
+                                        that.refreshList();
+                                    }}
+                                >搜索</Button>
+                            </div>
+
+                        </div>
+                        <Alert className="alert-box" message="配置详情列表" type="success" action={
+                            <div>
+                                <Button onClick={() => this.showModalToCreate()} type="primary" style={{ 'marginLeft': '10px' }} >新增</Button>
+                                <Tooltip title='重新调整比例:所有比例重置为1，只对有效的重新计算。' placement="top"  >
+                                    <Button onClick={() => this.onResetRatioClick()} type="primary" style={{ 'marginLeft': '10px' }} >调整比例</Button>
+                                </Tooltip>
+                                {/* -1失败 0等待点击 1加载中 2同步成功 */}
+                                <Button onClick={() => this.onSynchrodataClick()} type="primary" disabled={sync_cache_code === 1} style={{ 'marginLeft': '10px' }}>
+                                    {sync_cache_code === -1 ? '同步失败' : sync_cache_code === 0 ? '立即同步' : sync_cache_code === 1 ? '正在同步' : '同步成功'}
+                                </Button>
+                            </div>
+                        }>
+                        </Alert>
+                        <Table columns={teast_box.table_title} dataSource={teast_box.table_datas} pagination={false} scroll={{ x: 1300 }} />
+                        {
+                            teast_box.table_pages.totalCount !== 0 &&
+                            <div className="pagination-box">
+                                <Pagination current={teast_box.table_pages.currentPage} total={teast_box.table_pages.totalCount} pageSize={teast_box.table_pages.pageSize} />
+                            </div>
+                        }
+
+                        <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
 
 
-                    <div className="input-wrapper">
-                        <div className="title">广告时间选择:</div>
-                        <Tooltip title='请选择开始时间' placement="top" >
-                            <RangePicker className="date-picker" showTime />
-                        </Tooltip>
-                    </div>
-                    <div className="input-wrapper">
-                        <div className="title">搜索频道名称:</div>
-                        <Tooltip title='筛选搜索频道名称' placement="top" >
-                            <Input className="input" placeholder="请输入搜索频道名称" />
-                        </Tooltip>
-                        <Button className="btn" type="primary" size='small'>搜索</Button>
-                    </div>
 
-                </div>
-                <Alert className="alert-box" message="配置详情列表" type="success" action={
-                    <div>
-                        <Button onClick={() => this.showModalToCreate()} type="primary" style={{ 'marginLeft': '10px' }} >新增</Button>
-                        <Tooltip title='重新调整比例:所有比例重置为1，只对有效的重新计算。' placement="top"  >
-                            <Button onClick={() => this.onRestRatioClick()} type="primary" style={{ 'marginLeft': '10px' }} >调整比例</Button>
-                        </Tooltip>
-                        <Button onClick={() => this.onSynchrodataClick()} type="primary" style={{ 'marginLeft': '10px' }}>数据同步</Button>
-                    </div>
-                }>
-                </Alert>
-                <Table columns={teast_box.table_title} dataSource={teast_box.table_datas} pagination={false} scroll={{ x: 1300 }} />
-                {
-                    teast_box.table_pages.totalCount !== 0 &&
-                    <div className="pagination-box">
-                        <Pagination current={teast_box.table_pages.currentPage} total={teast_box.table_pages.totalCount} pageSize={teast_box.table_pages.pageSize} />
-                    </div>
-                }
+                    </TabPane>
+                    <TabPane tab="其他广告" key="2"></TabPane>
+                </Tabs>
 
-                <RecommendModal visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
 
             </div>
         )
     }
     componentDidMount() {
-        this.initList();
+        this.initData();
     }
-    initList() {
+    initData() {
 
         let that = this;
         //获取二维码类型
@@ -239,14 +295,40 @@ export default class Teast extends Component {
             }
         });
 
+        //查看广告节目单配置
+        requestTvTringShowConfig({}).then(res => {
+            let that = this;
+            let errCode = res.data.errCode;
+            if (errCode === 0) {
+                let data = res.data.data;
+                let ratio_box = {
+                    adRatio: data.adRatio,
+                    programRatio: data.programRatio,
+                }
+                let duration_box = {
+                    programDuration: data.programDuration,
+                }
 
+                that.setState({
+                    ratio_box: ratio_box,
+                    duration_box: duration_box,
+                })
 
+            }
+        })
+
+        this.refreshList();
+    }
+    refreshList() {
         let obj = {}
-        // let obj = {
-        //     "name": "123", // 名称
-        //     "startTime": 1612853591000, // 开始时间，单位毫秒
-        //     "endTime": 1835366340000  // 结束时间，单位毫秒
-        // }
+        let search_box = this.state.search_box;
+        if (search_box.startTime && search_box.endTime) {
+            obj.startTime = search_box.startTime;
+            obj.endTime = search_box.endTime;
+        }
+        if (search_box.currentPage) obj.currentPage = search_box.currentPage;
+        if (search_box.name) obj.name = search_box.name;
+
         requestTvTringAdList(obj).then(res => {
             let that = this;
             let errCode = res.data.errCode;
@@ -261,19 +343,107 @@ export default class Teast extends Component {
             }
         })
     }
+    //item状态变更切换
+    onStateChange(id, checked) {
+        let that = this;
+        let obj = {
+            ids: id
+        }
+        requestTvTringAdChangeState(obj).then(res => {
+            that.refreshList();
+        })
+    }
+    // requestTvTringAdChangeState
 
 
     //重设比例
     onResetRatioClick() {
-        // requestTvTringAdResetRatio
+        let that = this;
+        Modal.confirm({
+            title: '调整比例',
+            content: `重新调整比例:所有比例重置为1，只对有效的重新计算`,
+            okText: '调整',
+            cancelText: '取消',
+            onOk() {
+                requestTvTringAdResetRatio().then(res => {
+                    let errCode = res.data.errCode;
+                    if (errCode === 0) {
+                        message.success('调整成功')
+                        that.refreshList();
+                    } else {
+                        message.success('调整失败:' + res.data.msg)
+                    }
+                })
+            }
+        });
     }
 
     //数据同步被点击
     onSynchrodataClick() {
         let that = this;
+        that.setState({ sync_cache_code: 1 })
+
+        requestTvTringAdSyncCache().then(res => {
+            let errCode = res.data.errCode;
+            if (errCode === 0) {
+                that.setState({ sync_cache_code: 2 })
+                message.success('同步成功')
+            }
+            else {
+                that.setState({ sync_cache_code: -1 })
+                message.error('同步失败')
+            }
+
+        })
 
 
     }
+    onSaveDurationClick() {
+        let that = this;
+        let duration_box = that.state.duration_box;
+
+
+        let obj = {}
+        if (duration_box.programDuration) obj.programDuration = duration_box.programDuration;
+        else {
+            message.error('设置失败:请输入频道展示时长')
+            return;
+        }
+
+        requestTvTringAdConfigDuration(obj).then(res => {
+            let errCode = res.data.errCode;
+            if (errCode === 0) {
+                message.success('设置成功')
+            } else {
+                message.error('设置失败:' + res.data.msg)
+            }
+        })
+    }
+
+    //请求保存比例按钮 被点击
+    onRequestSaveRatioClick() {
+        let that = this;
+        let ratio_box = that.state.ratio_box;
+
+        let obj = {};
+        if (ratio_box.programRatio) obj.programRatio = ratio_box.programRatio;
+        else {
+            message.error('请填写节目单比例');
+            return;
+        }
+        if (ratio_box.adRatio) obj.adRatio = ratio_box.adRatio;
+        else {
+            message.error('请填写广告比例');
+            return;
+        }
+
+        requestTvTringAdConfigRatio(obj).then(res => {
+            message.success('保存成功');
+
+        })
+
+    }
+
     //表格内 复制 按钮被点击
     onTableItemCopyClick(row) {
         let that = this;
@@ -287,7 +457,7 @@ export default class Teast extends Component {
                     id: parseInt(row.id),
                 };
                 requestTvTringAdDuplicate(obj).then(res => {
-                    that.initList();
+                    that.refreshList();
                 });
             }
         });
@@ -303,6 +473,7 @@ export default class Teast extends Component {
             }
         })
 
+        that.state.refRecommendModal.refreshFromData(row);
 
     }
     //表格内 删除 按钮被点击
@@ -318,26 +489,28 @@ export default class Teast extends Component {
                     ids: parseInt(row.id),
                 };
                 requestTvTringAdDeleteItem(obj).then(res => {
-                    that.initList();
+                    that.refreshList();
                 })
             }
         });
     }
 
-    //展示弹出框 新增数据
+    //展示弹出框 
     showModalToCreate() {
-        this.setState({
+        let that = this;
+        that.setState({
             modal_box: {
                 is_show: true,
                 select_item: null,
             }
         })
+
+        that.state.refRecommendModal.refreshFromData(null);
     }
     onModalConfirm(item) {
-        console.log('-----------')
-        console.log(item);
         let that = this;
         let id = item.id;
+        if (id) id = parseInt(id);
 
         //id存在时为编辑类型 不存在时为创建类型
         (id ? requestTvTringAdEdit(item) : requestTvTringAdCreate(item)).then(res => {
@@ -349,14 +522,13 @@ export default class Teast extends Component {
                         is_show: false,
                     }
                 })
-                that.initList();
+                that.refreshList();
 
                 notification['success']({ message: `${id ? '编辑' : '创建'}成功`, });
             }
             //失败
             else {
-                notification['error']({ message: `${id ? '编辑' : '创建'}失 败`, description: res.data.msg });
-
+                notification['error']({ message: `${id ? '编辑' : '创建'}失败`, description: res.data.msg });
             }
         })
 

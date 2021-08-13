@@ -29,24 +29,42 @@ class Market extends Component {
         getMarketReturn：选中后的数据回调
     */
     return (
-      <CheckboxGroup onChange={(val)=>{
-        this.props.getMarketReturn(val)
-      }}
-      key={new Date().getTime()}
-      defaultValue={Array.isArray(this.props.checkData)?this.props.checkData:this.props.checkData.split(",")}
-      >
-        <Row>
-          {
-          this.state.dictList.map(r=>{
-            return(
-              <Col span={6} style={{margin:"0 0 10px 0"}}>
-                <Checkbox value={r.value}>{r.label}</Checkbox>
-              </Col>
-            )
-          })
-        }
-        </Row>
-      </CheckboxGroup>
+      <>
+        <Checkbox defaultChecked={this.state.dictList.length === this.props.checkData.length}
+          key={new Date().getTime()*6}
+          onChange={(val)=>{
+            if(val.target.checked){
+              let arr = []
+              this.state.dictList.forEach(r=>{
+                arr.push(r.value)
+              })
+              this.props.getMarketReturn(arr)
+            }else{
+              this.props.getMarketReturn([])
+            }
+        }}>
+          全选
+        </Checkbox>
+        <CheckboxGroup onChange={(val)=>{
+          this.props.getMarketReturn(val)
+        }}
+        key={new Date().getTime()}
+        defaultValue={Array.isArray(this.props.checkData)?this.props.checkData:this.props.checkData.split(",")}
+        >
+          <Row>
+            {
+            this.state.dictList.map(r=>{
+              return(
+                <Col span={6} style={{margin:"0 0 10px 0"}}>
+                  <Checkbox value={r.value}>{r.label}</Checkbox>
+                </Col>
+              )
+            })
+          }
+          </Row>
+        </CheckboxGroup>
+      </>
+      
     )
   }
   getDict(){ //获取产品线

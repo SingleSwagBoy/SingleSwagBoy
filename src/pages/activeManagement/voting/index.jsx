@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { baseUrl,addVoting,editVoting,deleteVote,getVotingList,getMyProduct,getDict,getUserTag,getChannel,changeStateVote,voteSyncCache} from 'api'
-import { Card, Button, Table, message,Checkbox, DatePicker,Select,Upload,Input,InputNumber,Switch,Modal,Form,Image,Space,Tree,Radio,Row, Col} from 'antd'
+import { baseUrl,addVoting,editVoting,deleteVote,getVotingList,getMyProduct,getUserTag,getChannel,changeStateVote,voteSyncCache} from 'api'
+import { Card, Button, Table, message, DatePicker,Select,Upload,Input,InputNumber,Switch,Modal,Form,Image,Space,Tree,Radio,Row, Col} from 'antd'
 import {  } from 'react-router-dom'
 
 import { MinusCircleOutlined,LoadingOutlined,PlusOutlined  } from "@ant-design/icons"
@@ -14,7 +14,6 @@ import moment from 'moment';
 const { Option } = Select;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
-const CheckboxGroup = Checkbox.Group;
 const normFile = (e) => {
   if (Array.isArray(e)) {
     return e;
@@ -41,7 +40,6 @@ export default class WinningNews extends Component {
       optionList:[],
       screen:{}, //筛选对象
       productList:[],
-      dictList:[],
       userTagList:[],
       channelList:[],
       defaultAddress:[],
@@ -559,37 +557,6 @@ export default class WinningNews extends Component {
                     name="market"
                     // rules={[{ required: true, message: '请选择所属类别' }]}
                   >
-                  {/* <Select
-                        placeholder="请选择渠道"
-                        mode="multiple"
-                        allowClear
-                      >
-                        {
-                          this.state.dictList.map(r=>{
-                            return(
-                              <Option value={r.code} key={r.id}>{r.name}</Option>
-                            )
-                          })
-                        }
-                      </Select> */}
-                      {/* <CheckboxGroup 
-                        // options={this.state.dictList}
-                      //  value={this.state.dictList}
-                        onChange={(val)=>{
-                        console.log(val)
-                      }} >
-                        <Row>
-                          {
-                          this.state.dictList.map(r=>{
-                            return(
-                              <Col span={6} style={{margin:"0 0 10px 0"}}>
-                                <Checkbox value={r.value}>{r.label}</Checkbox>
-                              </Col>
-                            )
-                          })
-                        }
-                        </Row>
-                      </CheckboxGroup> */}
                       <Market getMarketReturn={this.getMarketReturn.bind(this)}
                       checkData={this.state.currentItem.market}
                        />
@@ -629,7 +596,6 @@ export default class WinningNews extends Component {
   componentDidMount(){
     this.getVotingList() // 查询列表数据
     this.getMyProduct() // 查询产品线
-    this.getDict() // 查询渠道
     this.getUserTag() // 用户标签
     this.getChannel() // 用户标签
   }
@@ -677,22 +643,6 @@ export default class WinningNews extends Component {
     getMyProduct(params).then(res=>{
       this.setState({
         productList:res.data.data
-      })
-    })
-  }
-  getDict(){ //获取产品线
-    let params={
-      page:{isPage:9},
-      prodType:1
-    }
-    getDict(params).then(res=>{
-      let arr = res.data.data
-      let list = []
-      arr.forEach(r=>{
-        list.push({label:r.name,value:r.code})
-      })
-      this.setState({
-        dictList:list
       })
     })
   }
@@ -878,6 +828,7 @@ export default class WinningNews extends Component {
     })
   }
   getMarketReturn(val){
+    console.log(val)
     this.state.currentItem.market = val
     this.setState({
       currentItem:this.state.currentItem

@@ -263,7 +263,7 @@ export default class WinningNews extends Component {
               columns={this.state.columns} />
         </Card>
         <Modal
-            title="小程序"
+            title="活动"
             centered
             visible={this.state.visible}
             onCancel={() => {this.closeModel()}}

@@ -33,6 +33,7 @@ export default class Teast extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            refRecommendModal: null,
             qrcode_types: [],       //二维码类型
             jump_types: [],         //跳转类型
             jump_menu_types: [],    //跳转目录类型
@@ -60,7 +61,7 @@ export default class Teast extends Component {
                             let stop_time = moment(row.endTime).format(dateFormat)
 
                             return (
-                                <RangePicker showTime defaultValue={[moment(open_time, dateFormat), moment(stop_time, dateFormat)]} format={dateFormat} />
+                                <RangePicker showTime disabled defaultValue={[moment(open_time, dateFormat), moment(stop_time, dateFormat)]} format={dateFormat} />
                             )
                         }
                     },
@@ -90,10 +91,10 @@ export default class Teast extends Component {
                     { title: '比例', dataIndex: 'ratio', key: 'ratio', width: 100, },
                     { title: '二维码颜色', dataIndex: 'qrColor', key: 'qrColor', width: 200, },
                     {
-                        title: '状态', dataIndex: 'status', key: 'status', width: 80, fixed: 'right',
-                        render: () => {
+                        title: '状态', dataIndex: 'status', key: 'status', width: 120, fixed: 'right',
+                        render: (rowValue, row, index) => {
                             return (
-                                <Switch checkedChildren="有效" unCheckedChildren="无效"></Switch>
+                                <Switch defaultChecked={row.status} checkedChildren="有效" unCheckedChildren="无效" onChange={(checked) => this.onStateChange(row.id, checked)} />
                             )
                         }
                     },
@@ -148,7 +149,7 @@ export default class Teast extends Component {
                 <Tabs defaultActiveKey="1">
                     <TabPane tab="尝鲜版广告" key="1">
                         <div className="teast-wrapper">
-                        <Divider orientation="left">时间管理</Divider>
+                            <Divider orientation="left">时间管理</Divider>
                             <div className="input-wrapper">
                                 <div className="title">频道与广告的比例:</div>
                                 <Input.Group className="input" compact>
@@ -233,7 +234,7 @@ export default class Teast extends Component {
                             </div>
                         }
 
-                        <RecommendModal visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
+                        <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
 
 
 
@@ -316,6 +317,7 @@ export default class Teast extends Component {
             }
         })
 
+        this.refreshList();
     }
     refreshList() {
         let obj = {}
@@ -341,6 +343,18 @@ export default class Teast extends Component {
             }
         })
     }
+    //item状态变更切换
+    onStateChange(id, checked) {
+        let that = this;
+        let obj = {
+            ids: id
+        }
+        requestTvTringAdChangeState(obj).then(res => {
+            that.refreshList();
+        })
+    }
+    // requestTvTringAdChangeState
+
 
     //重设比例
     onResetRatioClick() {
@@ -459,6 +473,7 @@ export default class Teast extends Component {
             }
         })
 
+        that.state.refRecommendModal.refreshFromData(row);
 
     }
     //表格内 删除 按钮被点击
@@ -480,20 +495,22 @@ export default class Teast extends Component {
         });
     }
 
-    //展示弹出框 新增数据
+    //展示弹出框 
     showModalToCreate() {
-        this.setState({
+        let that = this;
+        that.setState({
             modal_box: {
                 is_show: true,
                 select_item: null,
             }
         })
+
+        that.state.refRecommendModal.refreshFromData(null);
     }
     onModalConfirm(item) {
-        console.log('-----------')
-        console.log(item);
         let that = this;
         let id = item.id;
+        if (id) id = parseInt(id);
 
         //id存在时为编辑类型 不存在时为创建类型
         (id ? requestTvTringAdEdit(item) : requestTvTringAdCreate(item)).then(res => {
@@ -511,8 +528,7 @@ export default class Teast extends Component {
             }
             //失败
             else {
-                notification['error']({ message: `${id ? '编辑' : '创建'}失 败`, description: res.data.msg });
-
+                notification['error']({ message: `${id ? '编辑' : '创建'}失败`, description: res.data.msg });
             }
         })
 

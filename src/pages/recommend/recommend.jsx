@@ -3,6 +3,7 @@ import RecommendModal from "./recommend-modal"
 import moment from 'moment';
 import React, { Component } from 'react';
 import {
+    getChannel,                         //获取频道
     getUserTag,                         //获取用户设备标签
     requestQrcodeTypes,                 //二维码类型
     requestJumpTypes,                   //获取跳转类型
@@ -35,6 +36,7 @@ export default class Teast extends Component {
         super(props);
         this.state = {
             refRecommendModal: null,
+            channel_list: [],
             qrcode_types: [],       //二维码类型
             jump_types: [],         //跳转类型
             jump_menu_types: [],    //跳转目录类型
@@ -72,30 +74,30 @@ export default class Teast extends Component {
                     // { title: '渠道', dataIndex: 'market', key: 'market', width: 100, },
                     // { title: '标签', dataIndex: 'tags', key: 'tags', width: 100, },
                     // { title: '跳转频道', dataIndex: 'jumpChannelCode', key: 'jumpChannelCode', width: 100, },
-                    { title: '投放类型', dataIndex: 'deliveryType', key: 'deliveryType', width: 100, },
-                    { title: '二维码套餐', dataIndex: 'pCode', key: 'pCode', width: 200, },
-                    { title: '跳转菜单类型', dataIndex: 'jumpMenuType', key: 'jumpMenuType', width: 200, },
-                    { title: '跳转参数', dataIndex: 'jumpParam', key: 'jumpParam', width: 300, },
-                    { title: '广告跳转类型', dataIndex: 'jumpType', key: 'jumpType', width: 200, },
-                    { title: '好看分类', dataIndex: 'goodLookType', key: 'goodLookType', width: 100, },
-                    {
-                        title: '二维码地址', dataIndex: 'qrCodeUrl', key: 'qrCodeUrl', width: 300,
-                        render: (rowValue, row, index) => {
-                            return (
-                                <div>
-                                    <Image width={50} src={row.qrCodeUrl} />
-                                    <div>{row.qrCodeUrl}</div>
-                                </div>
-                            )
-                        }
-                    },
-                    { title: '比例', dataIndex: 'ratio', key: 'ratio', width: 100, },
-                    { title: '二维码颜色', dataIndex: 'qrColor', key: 'qrColor', width: 200, },
+                    // { title: '投放类型', dataIndex: 'deliveryType', key: 'deliveryType', width: 100, },
+                    // { title: '二维码套餐', dataIndex: 'pCode', key: 'pCode', width: 200, },
+                    // { title: '跳转参数', dataIndex: 'jumpParam', key: 'jumpParam', width: 300, },
+                    // { title: '跳转菜单类型', dataIndex: 'jumpMenuTypeShow', key: 'jumpMenuTypeShow', width: 200, },
+                    // { title: '广告跳转类型', dataIndex: 'jumpTypeShow', key: 'jumpTypeShow', width: 200, },
+                    // { title: '好看分类', dataIndex: 'goodLookTypeShow', key: 'goodLookTypeShow', width: 100 },
+                    // {
+                    //     title: '二维码地址', dataIndex: 'qrCodeUrl', key: 'qrCodeUrl', width: 300,
+                    //     render: (rowValue, row, index) => {
+                    //         return (
+                    //             <div>
+                    //                 <Image width={50} src={row.qrCodeUrl} />
+                    //                 <div>{row.qrCodeUrl}</div>
+                    //             </div>
+                    //         )
+                    //     }
+                    // },
+                    // { title: '比例', dataIndex: 'ratio', key: 'ratio', width: 100, },
+                    // { title: '二维码颜色', dataIndex: 'qrColor', key: 'qrColor', width: 200, },
                     {
                         title: '状态', dataIndex: 'status', key: 'status', width: 120, fixed: 'right',
                         render: (rowValue, row, index) => {
                             return (
-                                <Switch defaultChecked={row.status} checkedChildren="有效" unCheckedChildren="无效" onChange={(checked) => this.onStateChange(row.id, checked)} />
+                                <Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="有效" unCheckedChildren="无效" onChange={(checked) => this.onStateChange(row.id, checked)} />
                             )
                         }
                     },
@@ -145,7 +147,7 @@ export default class Teast extends Component {
     }
 
     render() {
-        const { sync_cache_code, teast_box, modal_box, qrcode_types, jump_types, jump_menu_types, good_look_types, ratio_box, duration_box, user_tag, delivery_types } = this.state;
+        const { sync_cache_code, teast_box, modal_box, qrcode_types, jump_types, jump_menu_types, good_look_types, ratio_box, duration_box, user_tag, delivery_types, channel_list } = this.state;
         return (
             <div>
                 <div>广告管理</div>
@@ -219,6 +221,9 @@ export default class Teast extends Component {
                         </div>
                         <Alert className="alert-box" message="配置详情列表" type="success" action={
                             <div>
+                                <Tooltip title='仅仅只是刷新当前列表最新的数据' placement="top"  >
+                                    <Button onClick={() => this.requestRefreshList()} type="primary" style={{ 'marginLeft': '10px' }} >刷新</Button>
+                                </Tooltip>
                                 <Button onClick={() => this.showModalToCreate()} type="primary" style={{ 'marginLeft': '10px' }} >新增</Button>
                                 <Tooltip title='重新调整比例:所有比例重置为1，只对有效的重新计算。' placement="top"  >
                                     <Button onClick={() => this.onResetRatioClick()} type="primary" style={{ 'marginLeft': '10px' }} >调整比例</Button>
@@ -238,7 +243,7 @@ export default class Teast extends Component {
                             </div>
                         }
 
-                        <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} user_tag={user_tag} delivery_types={delivery_types}
+                        <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} user_tag={user_tag} delivery_types={delivery_types} channel_list={channel_list}
                             onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
 
 
@@ -299,6 +304,17 @@ export default class Teast extends Component {
                 })
             }
         });
+        //获取频道组
+        getChannel().then(res => {
+            let errCode = res.data.errCode;
+            if (errCode === 0) {
+                that.setState({
+                    channel_list: res.data.data,
+                })
+            }
+            console.log('频道')
+            console.log(res);
+        })
 
         //用户设备标签
         getUserTag().then(res => {
@@ -349,6 +365,14 @@ export default class Teast extends Component {
             let errCode = res.data.errCode;
             if (errCode === 0) {
                 let result = res.data.data;
+                // let datas = result.data;
+                // for (let i = 0; i < datas.length; i++) {
+                //     let data = datas[i];
+                //     data.jumpTypeShow = that.parseShowNameByKeyValue(data.jumpType, that.state.jump_types);                 //解析跳转类型
+                //     data.goodLookTypeShow = that.parseShowNameByKeyValue(data.goodLookType ,that.state.good_look_types);    //解析好看类型
+                //     data.deliveryTypeShow = that.parseShowNameByKeyValue(data.deliveryType, that.state.delivery_types);     //跳转菜单类型
+                //     data.jumpMenuTypeShow = that.parseShowNameByKeyValue(data.jumpMenuType, that.state.jump_menu_types);    //跳转目录类型
+                // }
                 that.state.teast_box.table_datas = result.data;
                 that.state.teast_box.table_pages = result.page;
 
@@ -358,6 +382,18 @@ export default class Teast extends Component {
             }
         })
     }
+    //从字典中解析对应参数类型的名称
+    parseShowNameByKeyValue(curr_type, data_array) {
+        // let that = this;
+        for (let i = 0; i < data_array.length; i++) {
+            let item = data_array[i]
+            if (curr_type === item.key) {
+                return item.value;
+            }
+        }
+        return '';
+    }
+
     //item状态变更切换
     onStateChange(id, checked) {
         let that = this;
@@ -365,6 +401,7 @@ export default class Teast extends Component {
             ids: id
         }
         requestTvTringAdChangeState(obj).then(res => {
+            message.success('状态修改成功')
             that.refreshList();
         })
     }
@@ -509,7 +546,15 @@ export default class Teast extends Component {
             }
         });
     }
+    //刷新列表
+    requestRefreshList() {
+        let that = this;
+        let search_box = that.state.search_box;
+        search_box.currentPage = 0;
 
+        that.setState({ search_box: search_box, });
+        that.refreshList();
+    }
     //展示弹出框 
     showModalToCreate() {
         let that = this;

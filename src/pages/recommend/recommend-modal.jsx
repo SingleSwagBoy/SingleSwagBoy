@@ -66,14 +66,26 @@ export default class recommendModal extends Component {
             data.time = [
                 moment(data.startTime), moment(data.endTime)
             ]
+            //设备标签
+            if (data.tags && data.tags.length > 0) {
+                if (data.tags.constructor === String) { data.tags = data.tags.split(','); }
+            }
+            else data.tags = [];
 
-            //地域列表
-            let address = data.address;
+            //频道列表
+            if (data.jumpChannelCode && data.jumpChannelCode.length > 0) {
+                if (data.jumpChannelCode.constructor === String) {
+                    data.jumpChannelCode = data.jumpChannelCode.split(',');
+                }
+            }
+            else data.jumpChannelCode = [];
 
 
-            //渠道列表
-            let market = data.market;
-            console.log(market);
+            console.log('编辑')
+            console.log(data);
+            let address = [];
+            if (data.area) address = data.area.split(',');      //地域列表
+            let market = data.market;                           //渠道列表
 
             that.setState({
                 _id: data.id,
@@ -93,6 +105,8 @@ export default class recommendModal extends Component {
                 ad_image_url: '',
                 startTime: '',
                 endTime: '',
+                address: [],
+                market: [],
             })
         }
     }
@@ -101,7 +115,7 @@ export default class recommendModal extends Component {
 
     render() {
         let { is_loading, ad_image_url, dateFormat } = this.state;
-        let { visible, qrcode_types, jump_types, jump_menu_types, good_look_types, user_tag, delivery_types } = this.props;
+        let { visible, qrcode_types, jump_types, jump_menu_types, good_look_types, user_tag, delivery_types, channel_list } = this.props;
 
         return (
             <div>
@@ -117,6 +131,9 @@ export default class recommendModal extends Component {
 
                     <Form name='recom' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
                         <Divider></Divider>
+                        <Form.Item label="notice1" >
+                            <div>当id为空时，当前为[创建模式],反之存在id时，为[更新模式]</div>
+                        </Form.Item>
                         <Form.Item label="id" name='id' >
                             <Input className="input-wrapper-from" disabled />
                         </Form.Item>
@@ -159,9 +176,9 @@ export default class recommendModal extends Component {
                                 <Input className="input-wrapper-from" addonBefore="纵" placeholder="例如:200" addonAfter="px" />
                             </Form.Item>
                         </Form.Item>
-                        <Form.Item label="二维码地址" >
+                        {/* <Form.Item name="qrCodeUrl" label="二维码地址" >
                             <Input className="input-wrapper-from" />
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item label="二维码颜色" name="qrColor">
                             <Input className="input-wrapper-from" />
                         </Form.Item>
@@ -180,12 +197,10 @@ export default class recommendModal extends Component {
 
                             <div>{ad_image_url}</div>
                         </Form.Item>
-                        <Form.Item label="展示时长" name="duration" rules={[{ required: true, message: '请输入展示时长' }]}>
-                            <Input className="input-wrapper-from" placeholder="例如:10" addonAfter="秒" />
-                        </Form.Item>
+                      
                         <Form.Item label="跳转类型">
                             <Form.Item label="" name="jumpType" style={{ width: 200, display: "inline-block" }}>
-                                <Select className="input-wrapper-from" onChange={(val) => {
+                                <Select className="input-wrapper-from" placeholder='请选择跳转类型' onChange={(val) => {
                                     this.setState({
                                         jump_types: this.state.jump_types
                                     })
@@ -199,16 +214,17 @@ export default class recommendModal extends Component {
                             {
                                 this.formRef.current && this.formRef.current.getFieldValue("jumpType") === 1 ?
                                     <Form.Item label="频道" name="jumpChannelCode" style={{ marginLeft: 10, width: 230, display: "inline-flex" }}>
-                                        {/* <Select className="input-wrapper-from" >
-                                            {user_tag.map((item, index) => {
-                                                return <Option value={item.key} key={index}>{item.key} - {item.value}</Option>
+                                        <Select className="input-wrapper-from" mode="multiple" >
+                                            {channel_list.map(r => {
+                                                return <Option value={r.code} key={r.id}>
+                                                    <div>{r.code}-{r.name}</div>
+                                                </Option>
                                             })}
-                                        </Select> */}
-                                        待写
+                                        </Select>
                                     </Form.Item>
                                     : this.formRef.current && this.formRef.current.getFieldValue("jumpType") === 4 ?
                                         <Form.Item label="跳转菜单" name="jumpMenuType" style={{ marginLeft: 10, width: 230, display: "inline-flex" }}>
-                                            <Select className="input-wrapper-from" >
+                                            <Select className="input-wrapper-from" placeholder='请选择跳转菜单'>
                                                 {jump_menu_types.map((item, index) => {
                                                     return <Option value={item.key} key={index}>{item.key} - {item.value}</Option>
                                                 })}
@@ -217,7 +233,7 @@ export default class recommendModal extends Component {
 
                                         : this.formRef.current && this.formRef.current.getFieldValue("jumpType") === 8 ?
                                             <Form.Item label="好看分类" name="goodLookType" style={{ marginLeft: 10, width: 230, display: "inline-flex" }}>
-                                                <Select className="input-wrapper-from" >
+                                                <Select className="input-wrapper-from" placeholder='请选择好看分类' >
                                                     {good_look_types.map((item, index) => {
                                                         return <Option value={item.key} key={index}>{item.key} - {item.value}</Option>
                                                     })}
@@ -227,31 +243,31 @@ export default class recommendModal extends Component {
                             }
                         </Form.Item>
 
-
-
                         <Form.Item label='用户设备标签' name='tags'>
-                            <Select className="input-wrapper-from" >
+                            <Select className="input-wrapper-from" mode="multiple">
                                 {user_tag.map(r => {
-                                    return <Option value={r.code} key={r.id}>{r.name}</Option>
+                                    return <Option value={r.code} key={r.id}>
+                                        <div>{r.code}-{r.name}</div>
+
+                                    </Option>
                                 })}
                             </Select>
                         </Form.Item>
 
 
-                        <Form.Item label="标签投放类型" name="deliverType" rules={[{ required: true, message: '请选择标签投放类型' }]}                 >
+                        <Form.Item label="标签投放类型" name="deliveryType" rules={[{ required: true, message: '请选择标签投放类型' }]}                 >
                             <Radio.Group>
                                 <Radio value={1}>定向</Radio>
                                 <Radio value={2}>非定向</Radio>
                             </Radio.Group>
                         </Form.Item>
 
-
-
                         <Form.Item label="比例" name='ratio'>
                             <Input className="input-wrapper-from"></Input>
                         </Form.Item>
-
-
+                        <Form.Item label="展示时长" name="duration" rules={[{ required: true, message: '请输入展示时长' }]}>
+                            <Input className="input-wrapper-from" placeholder="例如:10" addonAfter="秒" />
+                        </Form.Item>
 
                         <Form.Item label="地域" name="area">
                             <Address defaultAddress={this.state.address}
@@ -361,7 +377,7 @@ export default class recommendModal extends Component {
     //确认按钮被点击
     onOkClick() {
         let object = this.formRef.current.getFieldsValue()
-
+        let that = this;
         if (!object.status) object.status = false;
 
         // for (let key in object) {
@@ -429,7 +445,7 @@ export default class recommendModal extends Component {
             object.qrY = parseInt(object.qrY);
         }
 
-        if (!object.deliverType) {
+        if (!object.deliveryType) {
             message.error('请选择标签投放类型');
             return;
         }
@@ -440,10 +456,31 @@ export default class recommendModal extends Component {
         else if (!status) status = 2;
         object.status = status;
 
-        console.log('object ok click');
-        console.log(object);
+        //地域
+        let address = that.state.address;
+        if (address && address.length > 0) object.area = address.join(',');
 
-        this.props.onOk(object)
+        //渠道信息
+        let market = object.market;
+        if (market && market.length > 0) object.market = market.join(',');
+
+        //用户标签
+        let tags = object.tags;
+        if (tags && tags.length > 0) object.tags = tags.join(',');
+
+        //选择的频道类型
+        let jumpChannelCode = object.jumpChannelCode;
+        if (jumpChannelCode && jumpChannelCode.length > 0) object.jumpChannelCode = jumpChannelCode.join(',');
+
+
+        let obj = {};
+        for (let key in object) {
+            let value = object[key];
+            if (value) obj[key] = value;
+        }
+        console.log('=======创建、编辑、保存object');
+        console.log(obj);
+        this.props.onOk(obj)
     }
     //校验数字
     checkNumber(number) {

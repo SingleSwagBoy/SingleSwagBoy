@@ -68,7 +68,7 @@ export default class Teast extends Component {
                             )
                         }
                     },
-                    { title: '比例 (展示概率)', dataIndex: 'rate', key: 'rate', width: 200, },
+                    { title: '比例 (展示概率)', dataIndex: 'ratioStr', key: 'ratioStr', width: 200, },
                     { title: '展示时长', dataIndex: 'duration', key: 'time', width: 100, },
                     // { title: '地域', dataIndex: 'area', key: 'area', width: 100, },
                     // { title: '渠道', dataIndex: 'market', key: 'market', width: 100, },

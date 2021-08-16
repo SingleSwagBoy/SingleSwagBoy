@@ -67,11 +67,12 @@ export default class WinningNews extends Component {
                         placeholder="请选择试看频道组"
                         mode="multiple"
                         allowClear
+                        optionFilterProp="name"
                       >
                         {
                           this.state.channelList.map(r=>{
                             return(
-                              <Option value={r.id} key={r.id}>{r.name}</Option>
+                              <Option value={r.id} key={r.id} name={r.name}>{r.name}</Option>
                             )
                           })
                         }
@@ -121,7 +122,10 @@ export default class WinningNews extends Component {
     })
   }
   getLockList(){
-    getLockList({}).then(res=>{
+    let params={
+      page: {currentPage: 1, pageSize: 1000}
+    }
+    getLockList(params).then(res=>{
       if(res.data.errCode == 0){
        this.setState({
          channelList:res.data.data

@@ -45,7 +45,7 @@ const adminRoutes = [
   {path:'/mms/activeManagement/voting',component:Voting,name:'投票活动',icon:UnorderedListOutlined,code:"ActiveManagement"},
   {path:'/mms/channelManage/channelLock',component:ChannelLock,name:'专享台解锁',icon:UnorderedListOutlined,code:"channelManage"},
 
-  {path:'/mms/recommend/recommend',component:Recommend,name:'尝鲜版',icon:UnorderedListOutlined,code:"adManage"},
+  {path:'/mms/adManage/recommend',component:Recommend,name:'尝鲜版',icon:UnorderedListOutlined,code:"adManage"},
   {path:'/mms/noPermission',component:NoPermission,name:'没有权限',meta:{isNav:false,roles:'*'}}
 
 

@@ -4,7 +4,8 @@ import { Layout, Menu, Avatar, Dropdown, message, Badge } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  UserOutlined
+  UserOutlined,
+  UnorderedListOutlined
 } from '@ant-design/icons';
 
 import './style.css'
@@ -160,10 +161,9 @@ class MyLayout extends Component {
                       }
                     </SubMenu>
                     :
-                    <Menu.Item icon={<nav.icon />}>
+                    <Menu.Item icon={<UserOutlined />} key={nav.path}>
                       {nav.name}
                     </Menu.Item>
-                    
                   )
                 })
               }

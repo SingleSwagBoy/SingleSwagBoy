@@ -62,7 +62,8 @@ export default class recommendModal extends Component {
             //状态：1、有效,2、无效
             if (status == 1) status = true;
             else status = false;
-            data.status = true;
+            data.status = status;
+
             data.time = [
                 moment(data.startTime), moment(data.endTime)
             ]

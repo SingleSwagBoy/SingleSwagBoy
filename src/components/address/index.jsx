@@ -15,7 +15,15 @@ class Address extends Component {
     
   }
   componentDidMount(){
-    this.getPlace()
+    //缓存如果有地址就不需要再次去请求
+    if(window.localStorage.getItem("address")){
+      this.setState({
+        treeData:JSON.parse(window.localStorage.getItem("address"))
+      })
+    }else{
+      this.getPlace()
+    }
+   
   }
   render() {
     /* 
@@ -58,6 +66,7 @@ class Address extends Component {
       this.setState({
         treeData:tree
       })
+      window.localStorage.setItem("address",JSON.stringify(tree))
     })
   }
 }

@@ -63,7 +63,7 @@
     width: 300px;
 }
 
-.uplpad-image-box {
+.upload-image-box {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;

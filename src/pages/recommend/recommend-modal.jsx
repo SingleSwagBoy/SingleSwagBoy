@@ -189,7 +189,7 @@ export default class recommendModal extends Component {
 
                         <Divider orientation="left">广告配置</Divider>
                         <Form.Item label="图片" name="picUrl">
-                            <div className="uplpad-image-box">
+                            <div >
                                 <Upload {...this.buildAdImageUpload()}>上传图片</Upload>
                                 {ad_image_url ? <Image height={100} src={ad_image_url} /> : ''}
                             </div>

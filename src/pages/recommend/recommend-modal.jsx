@@ -64,7 +64,6 @@ export default class recommendModal extends Component {
             else status = false;
             data.status = status;
 
-
             data.time = [
                 moment(data.startTime), moment(data.endTime)
             ]

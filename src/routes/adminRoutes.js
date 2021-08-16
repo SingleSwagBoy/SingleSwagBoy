@@ -41,7 +41,7 @@ const adminRoutes = [
   {path:'/mms/service/miniInput',component:MiniInput,name:'小程序录入',icon:UnorderedListOutlined},
   {path:'/mms/activeManagement/voting',component:Voting,name:'投票活动',icon:UnorderedListOutlined},
   {path:'/mms/channelGroup/channelLock',component:ChannelLock,name:'专享台解锁',icon:UnorderedListOutlined},
-  {path:'/mms/recommend',component:Recommend,name:'广告管理',icon:UnorderedListOutlined},
+  {path:'/mms/recommend/recommend',component:Recommend,name:'尝鲜版',icon:UnorderedListOutlined},
 
 
   {path:'/mms/noPermission',component:NoPermission,name:'没有权限',meta:{isNav:false,roles:'*'}}

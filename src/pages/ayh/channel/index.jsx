@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getChannelGroupChannel,getListChannelInfo ,updateListChannelInfo,deleteChannelProgram} from 'api'
+import { getChannelGroupChannel,getListChannelInfo ,updateListChannelInfo,deleteChannelProgram,getCheckboxTry,addTvTrying,syncCacheTvTry,deleteTvTrying} from 'api'
 import { Card, Breadcrumb, Button, Table, Image, Modal, message,Input, Space,DatePicker,Checkbox} from 'antd'
 import { Link } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
@@ -30,6 +30,7 @@ export default class AyhChannel extends Component {
       mySwiper:"",
       timeSwiper:[],
       currentItem:{channelGroupId:1495,channelName:"央视"},
+      checkBoxList:[],//查看推送尝鲜版的list
       channel:[
         {channelName:"央视",channelGroupId:1495},
         {channelName:"卫视",channelGroupId:1496}
@@ -103,7 +104,14 @@ export default class AyhChannel extends Component {
             render:(row)=>{
                 return(
                     <div>
-                        <Checkbox onChange={()=>{ console.log('change'); }}>
+                        <Checkbox checked={row.checked} onChange={val=>{
+                          if(val.target.checked){
+                            this.addTvTrying(row)
+                          }else{
+                            this.deleteTvTrying(row)
+                          }
+                         
+                        }}>
                             推送
                         </Checkbox>
                     </div>
@@ -138,7 +146,7 @@ export default class AyhChannel extends Component {
                    
                   } }
                   >编辑</Button>
-                <Button style={{'margin-left':"5px"}} size="small" danger onClick={()=>{this.delArt(row)}}>
+                <Button style={{'marginLeft':"5px"}} size="small" danger onClick={()=>{this.delArt(row)}}>
                       删除
                 </Button>
                 
@@ -225,7 +233,8 @@ export default class AyhChannel extends Component {
               <div className="action_box">
                 <div>{this.state.currentItem.channelName}节目单</div>
                 <div className="btn_box">
-                  <div onClick={()=>{this.requestPushToTeast()}}>推送到尝鲜版</div>
+                {/* //推送到尝鲜版 */}
+                  <div onClick={()=>{this.syncCacheTvTry()}}>尝鲜版数据同步</div> 
                   <div onClick={()=>{this.updateListChannelInfo()}}>更新</div>
                   <div onClick={()=>{this.setState({visible:true,channelItem:null,type:2})}}>插入新节目</div>
                 </div>
@@ -238,6 +247,7 @@ export default class AyhChannel extends Component {
                     onChange: this.changeSize,
                     hideOnSinglePage:true
                 }}
+                rowKey={item=>item.startTime}
               columns={this.state.columns} />
             </div>
           </div>
@@ -337,6 +347,7 @@ export default class AyhChannel extends Component {
           lists:res.data.data,
           loading:false
         })
+        this.getCheckboxTry(param)
       }else{
         this.setState({
           lists:[],
@@ -345,10 +356,79 @@ export default class AyhChannel extends Component {
       }
     })
   }
-  //推送到尝鲜版
-  requestPushToTeast(){
-    console.log('推送到尝鲜版按钮被点击')
+  getCheckboxTry(param){
+    getCheckboxTry(param).then(res=>{
+      if(res.data.errCode === 0){
+        this.setState({
+          checkBoxList:res.data.data
+        })
+        if(res.data.data.programs.length>0){
+          this.state.lists.forEach(r=>{
+            res.data.data.programs.forEach(l=>{ //对比时间和programId
+              if(r.programId == l.split("_")[1] && util.formatTime(String(r.startTime).length==10? r.startTime* 1000:r.startTime,"",7).replaceAll(":","") == l.split("_")[0]){
+                r.checked = true
+              }
+            })
+          })
+          this.setState({
+            lists:[...this.state.lists]
+          })
+        }
+      }else{
+        this.setState({
+          checkBoxList:[]
+        })
+      }
+    })
   }
+  addTvTrying(item){
+    let param={
+      channelId:this.state.currentChannelItem.channelCode,
+      programId:item.programId,
+      dateAt:this.state.timeSwiper[this.state.currentIndex].replaceAll("-",""),
+      timeAt:util.formatTime(String(item.startTime).length==10? item.startTime* 1000:item.startTime,"",7).replaceAll(":","")
+    }
+    console.log(param)
+    addTvTrying(param).then(res=>{
+      if(res.data.errCode === 0){
+        item.checked = !item.checked
+        this.setState({
+          lists:this.state.lists
+        })
+      }else{
+        message.error(res.data.msg)
+      }
+    })
+  }
+  deleteTvTrying(item){
+    let param={
+      channelId:this.state.currentChannelItem.channelCode,
+      programId:item.programId,
+      dateAt:this.state.timeSwiper[this.state.currentIndex].replaceAll("-",""),
+      timeAt:util.formatTime(String(item.startTime).length==10? item.startTime* 1000:item.startTime,"",7).replaceAll(":","")
+    }
+    deleteTvTrying(param).then(res=>{
+      if(res.data.errCode === 0){
+        item.checked = !item.checked
+        this.setState({
+          lists:this.state.lists
+        })
+      }else{
+        message.error(res.data.msg)
+      }
+    })
+  }
+  //推送到尝鲜版
+  syncCacheTvTry(){
+    syncCacheTvTry({}).then(res=>{
+      if(res.data.errCode === 0){
+        message.success("数据同步成功")
+      }else{
+        message.error("数据同步失败")
+      }
+    })
+  }
+  
   updateListChannelInfo(){
     this.setState({
       loading:true

@@ -229,6 +229,19 @@ export const getLockList = (params) => { //获取专项频道未设置的频道�
 export const unlockChannel = (params) => { //专项频道解锁配置
     return request.post(`${baseUrl}/mms/channel/group/exclusive/unlock`, params)
 };
+//推送节目单尝鲜版 
+export const getCheckboxTry = (params) => { //获取checkbox
+    return request.get(`${baseUrl}/mms/channel/tvTrying/checkbox`, { params: params })
+};
+export const addTvTrying = (params) => { //添加推送尝鲜版
+    return request.post(`${baseUrl}/mms/channel/tvTrying/add`, params)
+};
+export const deleteTvTrying = (params) => { //添加推送尝鲜版
+    return request.post(`${baseUrl}/mms/channel/tvTrying/remove`, params)
+};
+export const syncCacheTvTry = (params) => { //数据同步推送尝鲜版
+    return request.post(`${baseUrl}/mms/channel/tvTrying/syncCache`, params)
+};
 
 
 

@@ -398,23 +398,28 @@ export default class AyhChannel extends Component {
     let param={
       channelId:this.state.currentChannelItem.channelCode,
       dateAt:this.state.timeSwiper[this.state.currentIndex].replaceAll("-",""),
-      timeAt:util.formatTime(String(item.startTime).length==10? item.startTime* 1000:item.startTime,"",7).replaceAll(":","")
     }
     if(item === 1){ //代表全频道
 
     }else{
       param.programId = item.programId
+      param.timeAt = util.formatTime(String(item.startTime).length==10? item.startTime* 1000:item.startTime,"",7).replaceAll(":","")
     }
-    
     console.log(param)
     addTvTrying(param).then(res=>{
       if(res.data.errCode === 0){
         if(item !== 1){
           item.checked = !item.checked
+          this.setState({
+            lists:this.state.lists
+          })
+        }else{
+          this.state.checkBoxList.isAll = !this.state.checkBoxList.isAll
+          this.setState({
+            checkBoxList:this.state.checkBoxList
+          })
         }
-        this.setState({
-          lists:this.state.lists
-        })
+       
       }else{
         message.error(res.data.msg)
       }
@@ -423,18 +428,28 @@ export default class AyhChannel extends Component {
   deleteTvTrying(item){
     let param={
       channelId:this.state.currentChannelItem.channelCode,
-      programId:item.programId,
       dateAt:this.state.timeSwiper[this.state.currentIndex].replaceAll("-",""),
-      timeAt:util.formatTime(String(item.startTime).length==10? item.startTime* 1000:item.startTime,"",7).replaceAll(":","")
     }
+    if(item === 1){ //代表全频道
+
+    }else{
+      param.programId = item.programId
+      param.timeAt = util.formatTime(String(item.startTime).length==10? item.startTime* 1000:item.startTime,"",7).replaceAll(":","")
+    }
+
     deleteTvTrying(param).then(res=>{
       if(res.data.errCode === 0){
         if(item !== 1){
           item.checked = !item.checked
+          this.setState({
+            lists:this.state.lists
+          })
+        }else{
+          this.state.checkBoxList.isAll = !this.state.checkBoxList.isAll
+          this.setState({
+            checkBoxList:this.state.checkBoxList
+          })
         }
-        this.setState({
-          lists:this.state.lists
-        })
       }else{
         message.error(res.data.msg)
       }

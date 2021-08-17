@@ -58,6 +58,8 @@ export default class recommendModal extends Component {
         that.formRef.current.resetFields();
         //编辑信息
         if (data) {
+            console.log('编辑前')
+            console.log(data)
             let status = data.status;
             //状态：1、有效,2、无效
             if (status == 1) status = true;
@@ -82,7 +84,7 @@ export default class recommendModal extends Component {
             else data.jumpChannelCode = [];
 
 
-            console.log('编辑')
+            console.log('编辑后')
             console.log(data);
             let address = [];
             if (data.area) address = data.area.split(',');      //地域列表
@@ -116,7 +118,7 @@ export default class recommendModal extends Component {
 
     render() {
         let { is_loading, ad_image_url, dateFormat } = this.state;
-        let { visible, qrcode_types, jump_types, jump_menu_types, good_look_types, user_tag, delivery_types, channel_list } = this.props;
+        let { visible, qrcode_types, jump_types, jump_menu_types, good_look_types, user_tag, delivery_types, channel_list, product_list } = this.props;
 
         return (
             <div>
@@ -131,6 +133,7 @@ export default class recommendModal extends Component {
                     ]}>
 
                     <Form name='recom' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
+                        <div>{JSON.stringify(qrcode_types)}</div>
                         <Divider></Divider>
                         <Form.Item label="notice1" >
                             <div>当id为空时，当前为[创建模式],反之存在id时，为[更新模式]</div>
@@ -149,16 +152,37 @@ export default class recommendModal extends Component {
                         <Form.Item label="状态" name="status" rules={[{ required: true, message: '请选择状态' }]} valuePropName='checked'>
                             <Switch checkedChildren="有效" unCheckedChildren="无效" />
                         </Form.Item>
-
-                        <Divider orientation="left">二维码配置</Divider>
-
-                        <Form.Item label="二维码类型" name="type"   >
-                            <Select className="input-wrapper-from">
+                        <Form.Item label="类型" name="type">
+                            <Select className="input-wrapper-from" onChange={(val) => {
+                                this.formRef.current.setFieldsValue({ 'type': val })
+                                this.setState({
+                                    is_loading: this.state.is_loading
+                                })
+                            }}>
                                 {qrcode_types.map((item, index) => {
-                                    return <Option value={item.key} key={index}>{item.key} - {item.value}</Option>
+                                    return <Option value={item.key} key={index} >{item.key} - {item.value}</Option>
                                 })}
                             </Select>
                         </Form.Item>
+
+                        {
+                            this.formRef.current && this.formRef.current.getFieldValue("type") === 3 ?
+                                <Form.Item label="套餐类型" name="pCode" >
+                                    <Select className="input-wrapper-from">
+                                        {product_list.map((item, index) => {
+                                            return <Option value={item.name} key={index}>{item.id} - {item.name}</Option>
+                                        })}
+                                    </Select>
+                                </Form.Item>
+                                : ''
+                        }
+
+
+
+
+                        <Divider orientation="left">二维码配置</Divider>
+
+
                         <Form.Item label="二维码尺寸">
                             <Form.Item name="qrWidth"  >
                                 <Input className="input-wrapper-from" addonBefore="宽" placeholder="例如:200" addonAfter="px" />
@@ -462,6 +486,15 @@ export default class recommendModal extends Component {
         }
         else if (area.constructor === Array) {
             object.area = area.join(',');
+        }
+        //比率
+        let ratio = object.ratio;
+        if (ratio) {
+            if (!this.checkNumber(object.ratio)) {
+                message.error('比例不正确，请输入数字');
+                return;
+            }
+            object.ratio = parseInt(object.ratio);
         }
 
 

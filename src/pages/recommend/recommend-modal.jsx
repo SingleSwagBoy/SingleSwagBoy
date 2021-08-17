@@ -62,7 +62,8 @@ export default class recommendModal extends Component {
             //状态：1、有效,2、无效
             if (status == 1) status = true;
             else status = false;
-            data.status = true;
+            data.status = status;
+
             data.time = [
                 moment(data.startTime), moment(data.endTime)
             ]
@@ -119,7 +120,7 @@ export default class recommendModal extends Component {
 
         return (
             <div>
-                <Modal className="modal-box" visible={visible} title="广告信息" width={800} transitionName="" closable={false}
+                <Modal className="modal-box" visible={visible} title="广告信息" width={800} transitionName="" onCancel={() => { this.props.onCancel() }} forceRender={true}
                     footer={[
                         <Button onClick={() => {
                             this.formRef.current.resetFields()
@@ -148,8 +149,6 @@ export default class recommendModal extends Component {
                         <Form.Item label="状态" name="status" rules={[{ required: true, message: '请选择状态' }]} valuePropName='checked'>
                             <Switch checkedChildren="有效" unCheckedChildren="无效" />
                         </Form.Item>
-
-
 
                         <Divider orientation="left">二维码配置</Divider>
 
@@ -190,14 +189,13 @@ export default class recommendModal extends Component {
 
                         <Divider orientation="left">广告配置</Divider>
                         <Form.Item label="图片" name="picUrl">
-                            <div className="uplpad-image-box">
+                            <div >
                                 <Upload {...this.buildAdImageUpload()}>上传图片</Upload>
                                 {ad_image_url ? <Image height={100} src={ad_image_url} /> : ''}
                             </div>
-
                             <div>{ad_image_url}</div>
                         </Form.Item>
-                      
+
                         <Form.Item label="跳转类型">
                             <Form.Item label="" name="jumpType" style={{ width: 200, display: "inline-block" }}>
                                 <Select className="input-wrapper-from" placeholder='请选择跳转类型' onChange={(val) => {
@@ -214,7 +212,7 @@ export default class recommendModal extends Component {
                             {
                                 this.formRef.current && this.formRef.current.getFieldValue("jumpType") === 1 ?
                                     <Form.Item label="频道" name="jumpChannelCode" style={{ marginLeft: 10, width: 230, display: "inline-flex" }}>
-                                        <Select className="input-wrapper-from" mode="multiple" >
+                                        <Select className="input-wrapper-from" mode="multiple" placeholder='请选择频道类型' >
                                             {channel_list.map(r => {
                                                 return <Option value={r.code} key={r.id}>
                                                     <div>{r.code}-{r.name}</div>
@@ -257,8 +255,9 @@ export default class recommendModal extends Component {
 
                         <Form.Item label="标签投放类型" name="deliveryType" rules={[{ required: true, message: '请选择标签投放类型' }]}                 >
                             <Radio.Group>
-                                <Radio value={1}>定向</Radio>
-                                <Radio value={2}>非定向</Radio>
+                                {delivery_types.map((item, index) => {
+                                    return <Radio value={item.key} key={index}> {item.value}</Radio>
+                                })}
                             </Radio.Group>
                         </Form.Item>
 
@@ -457,20 +456,45 @@ export default class recommendModal extends Component {
         object.status = status;
 
         //地域
-        let address = that.state.address;
-        if (address && address.length > 0) object.area = address.join(',');
+        let area = that.state.address;
+        if (!area) {
+            object.area = '';
+        }
+        else if (area.constructor === Array) {
+            object.area = area.join(',');
+        }
+
 
         //渠道信息
         let market = object.market;
-        if (market && market.length > 0) object.market = market.join(',');
+        if (!market) {
+            object.market = '';
+        }
+        else if (market.constructor === Array) {
+            object.market = market.join(',');
+        }
 
         //用户标签
         let tags = object.tags;
-        if (tags && tags.length > 0) object.tags = tags.join(',');
+        if (!tags) {
+            object.tags = '';
+        }
+        else if (tags.constructor === Array) {
+            object.tags = tags.join(',');
+        }
+        //用户图片
+        let ad_image_url = that.state.ad_image_url;
+        if (ad_image_url) object.picUrl = ad_image_url;
 
         //选择的频道类型
         let jumpChannelCode = object.jumpChannelCode;
-        if (jumpChannelCode && jumpChannelCode.length > 0) object.jumpChannelCode = jumpChannelCode.join(',');
+        if (!jumpChannelCode) {
+            object.jumpChannelCode = '';
+        }
+        else if (jumpChannelCode.constructor === Array) {
+            object.jumpChannelCode = jumpChannelCode.join(',');
+        }
+
 
 
         let obj = {};

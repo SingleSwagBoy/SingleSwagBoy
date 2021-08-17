@@ -240,8 +240,8 @@ export const requestTvTringAdDuplicate = (params) => { return request.get(`${bas
 export const requestTvTringAdCreate = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/create`, params) }                              //广告-新增
 export const requestTvTringAdEdit = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/edit`, params) }                                  //广告-编辑
 export const requestTvTringAdDeleteItem = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/deleteItem`, { params: params }) }           //广告-删除
-export const requestTvTringAdConfigRatio = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/config/ratio`, { params: params }) }        //广告-配置节目单比例
-export const requestTvTringAdConfigDuration = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/config/duration`, params); }            //广告-配置节目单持续时间
+export const requestTvTringAdConfigRatio = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/config/ratio`, params) }                   //广告-配置节目单比例
+export const requestTvTringAdConfigDuration = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/config/duration`, { params: params }); } //广告-配置节目单持续时间
 export const requestTvTringAdSyncCache = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/syncCache`, params) }                        //广告-数据同步-生成前台缓存
 export const requestTvTringShowConfig = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/showConfig`, params) }                         //广告-查看广告节目单配置
 

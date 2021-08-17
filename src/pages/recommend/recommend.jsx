@@ -68,7 +68,7 @@ export default class Teast extends Component {
                             )
                         }
                     },
-                    { title: '比例 (展示概率)', dataIndex: 'rate', key: 'rate', width: 200, },
+                    { title: '比例 (展示概率)', dataIndex: 'ratioStr', key: 'ratioStr', width: 200, },
                     { title: '展示时长', dataIndex: 'duration', key: 'time', width: 100, },
                     // { title: '地域', dataIndex: 'area', key: 'area', width: 100, },
                     // { title: '渠道', dataIndex: 'market', key: 'market', width: 100, },
@@ -150,107 +150,101 @@ export default class Teast extends Component {
         const { sync_cache_code, teast_box, modal_box, qrcode_types, jump_types, jump_menu_types, good_look_types, ratio_box, duration_box, user_tag, delivery_types, channel_list } = this.state;
         return (
             <div>
-                <div>广告管理</div>
+                <div>尝鲜版广告</div>
 
-                <Tabs defaultActiveKey="1">
-                    <TabPane tab="尝鲜版广告" key="1">
-                        <div className="teast-wrapper">
-                            <Divider orientation="left">时间管理</Divider>
-                            <div className="input-wrapper">
-                                <div className="title">频道与广告的比例:</div>
-                                <Input.Group className="input" compact>
-                                    <Input placeholder="频道" style={{ width: 100, textAlign: 'center' }} value={ratio_box.programRatio} onChange={(val) => {
-                                        let that = this;
-                                        ratio_box.programRatio = val.target.value;
-                                        that.setState({ ratio_box: ratio_box });
-                                    }} />
-                                    <Input placeholder=":" style={{ width: 25, borderLeft: 0, borderRight: 0, pointerEvents: 'none', }} disabled />
-                                    <Input placeholder="广告" style={{ width: 100, textAlign: 'center', }} value={ratio_box.adRatio} onChange={(val) => {
-                                        let that = this;
-                                        ratio_box.adRatio = val.target.value;
-                                        that.setState({ ratio_box: ratio_box });
-                                    }} />
-                                </Input.Group>
-                                <Button className="btn" type="primary" size='small' onClick={() => this.onRequestSaveRatioClick()}>保存</Button>
-                            </div>
-                            <div className="input-wrapper">
-                                <div className="title">频道展示时长:</div>
-                                <Input className="input" placeholder="请输入展示时长" suffix="秒" value={duration_box.programDuration} onChange={(val) => {
-                                    let that = this;
-                                    duration_box.programDuration = val.target.value;
-                                    that.setState({ duration_box: duration_box });
-                                }} />
-                                <Button className="btn" type="primary" size='small' onClick={() => this.onSaveDurationClick()}>保存</Button>
-                            </div>
+                <div className="teast-wrapper">
+                    <Divider orientation="left">时间管理</Divider>
+                    <div className="input-wrapper">
+                        <div className="title">频道与广告的比例:</div>
+                        <Input.Group className="input" compact>
+                            <Input placeholder="频道" style={{ width: 100, textAlign: 'center' }} value={ratio_box.programRatio} onChange={(val) => {
+                                let that = this;
+                                ratio_box.programRatio = val.target.value;
+                                that.setState({ ratio_box: ratio_box });
+                            }} />
+                            <Input placeholder=":" style={{ width: 25, borderLeft: 0, borderRight: 0, pointerEvents: 'none', }} disabled />
+                            <Input placeholder="广告" style={{ width: 100, textAlign: 'center', }} value={ratio_box.adRatio} onChange={(val) => {
+                                let that = this;
+                                ratio_box.adRatio = val.target.value;
+                                that.setState({ ratio_box: ratio_box });
+                            }} />
+                        </Input.Group>
+                        <Button className="btn" type="primary" size='small' onClick={() => this.onRequestSaveRatioClick()}>保存</Button>
+                    </div>
+                    <div className="input-wrapper">
+                        <div className="title">频道展示时长:</div>
+                        <Input className="input" placeholder="请输入展示时长" suffix="秒" value={duration_box.programDuration} onChange={(val) => {
+                            let that = this;
+                            duration_box.programDuration = val.target.value;
+                            that.setState({ duration_box: duration_box });
+                        }} />
+                        <Button className="btn" type="primary" size='small' onClick={() => this.onSaveDurationClick()}>保存</Button>
+                    </div>
 
-                            <Divider orientation="left">配置列表</Divider>
+                    <Divider orientation="left">配置列表</Divider>
 
-                            <div className="input-wrapper">
-                                <div className="title">广告时间选择:</div>
-                                <Tooltip title='请选择开始时间' placement="top" >
-                                    <RangePicker className="date-picker" showTime onChange={(val) => {
-                                        let that = this;
-                                        let search_box = that.state.search_box;
-                                        search_box.startTime = val[0].valueOf();
-                                        search_box.endTime = val[1].valueOf();
-                                        that.setState({ search_box: search_box });
-                                    }} />
-                                </Tooltip>
-                            </div>
-                            <div className="input-wrapper">
-                                <div className="title">搜索频道名称:</div>
-                                <Tooltip title='筛选搜索频道名称' placement="top" >
-                                    <Input className="input" placeholder="请输入搜索频道名称" onChange={(val) => {
-                                        let that = this;
-                                        let search_box = that.state.search_box;
-                                        search_box.name = val.target.value;
-                                        that.setState({ search_box: search_box });
-                                    }} />
-                                </Tooltip>
-                                <Button className="btn" type="primary" size='small'
-                                    onClick={() => {
-                                        let that = this;
-                                        let search_box = that.state.search_box;
-                                        search_box.currentPage = 0;
-                                        that.setState({ search_box: search_box });
-                                        that.refreshList();
-                                    }}
-                                >搜索</Button>
-                            </div>
+                    <div className="input-wrapper">
+                        <div className="title">广告时间选择:</div>
+                        <Tooltip title='请选择开始时间' placement="top" >
+                            <RangePicker className="date-picker" showTime onChange={(val) => {
+                                let that = this;
+                                let search_box = that.state.search_box;
+                                search_box.startTime = val[0].valueOf();
+                                search_box.endTime = val[1].valueOf();
+                                that.setState({ search_box: search_box });
+                            }} />
+                        </Tooltip>
+                    </div>
+                    <div className="input-wrapper">
+                        <div className="title">搜索频道名称:</div>
+                        <Tooltip title='筛选搜索频道名称' placement="top" >
+                            <Input className="input" placeholder="请输入搜索频道名称" onChange={(val) => {
+                                let that = this;
+                                let search_box = that.state.search_box;
+                                search_box.name = val.target.value;
+                                that.setState({ search_box: search_box });
+                            }} />
+                        </Tooltip>
+                        <Button className="btn" type="primary" size='small'
+                            onClick={() => {
+                                let that = this;
+                                let search_box = that.state.search_box;
+                                search_box.currentPage = 0;
+                                that.setState({ search_box: search_box });
+                                that.refreshList();
+                            }}
+                        >搜索</Button>
+                    </div>
 
-                        </div>
-                        <Alert className="alert-box" message="配置详情列表" type="success" action={
-                            <div>
-                                <Tooltip title='仅仅只是刷新当前列表最新的数据' placement="top"  >
-                                    <Button onClick={() => this.requestRefreshList()} type="primary" style={{ 'marginLeft': '10px' }} >刷新</Button>
-                                </Tooltip>
-                                <Button onClick={() => this.showModalToCreate()} type="primary" style={{ 'marginLeft': '10px' }} >新增</Button>
-                                <Tooltip title='重新调整比例:所有比例重置为1，只对有效的重新计算。' placement="top"  >
-                                    <Button onClick={() => this.onResetRatioClick()} type="primary" style={{ 'marginLeft': '10px' }} >调整比例</Button>
-                                </Tooltip>
-                                {/* -1失败 0等待点击 1加载中 2同步成功 */}
-                                <Button onClick={() => this.onSynchrodataClick()} type="primary" disabled={sync_cache_code === 1} style={{ 'marginLeft': '10px' }}>
-                                    {sync_cache_code === -1 ? '同步失败' : sync_cache_code === 0 ? '立即同步' : sync_cache_code === 1 ? '正在同步' : '同步成功'}
-                                </Button>
-                            </div>
-                        }>
-                        </Alert>
-                        <Table columns={teast_box.table_title} dataSource={teast_box.table_datas} pagination={false} scroll={{ x: 1300 }} />
-                        {
-                            teast_box.table_pages.totalCount !== 0 &&
-                            <div className="pagination-box">
-                                <Pagination current={teast_box.table_pages.currentPage} total={teast_box.table_pages.totalCount} pageSize={teast_box.table_pages.pageSize} />
-                            </div>
-                        }
+                </div>
+                <Alert className="alert-box" message="配置详情列表" type="success" action={
+                    <div>
+                        <Tooltip title='仅仅只是刷新当前列表最新的数据' placement="top"  >
+                            <Button onClick={() => this.requestRefreshList()} type="primary" style={{ 'marginLeft': '10px' }} >刷新</Button>
+                        </Tooltip>
+                        <Button onClick={() => this.showModalToCreate()} type="primary" style={{ 'marginLeft': '10px' }} >新增</Button>
+                        <Tooltip title='重新调整比例:所有比例重置为1，只对有效的重新计算。' placement="top"  >
+                            <Button onClick={() => this.onResetRatioClick()} type="primary" style={{ 'marginLeft': '10px' }} >调整比例</Button>
+                        </Tooltip>
+                        {/* -1失败 0等待点击 1加载中 2同步成功 */}
+                        <Button onClick={() => this.onSynchrodataClick()} type="primary" disabled={sync_cache_code === 1} style={{ 'marginLeft': '10px' }}>
+                            {sync_cache_code === -1 ? '同步失败' : sync_cache_code === 0 ? '立即同步' : sync_cache_code === 1 ? '正在同步' : '同步成功'}
+                        </Button>
+                    </div>
+                }>
+                </Alert>
+                <Table columns={teast_box.table_title} dataSource={teast_box.table_datas} pagination={false} scroll={{ x: 1300 }} />
+                {
+                    teast_box.table_pages.totalCount !== 0 &&
+                    <div className="pagination-box">
+                        <Pagination current={teast_box.table_pages.currentPage} total={teast_box.table_pages.totalCount} pageSize={teast_box.table_pages.pageSize} />
+                    </div>
+                }
 
-                        <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} user_tag={user_tag} delivery_types={delivery_types} channel_list={channel_list}
-                            onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
+                <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} user_tag={user_tag} delivery_types={delivery_types} channel_list={channel_list}
+                    onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
 
 
-
-                    </TabPane>
-                    <TabPane tab="其他广告" key="2"></TabPane>
-                </Tabs>
 
 
             </div>
@@ -456,7 +450,7 @@ export default class Teast extends Component {
 
 
         let obj = {}
-        if (duration_box.programDuration) obj.programDuration = duration_box.programDuration;
+        if (duration_box.programDuration) obj.programDuration = parseInt(duration_box.programDuration);
         else {
             message.error('设置失败:请输入频道展示时长')
             return;

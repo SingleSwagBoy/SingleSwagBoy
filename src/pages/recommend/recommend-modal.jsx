@@ -134,12 +134,12 @@ export default class recommendModal extends Component {
 
                     <Form name='recom' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
                         <Divider></Divider>
-                        <Form.Item label="notice1" >
-                            <div>当id为空时，当前为[创建模式],反之存在id时，为[更新模式]</div>
-                        </Form.Item>
-                        <Form.Item label="id" name='id' >
-                            <Input className="input-wrapper-from" disabled />
-                        </Form.Item>
+
+                        <Tooltip title='当id为空时，当前为[创建模式],反之存在id时，为[更新模式]。' placement="top" >
+                            <Form.Item label="id" name='id' >
+                                <Input className="input-wrapper-from" disabled />
+                            </Form.Item>
+                        </Tooltip>
                         <Form.Item label="广告名称" name='name' rules={[{ required: true, message: '请输入广告名称' }]}>
                             <Input className="input-wrapper-from" placeholder="请输入广告名称" />
                         </Form.Item>
@@ -148,9 +148,14 @@ export default class recommendModal extends Component {
                             <RangePicker showTime format={dateFormat} />
                         </Form.Item>
 
-                        <Form.Item label="状态" name="status" rules={[{ required: true, message: '请选择状态' }]} valuePropName='checked'>
-                            <Switch checkedChildren="有效" unCheckedChildren="无效" />
-                        </Form.Item>
+                        {/* <Form.Item label="notice2" >
+                            <div>假如说时间</div>
+                        </Form.Item> */}
+                        <Tooltip title='如果选择的时间结束时间比当前时间早，则当前数据自动无效，列表切换状态也无效。' placement="top" >
+                            <Form.Item label="状态" name="status" rules={[{ required: true, message: '请选择状态' }]} valuePropName='checked'>
+                                <Switch checkedChildren="有效" unCheckedChildren="无效" />
+                            </Form.Item>
+                        </Tooltip>
                         <Form.Item label="类型" name="type">
                             <Select className="input-wrapper-from" onChange={(val) => {
                                 this.formRef.current.setFieldsValue({ 'type': val })

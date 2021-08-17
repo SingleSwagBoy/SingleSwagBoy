@@ -188,30 +188,40 @@ export default class recommendModal extends Component {
 
 
                         <Form.Item label="二维码尺寸">
-                            <Form.Item name="qrWidth"  >
-                                <Input className="input-wrapper-from" addonBefore="宽" placeholder="例如:200" addonAfter="px" />
-                            </Form.Item>
-                            <Form.Item name="qrHight" >
-                                <Input className="input-wrapper-from" addonBefore="高" placeholder="例如:200" addonAfter="px" />
-                            </Form.Item>
+                            <div className="input-wrapper-box">
+                                <Form.Item name="qrWidth">
+                                    <Input className="input-wrapper-from" addonBefore="宽" placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                                <Form.Item name="qrHight" style={{ marginLeft: '5px' }}>
+                                    <Input className="input-wrapper-from" addonBefore="高" placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                            </div>
                         </Form.Item>
                         <Form.Item label="二维码偏移">
-                            <Form.Item name="qrX"  >
-                                <Input className="input-wrapper-from" addonBefore="横" placeholder="例如:200" addonAfter="px" />
-                            </Form.Item>
-                            <Form.Item name="qrY" >
-                                <Input className="input-wrapper-from" addonBefore="纵" placeholder="例如:200" addonAfter="px" />
-                            </Form.Item>
+                            <div className="input-wrapper-box">
+                                <Form.Item name="qrX">
+                                    <Input className="input-wrapper-from" addonBefore="横" placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                                <Form.Item name="qrY" style={{ marginLeft: '5px' }}>
+                                    <Input className="input-wrapper-from" addonBefore="纵" placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                            </div>
                         </Form.Item>
                         {/* <Form.Item name="qrCodeUrl" label="二维码地址" >
                             <Input className="input-wrapper-from" />
                         </Form.Item> */}
-                        <Form.Item label="二维码颜色" name="qrColor">
-                            <Input className="input-wrapper-from" />
+                        <Form.Item label="二维码颜色">
+                            <div className="input-wrapper-box">
+                                <Form.Item name="qrColor">
+                                    <Input addonBefore="主体" placeholder="例:#FFFFFF" className="input-wrapper-from" />
+                                </Form.Item>
+                                <Form.Item name="qrBackGroundColor" style={{ marginLeft: '5px' }}>
+                                    <Input addonBefore="背景" placeholder="例:#FFFFFF" className="input-wrapper-from" />
+                                </Form.Item>
+                            </div>
                         </Form.Item>
-                        <Form.Item label="二维码背景颜色" name="qrBackGroundColor" >
-                            <Input className="input-wrapper-from" />
-                        </Form.Item>
+
+
 
 
 

@@ -420,8 +420,8 @@ export default class Teast extends Component {
             ids: id
         }
         requestTvTringAdChangeState(obj).then(res => {
-            message.success('状态修改成功')
             that.refreshList();
+            message.success('状态修改成功')
         })
     }
     // requestTvTringAdChangeState
@@ -442,7 +442,7 @@ export default class Teast extends Component {
                         message.success('调整成功')
                         that.refreshList();
                     } else {
-                        message.success('调整失败:' + res.data.msg)
+                        message.error('调整失败:' + res.data.msg)
                     }
                 })
             }
@@ -475,7 +475,13 @@ export default class Teast extends Component {
 
 
         let obj = {}
-        if (duration_box.programDuration) obj.programDuration = parseInt(duration_box.programDuration);
+        if (duration_box.programDuration) {
+            if (!this.checkNumber(duration_box.programDuration)) {
+                message.error('频道展示时长请输入数字')
+                return;
+            }
+            obj.programDuration = parseInt(duration_box.programDuration);
+        }
         else {
             message.error('设置失败:请输入频道展示时长')
             return;
@@ -497,12 +503,24 @@ export default class Teast extends Component {
         let ratio_box = that.state.ratio_box;
 
         let obj = {};
-        if (ratio_box.programRatio) obj.programRatio = ratio_box.programRatio;
+        if (ratio_box.programRatio) {
+            if (!that.checkNumber(ratio_box.programRatio)) {
+                message.error('节目单比例请填入数字');
+                return;
+            }
+            obj.programRatio = parseInt(ratio_box.programRatio);
+        }
         else {
             message.error('请填写节目单比例');
             return;
         }
-        if (ratio_box.adRatio) obj.adRatio = ratio_box.adRatio;
+        if (ratio_box.adRatio) {
+            if (!that.checkNumber(ratio_box.adRatio)) {
+                message.error('广告比例请填入数字');
+                return;
+            }
+            obj.adRatio = ratio_box.adRatio;
+        }
         else {
             message.error('请填写广告比例');
             return;
@@ -510,7 +528,6 @@ export default class Teast extends Component {
 
         requestTvTringAdConfigRatio(obj).then(res => {
             message.success('保存成功');
-
         })
 
     }
@@ -621,6 +638,11 @@ export default class Teast extends Component {
         })
         console.log('cancel')
 
+    }
+    //校验数字
+    checkNumber(number) {
+        let regex = /^[0-9]*$/;
+        return regex.test(number);
     }
 
 }

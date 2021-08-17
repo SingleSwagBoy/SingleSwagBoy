@@ -9,7 +9,6 @@ import {
     requestJumpTypes,                   //获取跳转类型
     requestJumpMenuTypes,               //获取跳转目录类型
     requestGoodLookTypes,               //获取好看类型
-    getMyProduct,                       //套餐分类 产品线
     requestDeliveryTypes,               //投放类型
     requestTvTringAdList,               //广告-列表
     requestTvTringAdResetRatio,         //广告-重设比例
@@ -22,6 +21,7 @@ import {
     requestTvTringAdConfigDuration,     //广告-配置节目单持续时间
     requestTvTringAdSyncCache,          //广告-数据同步-生成前台缓存
     requestTvTringShowConfig,           //广告-查看广告节目单配置
+    requestProductSkuList,              //广告-二维码套餐类型
 } from 'api';
 import { Tabs, Input, DatePicker, Button, Tooltip, Table, Pagination, Switch, Modal, Image, Select, Alert, notification, message, Divider } from 'antd';
 import './style.css'
@@ -42,6 +42,7 @@ export default class Teast extends Component {
             jump_menu_types: [],    //跳转目录类型
             good_look_types: [],    //好看类型
             product_list: [],       //套餐分类
+
             delivery_types: [],     //投放类型
             sync_cache_code: 0,     //异步缓存状态码 -1失败 0等待点击 1等待中 2同步成功
 
@@ -97,6 +98,7 @@ export default class Teast extends Component {
                         title: '状态', dataIndex: 'status', key: 'status', width: 120, fixed: 'right',
                         render: (rowValue, row, index) => {
                             return (
+
                                 <Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="有效" unCheckedChildren="无效" onChange={(checked) => this.onStateChange(row.id, checked)} />
                             )
                         }
@@ -147,7 +149,7 @@ export default class Teast extends Component {
     }
 
     render() {
-        const { sync_cache_code, teast_box, modal_box, qrcode_types, jump_types, jump_menu_types, good_look_types, ratio_box, duration_box, user_tag, delivery_types, channel_list } = this.state;
+        const { sync_cache_code, teast_box, modal_box, qrcode_types, jump_types, jump_menu_types, good_look_types, ratio_box, duration_box, user_tag, delivery_types, channel_list, product_list } = this.state;
         return (
             <div>
                 <div>尝鲜版广告</div>
@@ -241,7 +243,7 @@ export default class Teast extends Component {
                     </div>
                 }
 
-                <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} user_tag={user_tag} delivery_types={delivery_types} channel_list={channel_list}
+                <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} user_tag={user_tag} delivery_types={delivery_types} channel_list={channel_list} product_list={product_list}
                     onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
 
 
@@ -258,8 +260,16 @@ export default class Teast extends Component {
         let that = this;
         //获取二维码类型
         requestQrcodeTypes().then(res => {
+            let types = [];
+            for (let i = 0, len = res.length; i < len; i++) {
+                let item = res[i];
+                let key = item.key;
+                if (key !== 3 && key !== 10 && key !== 11) continue;
+                types.push(item);
+            }
+
             that.setState({
-                qrcode_types: res,
+                qrcode_types: types,
             })
         });
         //获取跳转类型
@@ -288,16 +298,7 @@ export default class Teast extends Component {
             })
         });
 
-        //获取套餐列表
-        getMyProduct().then(res => {
-            let errCode = res.data.errCode;
-            if (errCode === 0) {
-                let product_list = res.data.data;
-                this.setState({
-                    product_list: product_list,
-                })
-            }
-        });
+
         //获取频道组
         getChannel().then(res => {
             let errCode = res.data.errCode;
@@ -341,6 +342,18 @@ export default class Teast extends Component {
 
             }
         })
+        //二维码套餐类型
+        requestProductSkuList({ page: { isPage: 9 }, productCategoryType: 10 }).then(res => {
+            let errCode = res.data.errCode;
+            if (errCode === 0) {
+                let product_list = res.data.data;
+                this.setState({
+                    product_list: product_list,
+                })
+            }
+            console.log('---------二维码套餐')
+            console.log(res);
+        })
 
         this.refreshList();
     }
@@ -358,6 +371,18 @@ export default class Teast extends Component {
             let that = this;
             let errCode = res.data.errCode;
             if (errCode === 0) {
+                let teast_box = that.state.teast_box;
+                teast_box.table_datas = [];
+                teast_box.table_pages = {
+                    currentPage: 0,
+                    pageSize: 0,
+                    totalCount: 0,
+                };
+
+                that.setState({
+                    teast_box: teast_box,
+                })
+
                 let result = res.data.data;
                 // let datas = result.data;
                 // for (let i = 0; i < datas.length; i++) {
@@ -395,8 +420,8 @@ export default class Teast extends Component {
             ids: id
         }
         requestTvTringAdChangeState(obj).then(res => {
-            message.success('状态修改成功')
             that.refreshList();
+            message.success('状态修改成功')
         })
     }
     // requestTvTringAdChangeState
@@ -417,7 +442,7 @@ export default class Teast extends Component {
                         message.success('调整成功')
                         that.refreshList();
                     } else {
-                        message.success('调整失败:' + res.data.msg)
+                        message.error('调整失败:' + res.data.msg)
                     }
                 })
             }
@@ -450,7 +475,13 @@ export default class Teast extends Component {
 
 
         let obj = {}
-        if (duration_box.programDuration) obj.programDuration = parseInt(duration_box.programDuration);
+        if (duration_box.programDuration) {
+            if (!this.checkNumber(duration_box.programDuration)) {
+                message.error('频道展示时长请输入数字')
+                return;
+            }
+            obj.programDuration = parseInt(duration_box.programDuration);
+        }
         else {
             message.error('设置失败:请输入频道展示时长')
             return;
@@ -472,20 +503,35 @@ export default class Teast extends Component {
         let ratio_box = that.state.ratio_box;
 
         let obj = {};
-        if (ratio_box.programRatio) obj.programRatio = ratio_box.programRatio;
+        if (ratio_box.programRatio) {
+            if (!that.checkNumber(ratio_box.programRatio)) {
+                message.error('节目单比例请填入数字');
+                return;
+            }
+            obj.programRatio = parseInt(ratio_box.programRatio);
+        }
         else {
             message.error('请填写节目单比例');
             return;
         }
-        if (ratio_box.adRatio) obj.adRatio = ratio_box.adRatio;
+        if (ratio_box.adRatio) {
+            if (!that.checkNumber(ratio_box.adRatio)) {
+                message.error('广告比例请填入数字');
+                return;
+            }
+            obj.adRatio = parseInt(ratio_box.adRatio);
+        }
         else {
             message.error('请填写广告比例');
             return;
         }
-
         requestTvTringAdConfigRatio(obj).then(res => {
-            message.success('保存成功');
-
+            let errCode = res.data.errCode;
+            if (errCode === 0) {
+                message.success('保存成功');
+            } else {
+                message.error('保存失败' + res.msg);
+            }
         })
 
     }
@@ -503,6 +549,12 @@ export default class Teast extends Component {
                     id: parseInt(row.id),
                 };
                 requestTvTringAdDuplicate(obj).then(res => {
+                    let errCode = res.errCode;
+                    if (errCode === 0) {
+                        message.success('复制成功');
+                    } else {
+                        message.error('复制失败' + res.msg);
+                    }
                     that.refreshList();
                 });
             }
@@ -596,6 +648,11 @@ export default class Teast extends Component {
         })
         console.log('cancel')
 
+    }
+    //校验数字
+    checkNumber(number) {
+        let regex = /^[0-9]*$/;
+        return regex.test(number);
     }
 
 }

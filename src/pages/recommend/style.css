@@ -60,15 +60,25 @@
 }
 
 .input-wrapper-from {
-    width: 300px;
+    width: 200px;
 }
+
+.input-wrapper-box {
+    display: flex;
+    flex-direction: row;
+}
+
+.input-wrapper-box>.input-wrapper-from {
+    margin-right: 5px;
+    padding-right: 5px;
+}
+
 
 .upload-image-box {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
 }
-
 
 /* .ant-upload-picture-card-wrapper {
     display: inline-block;

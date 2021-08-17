@@ -519,15 +519,19 @@ export default class Teast extends Component {
                 message.error('广告比例请填入数字');
                 return;
             }
-            obj.adRatio = ratio_box.adRatio;
+            obj.adRatio = parseInt(ratio_box.adRatio);
         }
         else {
             message.error('请填写广告比例');
             return;
         }
-
         requestTvTringAdConfigRatio(obj).then(res => {
-            message.success('保存成功');
+            let errCode = res.data.errCode;
+            if (errCode === 0) {
+                message.success('保存成功');
+            } else {
+                message.error('保存失败' + res.msg);
+            }
         })
 
     }
@@ -545,6 +549,12 @@ export default class Teast extends Component {
                     id: parseInt(row.id),
                 };
                 requestTvTringAdDuplicate(obj).then(res => {
+                    let errCode = res.errCode;
+                    if (errCode === 0) {
+                        message.success('复制成功');
+                    } else {
+                        message.error('复制失败' + res.msg);
+                    }
                     that.refreshList();
                 });
             }

@@ -133,7 +133,6 @@ export default class recommendModal extends Component {
                     ]}>
 
                     <Form name='recom' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
-                        <div>{JSON.stringify(qrcode_types)}</div>
                         <Divider></Divider>
                         <Form.Item label="notice1" >
                             <div>当id为空时，当前为[创建模式],反之存在id时，为[更新模式]</div>
@@ -224,7 +223,7 @@ export default class recommendModal extends Component {
                             <Form.Item label="" name="jumpType" style={{ width: 200, display: "inline-block" }}>
                                 <Select className="input-wrapper-from" placeholder='请选择跳转类型' onChange={(val) => {
                                     this.setState({
-                                        jump_types: this.state.jump_types
+                                        is_loading: this.state.is_loading
                                     })
                                     this.formRef.current.setFieldsValue({ "jumpType": val })
                                 }}>

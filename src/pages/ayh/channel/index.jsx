@@ -104,7 +104,7 @@ export default class AyhChannel extends Component {
             render:(row)=>{
                 return(
                     <div>
-                        <Checkbox checked={row.checked} onChange={val=>{
+                        <Checkbox checked={row.checked} disabled={this.state.checkBoxList.isAll} onChange={val=>{
                           if(val.target.checked){
                             this.addTvTrying(row)
                           }else{
@@ -231,7 +231,20 @@ export default class AyhChannel extends Component {
             </div>
             <div className="right_box">
               <div className="action_box">
-                <div>{this.state.currentItem.channelName}节目单</div>
+                <div className="title_btn">
+                  <div>{this.state.currentItem.channelName}节目单</div>
+                  {/* 节目单推送和频道推送互斥 */}
+                  <div><Checkbox checked={this.state.checkBoxList.isAll} disabled={this.state.checkBoxList.programs?this.state.checkBoxList.programs.length>0:false}  
+                  onChange={val=>{
+                    if(val.target.checked){
+                      this.addTvTrying(1)
+                    }else{
+                      this.deleteTvTrying(1)
+                    }
+                    
+                  }}>推送到尝鲜版</Checkbox>
+                  </div> 
+                </div>
                 <div className="btn_box">
                 {/* //推送到尝鲜版 */}
                   <div onClick={()=>{this.syncCacheTvTry()}}>尝鲜版数据同步</div> 
@@ -362,7 +375,7 @@ export default class AyhChannel extends Component {
         this.setState({
           checkBoxList:res.data.data
         })
-        if(res.data.data.programs.length>0){
+        if(Array.isArray(res.data.data.programs) && res.data.data.programs.length>0){
           this.state.lists.forEach(r=>{
             res.data.data.programs.forEach(l=>{ //对比时间和programId
               if(r.programId == l.split("_")[1] && util.formatTime(String(r.startTime).length==10? r.startTime* 1000:r.startTime,"",7).replaceAll(":","") == l.split("_")[0]){
@@ -381,17 +394,24 @@ export default class AyhChannel extends Component {
       }
     })
   }
-  addTvTrying(item){
+  addTvTrying(item){ 
     let param={
       channelId:this.state.currentChannelItem.channelCode,
-      programId:item.programId,
       dateAt:this.state.timeSwiper[this.state.currentIndex].replaceAll("-",""),
       timeAt:util.formatTime(String(item.startTime).length==10? item.startTime* 1000:item.startTime,"",7).replaceAll(":","")
     }
+    if(item === 1){ //代表全频道
+
+    }else{
+      param.programId = item.programId
+    }
+    
     console.log(param)
     addTvTrying(param).then(res=>{
       if(res.data.errCode === 0){
-        item.checked = !item.checked
+        if(item !== 1){
+          item.checked = !item.checked
+        }
         this.setState({
           lists:this.state.lists
         })
@@ -409,7 +429,9 @@ export default class AyhChannel extends Component {
     }
     deleteTvTrying(param).then(res=>{
       if(res.data.errCode === 0){
-        item.checked = !item.checked
+        if(item !== 1){
+          item.checked = !item.checked
+        }
         this.setState({
           lists:this.state.lists
         })

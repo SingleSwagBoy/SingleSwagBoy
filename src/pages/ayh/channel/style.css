@@ -109,9 +109,19 @@
     justify-content: space-between;
     margin-bottom: 10px;
 }
-.right_box .action_box>div:nth-child(1){
+.right_box .action_box .title_btn{
+    display: flex;
+    align-items: center;
+}
+.right_box .action_box .title_btn>:nth-child(1){
     font-size: 20px;
     font-weight: bolder; 
+}
+.right_box .action_box .title_btn>:nth-child(2){
+    font-size: 16px;
+    color: #1890ff;
+    margin-left: 20px;
+
 }
 .right_box .action_box .btn_box{
     display: flex;

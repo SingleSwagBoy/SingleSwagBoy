@@ -243,8 +243,8 @@ export const requestTvTringAdDeleteItem = (params) => { return request.get(`${ba
 export const requestTvTringAdConfigRatio = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/config/ratio`, params) }                   //广告-配置节目单比例
 export const requestTvTringAdConfigDuration = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/config/duration`, { params: params }); } //广告-配置节目单持续时间
 export const requestTvTringAdSyncCache = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/syncCache`, params) }                        //广告-数据同步-生成前台缓存
-export const requestTvTringShowConfig = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/showConfig`, params) }                         //广告-查看广告节目单配置
-
+export const requestTvTringShowConfig = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/showConfig`, { params: params }) }             //广告-查看广告节目单配置
+export const requestProductSkuList = (params) => { return request.post(`${baseUrl}/mms/p/product/sku`, params) }                                   //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型
 export const requestQrcodeTypes = () => {
@@ -252,7 +252,7 @@ export const requestQrcodeTypes = () => {
         let params = [
             { key: 1, value: '静态广告', },
             { key: 2, value: 'gif广告', },
-            { key: 3, value: '支付广告', },
+            { key: 3, value: '支付', },
             { key: 4, value: '到期不支付', },
             { key: 5, value: '到期支付', },
             { key: 6, value: '红包', },

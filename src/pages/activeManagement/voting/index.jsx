@@ -290,8 +290,8 @@ export default class WinningNews extends Component {
                         // defaultValue={this.state.newData.categories||[]}
                         allowClear
                       >
-                         <Option value={10} key={10}>点赞</Option>
-                         <Option value={20} key={20}>投票</Option>
+                         <Option value={10} key={10}>提前展示结果（点赞）</Option>
+                         <Option value={20} key={20}>不提前展示结果（投票）</Option>
                       </Select>
                   </Form.Item>
                 <Form.Item

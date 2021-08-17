@@ -363,17 +363,32 @@ export default class recommendModal extends Component {
                     that.setState({ is_loading: true });
                 }
                 if (info.file.status === 'done') {
-                    console.log(info.file)
-                    message.success(`上传成功`);
-                    let fileObj = info.file.originFileObj;
-                    that.getBase64(fileObj, imageUrl => {
-                        that.setState({ is_loading: false });
-                    })
+                    let response = info.file.response;
+                    let errCode = response.errCode;
+                    if (errCode === 0) {
+                        let fileObj = info.file.originFileObj;
+                        that.getBase64(fileObj, imageUrl => {
 
-                    console.log(info.file.response.data.fileUrl)
+                            if (!info.file.response.data) {
+                                message.error(`${info.file.name} 上传失败.保持网络连接，图片不能超过大小限制。`);
+                                that.setState({ is_loading: false, });
+                                return;
+                            }
+                            message.success(`上传成功`);
+
+                            that.setState({
+                                is_loading: false,
+                                ad_image_url: info.file.response.data.fileUrl
+                            });
+                        })
+                    }
+                    else {
+                        let msg = response.msg;
+                        message.error(`上传失败` + msg);
+                    }
 
                     //更新链接
-                    that.state.ad_image_url = info.file.response.data.fileUrl;
+
                     // let formData = that.state.formData;
                     // that.formRef.current.setFieldsValue(formData)
                 }

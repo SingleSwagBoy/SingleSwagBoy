@@ -449,24 +449,21 @@ export default class WinningNews extends Component {
                     // style={{ display: 'inline-flex'}}
                   >
                     <Form.Item
-                    name="tags"
-                    // rules={[{ required: true, message: '请选择状态' }]}
-                    style={{ display: 'inline-flex', width: 'calc(50% - 8px)', margin: '0 8px 0 0' }}
+                      name="tags"
+                      // rules={[{ required: true, message: '请选择状态' }]}
+                      style={{ display: 'inline-flex', width: 'calc(50% - 8px)', margin: '0 8px 0 0' }}
                     >
                       <Select
-                        placeholder="请选择用户设备标签"
-                        mode="multiple"
-                        onChange={(val)=>{
-                          console.log(val)
-                          
-                        }}
-                        // defaultValue={this.state.newData.tags}
-                        // {...this.state.selectProps}
-                        allowClear
+                         placeholder="请选择用户设备标签"
+                         mode="multiple"
+                         allowClear
+                        //  optionFilterProp="id"
                       >
                         {
                           this.state.userTagList.map(r=>{
-                            return <Option value={r.code} key={r.id}>{r.name}</Option>
+                            return(
+                              <Option value={r.id.toString()} key={r.id}>{r.name}</Option>
+                            )
                           })
                         }
                       </Select>
@@ -516,7 +513,7 @@ export default class WinningNews extends Component {
                         {
                           this.state.productList.map(r=>{
                             return(
-                              <Option value={r.id.toString()} key={r.appid}>{r.name}</Option>
+                              <Option value={r.appid} key={r.appid}>{r.name}</Option>
                             )
                           })
                         }
@@ -526,7 +523,7 @@ export default class WinningNews extends Component {
                   
                 <Form.Item {...this.state.tailLayout}>
                   <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
-                    确定
+                    提交
                   </Button>
                 </Form.Item>
               </Form> 

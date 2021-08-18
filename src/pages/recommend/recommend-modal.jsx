@@ -6,9 +6,8 @@ import moment from 'moment';
 import Address from "../../components/address/index" //地域组件
 import Market from "../../components/market/index" //渠道组件
 
-import { Input, DatePicker, Button, Tooltip, Switch, Modal, Form, Select, Alert, Radio, Divider, Upload, Image, message } from 'antd';
+import { Input, DatePicker, Button, Tooltip, Switch, Modal, Form, Select, Radio, Divider, Upload, Image, message } from 'antd';
 const { Option } = Select;
-const { Search } = Input;
 const { RangePicker } = DatePicker;
 
 
@@ -71,7 +70,13 @@ export default class recommendModal extends Component {
             ]
             //设备标签
             if (data.tags && data.tags.length > 0) {
-                if (data.tags.constructor === String) { data.tags = data.tags.split(','); }
+                if (data.tags.constructor === String) {
+                    data.tags = data.tags.split(',');
+                }
+
+                data.tags = data.tags.map((item, index) => {
+                    return parseInt(item);
+                })
             }
             else data.tags = [];
 
@@ -83,12 +88,10 @@ export default class recommendModal extends Component {
             }
             else data.jumpChannelCode = [];
 
-
             console.log('编辑后')
             console.log(data);
             let address = [];
             if (data.area) address = data.area.split(',');      //地域列表
-            let market = data.market;                           //渠道列表
 
             that.setState({
                 _id: data.id,
@@ -96,7 +99,7 @@ export default class recommendModal extends Component {
                 startTime: data.startTime,
                 endTime: data.endTime,
                 address: address,
-                market: market,
+                market: data.market, //渠道列表
             })
 
             that.formRef.current.setFieldsValue(data)
@@ -134,12 +137,17 @@ export default class recommendModal extends Component {
 
                     <Form name='recom' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
                         <Divider></Divider>
+                        {
+                            this.formRef.current && this.formRef.current.getFieldValue("id") ?
+                                <Tooltip title='当id为空时，当前为[创建模式],反之存在id时，为[更新模式]。' placement="top" >
+                                    <Form.Item label="id" name='id' >
+                                        <Input className="input-wrapper-from" disabled />
+                                    </Form.Item>
+                                </Tooltip>
+                                : ''
+                        }
 
-                        <Tooltip title='当id为空时，当前为[创建模式],反之存在id时，为[更新模式]。' placement="top" >
-                            <Form.Item label="id" name='id' >
-                                <Input className="input-wrapper-from" disabled />
-                            </Form.Item>
-                        </Tooltip>
+
                         <Form.Item label="广告名称" name='name' rules={[{ required: true, message: '请输入广告名称' }]}>
                             <Input className="input-wrapper-from" placeholder="请输入广告名称" />
                         </Form.Item>
@@ -148,14 +156,18 @@ export default class recommendModal extends Component {
                             <RangePicker showTime format={dateFormat} />
                         </Form.Item>
 
-                        {/* <Form.Item label="notice2" >
-                            <div>假如说时间</div>
-                        </Form.Item> */}
                         <Tooltip title='如果选择的时间结束时间比当前时间早，则当前数据自动无效，列表切换状态也无效。' placement="top" >
                             <Form.Item label="状态" name="status" rules={[{ required: true, message: '请选择状态' }]} valuePropName='checked'>
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" />
                             </Form.Item>
                         </Tooltip>
+
+                        <Tooltip title='毫秒与秒进制单位：1000' placement="top" >
+                            <Form.Item label="展示时长" name="duration" rules={[{ required: true, message: '请输入展示时长' }]}>
+                                <Input className="input-wrapper-from" placeholder="例如:1000" addonAfter="毫秒" />
+                            </Form.Item>
+                        </Tooltip>
+
                         <Form.Item label="类型" name="type">
                             <Select className="input-wrapper-from" onChange={(val) => {
                                 this.formRef.current.setFieldsValue({ 'type': val })
@@ -181,11 +193,7 @@ export default class recommendModal extends Component {
                                 : ''
                         }
 
-
-
-
                         <Divider orientation="left">二维码配置</Divider>
-
 
                         <Form.Item label="二维码尺寸">
                             <div className="input-wrapper-box">
@@ -220,10 +228,6 @@ export default class recommendModal extends Component {
                                 </Form.Item>
                             </div>
                         </Form.Item>
-
-
-
-
 
                         <Divider orientation="left">广告配置</Divider>
                         <Form.Item label="图片" name="picUrl">
@@ -280,18 +284,16 @@ export default class recommendModal extends Component {
                         </Form.Item>
 
                         <Form.Item label='用户设备标签' name='tags'>
-                            <Select className="input-wrapper-from" mode="multiple">
-                                {user_tag.map(r => {
-                                    return <Option value={r.code} key={r.id}>
-                                        <div>{r.code}-{r.name}</div>
-
+                            <Select className="input-wrapper-from" mode="multiple" placeholder='请选择用户设备标签'>
+                                {user_tag.map((item, index) => {
+                                    return <Option value={item.id} key={item.id}>
+                                        <div>{item.id}-{item.name}</div>
                                     </Option>
                                 })}
                             </Select>
                         </Form.Item>
 
-
-                        <Form.Item label="标签投放类型" name="deliveryType" rules={[{ required: true, message: '请选择标签投放类型' }]}                 >
+                        <Form.Item label="标签投放类型" name="deliveryType">
                             <Radio.Group>
                                 {delivery_types.map((item, index) => {
                                     return <Radio value={item.key} key={index}> {item.value}</Radio>
@@ -300,22 +302,15 @@ export default class recommendModal extends Component {
                         </Form.Item>
 
                         <Form.Item label="比例" name='ratio'>
-                            <Input className="input-wrapper-from"></Input>
-                        </Form.Item>
-                        <Form.Item label="展示时长" name="duration" rules={[{ required: true, message: '请输入展示时长' }]}>
-                            <Input className="input-wrapper-from" placeholder="例如:10" addonAfter="秒" />
+                            <Input className="input-wrapper-from" placeholder='请输入占比' />
                         </Form.Item>
 
                         <Form.Item label="地域" name="area">
-                            <Address defaultAddress={this.state.address}
-                                onCheckAddress={this.onCheckAddress.bind(this)}
-                            />
+                            <Address defaultAddress={this.state.address} onCheckAddress={this.onCheckAddress.bind(this)} />
                         </Form.Item>
 
-                        <Form.Item label="渠道" name="market"   >
-                            <Market getMarketReturn={this.getMarketReturn.bind(this)}
-                                checkData={this.state.market}
-                            />
+                        <Form.Item label="渠道" name="market">
+                            <Market getMarketReturn={this.getMarketReturn.bind(this)} checkData={this.state.market} />
                         </Form.Item>
                     </Form>
                 </Modal>
@@ -495,11 +490,6 @@ export default class recommendModal extends Component {
                 return;
             }
             object.qrY = parseInt(object.qrY);
-        }
-
-        if (!object.deliveryType) {
-            message.error('请选择标签投放类型');
-            return;
         }
 
         //状态：1、有效,2、无效

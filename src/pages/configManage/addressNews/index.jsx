@@ -68,7 +68,7 @@ export default class AddressNews extends Component {
 
                 }
                 >
-                    <Tabs defaultActiveKey="0" tabPosition={"top"}
+                    <Tabs defaultActiveKey="0" tabPosition={"left"} style={{height:"90vh"}}
                     onChange={(val)=>{
                         console.log(val)
                         this.setState({

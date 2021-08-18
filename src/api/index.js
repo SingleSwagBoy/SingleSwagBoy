@@ -317,6 +317,7 @@ export const requestGoodLookTypes = () => {
 export const requestDeliveryTypes = () => {
     return new Promise((resolve, reject) => {
         let params = [
+            { key: 0, value: '不限制' },
             { key: 1, value: '定向' },
             { key: 2, value: '非定向' },
         ];

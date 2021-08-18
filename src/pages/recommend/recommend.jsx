@@ -19,6 +19,7 @@ import {
     requestTvTringAdDeleteItem,         //广告-删除
     requestTvTringAdConfigRatio,        //广告-配置节目单比例
     requestTvTringAdConfigDuration,     //广告-配置节目单持续时间
+    requestTvTringAdConfigDurationL,    //广告-配置L型广告持续时间
     requestTvTringAdSyncCache,          //广告-数据同步-生成前台缓存
     requestTvTringShowConfig,           //广告-查看广告节目单配置
     requestProductSkuList,              //广告-二维码套餐类型
@@ -140,6 +141,7 @@ export default class Teast extends Component {
             },
             //持续时间
             duration_box: {
+                lDuration: '',
                 programDuration: '',
             }
         }
@@ -155,33 +157,44 @@ export default class Teast extends Component {
                     <Divider orientation="left">时间管理</Divider>
                     <div className="input-wrapper">
                         <div className="title">频道与广告的比例:</div>
-                        <Input.Group className="input" compact>
-                            <Input placeholder="频道" style={{ width: 100, textAlign: 'center' }} value={ratio_box.programRatio} onChange={(val) => {
-                                let that = this;
-                                ratio_box.programRatio = val.target.value;
-                                that.setState({ ratio_box: ratio_box });
-                            }} />
-                            <Input placeholder=":" style={{ width: 25, borderLeft: 0, borderRight: 0, pointerEvents: 'none', }} disabled />
-                            <Input placeholder="广告" style={{ width: 100, textAlign: 'center', }} value={ratio_box.adRatio} onChange={(val) => {
-                                let that = this;
-                                ratio_box.adRatio = val.target.value;
-                                that.setState({ ratio_box: ratio_box });
-                            }} />
-                        </Input.Group>
+                        <Input className="input" placeholder="频道" style={{ width: 120, textAlign: 'center' }} value={ratio_box.programRatio} onChange={(val) => {
+                            let that = this;
+                            ratio_box.programRatio = val.target.value;
+                            that.setState({ ratio_box: ratio_box });
+                        }} />
+                        <Input placeholder=":" style={{ width: 25, borderLeft: 0, borderRight: 0, pointerEvents: 'none', }} disabled />
+                        <Input placeholder="广告" style={{ width: 120, textAlign: 'center', }} value={ratio_box.adRatio} onChange={(val) => {
+                            let that = this;
+                            ratio_box.adRatio = val.target.value;
+                            that.setState({ ratio_box: ratio_box });
+                        }} />
                         <Button className="btn" type="primary" size='small' onClick={() => this.onRequestSaveRatioClick()}>保存</Button>
                     </div>
                     <div className="input-wrapper">
                         <div className="title">频道展示时长:</div>
-                        <Input className="input" placeholder="请输入展示时长" suffix="秒" value={duration_box.programDuration} onChange={(val) => {
+                        <Input className="input" style={{ width: 120, textAlign: 'center' }} placeholder="请输入展示时长" suffix="毫秒" value={duration_box.programDuration} onChange={(val) => {
                             let that = this;
                             duration_box.programDuration = val.target.value;
                             that.setState({ duration_box: duration_box });
                         }} />
+                        <Input placeholder="|" style={{ width: 25, borderLeft: 0, borderRight: 0, pointerEvents: 'none', }} disabled />
+                        <Input style={{ width: 120, textAlign: 'center', }} value={duration_box.programDuration ? duration_box.programDuration / 1000 : 0} suffix="秒" disabled />
+
                         <Button className="btn" type="primary" size='small' onClick={() => this.onSaveDurationClick()}>保存</Button>
                     </div>
 
                     <div className="input-wrapper">
                         <div className="title">L型广告持续时间:</div>
+
+                        <Input className="input" style={{ width: 120, textAlign: 'center' }} placeholder="请输入展示时长" suffix="毫秒" value={duration_box.lDuration} onChange={(val) => {
+                            let that = this;
+                            duration_box.lDuration = val.target.value;
+                            that.setState({ duration_box: duration_box });
+                        }} />
+                        <Input placeholder="|" style={{ width: 25, borderLeft: 0, borderRight: 0, pointerEvents: 'none', }} disabled />
+                        <Input style={{ width: 120, textAlign: 'center', }} value={duration_box.lDuration ? duration_box.lDuration / 1000 : 0} suffix="秒" disabled />
+
+                        <Button className="btn" type="primary" size='small' onClick={() => this.onSaveDurationLClick()}>保存</Button>
                     </div>
 
                     <Divider orientation="left">配置列表</Divider>
@@ -264,8 +277,9 @@ export default class Teast extends Component {
             for (let i = 0, len = res.length; i < len; i++) {
                 let item = res[i];
                 let key = item.key;
-                if (key !== 3 && key !== 10 && key !== 11) continue;
-                types.push(item);
+                if (key === 1 || key === 3 || key == 10 || key === 11) {
+                    types.push(item);
+                }
             }
 
             that.setState({
@@ -332,6 +346,7 @@ export default class Teast extends Component {
                     programRatio: data.programRatio,
                 }
                 let duration_box = {
+                    lDuration: data.lDuration,
                     programDuration: data.programDuration,
                 }
 
@@ -464,15 +479,13 @@ export default class Teast extends Component {
                 that.setState({ sync_cache_code: -1 })
                 message.error('同步失败')
             }
-
         })
-
-
     }
+
+    //保存频道展示时长
     onSaveDurationClick() {
         let that = this;
         let duration_box = that.state.duration_box;
-
 
         let obj = {}
         if (duration_box.programDuration) {
@@ -496,6 +509,34 @@ export default class Teast extends Component {
             }
         })
     }
+    //保存L型广告持续时间
+    onSaveDurationLClick(){
+        let that = this;
+        let duration_box = that.state.duration_box;
+
+        let obj = {}
+        if (duration_box.lDuration) {
+            if (!this.checkNumber(duration_box.lDuration)) {
+                message.error('L型广告持续时间请输入数字')
+                return;
+            }
+            obj.lDuration = parseInt(duration_box.lDuration);
+        }
+        else {
+            message.error('设置失败:请输入L型广告持续时间')
+            return;
+        }
+
+        requestTvTringAdConfigDurationL(obj).then(res => {
+            let errCode = res.data.errCode;
+            if (errCode === 0) {
+                message.success('设置成功')
+            } else {
+                message.error('设置失败:' + res.data.msg)
+            }
+        })
+    }
+
 
     //请求保存比例按钮 被点击
     onRequestSaveRatioClick() {

@@ -168,8 +168,8 @@ export default class recommendModal extends Component {
                             </Form.Item>
                         </Tooltip>
 
-                        <Form.Item label="类型" name="type">
-                            <Select className="input-wrapper-from" onChange={(val) => {
+                        <Form.Item label="类型" name="type" rules={[{ required: true, message: '请选择广告类型' }]} >
+                            <Select className="input-wrapper-from" placeholder='请选择广告类型' onChange={(val) => {
                                 this.formRef.current.setFieldsValue({ 'type': val })
                                 this.setState({
                                     is_loading: this.state.is_loading
@@ -184,7 +184,7 @@ export default class recommendModal extends Component {
                         {
                             this.formRef.current && this.formRef.current.getFieldValue("type") === 3 ?
                                 <Form.Item label="套餐类型" name="pCode" >
-                                    <Select className="input-wrapper-from">
+                                    <Select className="input-wrapper-from"  placeholder='请选择套餐类型'>
                                         {product_list.map((item, index) => {
                                             return <Option value={item.name} key={index}>{item.id} - {item.name}</Option>
                                         })}
@@ -461,6 +461,11 @@ export default class recommendModal extends Component {
             }
             object.duration = parseInt(duration);
         }
+        if (!object.type) {
+            message.error('请选择广告类型')
+            return
+        }
+
 
         if (object.qrWidth) {
             if (!this.checkNumber(object.qrWidth)) {

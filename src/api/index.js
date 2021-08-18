@@ -233,18 +233,19 @@ export const unlockChannel = (params) => { //专项频道解锁配置
 
 
 //========== 尝鲜版 ==========
-export const requestTvTringAdList = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/list`, params); }                                 //广告-列表
-export const requestTvTringAdResetRatio = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/resetRatio`, params) }                      //广告-重设比例
-export const requestTvTringAdChangeState = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/changeState`, { params: params }) }         //广告-修改状态
-export const requestTvTringAdDuplicate = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/duplicate`, { params: params }) }             //广告-拷贝一行
-export const requestTvTringAdCreate = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/create`, params) }                              //广告-新增
-export const requestTvTringAdEdit = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/edit`, params) }                                  //广告-编辑
-export const requestTvTringAdDeleteItem = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/deleteItem`, { params: params }) }           //广告-删除
-export const requestTvTringAdConfigRatio = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/config/ratio`, params) }                   //广告-配置节目单比例
-export const requestTvTringAdConfigDuration = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/config/duration`, { params: params }); } //广告-配置节目单持续时间
-export const requestTvTringAdSyncCache = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/syncCache`, params) }                        //广告-数据同步-生成前台缓存
-export const requestTvTringShowConfig = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/showConfig`, { params: params }) }             //广告-查看广告节目单配置
-export const requestProductSkuList = (params) => { return request.post(`${baseUrl}/mms/p/product/sku`, params) }                                   //广告-二维码套餐类型
+export const requestTvTringAdList = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/list`, params); }                                         //广告-列表
+export const requestTvTringAdResetRatio = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/resetRatio`, params) }                              //广告-重设比例
+export const requestTvTringAdChangeState = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/changeState`, { params: params }) }                 //广告-修改状态
+export const requestTvTringAdDuplicate = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/duplicate`, { params: params }) }                     //广告-拷贝一行
+export const requestTvTringAdCreate = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/create`, params) }                                      //广告-新增
+export const requestTvTringAdEdit = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/edit`, params) }                                          //广告-编辑
+export const requestTvTringAdDeleteItem = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/deleteItem`, { params: params }) }                   //广告-删除
+export const requestTvTringAdConfigRatio = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/config/ratio`, params) }                           //广告-配置节目单比例
+export const requestTvTringAdConfigDuration = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/config/duration`, { params: params }); }         //广告-配置节目单持续时间
+export const requestTvTringAdConfigDurationL = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/config/lDuration`, { params: params }); }       //广告-配置L型广告持续时间
+export const requestTvTringAdSyncCache = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/syncCache`, params) }                                //广告-数据同步-生成前台缓存
+export const requestTvTringShowConfig = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/showConfig`, { params: params }) }                     //广告-查看广告节目单配置
+export const requestProductSkuList = (params) => { return request.post(`${baseUrl}/mms/p/product/sku`, params) }                                            //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型
 export const requestQrcodeTypes = () => {
@@ -317,6 +318,7 @@ export const requestGoodLookTypes = () => {
 export const requestDeliveryTypes = () => {
     return new Promise((resolve, reject) => {
         let params = [
+            { key: 0, value: '不选择' },
             { key: 1, value: '定向' },
             { key: 2, value: '非定向' },
         ];

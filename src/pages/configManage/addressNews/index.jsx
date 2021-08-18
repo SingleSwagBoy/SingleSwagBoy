@@ -60,7 +60,7 @@ export default class AddressNews extends Component {
     render() {
         const { addressList } = this.state;
         return (
-            <div>
+            <div className="address_page">
                 <Card title={
                     <Breadcrumb>
                         <Breadcrumb.Item>地域新闻</Breadcrumb.Item>
@@ -68,7 +68,7 @@ export default class AddressNews extends Component {
 
                 }
                 >
-                    <Tabs defaultActiveKey="0" tabPosition={"left"} style={{height:"90vh"}}
+                    <Tabs defaultActiveKey="0" tabPosition={"left"}
                     onChange={(val)=>{
                         console.log(val)
                         this.setState({

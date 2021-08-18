@@ -128,5 +128,8 @@
     background-color: #1890ff !important;
     color: #fff;
 }
+.address_page .ant-tabs-nav{
+    height: 80vh;
+}
 
 

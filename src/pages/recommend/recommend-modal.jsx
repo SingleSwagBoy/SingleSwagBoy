@@ -284,7 +284,7 @@ export default class recommendModal extends Component {
                         </Form.Item>
 
                         <Form.Item label='用户设备标签' name='tags'>
-                            <Select className="input-wrapper-from" mode="multiple" placeholder='请选择用户设备标签'>
+                            <Select className="input-wrapper-from" mode="multiple" placeholder='请选择用户设备标签(可多选)'>
                                 {user_tag.map((item, index) => {
                                     return <Option value={item.id} key={item.id}>
                                         <div>{item.id}-{item.name}</div>

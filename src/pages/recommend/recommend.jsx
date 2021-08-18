@@ -180,6 +180,10 @@ export default class Teast extends Component {
                         <Button className="btn" type="primary" size='small' onClick={() => this.onSaveDurationClick()}>保存</Button>
                     </div>
 
+                    <div className="input-wrapper">
+                        <div className="title">L型广告持续时间:</div>
+                    </div>
+
                     <Divider orientation="left">配置列表</Divider>
 
                     <div className="input-wrapper">

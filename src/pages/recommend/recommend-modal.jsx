@@ -184,7 +184,7 @@ export default class recommendModal extends Component {
                         {
                             this.formRef.current && this.formRef.current.getFieldValue("type") === 3 ?
                                 <Form.Item label="套餐类型" name="pCode" >
-                                    <Select className="input-wrapper-from"  placeholder='请选择套餐类型'>
+                                    <Select className="input-wrapper-from" placeholder='请选择套餐类型'>
                                         {product_list.map((item, index) => {
                                             return <Option value={item.name} key={index}>{item.id} - {item.name}</Option>
                                         })}
@@ -262,7 +262,7 @@ export default class recommendModal extends Component {
                                             })}
                                         </Select>
                                     </Form.Item>
-                                    : this.formRef.current && this.formRef.current.getFieldValue("jumpType") === 4 ?
+                                    : this.formRef.current && this.formRef.current.getFieldValue("jumpType") === 6 ?
                                         <Form.Item label="跳转菜单" name="jumpMenuType" style={{ marginLeft: 10, width: 230, display: "inline-flex" }}>
                                             <Select className="input-wrapper-from" placeholder='请选择跳转菜单'>
                                                 {jump_menu_types.map((item, index) => {
@@ -270,7 +270,6 @@ export default class recommendModal extends Component {
                                                 })}
                                             </Select>
                                         </Form.Item>
-
                                         : this.formRef.current && this.formRef.current.getFieldValue("jumpType") === 8 ?
                                             <Form.Item label="好看分类" name="goodLookType" style={{ marginLeft: 10, width: 230, display: "inline-flex" }}>
                                                 <Select className="input-wrapper-from" placeholder='请选择好看分类' >

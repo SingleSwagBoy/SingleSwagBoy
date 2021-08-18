@@ -510,7 +510,7 @@ export default class Teast extends Component {
         })
     }
     //保存L型广告持续时间
-    onSaveDurationLClick(){
+    onSaveDurationLClick() {
         let that = this;
         let duration_box = that.state.duration_box;
 

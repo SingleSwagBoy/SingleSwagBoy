@@ -4,7 +4,8 @@ import { Layout, Menu, Avatar, Dropdown, message, Badge } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  UserOutlined
+  UserOutlined,
+  UnorderedListOutlined
 } from '@ant-design/icons';
 
 import './style.css'
@@ -12,7 +13,7 @@ import './style.css'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logout } from '../../store/user/actionCreators'
-
+import admintRouter from "../../routes/adminRoutes"
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 const mapStateToProps = (state)=>{
@@ -44,12 +45,25 @@ class MyLayout extends Component {
   };
   componentDidMount(){
     if(window.localStorage.getItem("routesList_tmp")){
+      let router = JSON.parse(window.localStorage.getItem("routesList_tmp"))
       this.setState({
-        navRoutes : JSON.parse(window.localStorage.getItem("routesList_tmp")).filter(route => route.code === "OlympicGames" || route.code === "LevelManage" || route.code === "LifeService")
+        navRoutes : this.getLocalMenu(router)
       })
     }else{
       this.getMenu()
     }
+  }
+  getLocalMenu(arr){ //获取本地存在的路径
+    let localList = []
+    admintRouter.filter(item=>item.code).forEach(r=>{
+      localList.push(r.code)
+    })
+    let array = [...new Set(localList)]
+    let newRouter = arr.filter(x => array.some(y => y === x.code))
+    newRouter.forEach(r=>{ //过滤已存在的一级菜单下面的老二级菜单
+      r.children = r.children.filter(x => admintRouter.some(y => y.path === x.path))
+    })
+    return newRouter
   }
   getMenu(){
     let base = "http://" + window.location.host;
@@ -93,7 +107,7 @@ class MyLayout extends Component {
         console.log(list,"list")
         window.localStorage.setItem("routesList_tmp",JSON.stringify(list))
         this.setState({
-          navRoutes:list.filter(item=>item.code === "OlympicGames" || item.code === "LevelManage" || item.code === "LifeService" )
+          navRoutes:this.getLocalMenu(list)
         })
       }
     })
@@ -102,8 +116,8 @@ class MyLayout extends Component {
     const menu = (
       <Menu>
         <Menu.Item onClick={()=>{
-          this.props.history.push('/admin/msgLists')
-        }}>消息中心</Menu.Item>
+          this.props.history.push('/mms/transition')
+        }}>首页</Menu.Item>
         <Menu.Item onClick={this.loginOut}>退出登录</Menu.Item>
       </Menu>
     );
@@ -147,10 +161,9 @@ class MyLayout extends Component {
                       }
                     </SubMenu>
                     :
-                    <Menu.Item icon={<nav.icon />}>
+                    <Menu.Item icon={<UserOutlined />} key={nav.path}>
                       {nav.name}
                     </Menu.Item>
-                    
                   )
                 })
               }

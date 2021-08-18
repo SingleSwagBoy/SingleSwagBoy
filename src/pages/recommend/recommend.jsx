@@ -23,12 +23,9 @@ import {
     requestTvTringShowConfig,           //广告-查看广告节目单配置
     requestProductSkuList,              //广告-二维码套餐类型
 } from 'api';
-import { Tabs, Input, DatePicker, Button, Tooltip, Table, Pagination, Switch, Modal, Image, Select, Alert, notification, message, Divider } from 'antd';
+import { Input, DatePicker, Button, Tooltip, Table, Pagination, Switch, Modal, Image, Alert, notification, message, Divider } from 'antd';
 import './style.css'
-const { Option } = Select;
 const { RangePicker } = DatePicker;
-const { Search } = Input;
-const { TabPane } = Tabs;
 
 
 export default class Teast extends Component {
@@ -70,7 +67,7 @@ export default class Teast extends Component {
                         }
                     },
                     { title: '比例 (展示概率)', dataIndex: 'ratioStr', key: 'ratioStr', width: 200, },
-                    { title: '展示时长', dataIndex: 'duration', key: 'time', width: 100, },
+                    { title: '展示时长(毫秒)', dataIndex: 'duration', key: 'time', width: 170, },
                     // { title: '地域', dataIndex: 'area', key: 'area', width: 100, },
                     // { title: '渠道', dataIndex: 'market', key: 'market', width: 100, },
                     // { title: '标签', dataIndex: 'tags', key: 'tags', width: 100, },
@@ -256,7 +253,6 @@ export default class Teast extends Component {
         this.initData();
     }
     initData() {
-
         let that = this;
         //获取二维码类型
         requestQrcodeTypes().then(res => {

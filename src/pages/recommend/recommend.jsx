@@ -288,8 +288,22 @@ export default class Teast extends Component {
         });
         //获取跳转类型
         requestJumpTypes().then(res => {
+            // that.setState({
+            //     jump_types: res,
+            // })
+
+
+            let types = [];
+            for (let i = 0, len = res.length; i < len; i++) {
+                let item = res[i];
+                let key = item.key;
+                if (key === 1 || key === 6 || key == 7|| key ===8) {
+                    types.push(item);
+                }
+            }
+
             that.setState({
-                jump_types: res,
+                jump_types: types,
             })
         });
         //获取跳转目录类型

@@ -20,6 +20,8 @@ const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
 const Recommend= lazy (()=>import ('pages/recommend/recommend.jsx'));
 const Voting = lazy(()=>import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(()=>import('pages/channelManage/channelLock/index.jsx'))
+const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'))
+
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
@@ -46,7 +48,15 @@ const adminRoutes = [
   {path:'/mms/channelManage/channelLock',component:ChannelLock,name:'专享台解锁',icon:UnorderedListOutlined,code:"channelManage"},
 
   {path:'/mms/adManage/recommend',component:Recommend,name:'尝鲜版',icon:UnorderedListOutlined,code:"adManage"},
+ 
+ 
+  //配置管理
+  {path:'/mms/doc',component:ConfigDoc,name:'文案管理',icon:UnorderedListOutlined,code:"configManage"},
+ 
+ 
+ 
   {path:'/mms/noPermission',component:NoPermission,name:'没有权限',meta:{isNav:false,roles:'*'}}
+
 
 
 ]

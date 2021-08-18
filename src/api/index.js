@@ -323,3 +323,11 @@ export const requestDeliveryTypes = () => {
         resolve(params);
     });
 }
+
+
+
+//========== 配置管理 ==========
+export const requestConfigAddDoc = (layer, params) => { return request.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}add`, params); }                       //配置列表-添加配置
+export const requestConfigDocList = (layer, params) => { return request.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}get`, params); }                      //配置列表-配置列表
+export const requestConfigDeleteDoc = (layer, params) => { return request.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}del`, params); }                    //配置列表-删除配置
+export const requestConfigUpdateDoc = (layer, params) => { return request.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}update`, params); }                 //配置列表-更新配置

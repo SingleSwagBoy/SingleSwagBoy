@@ -14,6 +14,7 @@ class Market extends Component {
       dictList:[],
       checkData:[],
       onlyValue:[],//全选值
+      isFold:false
     }
     
   }
@@ -31,7 +32,7 @@ class Market extends Component {
     */
     return (
       <>
-        <Checkbox defaultChecked={this.state.dictList.length === (this.props.checkData?this.props.checkData.length:0)}
+      <Checkbox defaultChecked={this.state.dictList.length === (this.props.checkData?this.props.checkData.length:0)}
           key={new Date().getTime()*6}
           onChange={(val)=>{
             if(val.target.checked){
@@ -46,6 +47,11 @@ class Market extends Component {
         }}>
           全选
         </Checkbox>
+      <div style={{
+        height: this.state.isFold?0:"auto",
+        overflow: "hidden",
+      }}>
+        
         <CheckboxGroup onChange={(val)=>{
           this.props.getMarketReturn(val)
         }}
@@ -64,6 +70,17 @@ class Market extends Component {
           }
           </Row>
         </CheckboxGroup>
+      </div>
+        
+        <div className="btn-zd" style={{
+          position:"absolute",right:"0px",top:"-20px",color:"#1890ff",cursor:"pointer",fontSize:"20px"
+        }}
+        onClick={()=>{
+          this.setState({
+            isFold:!this.state.isFold
+          })
+        }}
+        >{this.state.isFold?"点击展开":"点击折叠"}</div>
       </>
       
     )

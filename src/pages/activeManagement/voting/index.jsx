@@ -319,11 +319,23 @@ export default class WinningNews extends Component {
                   placeholder="请选择频道配置"
                   mode="multiple"
                   allowClear
+                  {...this.state.selectProps}
+                  onSearch={(val)=>{
+                    console.log(val)
+                    if (privateData.inputTimeOutVal) {
+                      clearTimeout(privateData.inputTimeOutVal);
+                      privateData.inputTimeOutVal = null;
+                    }
+                    privateData.inputTimeOutVal = setTimeout(() => {
+                      if (!privateData.inputTimeOutVal) return;
+                      this.getChannel(val)
+                    }, 1000)
+                  }}
                 >
                   {
                     this.state.channelList.map(r => {
                       return (
-                        <Option value={r.code} key={r.id}>{r.name}</Option>
+                        <Option value={r.code} key={r.id}>{r.name +"----"+ r.code}</Option>
                       )
                     })
                   }
@@ -584,8 +596,11 @@ export default class WinningNews extends Component {
       })
     })
   }
-  getChannel() { //获取用户标签
-    getChannel({}).then(res => {
+  getChannel(val) { //获取用户标签
+    let params={
+      keywords:val
+    }
+    getChannel(params).then(res => {
       this.setState({
         channelList: res.data.data
       })

@@ -200,7 +200,7 @@ export default class recommendModal extends Component {
                                 <Form.Item name="qrWidth">
                                     <Input className="input-wrapper-from" addonBefore="宽" placeholder="例如:200" addonAfter="px" />
                                 </Form.Item>
-                                <Form.Item name="qrHight" style={{ marginLeft: '5px' }}>
+                                <Form.Item name="qrHeight" style={{ marginLeft: '5px' }}>
                                     <Input className="input-wrapper-from" addonBefore="高" placeholder="例如:200" addonAfter="px" />
                                 </Form.Item>
                             </div>
@@ -473,12 +473,12 @@ export default class recommendModal extends Component {
             }
             object.qrWidth = parseInt(object.qrWidth);
         }
-        if (object.qrHight) {
-            if (!this.checkNumber(object.qrHight)) {
+        if (object.qrHeight) {
+            if (!this.checkNumber(object.qrHeight)) {
                 message.error('二维码高度校验失败');
                 return;
             }
-            object.qrHight = parseInt(object.qrHight);
+            object.qrHeight = parseInt(object.qrHeight);
         }
         if (object.qrX) {
             if (!this.checkNumber(object.qrX)) {

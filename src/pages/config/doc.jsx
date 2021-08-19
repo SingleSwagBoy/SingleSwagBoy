@@ -117,19 +117,30 @@ export default class Doc extends Component {
                         {
                             table_box.table_layer.length === 2 &&
                             <div>
-                                <Form.Item label="参数" name='value' rules={[{ required: true, message: '请输入参数' }]}>
-                                    <Input className="input-wrapper-from" placeholder="请输入参数"></Input>
+                                <Form.Item label="快捷上传"  >
+                                    <Upload  {...this.buildAdImageUpload()}>
+                                        <Button>快捷上传</Button>
+                                    </Upload>
                                 </Form.Item>
 
-                                <Upload  {...this.buildAdImageUpload()}>
-                                    <Button>快捷上传</Button>
-                                </Upload>
-                                {that.formRef.current.getFieldValue("value") ? <Image height={100} src={that.formRef.current.getFieldValue("value")} /> : ''}
+                                <Form.Item label="参数" name='value' rules={[{ required: true, message: '请输入参数' }]}>
+                                    <Input className="input-wrapper-from" placeholder="请输入参数" onBlur={(e) => {
+                                        let new_value = e.target.value;
+                                        that.formRef.current.setFieldsValue({ "value": new_value })
+                                        that.forceUpdate();
+                                    }}></Input>
+                                </Form.Item>
+                                {
+                                    that.formRef.current.getFieldValue("value") ?
+                                        <Form.Item label="展示"  >
+                                            <Image height={100} src={that.formRef.current.getFieldValue("value")} />
+                                        </Form.Item> : ''
+                                }
                             </div>
                         }
                     </Form>
                 </Modal>
-            </div>
+            </div >
         )
     }
 

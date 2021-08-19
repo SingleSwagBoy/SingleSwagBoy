@@ -51,7 +51,6 @@ export default class Doc extends Component {
         let that = this;
         return (
             <div>
-                <div>{JSON.stringify(table_box.table_layer)}</div>
                 <Divider orientation="left">
                     <Breadcrumb>
                         <Breadcrumb.Item>列表</Breadcrumb.Item>
@@ -270,7 +269,7 @@ export default class Doc extends Component {
         let table_pages = table_box.table_pages;
         let curr_page = table_pages.currentPage;
         if (curr_page === 0) curr_page = 1;
-        request_params.page = { currentPage: curr_page, pageSize: 1000, isPage: 9 };
+        request_params.page = { currentPage: curr_page, pageSize: 30, isPage: 1 };
 
         table_box.table_title = titles;
         that.setState({ table_box: table_box, });
@@ -296,8 +295,12 @@ export default class Doc extends Component {
     onItemManagerClick(item) {
         let that = this;
         let table_box = that.state.table_box;
-        let table_layer = table_box.table_layer;
+        //页码更新
+        let table_pages = table_box.table_pages;
+        table_pages.currentPage = 0;
 
+        //层级更新
+        let table_layer = table_box.table_layer;
         let layer = {
             id: item.id,
             name: item.name,
@@ -310,8 +313,34 @@ export default class Doc extends Component {
     //删除按钮被点击 删除并刷新当前页面
     onItemDeleteClick(item) {
         let that = this;
-        let id = item.id;
-        console.log(item);
+
+
+        Modal.info({
+            title: '删除',
+            content: (
+                <p>确定删除【{item.name}】这条数据？</p>
+            ),
+            okText: '删除',
+            cancelText: '取消',
+            onOk() {
+                let table_layer = that.state.table_box.table_layer;
+                let layer_count = table_layer.length;
+                let obj = {
+                    id: parseInt(item.id),
+                }
+                requestConfigDeleteDoc(layer_count, obj).then(res => {
+                    let errCode = res.data.errCode;
+                    if (errCode === 0) {
+                        message.success('数据删除成功');
+                        that.refreshList();
+                    } else {
+                        message.error('数据删除失败:', res.data.msg);
+                    }
+                })
+            },
+        });
+
+        // requestConfigDeleteDoc
     }
 
     //刷新列表被点击

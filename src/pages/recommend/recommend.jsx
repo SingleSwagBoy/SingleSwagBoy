@@ -297,7 +297,7 @@ export default class Teast extends Component {
             for (let i = 0, len = res.length; i < len; i++) {
                 let item = res[i];
                 let key = item.key;
-                if (key === 1 || key === 6 || key == 7|| key ===8) {
+                if (key === 1 || key === 6 || key === 8) {
                     types.push(item);
                 }
             }

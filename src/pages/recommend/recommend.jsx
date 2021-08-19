@@ -383,8 +383,6 @@ export default class Teast extends Component {
                     product_list: product_list,
                 })
             }
-            console.log('---------二维码套餐')
-            console.log(res);
         })
 
         this.refreshList();
@@ -510,7 +508,6 @@ export default class Teast extends Component {
                 message.error('频道展示时长请输入数字')
                 return;
             }
-            obj.programDuration = parseInt(duration_box.programDuration);
         }
         else {
             if (duration_box.programDuration !== 0 && duration_box.programDuration !== '0') {
@@ -519,6 +516,7 @@ export default class Teast extends Component {
             }
         }
 
+        obj.programDuration = parseInt(duration_box.programDuration);
         requestTvTringAdConfigDuration(obj).then(res => {
             let errCode = res.data.errCode;
             if (errCode === 0) {
@@ -547,6 +545,7 @@ export default class Teast extends Component {
             }
         }
         obj.lDuration = parseInt(duration_box.lDuration);
+    
         requestTvTringAdConfigDurationL(obj).then(res => {
             let errCode = res.data.errCode;
             if (errCode === 0) {
@@ -584,11 +583,9 @@ export default class Teast extends Component {
         }
         else {
             if (ratio_box.adRatio !== 0 && ratio_box.adRatio !== '0') {
-                message.error('请填写节目单比例');
+                message.error('请填写广告比例');
                 return;
             }
-            message.error('请填写广告比例');
-            return;
         }
 
         obj.programRatio = parseInt(ratio_box.programRatio);

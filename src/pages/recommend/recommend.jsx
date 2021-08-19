@@ -205,8 +205,14 @@ export default class Teast extends Component {
                             <RangePicker className="date-picker" showTime onChange={(val) => {
                                 let that = this;
                                 let search_box = that.state.search_box;
-                                search_box.startTime = val[0].valueOf();
-                                search_box.endTime = val[1].valueOf();
+                                if (!val || val.length < 1) {
+                                    search_box.startTime = '';
+                                    search_box.endTime = '';
+                                }
+                                else {
+                                    search_box.startTime = val[0].valueOf();
+                                    search_box.endTime = val[1].valueOf();
+                                }
                                 that.setState({ search_box: search_box });
                             }} />
                         </Tooltip>
@@ -259,9 +265,6 @@ export default class Teast extends Component {
 
                 <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} user_tag={user_tag} delivery_types={delivery_types} channel_list={channel_list} product_list={product_list}
                     onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
-
-
-
 
             </div>
         )
@@ -510,8 +513,10 @@ export default class Teast extends Component {
             obj.programDuration = parseInt(duration_box.programDuration);
         }
         else {
-            message.error('设置失败:请输入频道展示时长')
-            return;
+            if (duration_box.programDuration !== 0 && duration_box.programDuration !== '0') {
+                message.error('设置失败:请输入频道展示时长')
+                return;
+            }
         }
 
         requestTvTringAdConfigDuration(obj).then(res => {
@@ -534,13 +539,14 @@ export default class Teast extends Component {
                 message.error('L型广告持续时间请输入数字')
                 return;
             }
-            obj.lDuration = parseInt(duration_box.lDuration);
         }
         else {
-            message.error('设置失败:请输入L型广告持续时间')
-            return;
+            if (duration_box.lDuration !== 0 && duration_box.lDuration !== '0') {
+                message.error('设置失败:请输入L型广告持续时间')
+                return;
+            }
         }
-
+        obj.lDuration = parseInt(duration_box.lDuration);
         requestTvTringAdConfigDurationL(obj).then(res => {
             let errCode = res.data.errCode;
             if (errCode === 0) {
@@ -563,23 +569,30 @@ export default class Teast extends Component {
                 message.error('节目单比例请填入数字');
                 return;
             }
-            obj.programRatio = parseInt(ratio_box.programRatio);
         }
         else {
-            message.error('请填写节目单比例');
-            return;
+            if (ratio_box.programRatio !== 0 && ratio_box.programRatio !== '0') {
+                message.error('请填写节目单比例');
+                return;
+            }
         }
         if (ratio_box.adRatio) {
             if (!that.checkNumber(ratio_box.adRatio)) {
                 message.error('广告比例请填入数字');
                 return;
             }
-            obj.adRatio = parseInt(ratio_box.adRatio);
         }
         else {
+            if (ratio_box.adRatio !== 0 && ratio_box.adRatio !== '0') {
+                message.error('请填写节目单比例');
+                return;
+            }
             message.error('请填写广告比例');
             return;
         }
+
+        obj.programRatio = parseInt(ratio_box.programRatio);
+        obj.adRatio = parseInt(ratio_box.adRatio);
         requestTvTringAdConfigRatio(obj).then(res => {
             let errCode = res.data.errCode;
             if (errCode === 0) {

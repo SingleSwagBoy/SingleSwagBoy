@@ -1,6 +1,7 @@
-.tab-wrapper{
+.tab-wrapper {
     /* width: 100px; */
 }
+
 .teast-wrapper {
     /* 尝鲜版广告 */
     display: flex;
@@ -20,14 +21,66 @@
 }
 
 .input-wrapper>.input {
+    width: 400px;
     margin-left: 10px;
-    width: 200px;
 }
 
 .input-wrapper>.btn {
     margin-left: 10px;
+    width: 80px;
 }
 
 .input-wrapper>.date-picker {
     margin-left: 10px;
+    width: 400px;
 }
+
+.alert-box {
+    margin-top: 10px;
+}
+
+.alert-box>.btn-wrapper {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    background: red;
+}
+
+.button-box {
+    display: flex;
+    flex-direction: row;
+}
+
+.pagination-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+}
+
+.input-wrapper-from {
+    width: 200px;
+}
+
+.input-wrapper-box {
+    display: flex;
+    flex-direction: row;
+}
+
+.input-wrapper-box>.input-wrapper-from {
+    margin-right: 5px;
+    padding-right: 5px;
+}
+
+
+.upload-image-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+/* .ant-upload-picture-card-wrapper {
+    display: inline-block;
+    width: 100px;
+} */

@@ -309,8 +309,8 @@ export const requestJumpMenuTypes = () => {
             { key: 5, value: '跳转到联系' },
             { key: 6, value: '跳转到语音' },
             { key: 7, value: '跳转到套餐' },
-            { key: 8, value: '跳转到小剧场列表页' },
-            { key: 100, value: '跳转到小剧场播放页' },
+            // { key: 8, value: '跳转到小剧场列表页' },
+            // { key: 100, value: '跳转到小剧场播放页' },
         ];
         resolve(params);
     });

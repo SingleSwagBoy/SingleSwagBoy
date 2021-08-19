@@ -72,7 +72,7 @@ export default class WinningNews extends Component {
                         {
                           this.state.channelList.map(r=>{
                             return(
-                              <Option value={r.id} key={r.id} name={r.name}>{r.name}</Option>
+                              <Option value={r.id} key={r.id} name={r.name}>{r.name +"----"+ r.code}</Option>
                             )
                           })
                         }

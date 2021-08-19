@@ -87,7 +87,7 @@ export default class recommendModal extends Component {
                 }
             }
             else data.jumpChannelCode = [];
-         
+
             console.log('编辑后')
             console.log(data);
             let address = [];
@@ -164,9 +164,23 @@ export default class recommendModal extends Component {
 
                         <Tooltip title='毫秒与秒进制单位：1000' placement="top" >
                             <Form.Item label="展示时长" name="duration" rules={[{ required: true, message: '请输入展示时长' }]}>
-                                <Input className="input-wrapper-from" placeholder="例如:1000" addonAfter="毫秒" />
+                                <Input className="input-wrapper-from" placeholder="例如:1000" addonAfter="毫秒" onBlur={(e) => {
+                                    let new_value = e.target.value;
+                                    new_value = parseFloat(new_value);
+                                    console.log(new_value)
+
+                                    this.formRef.current.setFieldsValue({ 'duration': new_value });
+                                    this.forceUpdate();
+                                }} />
                             </Form.Item>
                         </Tooltip>
+                        {
+                            this.formRef.current &&
+                            <Form.Item label="展示时长">
+                                <Input className="input-wrapper-from" value={this.formRef.current.getFieldValue('duration')/1000} disabled addonAfter="秒" />
+                            </Form.Item>
+                        }
+
 
                         <Form.Item label="类型" name="type" rules={[{ required: true, message: '请选择广告类型' }]} >
                             <Select className="input-wrapper-from" placeholder='请选择广告类型' onChange={(val) => {

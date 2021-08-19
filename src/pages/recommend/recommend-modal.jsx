@@ -87,7 +87,7 @@ export default class recommendModal extends Component {
                 }
             }
             else data.jumpChannelCode = [];
-
+         
             console.log('编辑后')
             console.log(data);
             let address = [];
@@ -186,7 +186,7 @@ export default class recommendModal extends Component {
                                 <Form.Item label="套餐类型" name="pCode" >
                                     <Select className="input-wrapper-from" placeholder='请选择套餐类型'>
                                         {product_list.map((item, index) => {
-                                            return <Option value={item.name} key={index}>{item.id} - {item.name}</Option>
+                                            return <Option value={item.skuCode} key={index}>{item.skuCode} - {item.name}</Option>
                                         })}
                                     </Select>
                                 </Form.Item>

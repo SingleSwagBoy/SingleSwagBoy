@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { addVoting, editVoting, deleteVote, getVotingList, getMyProduct, getUserTag, getChannel, changeStateVote, voteSyncCache } from 'api'
+import { addVoting, editVoting, deleteVote, getVotingList, getMyProduct, getUserTag, getChannel, changeStateVote, voteSyncCache, requestVoteDuplicate } from 'api'
 import { Card, Button, Table, message, DatePicker, Select, Input, InputNumber, Switch, Modal, Form, Space, Radio } from 'antd'
 import { } from 'react-router-dom'
 
@@ -132,13 +132,14 @@ export default class WinningNews extends Component {
                     <Button
                       size="small"
                       dashed="true"
-                      onClick={() => {
-                        this.setState({
-                          defaultAddress: row.area.includes(",") ? row.area.split(",") : row.area,
-                        }, () => {
-                          this.addVoting(row, 2)
-                        })
-                      }}
+                     //   onClick={() => {
+                    //     this.setState({
+                    //       defaultAddress: row.area.includes(",") ? row.area.split(",") : row.area,
+                    //     }, () => {
+                    //       this.addVoting(row, 2)
+                    //     })
+                    //   }}
+                    onClick = {()=>this.onCopyDataClick(row)   }
                     >复制</Button>
                     <Button
                       size="small"
@@ -675,6 +676,22 @@ export default class WinningNews extends Component {
       }
     })
   }
+    //拷贝一行数据
+    onCopyDataClick(item){
+        let id = item.voteId;
+        let obj ={
+            id: id,
+        }
+        requestVoteDuplicate(obj).then(res=>{
+            let that = this ;
+            let errCode = res.data.errCode ;
+            if(errCode ===0 ){
+                that.getVotingList()
+            }else{
+                console.log('失败')
+            }
+        })
+      }
   addVoting(item, type) {
     if (type == 2) delete item.voteId
     let params = {

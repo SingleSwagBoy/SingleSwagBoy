@@ -309,6 +309,13 @@ export default class SportsProgram extends Component {
                    }
                  </Select>
                 </Form.Item>
+                <Form.Item
+                  label="专题key"
+                  name="topicKey"
+                  rules={[{ required: true, message: '请填写专题key' }]}
+                >
+                 <Input placeholder="请填写专题key" />
+                </Form.Item>
                 <Form.Item {...this.state.tailLayout}>
                   <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
                     确定
@@ -485,8 +492,10 @@ export default class SportsProgram extends Component {
   addList(val){
     console.log(val)
     let a = this.state.defaultProgram[val.value]
+    console.log(a)
     let params={
       ...a,
+      topicKey:val.topicKey,
       competitionName:a.competition_name,
       channelName:a.channel_name,
       startTime:a.start_time,

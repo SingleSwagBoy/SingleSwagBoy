@@ -217,7 +217,9 @@ export const changeStateVote = (params) => { //修改table里面的switch
 export const voteSyncCache = (params) => { //同步数据
     return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/syncCache`, params)
 };
-
+export const requestVoteDuplicate = (params) => {   //轻互动 拷贝一行
+    return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/duplicate`, {params:params})
+}
 
 // 频道组
 export const getLockConfig = (params) => { //获取专项频道解锁配置

@@ -177,7 +177,7 @@ export default class recommendModal extends Component {
                         {
                             this.formRef.current &&
                             <Form.Item label="展示时长">
-                                <Input className="input-wrapper-from" value={this.formRef.current.getFieldValue('duration')/1000} disabled addonAfter="秒" />
+                                <Input className="input-wrapper-from" value={this.formRef.current.getFieldValue('duration') / 1000} disabled addonAfter="秒" />
                             </Form.Item>
                         }
 
@@ -534,7 +534,6 @@ export default class recommendModal extends Component {
             object.ratio = parseInt(object.ratio);
         }
 
-
         //渠道信息
         let market = object.market;
         if (!market) {
@@ -565,14 +564,14 @@ export default class recommendModal extends Component {
             object.jumpChannelCode = jumpChannelCode.join(',');
         }
 
-
-
         let obj = {};
         for (let key in object) {
             let value = object[key];
-            if (value) obj[key] = value;
+            if (value || value === 0) obj[key] = value;
         }
+
         console.log('=======创建、编辑、保存object');
+        console.log(object.ratio)
         console.log(obj);
         this.props.onOk(obj)
     }

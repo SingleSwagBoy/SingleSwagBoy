@@ -45,12 +45,15 @@ export default class SportsProgram extends Component{
             visible:false,
             parentId:"",
             channelId:"",
+            channelNameId:"",
             tagList:[],
             tagOptions: [],
             channelOptions: [],
+            setprogromList:[],
             productList:[],
             videoLists:[],
             channelList: [],
+            channelName:"",
             currentObj:"",
             backImage:"",
             updateProps: {
@@ -122,6 +125,8 @@ export default class SportsProgram extends Component{
                 this.setState({
                     channelList:res.data.data,
                     channelOptions:_list
+                },()=>{
+                    console.log("channelOptions",this.state.channelOptions)
                 })
             }
         });
@@ -145,12 +150,24 @@ export default class SportsProgram extends Component{
             }
         });
     }
-    getDetail(){
+    getDetail(id){
         let params={
-            channelId:this.state.parentId
+            channelId:id
         }
         listProgramByChannelId(params).then(res=>{
             console.log(res);
+            if (res.data.errCode == 0){
+                let _arr=[];
+                let _list=Object.entries(res.data.data);
+                //console.log(_list)
+                for (const [key, value] of _list) {
+                    _arr.push({label: util.formatDateTwo(value.start_time, "M-D H:I", false) +  " " +value.name, value: key})
+                }
+                console.log(_arr)
+                this.setState({
+                    setprogromList:_arr
+                })
+            }
         })
     }
     getChannelSubject(keyWord){
@@ -172,7 +189,15 @@ export default class SportsProgram extends Component{
                 })
                 for(let i=0;i<res.data.data.dataList.length;i++){
                     if(res.data.data.dataList[i].ID==this.state.parentId){
-                        this.formRef.current.setFieldsValue(res.data.data.dataList[i])
+                        let _obj=res.data.data.dataList[i];
+                        if(_obj.tags!=''){
+                            _obj.tags=_obj.tags.split(",")
+                        }else{
+                            _obj.tags=[]
+                        }
+                        
+                        this.formRef.current.setFieldsValue(_obj)
+                        this.getDetail(res.data.data.dataList[i].channelId)
                         this.setState({
                             currentObj:res.data.data.dataList[i],
                             currentItem:res.data.data.dataList[i],
@@ -220,6 +245,7 @@ export default class SportsProgram extends Component{
             tags: _tages,
             //whiteList:obj.whiteList!=""?obj.whiteList.join(","):"",
             backImage:this.state.backImage,
+            channelName:this.state.channelName,
             ID:this.state.parentId*1 || ''
         }
         if(this.state.isAdd==true){  // 新增
@@ -285,6 +311,9 @@ export default class SportsProgram extends Component{
                         <Form.Item label="排序" name="column">
                             <InputNumber min={0} />
                         </Form.Item>
+                        <Form.Item label="关联h5地址" name="h5Url" rules={[{ required: true, message: '请填写地址' }]}>
+                            <Input placeholder="请填写H5地址" />
+                        </Form.Item>
                         <Form.Item label="背景色" name="bgColor" rules={[{ required: true, message: '请填写背景色' }]}>
                             <Input placeholder="请填写背景色" />
                         </Form.Item>
@@ -317,25 +346,44 @@ export default class SportsProgram extends Component{
                         <Form.Item label="预告片标题" name="svName" rules={[{ required: true, message: '请填写预告片标题' }]}>
                             <Input placeholder="请填写预告片标题" />
                         </Form.Item>
+                       
 
                         <Form.Item label="用户分群" name="tags" >
                             <Select placeholder="请选择用户分群" mode="multiple" allowClear>
                                 {
                                     this.state.tagList.map(r => {
                                         return (
-                                        <Option value={r.id.toString()} key={r.id}>{r.name}</Option>
+                                            <Option value={r.id.toString()} key={r.id}>{r.name}</Option>
                                         )
                                     })
                                 }
                             </Select>
                         </Form.Item>
 
-                        {/* <Form.Item label="频道" name="tags" >
-                            <Select placeholder="请选择频道" allowClear>
+                        {/* <Form.Item label="频道" name="channelId" >
+                            <Select placeholder="请选择频道" allowClear onChange={(val,name)=>{
+                                console.log('---------',name.children)
+                                this.setState({
+                                    channelName:name.children
+                                })
+                                this.getDetail(val)
+                            }}>
                                 {
-                                    this.state.tagList.map(r => {
+                                    this.state.channelList.map(r => {
                                         return (
-                                        <Option value={r.id.toString()} key={r.id}>{r.name}</Option>
+                                        <Option value={r.channelId} key={r.name}>{r.name}</Option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item label="节目" name="esIndexId" >
+                            <Select placeholder="请选择节目" allowClear>
+                                {
+                                    this.state.setprogromList.map(r => {
+                                        return (
+                                            <Option value={r.value} key={r.value}>{r.label}</Option>
                                         )
                                     })
                                 }

@@ -243,6 +243,27 @@ export const syncCacheTvTry = (params) => { //数据同步推送尝鲜版
     return request.post(`${baseUrl}/mms/channel/tvTrying/syncCache`, params)
 };
 
+// 频道专题
+export const Getchannels = (params) => { // 获取频道节目
+    return request.post(`${baseUrl}/mms/channel/programCover/channels`, params)
+};
+export const ChannelTopic = (params) => { // 获取专题列表
+    return request.get(`${baseUrl}/mms/channel/topic`, {params})
+};
+export const updateChannelTopic = params => {  // 修改专题列表
+    return request.put(`${baseUrl}/mms/channel/topic`, params) 
+}
+export const addChannelTopic = params => { // 新增专题列表
+    return request.post(`${baseUrl}/mms/channel/topic`, params) 
+}
+export const deleteChannelTopic = params => {   // 删除专题列表
+    return request.delete(`${baseUrl}/mms/channel/topic`, { params: params }) 
+}
+export const listProgramByChannelId = params => {   // 获取专题详情
+    return request.get(`${baseUrl}/mms/channel/programs/listByChannelId`, { params: params }) 
+}
+
+
 
 
 //========== 尝鲜版 ==========

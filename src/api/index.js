@@ -262,6 +262,9 @@ export const deleteChannelTopic = params => {   // 删除专题列表
 export const listProgramByChannelId = params => {   // 获取专题详情
     return request.get(`${baseUrl}/mms/channel/programs/listByChannelId`, { params: params }) 
 }
+export const syncChannel = params => { 
+    return request.get(`${baseUrl}/mms/sync/channel`, { params: params }); 
+};
 
 
 

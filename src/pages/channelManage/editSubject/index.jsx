@@ -19,8 +19,8 @@ const normFile = (e) => {
 
 export default class SportsProgram extends Component{
     formRef = React.createRef();
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             page: 1,
             pageSize: 10,
@@ -223,11 +223,14 @@ export default class SportsProgram extends Component{
     }
     submitForm(obj){
         console.log("submitFormsubmitForm",obj)
+        if(obj.whiteList==undefined){
+            obj.whiteList=""
+        }
         console.log("this.state.isAdd",this.state.isAdd)
         let _tages=obj.tags;
         if(_tages==""){
             _tages=""
-        }else{
+        }else if(_tages!="" && _tages!=undefined){
             if(_tages[0]==","){
                 _tages=_tages.slice(1,_tages.length);
                 console.log(_tages)
@@ -236,7 +239,12 @@ export default class SportsProgram extends Component{
                 console.log(_tages)
                 _tages=_tages.join(",")
             }
+        }else if(_tages==undefined){
+            _tages=""
         }
+        // if(whiteList==undefined){
+        //     whiteList=""
+        // }
         console.log(_tages)
         let params={
             ...this.state.currentItem,
@@ -245,24 +253,30 @@ export default class SportsProgram extends Component{
             tags: _tages,
             //whiteList:obj.whiteList!=""?obj.whiteList.join(","):"",
             backImage:this.state.backImage,
-            channelName:this.state.channelName,
+            //channelName:this.state.channelName,
             ID:this.state.parentId*1 || ''
         }
+        console.log(params);
         if(this.state.isAdd==true){  // 新增
             addChannelTopic(params).then(res=>{
                 console.log(res)
                 if(res.data.errCode==0){
                     message.success("添加成功")
+                    setTimeout(()=>{
+                        this.props.history.go(-1)
+                    },1000)
                 }else{
                     message.error(res.data.msg)
                 }
             })
         }else{
-            console.log(params);
             updateChannelTopic(params).then(res=>{
                 console.log(res)
                 if(res.data.errCode==0){
                     message.success("修改成功")
+                    setTimeout(()=>{
+                        this.props.history.go(-1)
+                    },1000)
                 }else{
                     message.error(res.data.msg)
                 }
@@ -284,7 +298,7 @@ export default class SportsProgram extends Component{
                     <div>
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <Link to="/mms/channelManage/channelSubject">频道专题</Link>
+                                <Link to="/mms/channelManage/channelSubject">频道专题1</Link>
                             </Breadcrumb.Item>
                             {
                                 this.state.isAdd==true &&
@@ -308,8 +322,8 @@ export default class SportsProgram extends Component{
                             <Input placeholder="请填写标题" />
                         </Form.Item>
 
-                        <Form.Item label="排序" name="column">
-                            <InputNumber min={0} />
+                        <Form.Item label="排序" name="column" rules={[{ required: true, message: '请填写排序' }]}>
+                            <InputNumber min={-1} />
                         </Form.Item>
                         <Form.Item label="关联h5地址" name="h5Url" rules={[{ required: true, message: '请填写地址' }]}>
                             <Input placeholder="请填写H5地址" />

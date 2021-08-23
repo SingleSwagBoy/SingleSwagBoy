@@ -254,7 +254,7 @@ export default class SportsProgram extends Component{
             //whiteList:obj.whiteList!=""?obj.whiteList.join(","):"",
             backImage:this.state.backImage,
             //channelName:this.state.channelName,
-            ID:this.state.parentId*1 || ''
+            ID:this.state.parentId*1 || 0
         }
         console.log(params);
         if(this.state.isAdd==true){  // 新增

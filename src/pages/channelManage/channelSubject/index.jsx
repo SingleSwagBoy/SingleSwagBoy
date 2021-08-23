@@ -18,6 +18,7 @@ export default class SportsProgram extends Component{
             total: 0,
             data: [],
             loading:false,
+            btnLoading:false,
             searchWords:"",
             lists: [
                 {name:"扫黑风暴",sort:1,status:1,id:1},
@@ -50,16 +51,16 @@ export default class SportsProgram extends Component{
                     dataIndex: "column",
                     key: "column",
                 },
-                {
-                    title: "频道",
-                    dataIndex: "channelName",
-                    key: "channelName",
-                },
-                {
-                    title: "节目",
-                    dataIndex: "programName",
-                    key: "programName",
-                },
+                // {
+                //     title: "频道",
+                //     dataIndex: "channelName",
+                //     key: "channelName",
+                // },
+                // {
+                //     title: "节目",
+                //     dataIndex: "programName",
+                //     key: "programName",
+                // },
                 {
                     title: "背景图",
                     dataIndex: "backImage",
@@ -127,12 +128,21 @@ export default class SportsProgram extends Component{
     }
     syncChannel() {
         console.log("数据同步")
+        this.setState({
+            btnLoading:true
+        })
         syncChannel().then((res) => {
             console.log(res);
             if (res.data.errCode == 0) {
                 message.success("数据同步成功")
+                this.setState({
+                    btnLoading:false
+                })
             } else {
                 message.error(res.data.msg)
+                this.setState({
+                    btnLoading:false
+                })
             }
         });
     }
@@ -174,6 +184,7 @@ export default class SportsProgram extends Component{
                             }}
                         >新增专题</Button>
                         <Button type="primary"
+                            loading={this.state.btnLoading}
                             style={{margin:"0 10px"}}
                                 onClick={()=>{
                                 this.syncChannel()

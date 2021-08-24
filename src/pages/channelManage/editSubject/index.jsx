@@ -298,7 +298,7 @@ export default class SportsProgram extends Component{
                     <div>
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <Link to="/mms/channelManage/channelSubject">频道专题1</Link>
+                                <Link to="/mms/channelManage/channelSubject">频道专题</Link>
                             </Breadcrumb.Item>
                             {
                                 this.state.isAdd==true &&

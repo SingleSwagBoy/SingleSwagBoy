@@ -1,4 +1,6 @@
 import request from 'utils/request.js'
+import request2 from 'utils/request2.js'
+
 let baseUrl = ""
 console.log(window.location.host, "api")
 if (window.location.host.includes("localhost") || window.location.host.includes("test")) {
@@ -364,3 +366,29 @@ export const requestDeliveryTypes = () => {
         resolve(params);
     });
 }
+
+//字典 状态
+export const requestDictStatus = () => {
+    return new Promise((resolve, reject) => {
+        let params = [
+            { key: 1, value: '有效' },
+            { key: 2, value: '无效' },
+        ];
+        resolve(params);
+    });
+}
+
+
+
+//========== 配置管理 ==========
+export const requestConfigAddDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}add`, params); }                       //配置列表-添加配置
+export const requestConfigDocList = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}get`, params); }                      //配置列表-配置列表
+export const requestConfigDeleteDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}del`, params); }                    //配置列表-删除配置
+export const requestConfigUpdateDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}update`, params); }                 //配置列表-更新配置
+
+
+//微信管理
+export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); }                   //获取微信回复
+export const requestWxPublicTypes = (params) => { return request2.post(`${baseUrl}/mms/wx/public/get`, params); }           //获取回复公众号的类型
+
+// getWxPublicNumber

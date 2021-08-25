@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-25 14:54:01
+ * @LastEditTime: 2021-08-25 15:21:16
  */
 
 import React, { Component } from 'react';
@@ -68,6 +68,8 @@ export default class Doc extends Component {
         let that = this;
         return (
             <div>
+                
+
                 <Tooltip title='产品线' placement="left" color={'purple'}>
                     <Menu onClick={(item) => that.onMenuClick(item.key)} selectedKeys={[curr_select_product_line_code]} mode="horizontal">
                         {
@@ -123,7 +125,7 @@ export default class Doc extends Component {
                             table_box.table_layer.length === 0 &&
                             <div>
                                 <Form.Item label='产品线' name='productLine' rules={[{ required: true, message: '请选择产品线' }]}>
-                                    <Select style={{ width: 350 }} placeholder="请选择产品线" >
+                                    <Select style={{ width: 350 }} placeholder="请选择产品线">
                                         {dict_product_line.map((item, index) => (
                                             <Option value={item.key} key={item.key}> {item.key}- {item.value}</Option>
                                         ))}

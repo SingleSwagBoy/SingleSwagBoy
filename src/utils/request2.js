@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2017-09-01 10:13:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-23 15:43:14
+ * @LastEditTime: 2021-08-25 15:14:54
  * @Description: 
  *      成功：  then()中解决问题
  *              集合类型返回     {data, pages} 
@@ -27,16 +27,18 @@ let request = axios.create({
 request.interceptors.request.use(config => {
     let url = config.url;
     let method = config.method;
-    showConsole(`>>>> 请求 请求地址:${url}`);
-    showConsole(`---> 请求 请求类型:[${method}]`);
+    showConsole(`>>>> 请求 接口地址:${url}`);
+    showConsole(`---> 请求 接口类型:[${method}]`);
 
     //Get
     if (method === 'get') {
-        showConsole(`---> 请求 请求参数:${config.params ? JSON.stringify(config.params) : '{}'}`);
+        showConsole(`---> 请求 接口参数:`);
+        showConsole.apply(`${config.params ? JSON.stringify(config.params) : '{}'}`);
     }
     //Post
     else if (method === 'post') {
-        showConsole(`---> 请求 请求参数:${config.data ? JSON.stringify(config.data) : '{}'}`);
+        showConsole(`---> 请求 接口参数:`);
+        showConsole(`${config.data ? JSON.stringify(config.data) : '{}'}`);
     }
 
     let user = localStorage.getItem('user')
@@ -60,8 +62,8 @@ request.interceptors.response.use(response => {
     let code = data.code;
     let err_code = data.errCode;
 
-    showConsole(`<<<< 获取 请求地址：${config.url.replace(process.env.BASE_API, '')}`);
-    showConsole(`<--- 获取 请求类型：[${config.method}]`);
+    showConsole(`<<<< 获取 接口地址：${config.url.replace(process.env.BASE_API, '')}`);
+    showConsole(`<--- 获取 接口类型：[${config.method}]`);
     showConsole(`<--- 获取 返回状态：${status} 接口状态${err_code}`);
     if (code === 401 || code === 403) {
         // token 没传或过期 弹出全局提醒

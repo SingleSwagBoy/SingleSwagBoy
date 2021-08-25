@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-25 14:28:51
+ * @LastEditTime: 2021-08-25 14:54:01
  */
 
 import React, { Component } from 'react';
@@ -107,7 +107,7 @@ export default class Doc extends Component {
                 }>
                 </Alert>
 
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1200 }} />
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1200, y: 600 }} />
 
                 {/* {
                     table_box.table_pages.totalCount !== 0 &&
@@ -371,9 +371,6 @@ export default class Doc extends Component {
                 message.error(res.desc);
             })
         })
-
-
-        
     }
 
     //管理按钮被点击 跳转到下一层数据
@@ -442,11 +439,6 @@ export default class Doc extends Component {
                 break;
             }
         }
-
-
-
-
-
         let modal_box = that.state.modal_box;
         modal_box.is_show = true;
         that.setState({ modal_box: modal_box })
@@ -506,7 +498,6 @@ export default class Doc extends Component {
             object.docKeyId = item.id;
         }
 
-
         requestConfigAddDoc(step, object).then(res => {
             message.success('数据添加成功');
             //隐藏弹出框
@@ -519,11 +510,8 @@ export default class Doc extends Component {
             message.error('数据添加失败：' + res.desc)
             console.log(res);
         })
-
-
-
-
     }
+
     //弹出框Cancel被点击
     onModalCancelClick() {
         let that = this;
@@ -631,9 +619,9 @@ export default class Doc extends Component {
         }
         //按钮形态
         else {
-            return <Button type='link' onClick={() => { row[flag_key] = true; that.forceUpdate(); }} >
+            return <a type='link' onClick={() => { row[flag_key] = true; that.forceUpdate(); }} >
                 {default_value}
-            </Button>
+            </a>
         }
     }
     //更新

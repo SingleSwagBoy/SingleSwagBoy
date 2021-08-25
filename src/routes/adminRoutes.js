@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-23 11:50:16
+ * @LastEditTime: 2021-08-25 11:56:55
  */
 import {lazy} from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -27,16 +27,12 @@ const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
 const Recommend= lazy (()=>import ('pages/recommend/recommend.jsx'));
 const Voting = lazy(()=>import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(()=>import('pages/channelManage/channelLock/index.jsx'))
-<<<<<<< HEAD
 const AddressNews = lazy(()=>import('pages/configManage/addressNews/index.jsx'))
 const ChannelSubject = lazy(()=>import('pages/channelManage/channelSubject/index.jsx'))
 const EditSubject = lazy(()=>import('pages/channelManage/editSubject/index.jsx'))
-=======
 const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
 const WxReply =  lazy(()=>import('pages/wechart/wxReply.jsx'));
 
-
->>>>>>> feature/hqs/cms-local-chenli
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [

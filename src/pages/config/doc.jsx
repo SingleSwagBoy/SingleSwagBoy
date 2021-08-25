@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-25 15:21:16
+ * @LastEditTime: 2021-08-25 17:28:14
  */
 
 import React, { Component } from 'react';
@@ -48,6 +48,7 @@ export default class Doc extends Component {
             //产品线
             dict_product_line: [
                 // productLine 整数类型 1=电视端，2=安卓，3=ios, 6=小程序
+                { key: 100, code: 'all', value: '全端' },
                 { key: 1, code: 'tv', value: '电视端' },
                 { key: 2, code: 'android', value: '安卓' },
                 { key: 3, code: 'ios', value: 'ios' },
@@ -68,7 +69,7 @@ export default class Doc extends Component {
         let that = this;
         return (
             <div>
-                
+
 
                 <Tooltip title='产品线' placement="left" color={'purple'}>
                     <Menu onClick={(item) => that.onMenuClick(item.key)} selectedKeys={[curr_select_product_line_code]} mode="horizontal">
@@ -500,6 +501,10 @@ export default class Doc extends Component {
             object.docKeyId = item.id;
         }
 
+        if (object.code) object.code = object.code.replace(/(^\s*)|(\s*$)/g, "");
+        if (object.name) object.name = object.name.replace(/(^\s*)|(\s*$)/g, "");
+        if (object.value) object.value = object.value.replace(/(^\s*)|(\s*$)/g, "");
+
         requestConfigAddDoc(step, object).then(res => {
             message.success('数据添加成功');
             //隐藏弹出框
@@ -632,6 +637,9 @@ export default class Doc extends Component {
         let table_box = that.state.table_box;
         let table_layer = table_box.table_layer;    //表格层级
         let layer_count = table_layer.length;
+        if (row.code) row.code = row.code.replace(/(^\s*)|(\s*$)/g, "");
+        if (row.name) row.name = row.name.replace(/(^\s*)|(\s*$)/g, "");
+        if (row.value) row.value = row.value.replace(/(^\s*)|(\s*$)/g, "");
 
         requestConfigUpdateDoc(layer_count, row).then(res => {
             message.success('修改成功');

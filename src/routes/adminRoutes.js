@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: HuangQS
+ * @Date: 2021-08-20 16:06:46
+ * @LastEditors: HuangQS
+ * @LastEditTime: 2021-08-23 11:50:16
+ */
 import {lazy} from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
 const AyhChannel = lazy(()=>import('pages/ayh/channel/index.jsx'))
@@ -20,7 +27,9 @@ const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
 const Recommend= lazy (()=>import ('pages/recommend/recommend.jsx'));
 const Voting = lazy(()=>import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(()=>import('pages/channelManage/channelLock/index.jsx'))
-const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'))
+const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
+const WxReply =  lazy(()=>import('pages/wechart/wxReply.jsx'));
+
 
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
@@ -53,6 +62,8 @@ const adminRoutes = [
   //配置管理
   {path:'/mms/doc',component:ConfigDoc,name:'文案管理',icon:UnorderedListOutlined,code:"configManage"},
  
+  //微信公众号管理
+  {path:'/mms/wxReply',component:WxReply,name:'自动回复',icon:UnorderedListOutlined,code:"WeChatManage"},
  
  
   {path:'/mms/noPermission',component:NoPermission,name:'没有权限',meta:{isNav:false,roles:'*'}}

@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-25 11:58:09
+ * @LastEditTime: 2021-08-25 14:28:51
  */
 
 import React, { Component } from 'react';
@@ -258,7 +258,7 @@ export default class Doc extends Component {
                 render: (rowValue, row, index) => {
                     let is_disable = layer_count !== 0;
                     return (
-                        <Select style={{ width: 120 }} defaultValue={row.productLine} onChange={(select_id) => this.onItemTypeChange(select_id, row)} disabled={is_disable}>
+                        <Select style={{ width: 120 }} defaultValue={row.productLine} onChange={(data) => this.onItemDataChange(row, 'productLine', data)} disabled={is_disable}>
                             {dict_product_line.map((item, index) => {
                                 return <Option value={item.key} key={index}>{item.key} - {item.value}</Option>
                             })}
@@ -279,7 +279,7 @@ export default class Doc extends Component {
                     title: '类型', dataIndex: 'type', key: 'type',
                     render: (rowValue, row, index) => {
                         return (
-                            <Select defaultValue={row.type} style={{ width: 180 }} onChange={(select_id) => this.onItemTypeChange(select_id, row)}>
+                            <Select defaultValue={row.type} style={{ width: 180 }} onChange={(data) => this.onItemDataChange(row, 'type', data)}>
                                 {dict_types.map((item, index) => {
                                     return <Option value={item.key} key={index}>{item.key} - {item.value}</Option>
                                 })}
@@ -293,7 +293,7 @@ export default class Doc extends Component {
                 title: '状态', dataIndex: 'status', key: 'status',
                 render: (rowValue, row, index) => {
                     return (
-                        <Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="有效" unCheckedChildren="无效" onChange={(type) => this.onItemStatusChanged(type, row)} />
+                        <Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="有效" unCheckedChildren="无效" onChange={(data) => this.onItemDataChange(row, 'status', data ? 1 : 2)} />
                     )
                 }
             });
@@ -356,16 +356,24 @@ export default class Doc extends Component {
         }
 
         table_box.table_datas = [];
-
-        requestConfigDocList(layer_count, request_params).then(res => {
-            if (res.data) {
-                table_box.table_datas = res.data;
-                table_box.table_pages = res.page;
-                that.setState({ table_box: table_box });
-            }
-        }).catch(res => {
-            message.error(res.desc);
+        that.setState({
+            table_box: table_box,
+        }, () => {
+            requestConfigDocList(layer_count, request_params).then(res => {
+                if (res.data) {
+                    table_box.table_datas = res.data;
+                    table_box.table_pages = res.page;
+                    that.setState({ table_box: table_box },);
+                } else {
+                    message.error('暂无数据');
+                }
+            }).catch(res => {
+                message.error(res.desc);
+            })
         })
+
+
+        
     }
 
     //管理按钮被点击 跳转到下一层数据
@@ -568,20 +576,17 @@ export default class Doc extends Component {
         }
         return '';
     }
-
-    //类型变更
-    onItemTypeChange(select_id, row) {
+    /**
+     * 数据变更切换 统一更新逻辑
+     * @param {*} source        item数据源(row)
+     * @param {*} key           变更参数的key
+     * @param {*} value         变更参数对应的数据
+     */
+    onItemDataChange(source, key, value) {
         let that = this;
-        row.type = select_id;
-        that.requestUpdateData(row);
-    }
-
-    //状态变更
-    onItemStatusChanged(type, row) {
-        let that = this;
-        let obj = Object.assign({}, row);
-        obj.status = type ? 1 : 2;
-
+        source[key] = value;
+        //更新数据
+        let obj = Object.assign({}, source);
         that.requestUpdateData(obj);
     }
 
@@ -595,8 +600,6 @@ export default class Doc extends Component {
     onItemInputChanged(target_key, e, row) {
         let that = this;
         row[target_key] = e.target.value;
-
-
         that.requestUpdateData(row)
     }
 
@@ -695,15 +698,16 @@ export default class Doc extends Component {
             },
             //上传文件之前的钩子，参数为上传的文件
             beforeUpload(file) {
-                let isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-                if (!isJpgOrPng) {
-                    message.error('You can only upload JPG/PNG file!');
-                }
-                let isLt2M = file.size / 1024 / 1024 < 2;
-                if (!isLt2M) {
-                    message.error('Image must smaller than 2MB!');
-                }
-                return isJpgOrPng && isLt2M;
+                // let isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+                // if (!isJpgOrPng) {
+                //     message.error('You can only upload JPG/PNG file!');
+                // }
+                // let isLt2M = file.size / 1024 / 1024 < 2;
+                // if (!isLt2M) {
+                //     message.error('Image must smaller than 2MB!');
+                // }
+                // return isJpgOrPng && isLt2M;
+                return true;
             }
         }
     }

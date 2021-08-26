@@ -323,7 +323,7 @@ export default class AddressNews extends Component {
                   </div>
                   <Pagination defaultCurrent={1} total={this.state.totalCount}
                     current={this.state.page}
-                    pageSize={this.state.tabIndex==1?100:this.state.pageSize}
+                    pageSize={this.state.tabIndex==1?20:this.state.pageSize}
                     onChange={(page, pageSize) => {
                       console.log(page, pageSize)
                       this.setState({
@@ -686,8 +686,8 @@ export default class AddressNews extends Component {
   }
   getTemplateImage() {
     let params = {
-      count: 100,
-      offset: 0,
+      count: 20,
+      offset: (this.state.page -1 )* 20,
       type: "image",
       wxCode: this.formRef.current.getFieldValue("wxCode"),
     }

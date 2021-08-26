@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
 import { getMsgTemplate, getTemplateImage, getTemplateUser, editMsg, sendMsg, addMsg, getMpList, addMaterial, syncWxMaterial, addText } from 'api'
-import { Card, Button, message, Tabs, Radio, Modal, Form, Input, Select, DatePicker, Divider, Alert } from 'antd'
+import { Card, Button, message, Tabs, Radio, Modal, Form, Input, Select, DatePicker, Divider, Alert,InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
 import util from 'utils'
@@ -125,21 +125,44 @@ export default class AddressNews extends Component {
                 >
                   <Select
                     placeholder="请选择定时发送方式"
-
                     allowClear
+                    onChange={(val)=>{
+                      if(val != 3){
+                        this.formRef.current.setFieldsValue({ "sendTime": "" })
+                      }
+                      this.setState({
+                        test:1
+                      })
+                      
+                    }}
                   >
                     <Option value={1} key={1}>一次性定时发送</Option>
                     <Option value={2} key={2}>循环定时发送</Option>
                     <Option value={3} key={3}>相对时间定时发送</Option>
                   </Select>
                 </Form.Item>
-                <Form.Item
-                  name="sendTime"
-                  rules={[{ required: true, message: '请选择结束时间' }]}
-                  style={{ display: 'inline-block', }}
-                >
-                  <DatePicker showTime></DatePicker>
-                </Form.Item>
+                {
+                  this.formRef.current && this.formRef.current.getFieldValue("sendType") === 3 ? 
+                  <Form.Item
+                    name="sendTime"
+                    rules={[{ required: true, message: '请输入相对发送时间' }]}
+                    style={{ display: 'inline-block', }}
+                  >
+                    <InputNumber min={0} 
+                      formatter={value => `小时 ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                      // parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                     placeholder="请输入相对发送时间" style={{width:"100%"}} />
+                  </Form.Item>
+                  :
+                  <Form.Item
+                    name="sendTime"
+                    rules={[{ required: true, message: '请选择结束时间' }]}
+                    style={{ display: 'inline-block', }}
+                  >
+                    <DatePicker showTime></DatePicker>
+                  </Form.Item>
+                }
+                
 
               </Form.Item>
 
@@ -575,9 +598,11 @@ export default class AddressNews extends Component {
     } else if (data) {
       let formData = data
       formData.tag = formData.tag ? Array.isArray(formData.tag) ? formData.tag : formData.tag.split(",") : []
-      // formData.sendTime = moment(formData.sendTime * 1000)
       this.formRef.current.setFieldsValue(formData)
-      this.formRef.current.setFieldsValue({ "sendTime": moment(formData.sendTime * 1000) })
+      if(formData.sendType != 3){
+        this.formRef.current.setFieldsValue({ "sendTime": moment(formData.sendTime * 1000) })
+      }
+     
       let index = 0
       if (formData.type == "image") {
         index = 1
@@ -685,7 +710,7 @@ export default class AddressNews extends Component {
       id, info, messageType, sendTime, sendType, type, tag, wxCode,
       ...item,
       tag: item.tag.length === 0 ? "" : item.tag.join(","),
-      sendTime: parseInt(item.sendTime.toDate().getTime() / 1000),
+      sendTime:item.sendType ==3? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
       info: this.state.tabIndex == 1 ? JSON.stringify(this.state.selectContent) : this.state.selectContent.info ? this.state.selectContent.info : JSON.stringify(this.state.selectContent),
       type: this.state.selectContent.type || this.formRef.current.getFieldValue("type")
     }
@@ -761,7 +786,7 @@ export default class AddressNews extends Component {
     let params = {
       ...item,
       messageType: "custom",
-      sendTime: parseInt(item.sendTime.toDate().getTime() / 1000),
+      sendTime: item.sendType ==3? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
       type: this.state.selectContent.type || this.formRef.current.getFieldValue("type"),
       tag: Array.isArray(item.tag) ? item.tag.length === 0 ? "" : item.tag.join(",") : "",
       info: this.state.tabIndex == 1 ? JSON.stringify(this.state.selectContent) : this.state.selectContent.info ? this.state.selectContent.info : JSON.stringify(this.state.selectContent),

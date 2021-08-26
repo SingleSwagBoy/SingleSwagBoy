@@ -59,10 +59,7 @@ const adminRoutes = [
 
   {path:'/mms/activeManagement/voting',component:Voting,name:'投票活动',icon:UnorderedListOutlined,code:"ActiveManagement"},
   {path:'/mms/channelManage/channelLock',component:ChannelLock,name:'专享台解锁',icon:UnorderedListOutlined,code:"channelManage"},
-<<<<<<< HEAD
-=======
   {path:'/mms/channel/livePreview',component:LivePreview,name:'直播预告',icon:UnorderedListOutlined,code:"channelManage"},
->>>>>>> dev-add-miniCard
 
   {path:'/mms/configManage/addressNews',component:AddressNews,name:'地域新闻',icon:UnorderedListOutlined,code:"configManage"},
 

@@ -13,10 +13,11 @@ class ImageUpload extends Component {
       loading:false,
       updateProps: {
         name:"file",
+        data:{wxCode:this.props.params}, //接口其他参数
         listType:"picture-card",
         className:"avatar-uploader",
         showUploadList:false,
-        action: `${baseUrl}/mms/file/upload?dir=ad`,
+        action: `${baseUrl}${this.props.postUrl?this.props.postUrl:"/mms/file/upload?dir=ad"}`,//需要上传其他地址传过来，默认为ad
         headers: {
           authorization: JSON.parse(localStorage.getItem("user")).authorization,
         },
@@ -54,7 +55,7 @@ class ImageUpload extends Component {
                   if (info.file.status === 'done') {
                     console.log(info)
                     if(info.file.response.errCode === 0){
-                      this.props.getUploadFileUrl(info.file.response.data.fileUrl)
+                      this.props.getUploadFileUrl(info.file.response.data.fileUrl,info.file.response.data)
                       message.success(`上传成功`);
                     }else{
                       this.setState({ loading: false });

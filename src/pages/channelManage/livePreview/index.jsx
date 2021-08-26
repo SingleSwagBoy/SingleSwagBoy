@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getLivePreview, delLivePreview, setConfig, getConfig } from 'api'
+import { getLivePreview, delLivePreview, setConfig, getConfig, updateLivePreview } from 'api'
 import { Card, Breadcrumb, Button, message, Table, Switch, Modal, Form, Input } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
@@ -95,6 +95,12 @@ export default class AddressNews extends Component {
                                 <Switch checkedChildren="有效" unCheckedChildren="无效"
                                     key={new Date().getTime()}
                                     defaultChecked={rowValue === 1 ? true : false}
+                                    onChange={(val) => {
+                                        console.log(val)
+                                        if(val)row.state = 1
+                                        else row.state = 2
+                                        this.updateLivePreview(row)
+                                    }}
                                 />
                             </div>
                         )
@@ -332,7 +338,7 @@ export default class AddressNews extends Component {
         this.setState({
             defaultAddress: arr
         })
-        this.formRef.current.setFieldsValue({ "area": arr})
+        this.formRef.current.setFieldsValue({ "area": arr })
     }
     setConfig(val) { // 设置
         let params = {
@@ -346,7 +352,7 @@ export default class AddressNews extends Component {
                 message.success("设置成功")
                 this.getConfig()
                 this.setState({
-                    entranceState:false
+                    entranceState: false
                 })
             } else {
                 message.error("设置失败")
@@ -359,6 +365,17 @@ export default class AddressNews extends Component {
                 this.setState({
                     config: res.data.data
                 })
+            }
+        })
+    }
+    updateLivePreview(item) {
+        let params = {
+           ...item
+        }
+        updateLivePreview(params).then(res => {
+            if (res.data.errCode === 0) {
+            } else {
+                message.error("更新失败")
             }
         })
     }

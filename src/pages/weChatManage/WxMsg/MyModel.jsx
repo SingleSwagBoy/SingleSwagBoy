@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
 import { getMsgTemplate, getTemplateImage, getTemplateUser, editMsg, sendMsg, addMsg, getMpList, addMaterial, syncWxMaterial, addText } from 'api'
-import { Card, Button, message, Tabs, Radio, Modal, Form, Input, Select, DatePicker, Divider, Alert,InputNumber } from 'antd'
+import { Card, Button, message, Tabs, Radio, Modal, Form, Input, Select, DatePicker, Divider, Alert, InputNumber, Pagination } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
 import util from 'utils'
@@ -17,6 +17,9 @@ export default class AddressNews extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      page: 1,
+      pageSize: 10,
+      totalCount:0,
       layout: {
         labelCol: { span: 6 },
         wrapperCol: { span: 18 },
@@ -126,14 +129,14 @@ export default class AddressNews extends Component {
                   <Select
                     placeholder="请选择定时发送方式"
                     allowClear
-                    onChange={(val)=>{
-                      if(val != 3){
+                    onChange={(val) => {
+                      if (val != 3) {
                         this.formRef.current.setFieldsValue({ "sendTime": "" })
                       }
                       this.setState({
-                        test:1
+                        test: 1
                       })
-                      
+
                     }}
                   >
                     <Option value={1} key={1}>一次性定时发送</Option>
@@ -142,27 +145,27 @@ export default class AddressNews extends Component {
                   </Select>
                 </Form.Item>
                 {
-                  this.formRef.current && this.formRef.current.getFieldValue("sendType") === 3 ? 
-                  <Form.Item
-                    name="sendTime"
-                    rules={[{ required: true, message: '请输入相对发送时间' }]}
-                    style={{ display: 'inline-block', }}
-                  >
-                    <InputNumber min={0} 
-                      formatter={value => `小时 ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                      // parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                     placeholder="请输入相对发送时间" style={{width:"100%"}} />
-                  </Form.Item>
-                  :
-                  <Form.Item
-                    name="sendTime"
-                    rules={[{ required: true, message: '请选择结束时间' }]}
-                    style={{ display: 'inline-block', }}
-                  >
-                    <DatePicker showTime></DatePicker>
-                  </Form.Item>
+                  this.formRef.current && this.formRef.current.getFieldValue("sendType") === 3 ?
+                    <Form.Item
+                      name="sendTime"
+                      rules={[{ required: true, message: '请输入相对发送时间' }]}
+                      style={{ display: 'inline-block', }}
+                    >
+                      <InputNumber min={0}
+                        formatter={value => `小时 ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        // parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                        placeholder="请输入相对发送时间" style={{ width: "100%" }} />
+                    </Form.Item>
+                    :
+                    <Form.Item
+                      name="sendTime"
+                      rules={[{ required: true, message: '请选择结束时间' }]}
+                      style={{ display: 'inline-block', }}
+                    >
+                      <DatePicker showTime></DatePicker>
+                    </Form.Item>
                 }
-                
+
 
               </Form.Item>
 
@@ -261,8 +264,8 @@ export default class AddressNews extends Component {
                 </Select>
               </Form.Item>
               <Form.Item {...this.state.tailLayout}>
-                <Button type="primary" onClick={()=>{
-                  if(this.state.openIdList.length == 0)return message.error("请添加预览用户")
+                <Button type="primary" onClick={() => {
+                  if (this.state.openIdList.length == 0) return message.error("请添加预览用户")
                   this.sendModal()
                 }}>
                   发送到手机预览
@@ -284,19 +287,22 @@ export default class AddressNews extends Component {
           wrapClassName="outClass"
         // style={{ zIndex: 9999 }}
         >
-
           <Tabs tabPosition={"top"} activeKey={tabIndex.toString()}
             onChange={(val) => {
               this.setState({
-                tabIndex: val
+                tabIndex: val,
+                page:1,
+                pageSize:10
+              },()=>{
+                if (val == 0) {
+                  this.getMsgTemplate("mpnews")
+                } else if (val == 2) {
+                  this.getMsgTemplate("text")
+                } else if (val == 1) {
+                  this.getTemplateImage()
+                }
               })
-              if (val == 0) {
-                this.getMsgTemplate("mpnews")
-              } else if (val == 2) {
-                this.getMsgTemplate("text")
-              } else if (val == 1) {
-                this.getTemplateImage()
-              }
+             
             }}
           >
             {
@@ -315,9 +321,29 @@ export default class AddressNews extends Component {
                       })
                     }
                   </div>
+                  <Pagination defaultCurrent={1} total={this.state.totalCount}
+                    current={this.state.page}
+                    pageSize={this.state.tabIndex==1?100:this.state.pageSize}
+                    onChange={(page, pageSize) => {
+                      console.log(page, pageSize)
+                      this.setState({
+                        page:page,
+                        pageSize:pageSize
+                      },()=>{
+                        if (this.state.tabIndex == 0) {
+                          this.getMsgTemplate("mpnews")
+                        } else if (this.state.tabIndex == 2) {
+                          this.getMsgTemplate("text")
+                        } else if (this.state.tabIndex == 1) {
+                          this.getTemplateImage()
+                        }
+                      })
+                     
+                    }} />
                 </TabPane>
               ))
             }
+
           </Tabs>
         </Modal>
         {/* 新增素材 */}
@@ -599,10 +625,10 @@ export default class AddressNews extends Component {
       let formData = data
       formData.tag = formData.tag ? Array.isArray(formData.tag) ? formData.tag : formData.tag.split(",") : []
       this.formRef.current.setFieldsValue(formData)
-      if(formData.sendType != 3){
+      if (formData.sendType != 3) {
         this.formRef.current.setFieldsValue({ "sendTime": moment(formData.sendTime * 1000) })
       }
-     
+
       let index = 0
       if (formData.type == "image") {
         index = 1
@@ -640,7 +666,7 @@ export default class AddressNews extends Component {
   getMsgTemplate(val) {
     let params = {
       name: "",
-      page: { currentPage: 1, pageSize: 100 },
+      page: { currentPage: this.state.page, pageSize: this.state.pageSize },
       type: val,
       wxCode: this.formRef.current.getFieldValue("wxCode"),
     }
@@ -648,7 +674,8 @@ export default class AddressNews extends Component {
       if (res.data.errCode === 0 && res.data.data) {
         console.log(res.data)
         this.setState({
-          templateList: res.data.data
+          templateList: res.data.data,
+          totalCount:res.data.totalCount
         })
       } else {
         this.setState({
@@ -659,7 +686,7 @@ export default class AddressNews extends Component {
   }
   getTemplateImage() {
     let params = {
-      count: 20,
+      count: 100,
       offset: 0,
       type: "image",
       wxCode: this.formRef.current.getFieldValue("wxCode"),
@@ -668,7 +695,8 @@ export default class AddressNews extends Component {
       console.log(res.data)
       if (res.data.errCode === 0 && res.data.data) {
         this.setState({
-          templateList: res.data.data.item
+          templateList: res.data.data.item,
+          totalCount:res.data.data.totalCount
         })
       } else {
         this.setState({
@@ -710,7 +738,7 @@ export default class AddressNews extends Component {
       id, info, messageType, sendTime, sendType, type, tag, wxCode,
       ...item,
       tag: item.tag.length === 0 ? "" : item.tag.join(","),
-      sendTime:item.sendType ==3? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
+      sendTime: item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
       info: this.state.tabIndex == 1 ? JSON.stringify(this.state.selectContent) : this.state.selectContent.info ? this.state.selectContent.info : JSON.stringify(this.state.selectContent),
       type: this.state.selectContent.type || this.formRef.current.getFieldValue("type")
     }
@@ -765,7 +793,7 @@ export default class AddressNews extends Component {
         "mediaId": this.state.selectContent.mediaId,
         "msgType": formData.type
       }
-    }else if(formData.type === "news"){
+    } else if (formData.type === "news") {
       params = {
         ...params,
         ...this.state.selectContent
@@ -786,7 +814,7 @@ export default class AddressNews extends Component {
     let params = {
       ...item,
       messageType: "custom",
-      sendTime: item.sendType ==3? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
+      sendTime: item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
       type: this.state.selectContent.type || this.formRef.current.getFieldValue("type"),
       tag: Array.isArray(item.tag) ? item.tag.length === 0 ? "" : item.tag.join(",") : "",
       info: this.state.tabIndex == 1 ? JSON.stringify(this.state.selectContent) : this.state.selectContent.info ? this.state.selectContent.info : JSON.stringify(this.state.selectContent),
@@ -827,7 +855,7 @@ export default class AddressNews extends Component {
     let arr = this.state.mpList.filter(item => item.appid == val.appid)
     let params = {
       ...val,
-      appName: arr.length>0?arr[0].appName:"",
+      appName: arr.length > 0 ? arr[0].appName : "",
     }
     console.log(params, "新增")
     addText(params).then(res => {

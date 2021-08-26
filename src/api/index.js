@@ -231,6 +231,19 @@ export const getLockList = (params) => { //获取专项频道未设置的频道�
 export const unlockChannel = (params) => { //专项频道解锁配置
     return request.post(`${baseUrl}/mms/channel/group/exclusive/unlock`, params)
 };
+//直播预告
+export const getLivePreview = (params) => { //获取直播预告列表
+    return request.post(`${baseUrl}/mms/channel/livePreview/get`, params)
+};
+export const updateLivePreview = (params) => { //更新直播预告列表
+    return request.post(`${baseUrl}/mms/channel/livePreview/update`, params)
+};
+export const delLivePreview = (params) => { //删除直播预告列表
+    return request.post(`${baseUrl}/mms/channel/livePreview/del`, params)
+};
+export const addLivePreview = (params) => { //新增直播预告列表
+    return request.post(`${baseUrl}/mms/channel/livePreview/add`, params)
+};
 //推送节目单尝鲜版 
 export const getCheckboxTry = (params) => { //获取checkbox
     return request.get(`${baseUrl}/mms/channel/tvTrying/checkbox`, { params: params })

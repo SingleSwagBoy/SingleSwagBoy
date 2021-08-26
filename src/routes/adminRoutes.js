@@ -33,6 +33,7 @@ const EditSubject = lazy(()=>import('pages/channelManage/editSubject/index.jsx')
 const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
 const WxReply =  lazy(()=>import('pages/wechart/wxReply.jsx'));
 
+const WxMsg = lazy(()=>import('pages/weChatManage/WxMsg/index.jsx'))
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
@@ -74,6 +75,10 @@ const adminRoutes = [
   {path:'/mms/wxReply',component:WxReply,name:'自动回复',icon:UnorderedListOutlined,code:"WeChatManage"},
  
  
+
+
+  {path:'/mms/wx/msg',component:WxMsg,name:'客服消息',icon:UnorderedListOutlined,code:"WeChatManage"},
+
   {path:'/mms/noPermission',component:NoPermission,name:'没有权限',meta:{isNav:false,roles:'*'}}
 
 

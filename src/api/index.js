@@ -271,6 +271,49 @@ export const syncChannel = params => {
 };
 
 
+//微信公众号管理
+export const getMsg = (params) => { //客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/task/get`, params)
+};
+export const getMsgLog = (params) => { //客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/log/get`, params)
+};
+export const getPublicList = (params) => { //获取公众号
+    return request.post(`${baseUrl}/mms/wx/public/get`, params)
+};
+export const getMsgTemplate = (params) => { //获取模版 图文信息/文字信息
+    return request.post(`${baseUrl}/mms/wx/msg/get`, params)
+};
+export const getTemplateImage = (params) => { //获取模版 图片
+    return request.post(`${baseUrl}/mms/wx/msg/material`, params)
+};
+export const getTemplateUser = (params) => { //获取预览用户
+    return request.get(`${baseUrl}/mms/wx/msg/user/get`, {params:params})
+};
+export const deleteMsg = (params) => { //删除客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/task/del`, params)
+};
+export const editMsg = (params) => { //编辑客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/task/update`, params)
+};
+export const sendMsg = (params) => { //发送客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/send`, params)
+};
+export const addMsg = (params) => { //新增客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/task/add`, params)
+};
+export const getMpList = (params) => { //获取小程序列表
+    return request.post(`${baseUrl}/mms/wx/msg/getMpList`, params)
+};
+export const addMaterial = (params) => { //新增素材
+    return request.post(`${baseUrl}/mms/wx/msg/addNews`, params)
+};
+export const addText = (params) => { //新增文本
+    return request.post(`${baseUrl}/mms/wx/msg/add`, params)
+};
+export const syncWxMaterial = (params) => { //同步新增素材
+    return request.post(`${baseUrl}/mms/wx/msg/syncWxMaterial`, params)
+};
 
 
 //========== 尝鲜版 ==========

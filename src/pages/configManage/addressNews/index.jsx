@@ -36,6 +36,11 @@ export default class AddressNews extends Component {
                     key: "title",
                 },
                 {
+                    title: "热度",
+                    dataIndex: "desc",
+                    key: "desc",
+                },
+                {
                     title: "操作",
                     key: "action",
                     width: 200,

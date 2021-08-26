@@ -391,4 +391,5 @@ export const requestConfigUpdateDoc = (layer, params) => { return request2.post(
 export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); }                   //获取微信回复
 export const requestWxPublicTypes = (params) => { return request2.post(`${baseUrl}/mms/wx/public/get`, params); }           //获取回复公众号的类型
 
-// getWxPublicNumber
+//========== 数据同步|数据缓存 ========== 
+export const syncOther = (params) => { return request2.get(`${baseUrl}/mms/sync/other`, { params: params }); };         //其他缓存 其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)

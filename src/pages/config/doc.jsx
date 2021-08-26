@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-25 17:28:14
+ * @LastEditTime: 2021-08-26 11:02:24
  */
 
 import React, { Component } from 'react';
@@ -16,6 +16,8 @@ import {
     requestConfigUpdateDoc,             //配置列表-更新配置
 } from 'api'
 import './doc_style.css'
+import SyncBtn from "../../components/syncBtn/syncBtn.jsx"
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 export default class Doc extends Component {
@@ -69,8 +71,6 @@ export default class Doc extends Component {
         let that = this;
         return (
             <div>
-
-
                 <Tooltip title='产品线' placement="left" color={'purple'}>
                     <Menu onClick={(item) => that.onMenuClick(item.key)} selectedKeys={[curr_select_product_line_code]} mode="horizontal">
                         {
@@ -106,6 +106,8 @@ export default class Doc extends Component {
                         <Tooltip title='新增数据' placement="top"  >
                             <Button onClick={() => this.onItemShowModalClick()} type="primary" style={{ 'marginLeft': '10px' }} >新增</Button>
                         </Tooltip>
+
+                        <SyncBtn type={1} name={'同步缓存'} />
                     </div>
                 }>
                 </Alert>
@@ -459,7 +461,6 @@ export default class Doc extends Component {
             that.requestUpdateData(item);
         }
     }
-
     //弹出框OK被点击
     onModalOkClick() {
         let that = this;

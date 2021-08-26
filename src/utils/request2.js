@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2017-09-01 10:13:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-25 15:14:54
+ * @LastEditTime: 2021-08-26 10:53:29
  * @Description: 
  *      成功：  then()中解决问题
  *              集合类型返回     {data, pages} 
@@ -33,7 +33,7 @@ request.interceptors.request.use(config => {
     //Get
     if (method === 'get') {
         showConsole(`---> 请求 接口参数:`);
-        showConsole.apply(`${config.params ? JSON.stringify(config.params) : '{}'}`);
+        showConsole(`${config.params ? JSON.stringify(config.params) : '{}'}`);
     }
     //Post
     else if (method === 'post') {
@@ -64,7 +64,7 @@ request.interceptors.response.use(response => {
 
     showConsole(`<<<< 获取 接口地址：${config.url.replace(process.env.BASE_API, '')}`);
     showConsole(`<--- 获取 接口类型：[${config.method}]`);
-    showConsole(`<--- 获取 返回状态：${status} 接口状态${err_code}`);
+    showConsole(`<--- 获取 返回状态：${status} 接口状态：${err_code}`);
     if (code === 401 || code === 403) {
         // token 没传或过期 弹出全局提醒
         message.error(data.msg, 2, () => {
@@ -95,7 +95,21 @@ request.interceptors.response.use(response => {
         }
         //错误的返回？ 空数据？
         else {
-            result.data = data;
+            //比如同步数据接口 仅返回{errCode : 0}
+            if (err_code === 0) {
+                //如果存在页码 返回的数据规范为空集合类型
+                if (data.currentPage || data.pageSize) {
+                    data.data = [];
+                } else {
+                    data.data = {};
+                }
+
+                result.data = data;
+            }
+            //出错了
+            else {
+                return onFailCallback(status, err_code, '数据不存在');
+            }
         }
 
         showConsole(`<--- 获取 返回数据：`);

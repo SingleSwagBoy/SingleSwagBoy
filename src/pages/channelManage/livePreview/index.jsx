@@ -66,6 +66,11 @@ export default class AddressNews extends Component {
                     key: "date",
                 },
                 {
+                    title: "节目id",
+                    dataIndex: "programId",
+                    key: "programId",
+                },
+                {
                     title: "开始时间",
                     dataIndex: "startTime",
                     key: "startTime",

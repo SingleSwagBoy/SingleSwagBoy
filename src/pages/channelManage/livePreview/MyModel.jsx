@@ -59,14 +59,9 @@ export default class AddressNews extends Component {
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}
                         >
-                            <Form.Item
-                                label="节目信息"
-                                name="name"
-                                rules={[{ required: true, message: '请选择节目信息' }]}
-                            // style={{ display: 'inline-flex', width: 'calc(50% - 8px)',}}
-                            >
+                            <Form.Item label="节目信息" name="name" rules={[{ required: true, message: '请输入节目信息' }]}>
                                 <Select
-                                    placeholder="请选择节目信息"
+                                    placeholder="请输入节目信息 "
                                     allowClear
                                     {...this.state.selectProps}
                                     onSearch={(val) => {
@@ -236,6 +231,8 @@ export default class AddressNews extends Component {
         let params = {
             ...val,
             channelCode: arr ? arr.channel_id : "",
+            programId: arr ? arr.program_id : "",
+
             startTime: arr ? arr.start_time * 1000 : "",
             endTime: arr ? arr.end_time * 1000 : "",
             name: getName.length > 0 ? getName[0].label : ""

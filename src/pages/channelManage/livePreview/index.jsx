@@ -271,11 +271,7 @@ export default class AddressNews extends Component {
                                     onCheckAddress={this.onCheckAddress.bind(this)}
                                 />
                             </Form.Item>
-                            <Form.Item
-                                label="白名单"
-                                name="ip"
-                                rules={[{ required: true, message: '请输入ip' }]}
-                            >
+                            <Form.Item label="白名单" name="ip">
                                 <Input.TextArea />
                             </Form.Item>
                             <Form.Item {...this.state.tailLayout}>

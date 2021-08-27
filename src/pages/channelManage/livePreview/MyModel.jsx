@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
 import { getProgramsList, updateLivePreview, addLivePreview } from 'api'
-import { Button, message, Modal, Form, Input, Select } from 'antd'
+import { Button, message, Modal, Form, Input, Select, Tooltip } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
 import util from 'utils'
@@ -87,9 +87,13 @@ export default class AddressNews extends Component {
                             <Form.Item label="节目名" name="showTitle" rules={[{ required: true, message: '请输入节目名' }]} >
                                 <Input />
                             </Form.Item>
-                            <Form.Item label="节目详情" name="showDetail" rules={[{ required: true, message: '请输入节目详情' }]} >
-                                <Input />
-                            </Form.Item>
+                            <Tooltip title='节目预约入口' placement="top">
+                                <Form.Item label="节目详情" name="showDetail" rules={[{ required: true, message: '请输入节目详情' }]} >
+                                    <Input />
+                                </Form.Item>
+                            </Tooltip>
+
+
                             <Form.Item label="头图地址" required={true} >
                                 <Form.Item name="picUrl" style={{ display: 'inline-flex', width: 'calc(70% - 8px)', }} ules={[{ required: true, message: '请上传头图地址' }]} >
 
@@ -133,11 +137,12 @@ export default class AddressNews extends Component {
                             >
                                 <Input />
                             </Form.Item>
-                            <Form.Item label="节目描述" name="showDescrip"
-                            // style={{ display: 'inline-flex', width: 'calc(50% - 8px)',}}
-                            >
-                                <Input.TextArea />
-                            </Form.Item>
+                            <Tooltip title='直播预告页面' placement="top">
+                                <Form.Item label="节目描述" name="showDescrip">
+                                    <Input.TextArea />
+                                </Form.Item>
+                            </Tooltip>
+
                             <Form.Item {...this.state.tailLayout}>
                                 <Button htmlType="submit" type="primary" >
                                     提交

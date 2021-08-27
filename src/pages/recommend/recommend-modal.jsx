@@ -39,9 +39,9 @@ export default class recommendModal extends Component {
     //外部请求更新页面数据
     refreshFromData(data) {
         let that = this;
-        if (!this.formRef || !this.formRef.current) {
+        if (!that.formRef || !that.formRef.current) {
             let interval = setInterval(() => {
-                if (!this.formRef || !this.formRef.current) {
+                if (!that.formRef || !that.formRef.current) {
                 } else {
                     that.renderPageWhenPageChange(data);
                     clearInterval(interval);

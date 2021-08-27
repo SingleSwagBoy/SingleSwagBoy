@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2017-09-01 10:13:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-26 10:53:29
+ * @LastEditTime: 2021-08-26 11:55:48
  * @Description: 
  *      成功：  then()中解决问题
  *              集合类型返回     {data, pages} 
@@ -104,7 +104,7 @@ request.interceptors.response.use(response => {
                     data.data = {};
                 }
 
-                result.data = data;
+                result.data = data.data;
             }
             //出错了
             else {

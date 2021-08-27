@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-26 21:04:29
+ * @LastEditTime: 2021-08-27 11:13:33
  */
 import React, { Component } from 'react';
 import { Menu, Button, Table, Switch, Input, Upload, Image, message, Select, Alert, Tooltip, Form, Radio } from 'antd';
@@ -32,9 +32,9 @@ export default class WxReply extends Component {
                 { index: "1", code: "keywords", name: '关键字回复' },
                 { index: "2", code: "messageDefault", name: '收到消息回复' },
                 { index: "3", code: "addFriend", name: '被关注回复' },
-                { index: "4", code: "scanSubscribe", name: '扫码关注回复' },
-                { index: "5", code: "scan", name: '已登陆扫码回复' },
-                { index: "6", code: "other", name: '其他扫码回复' },
+                { index: "4", code: "scanSubscribe", name: '首次扫码关注回复' },
+                { index: "5", code: "scan", name: '已关注扫码回复' },
+                { index: "6", code: "other", name: '自定义二维码回复' },
             ],
             dict_rule_type: [
                 { key: 1, value: '全匹配' },
@@ -620,8 +620,6 @@ export default class WxReply extends Component {
 
         console.log('click!!!');
         console.log(reply_box);
-
-
     }
 
 

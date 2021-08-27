@@ -168,12 +168,13 @@ export default class AddressNews extends Component {
         }
     }
     submitForm(val) {
+        // console.log(this.state.fatherData)
         if (this.state.fatherData) {
             // this.updateLivePreview(val)
-            this.requenstSubmitCreateUpdate(true, val);
+            this.requenstSubmitCreateUpdate(false, val);
         } else {
             // this.addLivePreview(val)
-            this.requenstSubmitCreateUpdate(false, val);
+            this.requenstSubmitCreateUpdate(true, val);
         }
     }
     addLivePreview(val) {

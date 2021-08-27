@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2017-09-01 10:13:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-26 11:55:48
+ * @LastEditTime: 2021-08-27 18:16:09
  * @Description: 
  *      成功：  then()中解决问题
  *              集合类型返回     {data, pages} 
@@ -14,6 +14,8 @@
 import axios from 'axios'
 import { message } from 'antd'
 import { createHashHistory } from 'history'
+import Loading from '../components/loading/loading.jsx';
+
 let history = createHashHistory()
 let isTestMode = true;
 
@@ -29,6 +31,16 @@ request.interceptors.request.use(config => {
     let method = config.method;
     showConsole(`>>>> 请求 接口地址:${url}`);
     showConsole(`---> 请求 接口类型:[${method}]`);
+
+    if (url) {
+        //数据同步 缓存清理的接口 不显示loading框
+        let check = url.indexOf('/mms/sync/') > -1;
+        if (!check) {
+            Loading.showLoading();
+        }
+    }
+
+
 
     //Get
     if (method === 'get') {
@@ -51,6 +63,7 @@ request.interceptors.request.use(config => {
     return config;
 }, function (error) {
     // hide();
+    Loading.hideLoading();
     return Promise.reject(error);
 });
 // response拦截器
@@ -72,6 +85,7 @@ request.interceptors.response.use(response => {
             history.push('/login')
             history.go(0)
         })
+        Loading.hideLoading();
         return;
     }
     //请求成功
@@ -115,6 +129,7 @@ request.interceptors.response.use(response => {
         showConsole(`<--- 获取 返回数据：`);
         showConsole(result)
         showConsole(`----------------------------`);
+        Loading.hideLoading();
         return result;
     }
     return onFailCallback(status, err_code, data.msg);
@@ -130,6 +145,7 @@ function onFailCallback(statu_code, error_code, desc) {
     };
 
     message.error(desc);
+    Loading.hideLoading();
     return Promise.reject(fail);
 }
 
@@ -138,6 +154,7 @@ function onFailCallback(statu_code, error_code, desc) {
 function showConsole(desc) {
     if (isTestMode) console.log(desc);
 }
+
 
 
 export default request

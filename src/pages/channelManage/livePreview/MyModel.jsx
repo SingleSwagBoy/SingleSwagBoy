@@ -211,9 +211,10 @@ export default class AddressNews extends Component {
             ...this.state.fatherData,
             ...val,
             channelCode: arr ? arr.channel_id : "",
+            programId: arr ? arr.program_id : "",
             startTime: arr ? arr.start_time * 1000 : "",
             endTime: arr ? arr.end_time * 1000 : "",
-            name: getName.length > 0 ? getName[0].label : ""
+            name: getName.length > 0 ? getName[0].label : "",
         }
         console.log(params)
         updateLivePreview(params).then(res => {

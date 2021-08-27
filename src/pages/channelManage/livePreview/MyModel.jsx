@@ -175,11 +175,9 @@ export default class AddressNews extends Component {
     submitForm(val) {
         // console.log(this.state.fatherData)
         if (this.state.fatherData) {
-            // this.updateLivePreview(val)
-            this.requenstSubmitCreateUpdate(false, val);
+            this.updateLivePreview(val)
         } else {
-            // this.addLivePreview(val)
-            this.requenstSubmitCreateUpdate(true, val);
+            this.addLivePreview(val)
         }
     }
     addLivePreview(val) {
@@ -228,34 +226,7 @@ export default class AddressNews extends Component {
             }
         })
     }
-    //申请发起创建 or 更新数据
-    requenstSubmitCreateUpdate(is_create, val) {
-        let that = this;
-        let arr = that.state.defaultProgram[val.name]
-        let getName = []
-        getName = that.state.programGrounp.filter(item => item.value == val.name)
-        let params = {
-            ...val,
-            channelCode: arr ? arr.channel_id : "",
-            programId: arr ? arr.program_id : "",
-
-            startTime: arr ? arr.start_time * 1000 : "",
-            endTime: arr ? arr.end_time * 1000 : "",
-            name: getName.length > 0 ? getName[0].label : ""
-        };
-
-        (is_create ? addLivePreview(params) : updateLivePreview(params))
-            .then(res => {
-                if (res.data.errCode === 0) {
-                    message.success(is_create ? "新增成功" : "更新成功")
-                    that.props.closeModel()
-                    that.props.getLivePreview()
-                } else {
-                    message.error(is_create ? "新增失败" : "更新失败")
-                }
-            })
-
-    }
+  
 
 
     getUploadFileUrl(type, url) {

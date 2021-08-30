@@ -1,0 +1,23 @@
+.main {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 10px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+.main>.img {
+    width: 40px;
+    height: 40px;
+}
+
+.main>.desc {
+    margin-top: 10px;
+    font-size: 14px;
+}

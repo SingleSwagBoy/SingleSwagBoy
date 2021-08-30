@@ -259,6 +259,30 @@ export const syncCacheTvTry = (params) => { //数据同步推送尝鲜版
     return request.post(`${baseUrl}/mms/channel/tvTrying/syncCache`, params)
 };
 
+// 频道专题
+export const Getchannels = (params) => { // 获取频道节目
+    return request.post(`${baseUrl}/mms/channel/programCover/channels`, params)
+};
+export const ChannelTopic = (params) => { // 获取专题列表
+    return request.get(`${baseUrl}/mms/channel/topic`, {params})
+};
+export const updateChannelTopic = params => {  // 修改专题列表
+    return request.put(`${baseUrl}/mms/channel/topic`, params) 
+}
+export const addChannelTopic = params => { // 新增专题列表
+    return request.post(`${baseUrl}/mms/channel/topic`, params) 
+}
+export const deleteChannelTopic = params => {   // 删除专题列表
+    return request.delete(`${baseUrl}/mms/channel/topic`, { params: params }) 
+}
+export const listProgramByChannelId = params => {   // 获取专题详情
+    return request.get(`${baseUrl}/mms/channel/programs/listByChannelId`, { params: params }) 
+}
+export const syncChannel = params => { 
+    return request.get(`${baseUrl}/mms/sync/channel`, { params: params }); 
+};
+
+
 //微信公众号管理
 export const getMsg = (params) => { //客服消息
     return request.post(`${baseUrl}/mms/wx/msg/task/get`, params)
@@ -422,7 +446,7 @@ export const requestConfigUpdateDoc = (layer, params) => { return request2.post(
 export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); }                   //获取微信回复
 export const requestWxPublicTypes = (params) => { return request2.post(`${baseUrl}/mms/wx/public/get`, params); }           //获取回复公众号的类型
 
-//========== 数据同步|数据缓存 ==========
+//========== 数据同步|数据缓存 ========== 
 export const syncOther = (params) => { return request2.get(`${baseUrl}/mms/sync/other`, { params: params }); };                                                             //其他缓存 其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)
 export const syncLiveCarousel = (params) => { return request2.get(`${baseUrl}/mms/sync/liveCarousel`, { params: params }); };                                               //直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)
 export const syncSyncConfig = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config`, { params: params }); };                                          //查找合集短视频 /mms/config/common/syn_config?key=

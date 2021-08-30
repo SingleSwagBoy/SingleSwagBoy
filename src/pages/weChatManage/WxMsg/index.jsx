@@ -228,7 +228,7 @@ export default class AddressNews extends Component {
     render() {
         const { addressList, listType } = this.state;
         return (
-            <div className="address_page">
+            <div className="kefu_page">
                 <Card title={
                     <Breadcrumb>
                         <Breadcrumb.Item>客服消息</Breadcrumb.Item>

@@ -1,0 +1,164 @@
+.user-tags-wrapper {
+    background: #FFFFFF;
+    padding: 15px;
+}
+
+.reply-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    position: relative;
+}
+
+.reply-wrapper>.tab-box {
+    /* 消息切换框按钮盒子 */
+    width: 130px;
+    position: absolute;
+}
+
+.reply-wrapper>.reply-box {
+    /* 消息内容盒子 */
+    width: 60%;
+    left: 125px;
+    position: absolute;
+}
+
+.reply-wrapper>.phone-wrapper {
+    /* 手机展示盒子 */
+    position: absolute;
+    width: 220px;
+    height: 350px;
+    background: #FFFFFF;
+    /* border: 1px #FF0000 solid; */
+    border: 1px solid rgba(253, 32, 45, 0.2);
+    border-radius: 12px;
+    margin-left: 10px;
+    right: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.tab-box>.item, .tab-box>.item-create, .tab-box>.item-select {
+    width: 120px;
+    height: 40px;
+    background: #FAFAFA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    margin-bottom: 5px;
+}
+
+.tab-box>.item-create {
+    border: 1px #FF0000 dashed;
+}
+
+.tab-box>.item-select {
+    color: #FFFFFF;
+    background: #F2B724;
+}
+
+.reply-box>.item-box {
+    min-height: 300px;
+    padding: 10px 15px;
+    background: #FFFFFF;
+}
+
+.reply-box>.btn-box {
+    /* 保存按钮 */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
+}
+
+/* ========================== 手机 ========================== */
+
+.phone-wrapper>.phone-topic {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 3px 0;
+}
+
+.phone-wrapper>.phone-box {
+    display: flex;
+    flex-direction: row;
+    font-size: 8px;
+    margin: 30px 5px;
+}
+
+.phone-box>.head-img {
+    width: 35px;
+    height: 35px;
+    border-radius: 3px;
+    border: 1px #F2B724 solid;
+    background: #584232;
+    color: #FAFAFA;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.phone-box>.phone-item-box {
+    width: 160px;
+    margin-left: 5px;
+    background: #FAFAFA;
+    border: 1px solid rgba(253, 32, 45, 0.2);
+    padding: 3px 5px;
+}
+
+.phone-item-box>.title {
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.phone-item-box>.description {
+    font-size: 9px;
+}
+
+.phone-item-box>.phone-content {
+    font-size: 8px;
+}
+
+.phone-item-box>.phone-url {
+    font-size: 6px;
+}
+
+.phone-item-box>.phone-image {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ====================================滚动条样式==================================== */
+
+.phone-wrapper::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 3px;
+    /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+
+.phone-wrapper::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #535353;
+}
+
+.phone-wrapper::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background: #ededed;
+    margin: 10px 0;
+}

@@ -187,6 +187,7 @@ export default class AddressNews extends Component {
         let params = {
             ...val,
             channelCode: arr ? arr.channel_id : "",
+            programId: arr ? arr.program_id : "",
             startTime: arr ? arr.start_time * 1000 : "",
             endTime: arr ? arr.end_time * 1000 : "",
             name: getName.length > 0 ? getName[0].label : ""
@@ -227,7 +228,7 @@ export default class AddressNews extends Component {
             }
         })
     }
-  
+
 
 
     getUploadFileUrl(type, url) {

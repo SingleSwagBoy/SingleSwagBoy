@@ -36,6 +36,7 @@ export default class AddressNews extends Component {
             visible: false,
             entranceState: false,//入口配置弹窗的状态
             defaultAddress: [],
+            last_item_edit_id: '',  //上一个被编辑的id
             columns: [
                 {
                     title: "ID",
@@ -121,7 +122,7 @@ export default class AddressNews extends Component {
                             row.is_edit_sort = false;
                         }
                         return (
-                            is_edit ?
+                            is_edit && this.state.last_item_edit_id === row.id ?
                                 <InputNumber min={0} max={1000} defaultValue={rowValue} onBlur={(e) => {
                                     let that = this;
                                     let target = e.target;
@@ -150,7 +151,12 @@ export default class AddressNews extends Component {
                                 <a onClick={() => {
                                     let that = this;
                                     row.is_edit_sort = true;
-                                    that.forceUpdate();
+                                    that.setState({
+                                        last_item_edit_id: row.id,
+                                    }, () => {
+                                        that.forceUpdate();
+                                    })
+
                                 }}>{rowValue}</a>
                         )
                     }

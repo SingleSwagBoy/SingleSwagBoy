@@ -43,16 +43,25 @@ export default class AddressNews extends Component {
                 {
                     title: "操作",
                     key: "action",
-                    width: 200,
+                    width: 500,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
                                 {
-                                    <div style={{color:"#1890ff",cursor:"pointer"}} onClick={() => {
-                                        window.open(`https://www.douyin.com/search/${row.title}`)
-                                    }}>
-                                        搜索
+                                    <div style={{display:"flex",alignItems:"center"}}>
+                                        <div style={{ color: "#1890ff", cursor: "pointer",marginRight:"20px" }} onClick={() => {
+                                            window.open(`https://www.douyin.com/search/${row.title}`)
+                                        }}>
+                                            抖音搜索
+                                        </div>
+                                        <div style={{ color: "#1890ff", cursor: "pointer" }} onClick={() => {
+                                            window.open(`https://s.weibo.com/weibo?q=${row.title}`)
+                                        }}>
+                                            微博搜索
+                                        </div>
                                     </div>
+
+
                                 }
                             </div>
                         )
@@ -74,13 +83,13 @@ export default class AddressNews extends Component {
                 }
                 >
                     <Tabs defaultActiveKey="0" tabPosition={"left"}
-                    onChange={(val)=>{
-                        console.log(val)
-                        this.setState({
-                            loading:true
-                        })
-                        this.getNews(this.state.addressList[val].split("-")[1])
-                    }}
+                        onChange={(val) => {
+                            console.log(val)
+                            this.setState({
+                                loading: true
+                            })
+                            this.getNews(this.state.addressList[val].split("-")[1])
+                        }}
                     >
                         {
                             addressList.map((r, i) => (
@@ -101,7 +110,7 @@ export default class AddressNews extends Component {
     }
     componentDidMount() {
         this.setState({
-            loading:true
+            loading: true
         })
         this.getNews(this.state.addressList[0].split("-")[1])
     }
@@ -114,13 +123,13 @@ export default class AddressNews extends Component {
             console.log(res)
             if (res.data.success) {
                 this.setState({
-                    lists:res.data.cities_hots[0].hots,
-                    loading:false
+                    lists: res.data.cities_hots[0].hots,
+                    loading: false
                 })
-            }else{
+            } else {
                 this.setState({
-                    lists:[],
-                    loading:false
+                    lists: [],
+                    loading: false
                 })
             }
         })

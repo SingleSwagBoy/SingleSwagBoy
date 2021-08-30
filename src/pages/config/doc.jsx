@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-26 11:02:24
+ * @LastEditTime: 2021-08-30 11:35:39
  */
 
 import React, { Component } from 'react';
@@ -62,7 +62,7 @@ export default class Doc extends Component {
                 is_show: false,
                 title: '新增',
             },
-            temp: true,
+            last_item_edit_id: '',   //上一个被选中的id
         }
     }
 
@@ -610,9 +610,16 @@ export default class Doc extends Component {
         let that = this;
         let is_edit = row[flag_key];
         let default_value = row[param_key];
+        let last_item_edit_id = that.state.last_item_edit_id;
 
         //编辑形态 失去焦点 更新数据
         if (is_edit) {
+            if (last_item_edit_id !== row.id) {
+                row[flag_key] = false;
+                that.forceUpdate();
+                return;
+            }
+
             return <Input defaultValue={default_value} onBlur={(e) => {
                 let new_value = e.target.value;
                 if (default_value === new_value) {
@@ -627,7 +634,14 @@ export default class Doc extends Component {
         }
         //按钮形态
         else {
-            return <a type='link' onClick={() => { row[flag_key] = true; that.forceUpdate(); }} >
+            return <a type='link' onClick={() => {
+                row[flag_key] = true;
+                that.setState({
+                    last_item_edit_id: row.id,
+                }, () => {
+                    that.forceUpdate();
+                })
+            }} >
                 {default_value}
             </a>
         }

@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
 import { getLivePreview, delLivePreview, setConfig, getConfig, updateLivePreview } from 'api'
-import { Card, Breadcrumb, Button, message, Table, Switch, Modal, Form, Input } from 'antd'
+import { Card, Breadcrumb, Button, message, Table, Switch, Modal, Form, Input, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
 import util from 'utils'
 import "./style.css"
 import MyModel from "./MyModel"
 import Address from "../../../components/address/index" //地域组件
+import SyncBtn from "../../../components/syncBtn/syncBtn.jsx"
+
 
 export default class AddressNews extends Component {
     formRef = React.createRef();
@@ -52,7 +54,6 @@ export default class AddressNews extends Component {
                     title: "预告频道",
                     dataIndex: "channelCode",
                     key: "channelCode",
-
                 },
                 {
                     title: "预告节目",
@@ -63,7 +64,11 @@ export default class AddressNews extends Component {
                     title: "预告日期",
                     dataIndex: "date",
                     key: "date",
-
+                },
+                {
+                    title: "节目id",
+                    dataIndex: "programId",
+                    key: "programId",
                 },
                 {
                     title: "开始时间",
@@ -96,9 +101,8 @@ export default class AddressNews extends Component {
                                     key={new Date().getTime()}
                                     defaultChecked={rowValue === 1 ? true : false}
                                     onChange={(val) => {
-                                        console.log(val)
-                                        if(val)row.state = 1
-                                        else row.state = 2
+                                        if (val) row.status = 1
+                                        else row.status = 2
                                         this.updateLivePreview(row)
                                     }}
                                 />
@@ -110,7 +114,46 @@ export default class AddressNews extends Component {
                     title: "排序",
                     dataIndex: "sortOrder",
                     key: "sortOrder",
+                    render: (rowValue, row, index) => {
+                        let is_edit = row.is_edit_sort;
+                        if (!is_edit) {
+                            is_edit = false;
+                            row.is_edit_sort = false;
+                        }
+                        return (
+                            is_edit ?
+                                <InputNumber min={0} max={1000} defaultValue={rowValue} onBlur={(e) => {
+                                    let that = this;
+                                    let target = e.target;
+                                    let max = parseInt(target.ariaValueMax);
+                                    let min = parseInt(target.ariaValueMin);
+                                    let now = parseInt(e.target.value);
 
+                                    //校验大小
+                                    if (now > max) now = max;
+                                    else if (now < min) now = min;
+
+                                    //更新数据
+                                    let last_sortOrder = row.sortOrder;
+                                    if (last_sortOrder == now) {
+                                        row.is_edit_sort = false;
+                                    } else {
+                                        row.sortOrder = now;
+                                        that.updateLivePreview(row);
+                                    }
+
+                                    row.is_edit_sort = false;
+                                    that.forceUpdate();
+
+                                }} />
+                                :
+                                <a onClick={() => {
+                                    let that = this;
+                                    row.is_edit_sort = true;
+                                    that.forceUpdate();
+                                }}>{rowValue}</a>
+                        )
+                    }
                 },
                 {
                     title: "操作",
@@ -120,25 +163,15 @@ export default class AddressNews extends Component {
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                                <Button
-                                    size="small"
-                                    type="primary"
-                                    style={{ margin: "0 10px" }}
+                                <Button size="small" type="primary" style={{ margin: "0 10px" }}
                                     onClick={() => {
                                         this.setState({
                                             visible: true
                                         }, () => {
                                             this.refs.getMyModal.getFormData(row)
                                         })
-                                    }}
-                                >编辑</Button>
-                                <Button
-                                    size="small"
-                                    danger
-                                    onClick={() => {
-                                        this.delArt(row)
-                                    }}
-                                >删除</Button>
+                                    }}>编辑</Button>
+                                <Button size="small" danger onClick={() => { this.delArt(row) }} >删除</Button>
                             </div>
                         )
                     }
@@ -155,12 +188,10 @@ export default class AddressNews extends Component {
                     <Breadcrumb>
                         <Breadcrumb.Item>直播预告</Breadcrumb.Item>
                     </Breadcrumb>
-
                 }
                     extra={
                         <div>
-                            <Button type="primary"
-                                style={{ margin: "0 0 0 20px" }}
+                            <Button type="primary" style={{ margin: "0 0 0 20px" }}
                                 onClick={() => {
                                     this.setState({
                                         visible: true
@@ -169,8 +200,7 @@ export default class AddressNews extends Component {
                                     })
                                 }}
                             >新增</Button>
-                            <Button type="primary"
-                                style={{ margin: "0 0 0 20px" }}
+                            <Button type="primary" style={{ margin: "0 0 0 20px" }}
                                 onClick={() => {
                                     this.setState({
                                         entranceState: true
@@ -183,15 +213,14 @@ export default class AddressNews extends Component {
                                     })
                                 }}
                             >入口配置</Button>
+
+                            <SyncBtn type={2} name='直播轮播缓存' desc='直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)' />
+                            <SyncBtn type={3} name='入口配置缓存' desc='这是入口配置的缓存按钮' params={{ key: 'CHANNEL.PROGRAM_ADVANCE' }} />
+
                         </div>
                     }
                 >
-                    <Table
-                        dataSource={this.state.lists}
-                        scroll={{ x: 1300 }}
-                        rowKey={item => item.id}
-                        loading={this.state.loading}
-                        columns={this.state.columns}
+                    <Table dataSource={this.state.lists} scroll={{ x: 1300 }} rowKey={item => item.id} loading={this.state.loading} columns={this.state.columns}
                         pagination={{
                             current: this.state.page,
                             pageSize: this.state.pageSize,
@@ -201,11 +230,7 @@ export default class AddressNews extends Component {
                     />
 
                 </Card>
-                <MyModel visible={this.state.visible}
-                    getLivePreview={this.getLivePreview.bind(this)}
-                    closeModel={() => { this.setState({ visible: false }) }}
-                    ref="getMyModal"
-                />
+                <MyModel visible={this.state.visible} getLivePreview={this.getLivePreview.bind(this)} closeModel={() => { this.setState({ visible: false }) }} ref="getMyModal" />
                 <Modal
                     title="入口配置"
                     centered
@@ -243,7 +268,7 @@ export default class AddressNews extends Component {
                                 />
                             </Form.Item>
                             <Form.Item
-                                label="支付地域"
+                                label="支持地域"
                                 name="area"
                             // rules={[{ required: true, message: '请输入节目描述' }]}
                             >
@@ -251,11 +276,7 @@ export default class AddressNews extends Component {
                                     onCheckAddress={this.onCheckAddress.bind(this)}
                                 />
                             </Form.Item>
-                            <Form.Item
-                                label="白名单"
-                                name="ip"
-                                rules={[{ required: true, message: '请输入ip' }]}
-                            >
+                            <Form.Item label="白名单" name="ip">
                                 <Input.TextArea />
                             </Form.Item>
                             <Form.Item {...this.state.tailLayout}>
@@ -284,19 +305,26 @@ export default class AddressNews extends Component {
 
     }
     getLivePreview() {
+        let that = this;
         let params = {
             date: "",
             page: { currentPage: this.state.page, pageSize: this.state.pageSize },
             showTitle: ""
         }
-        getLivePreview(params).then(res => {
-            if (res.data.errCode === 0) {
-                this.setState({
-                    lists: res.data.data,
-                    total: res.data.totalCount
-                })
-            }
-        })
+        // let last_data = res.data.data;
+
+        that.setState({ lists: [] }, () => {
+            getLivePreview(params).then(res => {
+                if (res.data.errCode === 0) {
+                    this.setState({
+                        lists: res.data.data,
+                        total: res.data.totalCount
+                    })
+                }
+            })
+        });
+
+
     }
     delArt(item) {
         Modal.confirm({
@@ -369,11 +397,13 @@ export default class AddressNews extends Component {
         })
     }
     updateLivePreview(item) {
+        let that = this;
         let params = {
-           ...item
+            ...item
         }
         updateLivePreview(params).then(res => {
             if (res.data.errCode === 0) {
+                that.getLivePreview();
             } else {
                 message.error("更新失败")
             }

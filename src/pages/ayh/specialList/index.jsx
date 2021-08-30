@@ -280,12 +280,13 @@ export default class SportsProgram extends Component {
                 >
                  <Input placeholder="请填写专题名" />
                 </Form.Item>
-                {/* <Form.Item
-                  label="短视频ID"
-                  name="shortVideoId"
+                <Form.Item
+                  label="专题key"
+                  name="topicKey"
+                  rules={[{ required: true, message: '请填写专题key' }]}
                 >
-                 <Input placeholder="请填写短视频ID" />
-                </Form.Item> */}
+                 <Input placeholder="请填写专题key" />
+                </Form.Item>
                 <Form.Item {...this.state.tailLayout}>
                   <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
                     确定
@@ -389,10 +390,12 @@ export default class SportsProgram extends Component {
   addColumn(val){
     let params={
       name:val.name,
+      topicKey:val.topicKey,
       type:1,
       sort:100
     }
     addColumn(params).then(res=>{
+      console.log(res)
       if(res.data.errCode === 0){
         this.shortVideoSearch(this.state.searchWords)
         message.success("新增成功")

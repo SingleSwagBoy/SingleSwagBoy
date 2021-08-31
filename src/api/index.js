@@ -1,4 +1,5 @@
 import request from 'utils/request.js'
+import request2 from 'utils/request2.js'
 let baseUrl = ""
 console.log(window.location.host, "api")
 if (window.location.host.includes("localhost") || window.location.host.includes("test")) {
@@ -186,7 +187,7 @@ export const resetSort = (params) => { //拖动排序
     return request.post(`${baseUrl}/mms/tv/lifeService/resetSort`, params)
 };
 
-//投票 
+//投票
 export const getVotingList = (params) => { //获取投票列表
     return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/list`, params)
 };
@@ -231,7 +232,20 @@ export const getLockList = (params) => { //获取专项频道未设置的频道�
 export const unlockChannel = (params) => { //专项频道解锁配置
     return request.post(`${baseUrl}/mms/channel/group/exclusive/unlock`, params)
 };
-//推送节目单尝鲜版 
+//直播预告
+export const getLivePreview = (params) => { //获取直播预告列表
+    return request.post(`${baseUrl}/mms/channel/livePreview/get`, params)
+};
+export const updateLivePreview = (params) => { //更新直播预告列表
+    return request.post(`${baseUrl}/mms/channel/livePreview/update`, params)
+};
+export const delLivePreview = (params) => { //删除直播预告列表
+    return request.post(`${baseUrl}/mms/channel/livePreview/del`, params)
+};
+export const addLivePreview = (params) => { //新增直播预告列表
+    return request.post(`${baseUrl}/mms/channel/livePreview/add`, params)
+};
+//推送节目单尝鲜版
 export const getCheckboxTry = (params) => { //获取checkbox
     return request.get(`${baseUrl}/mms/channel/tvTrying/checkbox`, { params: params })
 };
@@ -269,6 +283,49 @@ export const syncChannel = params => {
 };
 
 
+//微信公众号管理
+export const getMsg = (params) => { //客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/task/get`, params)
+};
+export const getMsgLog = (params) => { //客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/log/get`, params)
+};
+export const getPublicList = (params) => { //获取公众号
+    return request.post(`${baseUrl}/mms/wx/public/get`, params)
+};
+export const getMsgTemplate = (params) => { //获取模版 图文信息/文字信息
+    return request.post(`${baseUrl}/mms/wx/msg/get`, params)
+};
+export const getTemplateImage = (params) => { //获取模版 图片
+    return request.post(`${baseUrl}/mms/wx/msg/material`, params)
+};
+export const getTemplateUser = (params) => { //获取预览用户
+    return request.get(`${baseUrl}/mms/wx/msg/user/get`, {params:params})
+};
+export const deleteMsg = (params) => { //删除客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/task/del`, params)
+};
+export const editMsg = (params) => { //编辑客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/task/update`, params)
+};
+export const sendMsg = (params) => { //发送客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/send`, params)
+};
+export const addMsg = (params) => { //新增客服消息
+    return request.post(`${baseUrl}/mms/wx/msg/task/add`, params)
+};
+export const getMpList = (params) => { //获取小程序列表
+    return request.post(`${baseUrl}/mms/wx/msg/getMpList`, params)
+};
+export const addMaterial = (params) => { //新增素材
+    return request.post(`${baseUrl}/mms/wx/msg/addNews`, params)
+};
+export const addText = (params) => { //新增文本
+    return request.post(`${baseUrl}/mms/wx/msg/add`, params)
+};
+export const syncWxMaterial = (params) => { //同步新增素材
+    return request.post(`${baseUrl}/mms/wx/msg/syncWxMaterial`, params)
+};
 
 
 //========== 尝鲜版 ==========
@@ -364,3 +421,33 @@ export const requestDeliveryTypes = () => {
         resolve(params);
     });
 }
+
+//字典 状态
+export const requestDictStatus = () => {
+    return new Promise((resolve, reject) => {
+        let params = [
+            { key: 1, value: '有效' },
+            { key: 2, value: '无效' },
+        ];
+        resolve(params);
+    });
+}
+
+
+
+//========== 配置管理 ==========
+export const requestConfigAddDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}add`, params); }                       //配置列表-添加配置
+export const requestConfigDocList = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}get`, params); }                      //配置列表-配置列表
+export const requestConfigDeleteDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}del`, params); }                    //配置列表-删除配置
+export const requestConfigUpdateDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}update`, params); }                 //配置列表-更新配置
+
+
+//微信管理
+export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); }                   //获取微信回复
+export const requestWxPublicTypes = (params) => { return request2.post(`${baseUrl}/mms/wx/public/get`, params); }           //获取回复公众号的类型
+
+//========== 数据同步|数据缓存 ========== 
+export const syncOther = (params) => { return request2.get(`${baseUrl}/mms/sync/other`, { params: params }); };                                                             //其他缓存 其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)
+export const syncLiveCarousel = (params) => { return request2.get(`${baseUrl}/mms/sync/liveCarousel`, { params: params }); };                                               //直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)
+export const syncSyncConfig = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config`, { params: params }); };                                          //查找合集短视频 /mms/config/common/syn_config?key=
+

@@ -31,7 +31,7 @@ const LivePreview = lazy(()=>import('pages/channelManage/livePreview/index.jsx')
 const AddressNews = lazy(()=>import('pages/configManage/addressNews/index.jsx'))
 const ChannelSubject = lazy(()=>import('pages/channelManage/channelSubject/index.jsx'))
 const EditSubject = lazy(()=>import('pages/channelManage/editSubject/index.jsx'))
-// const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
+const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
 // const WxReply =  lazy(()=>import('pages/wechart/wxReply.jsx'));
 
 // const WxMsg = lazy(()=>import('pages/weChatManage/WxMsg/index.jsx'))
@@ -70,7 +70,7 @@ const adminRoutes = [
  
  
   //配置管理
-  // {path:'/mms/doc',component:ConfigDoc,name:'文案管理',icon:UnorderedListOutlined,code:"configManage"},
+  {path:'/mms/doc',component:ConfigDoc,name:'文案管理',icon:UnorderedListOutlined,code:"configManage"},
  
   //微信公众号管理
   // {path:'/mms/wxReply',component:WxReply,name:'自动回复',icon:UnorderedListOutlined,code:"WeChatManage"},

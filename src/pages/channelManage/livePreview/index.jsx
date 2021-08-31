@@ -22,6 +22,7 @@ export default class AddressNews extends Component {
             lists: [],
             config: "",
             loading: false,
+            searchWord:"",//搜索名称
             layout: {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 20 },
@@ -183,11 +184,33 @@ export default class AddressNews extends Component {
     render() {
         const { addressList, listType } = this.state;
         return (
-            <div className="address_page">
+            <div className="livePreview_page">
                 <Card title={
-                    <Breadcrumb>
-                        <Breadcrumb.Item>直播预告</Breadcrumb.Item>
-                    </Breadcrumb>
+                    <>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>直播预告</Breadcrumb.Item>
+                        </Breadcrumb>
+                        <div className="everyBody">
+                            <div>节目名称:</div>
+                            <Input.Search
+                            allowClear
+                                placeholder="请输入搜索的节目名称"
+                                onChange={(val) => {
+                                    // this.state.searchWord = val
+                                }}
+                                onSearch={(val) => {
+                                    this.state.searchWord = val
+                                    this.setState({
+                                        page: 1,
+                                        searchWord:val
+                                    }, () => {
+                                        this.getLivePreview()
+                                    })
+
+                                }}
+                            />
+                        </div>
+                    </>
                 }
                     extra={
                         <div>
@@ -309,7 +332,7 @@ export default class AddressNews extends Component {
         let params = {
             date: "",
             page: { currentPage: this.state.page, pageSize: this.state.pageSize },
-            showTitle: ""
+            showTitle: this.state.searchWord
         }
         // let last_data = res.data.data;
 

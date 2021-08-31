@@ -10,3 +10,9 @@
 .outClass{
     z-index: 9999;
 }
+.livePreview_page .everyBody{
+    width: 300px;
+    display: flex;
+    align-items: center;
+      
+}

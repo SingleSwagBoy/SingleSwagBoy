@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-25 11:56:55
+ * @LastEditTime: 2021-08-30 16:23:56
  */
 import {lazy} from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -32,7 +32,8 @@ const AddressNews = lazy(()=>import('pages/configManage/addressNews/index.jsx'))
 const ChannelSubject = lazy(()=>import('pages/channelManage/channelSubject/index.jsx'))
 const EditSubject = lazy(()=>import('pages/channelManage/editSubject/index.jsx'))
 const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
-const WxReply =  lazy(()=>import('pages/wechart/wxReply.jsx'));
+const WxReply =  lazy(()=>import('pages/wechart/wxReply.jsx'));  
+const wxPayTemplate =  lazy(()=>import('pages/wechart/wxPayTemplate.jsx'));
 
 const WxMsg = lazy(()=>import('pages/weChatManage/WxMsg/index.jsx'))
 // advertising management
@@ -75,6 +76,7 @@ const adminRoutes = [
  
   //微信公众号管理
   {path:'/mms/wxReply',component:WxReply,name:'自动回复',icon:UnorderedListOutlined,code:"WeChatManage"},
+  {path:'/mms/wxPayTemplate',component:wxPayTemplate,name:'支付模板消息',icon:UnorderedListOutlined,code:"WeChatManage"},
  
  
 

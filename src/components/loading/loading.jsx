@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-25 13:36:29
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-27 18:17:26
+ * @LastEditTime: 2021-09-01 17:15:54
  */
 
 
@@ -24,10 +24,16 @@ class Loading extends Component {
 
     }
     render() {
-        let { is_show, img_url } = this.state;
+        let that = this;
+        let { is_show, img_url } = that.state;
 
         return (
-            <Modal visible={is_show} footer={null} closable={false} centered  transitionName="" maskTransitionName="">
+            <Modal visible={is_show} footer={null} centered transitionName="" maskTransitionName=""
+                /**closable={false}**/ onCancel={() => {
+                    that.setState({
+                        is_show: false,
+                    })
+                }}>
                 <div className="main">
                     <img className='img' src={img_loading} alt />
                     <span className='desc'>加载中</span>
@@ -40,14 +46,11 @@ class Loading extends Component {
     showLoading() {
         let that = this;
         that.setState({ is_show: true })
-        console.log("show!!!!")
     }
 
     hideLoading() {
         let that = this;
         that.setState({ is_show: false })
-        console.log("hide!!!!")
-
     }
 
 }

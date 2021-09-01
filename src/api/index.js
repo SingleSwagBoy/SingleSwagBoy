@@ -220,7 +220,7 @@ export const voteSyncCache = (params) => { //同步数据
     return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/syncCache`, params)
 };
 export const requestVoteDuplicate = (params) => {   //轻互动 拷贝一行
-    return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/duplicate`, {params:params})
+    return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/duplicate`, { params: params })
 }
 
 // 频道组
@@ -265,22 +265,22 @@ export const Getchannels = (params) => { // 获取频道节目
     return request.post(`${baseUrl}/mms/channel/programCover/channels`, params)
 };
 export const ChannelTopic = (params) => { // 获取专题列表
-    return request.get(`${baseUrl}/mms/channel/topic`, {params})
+    return request.get(`${baseUrl}/mms/channel/topic`, { params })
 };
 export const updateChannelTopic = params => {  // 修改专题列表
-    return request.put(`${baseUrl}/mms/channel/topic`, params) 
+    return request.put(`${baseUrl}/mms/channel/topic`, params)
 }
 export const addChannelTopic = params => { // 新增专题列表
-    return request.post(`${baseUrl}/mms/channel/topic`, params) 
+    return request.post(`${baseUrl}/mms/channel/topic`, params)
 }
 export const deleteChannelTopic = params => {   // 删除专题列表
-    return request.delete(`${baseUrl}/mms/channel/topic`, { params: params }) 
+    return request.delete(`${baseUrl}/mms/channel/topic`, { params: params })
 }
 export const listProgramByChannelId = params => {   // 获取专题详情
-    return request.get(`${baseUrl}/mms/channel/programs/listByChannelId`, { params: params }) 
+    return request.get(`${baseUrl}/mms/channel/programs/listByChannelId`, { params: params })
 }
-export const syncChannel = params => { 
-    return request.get(`${baseUrl}/mms/sync/channel`, { params: params }); 
+export const syncChannel = params => {
+    return request.get(`${baseUrl}/mms/sync/channel`, { params: params });
 };
 
 
@@ -301,7 +301,7 @@ export const getTemplateImage = (params) => { //获取模版 图片
     return request.post(`${baseUrl}/mms/wx/msg/material`, params)
 };
 export const getTemplateUser = (params) => { //获取预览用户
-    return request.get(`${baseUrl}/mms/wx/msg/user/get`, {params:params})
+    return request.get(`${baseUrl}/mms/wx/msg/user/get`, { params: params })
 };
 export const deleteMsg = (params) => { //删除客服消息
     return request.post(`${baseUrl}/mms/wx/msg/task/del`, params)
@@ -415,7 +415,7 @@ export const requestGoodLookTypes = () => {
 export const requestDeliveryTypes = () => {
     return new Promise((resolve, reject) => {
         let params = [
-            { key: 0, value: '不选择' },
+            // { key: 0, value: '不选择' },
             { key: 1, value: '定向' },
             { key: 2, value: '非定向' },
         ];
@@ -444,8 +444,12 @@ export const requestConfigUpdateDoc = (layer, params) => { return request2.post(
 
 
 //微信管理
-export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); }                   //获取微信回复
-export const requestWxPublicTypes = (params) => { return request2.post(`${baseUrl}/mms/wx/public/get`, params); }           //获取回复公众号的类型
+export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); }                           //获取微信回复
+export const requestWxReplyTypes = (params) => { return request2.post(`${baseUrl}/mms/wx/public/get`, params); }                    //获取回复公众号的类型
+export const requestWxReplyUpdate = params => { return request2.post(`${baseUrl}/mms/wxReply/update`, params); };                   //编辑|更新
+export const requestWxReplyDelete = params => { return request2.post(`${baseUrl}/mms/wxReply/del`, params); };                      //删除
+export const requestWxReplyCreate = params => { return request2.post(`${baseUrl}/mms/wxReply/add`, params); };                      //添加
+
 
 //========== 数据同步|数据缓存 ========== 
 export const syncOther = (params) => { return request2.get(`${baseUrl}/mms/sync/other`, { params: params }); };                                                             //其他缓存 其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)

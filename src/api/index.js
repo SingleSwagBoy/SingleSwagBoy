@@ -451,3 +451,13 @@ export const syncOther = (params) => { return request2.get(`${baseUrl}/mms/sync/
 export const syncLiveCarousel = (params) => { return request2.get(`${baseUrl}/mms/sync/liveCarousel`, { params: params }); };                                               //直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)
 export const syncSyncConfig = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config`, { params: params }); };                                          //查找合集短视频 /mms/config/common/syn_config?key=
 
+//小程序配置
+export const getMiniProList = (params) => { //获取小程序配置列表
+    return request.post(`${baseUrl}/mms/wx/msg/getMpListV2`, params)
+};
+export const addMpConfig = (params) => { //增加小程序配置列表
+    return request.post(`${baseUrl}/mms/wx/msg/addMpConfig`, params)
+};
+export const delMpConfig = (params) => { //删除小程序配置列表
+    return request.post(`${baseUrl}/mms/wx/msg/delMpConfig?id=${params.id}`)
+};

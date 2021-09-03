@@ -22,7 +22,8 @@ export default class AddressNews extends Component {
             lists: [],
             config: "",
             loading: false,
-            searchWord:"",//搜索名称
+            searchWord: "",//搜索名称
+            searchDate:"",//搜索日期
             layout: {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 20 },
@@ -187,29 +188,46 @@ export default class AddressNews extends Component {
             <div className="livePreview_page">
                 <Card title={
                     <>
-                        <Breadcrumb>
+                        {/* <Breadcrumb>
                             <Breadcrumb.Item>直播预告</Breadcrumb.Item>
-                        </Breadcrumb>
-                        <div className="everyBody">
-                            <div>节目名称:</div>
-                            <Input.Search
-                            allowClear
-                                placeholder="请输入搜索的节目名称"
-                                onChange={(val) => {
-                                    // this.state.searchWord = val
-                                }}
-                                onSearch={(val) => {
-                                    this.state.searchWord = val
-                                    this.setState({
-                                        page: 1,
-                                        searchWord:val
-                                    }, () => {
-                                        this.getLivePreview()
-                                    })
+                        </Breadcrumb> */}
+                        <div style={{display:"flex"}}>
+                            <div className="everyBody">
+                                <div>节目名称:</div>
+                                <Input.Search
+                                    allowClear
+                                    placeholder="请输入搜索的节目名称"
+                                    onSearch={(val) => {
+                                        this.state.searchWord = val
+                                        this.setState({
+                                            page: 1,
+                                            searchWord: val
+                                        }, () => {
+                                            this.getLivePreview()
+                                        })
 
-                                }}
-                            />
+                                    }}
+                                />
+                            </div>
+                            <div className="everyBody" style={{marginLeft:"20px"}}>
+                                <div>预告日期:</div>
+                                <Input.Search
+                                    allowClear
+                                    placeholder="请输入预告日期"
+                                    onSearch={(val) => {
+                                        this.state.searchDate = val
+                                        this.setState({
+                                            page: 1,
+                                            searchDate: val
+                                        }, () => {
+                                            this.getLivePreview()
+                                        })
+
+                                    }}
+                                />
+                            </div>
                         </div>
+
                     </>
                 }
                     extra={
@@ -330,7 +348,7 @@ export default class AddressNews extends Component {
     getLivePreview() {
         let that = this;
         let params = {
-            date: "",
+            date: this.state.searchDate,
             page: { currentPage: this.state.page, pageSize: this.state.pageSize },
             showTitle: this.state.searchWord
         }

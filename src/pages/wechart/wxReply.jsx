@@ -3,10 +3,10 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-01 20:05:11
+ * @LastEditTime: 2021-09-03 11:01:36
  */
 import React, { Component } from 'react';
-import { Tabs, Menu, Button, Table, Switch, Input, Upload, Image, message, Select, Alert, Tooltip, Form, Radio, Modal } from 'antd';
+import { Menu, message, Tooltip, Modal } from 'antd';
 import {
     requestDictStatus,                  //字典 状态
     requestWxReply,                     //获取微信关键字回复
@@ -31,9 +31,9 @@ export default class WxReply extends Component {
                 { index: "1", code: "keywords", name: '关键字回复' },
                 { index: "6", code: "other", name: '自定义二维码回复' },
                 { index: "2", code: "messageDefault", name: '收到消息回复' },
-                { index: "3", code: "addFriend", name: '被关注回复' },
-                { index: "4", code: "scanSubscribe", name: '首次扫码关注回复' },
-                { index: "5", code: "scan", name: '已关注扫码回复' },
+                { index: "3", code: "addFriend", name: '搜索关注回复' },
+                { index: "4", code: "scanSubscribe", name: '第1次扫码关注回复' },
+                { index: "5", code: "scan", name: '第N次关注扫码回复' },
             ],
             dict_rule_type: [
                 { key: 1, value: '全匹配' },
@@ -45,6 +45,11 @@ export default class WxReply extends Component {
                 { key: 'image', value: '图片' },
                 { key: 'news', value: '图文' },
                 { key: 'mini', value: '小程序卡片' },   //用于前端 穿给后端的时候 用文本形式上传
+            ],
+            //关键字匹配规则
+            dict_rule_types: [
+                { key: 1, value: '全匹配' },
+                { key: 2, value: '半匹配' },
             ],
             dict_user_tags: [],                      //字典 用户标签
             dict_public_types: [],                  //字典 微信公众号回复类型
@@ -76,7 +81,7 @@ export default class WxReply extends Component {
 
     render() {
         let { table_box, menu_select_code, menu_list, request_box,
-            dict_public_types, dict_msg_type, dict_user_tags, } = this.state;
+            dict_public_types, dict_msg_type, dict_user_tags, dict_rule_types, } = this.state;
 
         return (
             <div>
@@ -108,7 +113,9 @@ export default class WxReply extends Component {
                 }
 
 
-                <WxReplyModal onRef={(val) => { this.setState({ wxReplyModlRef: val }) }} dict_msg_type={dict_msg_type} dict_user_tags={dict_user_tags} dict_public_types={dict_public_types} menu_type={menu_select_code} request_box={request_box}
+                <WxReplyModal onRef={(val) => { this.setState({ wxReplyModlRef: val }) }}
+                    dict_msg_type={dict_msg_type} dict_user_tags={dict_user_tags} dict_public_types={dict_public_types} dict_rule_types={dict_rule_types}
+                    menu_type={menu_select_code} request_box={request_box}
                     onSave={this.onWxReplySaveClick.bind(this)} onDelete={this.onWxReplyDeleteClick.bind(this)} />
 
             </div>

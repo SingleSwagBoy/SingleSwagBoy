@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2017-09-01 10:13:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-27 18:16:09
+ * @LastEditTime: 2021-09-03 10:48:24
  * @Description: 
  *      成功：  then()中解决问题
  *              集合类型返回     {data, pages} 
@@ -20,9 +20,8 @@ let history = createHashHistory()
 let isTestMode = true;
 
 let request = axios.create({
-    // baseURL: "",
     // baseURL: "http://test.cms.tvplus.club",
-    timeout: 10000,
+    timeout: 8000,
 })
 
 // request拦截器

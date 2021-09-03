@@ -2,18 +2,20 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-02 13:49:05
+ * @LastEditTime: 2021-09-03 12:39:11
  * @Description: 微信自动回复模块
  */
 
 
 import React, { Component } from 'react';
-import { Modal, Tabs, Divider, Button, Input, Upload, Image, message, Select, Switch, Alert, Tooltip, Form, Radio, Layout } from 'antd';
+import { Modal, Tabs, Divider, Button, Input, Tag, Image, message, Select, Switch, Alert, Tooltip, Form, Radio } from 'antd';
 import "./wxReplyModal.css";
 import ImageUpload from "@/components/ImageUpload/index" //图片组件
+import { PlusOutlined } from '@ant-design/icons';
+import WxReplyModalTags from "./wxReplyModalTags"
 
 let { TabPane } = Tabs;
-let { TextArea } = Input;
+let { TextArea, Search } = Input;
 let { Option } = Select;
 
 
@@ -25,16 +27,22 @@ export default class WxReplyModal extends Component {
 
         this.state = {
             base_width: 450,
-            is_edit_mode: false,    //编辑模式
-            datas: [],              //数据源
-            tags: [],               //标题 标签 分类
+            is_edit_mode: false,                //编辑模式
+            datas: [],                          //数据源
+            tags: [],                           //标题 标签 分类
 
-            item: {},               //当前数据源
-            infos: [],              //回复列表
-            wxCodes: [],            //在[自定义二维码回复]类型中展示 
-            tag_select_id: 0,       //标题标签选中id
-            reply_select_id: 0,     //回复消息选中id
+            item: {},                           //当前数据源
+            infos: [],                          //回复列表
+            wxCodes: [],                        //在[自定义二维码回复]类型中展示 
+            tag_select_id: 0,                   //标题标签选中id
+            reply_select_id: 0,                 //回复消息选中id
+            //最近获取到焦点的的输入框
+            last_select_input_box: {
+                key: '',
+                value: '',
+            },
 
+            wxReplyModlTagsRef: null,
         }
     }
     componentDidMount() {
@@ -44,9 +52,10 @@ export default class WxReplyModal extends Component {
     render() {
         let that = this;
         let { menu_type, } = that.props;
-        let { dict_msg_type, dict_public_types, dict_user_tags, } = that.props;
-        let { tags, item, base_width, infos, tag_select_id, reply_select_id } = that.state;
+        let { dict_msg_type, dict_public_types, dict_user_tags, dict_rule_types } = that.props;
+        let { tags, item, base_width, infos, tag_select_id, reply_select_id, last_select_input_box } = that.state;
         let targetReplyId = parseInt(reply_select_id) + 1;
+
         return (
             <div key='modal'>
                 <div>
@@ -59,7 +68,7 @@ export default class WxReplyModal extends Component {
                     }>
                     </Alert>
                     {/* 所有被选中的标签 */}
-                    <Tooltip title='当前自动回复消息相关联影响的标签' placement="top" color={'purple'} >
+                    {/* <Tooltip title='当前自动回复消息相关联影响的标签' placement="top" color={'purple'} >
                         <div className="tap-wrapper">
                             <Tabs type="editable-card" hideAdd activeKey={`${tag_select_id}`}
                                 onEdit={(targetKey, action) => that.onTabsCreateDeleteClick(targetKey, action)} onChange={(activeKey) => that.onTitleTagChangeClick(activeKey)}  >
@@ -68,7 +77,12 @@ export default class WxReplyModal extends Component {
                                 ))}
                             </Tabs>
                         </div>
-                    </Tooltip>
+                    </Tooltip> */}
+
+                    <WxReplyModalTags onRef={(val) => { this.setState({ wxReplyModlTagsRef: val }) }} tags={tags}
+                        tag_select_id={tag_select_id} onSelectIdChange={(tag_select_id) => that.onTitleTagChangeClick(tag_select_id)}
+                    />
+
                 </div>
                 {
                     item.is_empty &&
@@ -92,9 +106,36 @@ export default class WxReplyModal extends Component {
                                             <Form.Item label='分类名称' name='ruleName' >
                                                 <Input style={{ width: base_width }} placeholder='请输入分类名称' />
                                             </Form.Item>
-                                            <Form.Item label='关键字' name='keywords' >
-                                                <Input style={{ width: base_width }} placeholder='请输入关键字' />
+
+                                            <Form.Item label='回复公众号' name='wxCodes' >
+                                                <Select style={{ width: base_width }} mode="multiple" allowClear placeholder='请选择回复公众号' >
+                                                    {dict_public_types.map((item, index) => (
+                                                        <Option value={item.code}>{item.name}</Option>
+                                                    ))}
+                                                </Select>
                                             </Form.Item>
+
+                                            <Form.Item label='关键字匹配'>
+                                                <Form.Item name='ruleType' >
+                                                    <Select style={{ width: base_width }} placeholder="请选择匹配规则" >
+                                                        {dict_rule_types.map((item, index) => (
+                                                            <Option value={item.key} key={item.key}>{item.key}-{item.value}</Option>
+                                                        ))}
+                                                    </Select>
+                                                </Form.Item>
+
+                                                <Form.Item>
+                                                    {/* {that.renderKeywordsTags()} */}
+                                                </Form.Item>
+
+
+
+                                                <Form.Item name='keywords' >
+                                                    <Input style={{ width: base_width }} placeholder='请输入关键字' />
+                                                </Form.Item>
+                                            </Form.Item>
+
+
                                         </div>
                                     }
                                     {
@@ -113,6 +154,8 @@ export default class WxReplyModal extends Component {
                                                     ))}
                                                 </Select>
                                             </Form.Item>
+
+
                                         </div>
                                     }
                                     {
@@ -220,12 +263,21 @@ export default class WxReplyModal extends Component {
                                                     ))}
                                                 </Radio.Group>
                                             </Form.Item>
+
+                                            <Form.Item label='快捷功能'  >
+                                                <Tooltip title='针对部分输入框提供快捷输入联系人通配符的按钮，系统将自动将此参数转化为[用户姓名]' placement='top'>
+                                                    <Button onClick={() => that.onUserTargetClick()}>
+                                                        {last_select_input_box.key ? `添加#nickname# --- [${last_select_input_box.key}]` : '添加#nickname# --- [未选择]'}
+                                                    </Button>
+                                                </Tooltip>
+                                            </Form.Item>
+
                                             {
                                                 // 文字回复
                                                 that.replyFormRef.current.getFieldValue('msg_type') === 'text' &&
                                                 <div>
                                                     <Form.Item label='文字回复' name='content'>
-                                                        <TextArea style={{ width: base_width }} rows={5} placeholder='请输入文字回复' onBlur={() => that.onInputLoseFocus()} />
+                                                        <TextArea style={{ width: base_width }} rows={5} placeholder='请输入文字回复' onFocus={() => that.onInputGetFocus('文字回复', 'content')} onBlur={(view) => that.onInputLoseFocus(view)} />
                                                     </Form.Item>
                                                 </div>
                                             }
@@ -252,14 +304,14 @@ export default class WxReplyModal extends Component {
                                                 that.replyFormRef.current.getFieldValue('msg_type') === 'news' &&
                                                 <div>
                                                     <Form.Item label='标题' name='title'>
-                                                        <Input style={{ width: base_width }} placeholder='请输入标题' onBlur={() => that.onInputLoseFocus()} />
+                                                        <Input style={{ width: base_width }} placeholder='请输入标题' onFocus={() => that.onInputGetFocus('标题', 'title')} onBlur={() => that.onInputLoseFocus()} />
                                                     </Form.Item>
                                                     <Form.Item label='摘要' name='description'>
-                                                        <TextArea style={{ width: base_width }} rows={5} placeholder='请输入摘要' onBlur={() => that.onInputLoseFocus()} />
+                                                        <TextArea style={{ width: base_width }} rows={5} placeholder='请输入摘要' onFocus={() => that.onInputGetFocus('摘要', 'description')} onBlur={() => that.onInputLoseFocus()} />
                                                     </Form.Item>
-                                                    <Form.Item label='内容' name='content'>
+                                                    {/* <Form.Item label='内容' name='content'>
                                                         <TextArea style={{ width: base_width }} rows={5} placeholder='请输入内容' onBlur={() => that.onInputLoseFocus()} />
-                                                    </Form.Item>
+                                                    </Form.Item> */}
 
                                                     <Form.Item label='图片上传'>
                                                         <Form.Item >
@@ -282,7 +334,7 @@ export default class WxReplyModal extends Component {
                                                 that.replyFormRef.current.getFieldValue('msg_type') === 'mini' &&
                                                 <div>
                                                     <Form.Item label='卡片标题' name='title'>
-                                                        <Input style={{ width: base_width }} placeholder='请输入小程序标题' onBlur={() => that.onInputLoseFocus()} />
+                                                        <Input style={{ width: base_width }} placeholder='请输入小程序标题' onFocus={() => that.onInputGetFocus('卡片标题', 'title')} onBlur={() => that.onInputLoseFocus()} />
                                                     </Form.Item>
                                                     <Form.Item label='小程序appId' name='appid'>
                                                         <Input style={{ width: base_width }} placeholder='请填写小程序Appid' onBlur={() => that.onInputLoseFocus()} />
@@ -410,7 +462,11 @@ export default class WxReplyModal extends Component {
 
             //将info转为对象类型
             let info = item.info;
-            item.info = !info ? [] : JSON.parse(info);
+            try {
+                item.info = !info ? [] : JSON.parse(info);
+            } catch (e) {
+                item.info = [];
+            }
         }
         let is_edit_mode = that.state.is_edit_mode;
         let tag_select_id = 0;
@@ -428,6 +484,10 @@ export default class WxReplyModal extends Component {
             tag_select_id: tag_select_id,
             reply_select_id: reply_select_id,
             is_edit_mode: false,
+            last_select_input_box: {
+                key: '',
+                value: '',
+            }
         }, () => {
             that.renderFormData();
         })
@@ -458,6 +518,10 @@ export default class WxReplyModal extends Component {
         that.setState({
             datas: datas,
             infos: infos,
+            last_select_input_box: {
+                key: '',
+                value: '',
+            },
         }, () => {
             that.renderFormData();
         })
@@ -486,6 +550,47 @@ export default class WxReplyModal extends Component {
 
             //关键字回复
             if (menu_type === 'keywords') {
+
+                let wxCodes = [];
+                let tempWxCode = item.wxCode;
+                if (tempWxCode && tempWxCode.length > 0) {
+                    wxCodes = tempWxCode.split(',');
+                } else {
+                    wxCodes = [];
+                }
+                result_item.wxCodes = wxCodes;
+
+                // //===== 关键字数据转换 =====
+                // let keywords = JSON.parse(JSON.stringify(item.keywords));
+                // console.log('-------------------------------------A')
+                // console.log(keywords)
+                // console.log(keywords.constructor)
+
+                // //空数据转数组
+                // if (!keywords || keywords.length <= 0) {
+                //     result_item.keywords = [];
+
+                // }
+                // //字符串转为数组 格式化数据
+                // else if (keywords.constructor === String) {
+                //     console.log('---->keywords String ')
+                //     let values = keywords.split(',');
+                //     console.log(values)
+
+                //     keywords = [];
+
+                //     for (let i = 0, len = values.length; i < len; i++) {
+                //         let value = values[i];
+                //         keywords.push({
+                //             id: i,
+                //             value: value,
+                //             is_edit: false,
+                //         })
+                //     }
+                //     result_item.keywords = keywords;
+                // }
+                // // console.log('---->keywords')
+                // // console.log(keywords)
             }
             //更新[自定义二维码回复]类型对应的wxCode数据
             else if (menu_type === 'other') {
@@ -573,6 +678,60 @@ export default class WxReplyModal extends Component {
 
     }
 
+    //渲染Keywords标签列表
+    renderKeywordsTags() {
+        let that = this;
+        let titleFormRef = that.titleFormRef;
+
+        if (!titleFormRef || !titleFormRef.current) return;
+
+        let keywords = titleFormRef.current.getFieldValue('keywords');
+        if (!keywords || keywords.length <= 0) return;
+
+        let last_modify_input = null;
+        let last_select_id = '';
+
+
+        let views = (
+            <div>
+                {/* 标签列表 */}
+                {keywords && keywords.length > 0 && keywords.map((item, index) => {
+                    let is = last_select_id === index;
+
+
+                    if (last_select_id === index)
+                        return (
+                            <Input></Input>
+                        )
+                    else
+                        return (
+                            <Tag>
+                                <span onDoubleClick={e => {
+                                    // console.log('two click!!!')
+                                    // last_select_id = index;
+                                    // console.log(last_select_id, index);
+                                    // that.forceUpdate();
+                                }}>
+                                    {item}
+                                </span>
+
+                            </Tag>
+                        )
+
+
+
+                })}
+
+            </div>
+
+        )
+
+        keywords = keywords.join(',');
+        titleFormRef.current.setFieldsValue({ keywords: keywords });
+
+        return views;
+
+    }
 
     //创建和删除新回复按钮被点击
     onReplyItemClick(index, action) {
@@ -620,12 +779,6 @@ export default class WxReplyModal extends Component {
             })
         }
     }
-    //获取上传的图片路径
-    getUploadFileUrl(file) {
-        let that = this;
-        that.replyFormRef.current.setFieldsValue({ "pic_url": file });
-        that.onInputLoseFocus();
-    }
 
     //标题标签被点击
     onTitleTagChangeClick(index) {
@@ -635,6 +788,10 @@ export default class WxReplyModal extends Component {
         that.setState({
             tag_select_id: index,
             reply_select_id: 0,
+            last_select_input_box: {
+                key: '',
+                value: '',
+            }
         }, () => {
             that.renderFormData();
         })
@@ -679,6 +836,40 @@ export default class WxReplyModal extends Component {
 
     }
 
+    //获取上传的图片路径
+    getUploadFileUrl(file) {
+        let that = this;
+        that.replyFormRef.current.setFieldsValue({ "pic_url": file });
+
+        let infos = that.state.infos;
+        let reply_select_id = that.state.reply_select_id;
+
+        let last_info = infos[reply_select_id];
+        let curr_info = that.replyFormRef.current.getFieldsValue()
+        curr_info.pic_url = file;
+
+        let new_info = Object.assign({}, last_info, curr_info)
+        infos[reply_select_id] = new_info;
+        that.setState({
+            infos: infos
+        }, () => {
+            that.forceUpdate();
+        })
+    }
+    //输入框获取焦点
+    onInputGetFocus(key, value) {
+        let that = this;
+
+        that.setState({
+            last_select_input_box: {
+                key: key,
+                value: value,
+            },
+        }, () => {
+            that.forceUpdate();
+        })
+    }
+
     //输入框时区焦点监听
     onInputLoseFocus() {
         let that = this;
@@ -695,6 +886,25 @@ export default class WxReplyModal extends Component {
         }, () => {
             that.forceUpdate();
         })
+    }
+    //添加 #用户名# 按钮被点击 在对应参数后面添加 #name#
+    onUserTargetClick() {
+        let that = this;
+        let last_select_input_box = that.state.last_select_input_box;
+        let value = last_select_input_box.value;
+        if (!value) {
+            message.error('请先选择需要添加 #用户名称# 的输入框，获取焦点后再使用。')
+            return;
+        }
+
+        let curr_info = that.replyFormRef.current.getFieldsValue()
+        let last_value = curr_info[value];
+        if (!last_value) last_value = "";
+
+        let curr_value = last_value + '#nickname#'
+        curr_info[value] = curr_value;
+
+        that.replyFormRef.current.setFieldsValue(curr_info);
     }
 
     //用户标签选择监听，判断是否存在重复标签

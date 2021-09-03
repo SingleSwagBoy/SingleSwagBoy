@@ -1,0 +1,67 @@
+.custom-tag-wrapper {
+    width: 100%;
+}
+
+.custom-tag-box {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background: #FFFFFF;
+}
+
+.custom-tag-box-close {
+    height: 46px;
+    overflow: hidden;
+}
+
+.custom-tag-empty {
+    line-height: 46px;
+    min-width: 120px;
+    padding: 0 20px;
+}
+
+.custom-tag-pane {
+    line-height: 46px;
+    min-width: 120px;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
+.custom-tag-pane:hover {
+    color: #1890ff;
+}
+
+.custom-tag-pane-select {
+    color: #1890ff;
+    font-weight: bold;
+}
+
+/* =========扩展 */
+
+.custom-extend-box {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-extend-item {
+    line-height: 23px;
+    width: 100px;
+    padding: 5px 0;
+    margin-bottom: 15px;
+    background: #FFFFFF;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.custom-extend-item:hover {
+    background: rgba(255, 255, 255, 0.75);
+}

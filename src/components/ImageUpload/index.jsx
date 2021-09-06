@@ -13,7 +13,7 @@ class ImageUpload extends Component {
       loading:false,
       updateProps: {
         name:"file",
-        data:{wxCode:this.props.params}, //接口其他参数
+        // data:{wxCode:this.props.params}, //接口其他参数
         listType:"picture-card",
         className:"avatar-uploader",
         showUploadList:false,

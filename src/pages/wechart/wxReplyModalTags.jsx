@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Radio } from 'antd';
+import { Tag } from 'antd';
 
 import "./wxReplyModalTags.css";
 
@@ -21,24 +21,6 @@ export default class wxReplyModalTags extends Component {
         let that = this;
         let { is_open_tags } = that.state;
         let { tags, tag_select_id } = that.props;
-        // return (
-
-        //     <div className='custom-tag-wrapper'>
-        //         {
-        //             tags && tags.map((item, index) => {
-
-
-        //                 if (is_open_tags) {
-        //                     <div className='custom-tag-pane' onClick={() => that.onTagClick(index)}>
-        //                         {item.name}
-        //                     </div>
-        //                 }
-
-
-        //             })
-        //         }
-        //     </div>
-        // )
 
         let view = '';
         if (tags && tags.length > 0) {
@@ -47,10 +29,14 @@ export default class wxReplyModalTags extends Component {
                     <div className={`custom-tag-box ${!is_open_tags ? 'custom-tag-box-close' : ''}`}>
                         {
                             tags.map((item, index) => {
-                                return <div className={`custom-tag-pane ${tag_select_id === index ? 'custom-tag-pane-select' : ''}`}
-                                    onClick={() => that.onTagClick(index)}>
-                                    {item.name}
-                                </div>
+                                return (
+                                    <div className="custom-tag-item">
+                                        <Tag className="custom-tag-pane" color={tag_select_id === index ? 'volcano' : ''} closable
+                                            onClick={() => that.onTagClick(index)} onClose={(e) => { that.onTagDeleteClick(e, index) }}>
+                                            {item.name}
+                                        </Tag>
+                                    </div>
+                                )
                             })
                         }
                     </div>
@@ -59,7 +45,7 @@ export default class wxReplyModalTags extends Component {
                             {is_open_tags ? '收起列表' : '展开列表'}
                         </div>
                     </div>
-                </div>
+                </div >
             )
         } else {
             view = (
@@ -81,6 +67,13 @@ export default class wxReplyModalTags extends Component {
     onTagClick(index) {
         let that = this;
         that.props.onSelectIdChange(index);
+    }
+
+    //删除Tag按钮被点击
+    onTagDeleteClick(e, index) {
+        e.preventDefault();
+        let that = this;
+        that.props.onTabsDeleteClick(index);
     }
 
     //展开关闭按钮被点击

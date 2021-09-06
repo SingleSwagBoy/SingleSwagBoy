@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-03 11:01:36
+ * @LastEditTime: 2021-09-06 14:15:02
  */
 import React, { Component } from 'react';
 import { Menu, message, Tooltip, Modal } from 'antd';
@@ -75,7 +75,6 @@ export default class WxReply extends Component {
                 select_item: null,
             },
         }
-
     }
 
 
@@ -131,7 +130,16 @@ export default class WxReply extends Component {
 
         //用户标签
         getUserTag().then(res => {
-            that.setState({ dict_user_tags: res.data.data });
+            let datas = res.data.data;
+            let tags = [];
+            tags.push({ id: -1, code: 'default', name: '默认', });
+
+            for (let i = 0, len = datas.length; i < len; i++) {
+                let item = datas[i];
+                tags.push(item);
+            }
+
+            that.setState({ dict_user_tags: tags });
             //状态字典
             requestDictStatus().then(res => {
                 that.setState({ dict_status: res, })
@@ -189,13 +197,8 @@ export default class WxReply extends Component {
         let that = this;
         that.setState({ menu_select_code: code, });
 
-        let table_box = that.state.table_box;
-        let table_title = [];
         let request_box = {};
         let dict_public_types = that.state.dict_public_types;
-        let dict_reply_obj_type = that.state.dict_reply_obj_type;
-        let dict_rule_type = that.state.dict_rule_type;
-        let dict_msg_type = that.state.dict_msg_type;
 
         //关键字回复 || 自定义二维码回复
         if (code === 'keywords' || code === 'other') {
@@ -229,141 +232,11 @@ export default class WxReply extends Component {
             }
         }
 
-
-        // table_title.push({ title: 'id', dataIndex: 'id', key: 'id', width: 50, });
-        // table_title.push({ title: '分类', dataIndex: 'name', key: 'name', width: 100, });
-
-        // // table_title.push({
-        // //     title: '回复类型', dataIndex: 'msgType', key: 'msgType', width: 140,
-        // //     render: (rowValue, row, index) => {
-        // //         return (
-        // //             <Select defaultValue={row.msgType} style={{ width: '100%' }} onChange={(e) => {
-        // //                 row.msgType = e;
-        // //                 that.forceUpdate();
-        // //             }} >
-        // //                 {dict_msg_type.map((item, index) => (
-        // //                     <Option value={item.key}>{item.value}</Option>
-        // //                 ))}
-        // //             </Select>
-        // //         )
-        // //     }
-        // // });
-
-
-        // //关键字回复
-        // if (code === 'keywords' || code === 'other') {
-        //     menu_public_type_select_code = '';
-        //     if (code === 'keywords') {
-        //         request_box = { code: code }
-        //     }
-        //     //other类型 特殊处理 根据老CMS的接口设计 貌似这里需要传递'abc'类型的字符串 需要带上冒号
-        //     else {
-        //         let code_array = [];
-        //         let items = that.state.menu_list;
-        //         for (let i = 0, len = items.length; i < len; i++) {
-        //             let item = items[i];
-        //             code_array.push(`'${item.code}'`)
-        //         }
-        //         let codes = code_array.join(',');
-        //         request_box = { notCode: codes }
-        //     }
-
-
-        //     table_title.push({
-        //         title: '回复公众号', dataIndex: 'wxCode', key: 'wxCode', width: 140,
-        //         render: (rowValue, row, index) => {
-        //             let array = [];
-        //             if (row.wxCode && row.wxCode.constructor === String) {
-        //                 array = row.wxCode.split(',')
-        //             }
-
-        //             return (
-        //                 <Select defaultValue={array} style={{ width: '100%' }} mode="multiple" allowClear>
-        //                     {dict_public_types.map((item, index) => (
-        //                         <Option value={item.code}>{item.name}</Option>
-        //                     ))}
-        //                 </Select>
-        //             )
-        //         }
-        //     });
-
-        //     if (code === 'keywords') {
-        //         table_title.push({ title: '规则', dataIndex: 'ruleName', key: 'ruleName', width: 100, });
-        //         table_title.push({
-        //             title: '匹配规则', dataIndex: 'ruleType', key: 'ruleType', width: 140,
-        //             render: (rowValue, row, index) => {
-        //                 let array = [];
-        //                 if (row.wxCode && row.wxCode.constructor === String) {
-        //                     array = row.wxCode.split(',')
-        //                 }
-        //                 return (
-        //                     <Select defaultValue={parseInt(row.ruleType)} style={{ width: '100%' }} >
-        //                         {dict_rule_type.map((item, index) => (
-        //                             <Option value={item.key} key={item.key}>{item.value}</Option>
-        //                         ))}
-        //                     </Select>
-        //                 )
-        //             }
-        //         });
-        //         table_title.push({ title: '关键字', dataIndex: 'keywords', key: 'keywords', width: 100, });
-        //     }
-        //     //
-        //     else {
-        //         table_title.push({ title: '名称', dataIndex: 'name', key: 'name', width: 100, });
-        //         table_title.push({ title: '编码', dataIndex: 'code', key: 'code', width: 100, });
-        //     }
-        // }
-        // //其他类型
-        // else {
-        //     menu_public_type_select_code = dict_public_types[0].code;
-
-        //     //其他类型的貌似都需要单独name
-        //     let menu_list = that.state.menu_list;
-        //     let name = '';
-        //     for (let i = 0, len = menu_list.length; i < len; i++) {
-        //         let item = menu_list[i];
-        //         if (code === item.code) {
-        //             name = item.name;
-        //             break;
-        //         }
-        //     }
-        //     request_box = { code: code, name: name }
-        // }
-
-
-        // table_title.push({
-        //     title: '状态', dataIndex: 'status', key: 'status', width: 100,
-        //     render: (rowValue, row, index) => {
-        //         return (
-        //             <Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="有效" unCheckedChildren="无效"
-        //                 onChange={(type) => this.onItemStatusChanged(type, row)} />
-        //         )
-        //     }
-        // });
-
-        // table_title.push({
-        //     title: '操作', dataIndex: 'action', key: 'action', width: 80, fixed: 'right',
-        //     render: (rowValue, row, index) => {
-        //         return (
-        //             <div>
-        //                 {/* <Button>复制</Button> */}
-        //                 <Button size='small' type='primary' type='link' onClick={() => { console.log(row) }}>编辑</Button>
-        //                 <Button size='small' type='primary' type='link' onClick={() => that.onItemDeleteClick(row)}>删除</Button>
-        //             </div>
-        //         )
-        //     }
-
-        // });
-
-        // table_box.table_title = table_title;
-
         that.setState({
             request_box: request_box,
         }, () => {
             that.refreshList();
         });
-
-
     }
 
     //item状态变更

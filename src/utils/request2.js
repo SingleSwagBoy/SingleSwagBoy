@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2017-09-01 10:13:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-03 10:48:24
+ * @LastEditTime: 2021-09-07 16:09:28
  * @Description: 
  *      成功：  then()中解决问题
  *              集合类型返回     {data, pages} 
@@ -38,8 +38,6 @@ request.interceptors.request.use(config => {
             Loading.showLoading();
         }
     }
-
-
 
     //Get
     if (method === 'get') {
@@ -130,6 +128,10 @@ request.interceptors.response.use(response => {
         showConsole(`----------------------------`);
         Loading.hideLoading();
         return result;
+    }
+    //其他错误
+    else {
+        message.error('请求失败 状态码：' + status)
     }
     return onFailCallback(status, err_code, data.msg);
 }, function (error) {

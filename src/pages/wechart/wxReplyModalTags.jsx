@@ -26,28 +26,30 @@ export default class wxReplyModalTags extends Component {
         if (tags && tags.length > 0) {
             view = (
                 <div className="custom-tag-wrapper">
-                    <div className={`custom-tag-box ${!is_open_tags ? 'custom-tag-box-close' : ''}`}>
+                    <div className="custom-tag-box">
                         {
                             tags.map((item, index) => {
                                 return (
                                     tag_select_id === index ? <div className="custom-tag-item">
                                         <Tag className="custom-tag-pane" color="volcano" closable
                                             onClick={() => that.onTagClick(index)} onClose={(e) => { that.onTagDeleteClick(e, index) }}>
-                                           {item.id}-{item.name}
+                                            {item.id ? `${item.id}-${item.name}` : `${item.name}`}
                                         </Tag>
-                                    </div> : <div />
+                                    </div> : ''
                                 )
                             })
                         }
+                    </div>
+                    <div className={`custom-tag-box ${!is_open_tags ? 'custom-tag-box-close' : ''}`}>
                         {
                             tags.map((item, index) => {
                                 return (
-                                    tag_select_id !== index ? <div className="custom-tag-item">
+                                    <div className="custom-tag-item">
                                         <Tag className="custom-tag-pane" color={tag_select_id === index ? 'volcano' : ''} closable
                                             onClick={() => that.onTagClick(index)} onClose={(e) => { that.onTagDeleteClick(e, index) }}>
-                                              {item.id}-{item.name}
+                                             {item.id ? `${item.id}-${item.name}` : `${item.name}`}
                                         </Tag>
-                                    </div> : <div />
+                                    </div>
                                 )
                             })
                         }

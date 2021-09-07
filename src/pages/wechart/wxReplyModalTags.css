@@ -14,6 +14,7 @@
 .custom-tag-box-close {
     height: 46px;
     overflow: hidden;
+    background: #FFFFFF;
 }
 
 .custom-tag-empty {
@@ -21,6 +22,7 @@
     min-width: 120px;
     padding: 0 20px;
 }
+
 
 .custom-tag-item {
     display: flex;

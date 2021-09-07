@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-07 11:24:52
+ * @LastEditTime: 2021-09-07 11:54:35
  * @Description: 微信自动回复模块
  */
 
@@ -268,10 +268,23 @@ export default class WxReplyModal extends Component {
                                             </Form.Item>
 
                                             <Form.Item label='快捷功能'  >
-                                                <Tooltip title='针对部分输入框提供快捷输入联系人通配符的按钮，系统将自动将此参数转化为[用户姓名]' placement='top'>
-                                                    <Button onClick={() => that.onUserTargetClick()}>
-                                                        {last_select_input_box.key ? `添加#nickname# --- [${last_select_input_box.key}]` : '添加#nickname# --- [未选择]'}
-                                                    </Button>
+                                                <Form.Item>
+                                                    当前选择组件 {last_select_input_box.key ? `[${last_select_input_box.key}]` : '[未选择]'}
+                                                </Form.Item>
+
+
+
+                                                <Tooltip title='系统将自动转化为[用户姓名]' placement='top'>
+                                                    <Button size='small' onClick={() => that.onUserTargetClick('#nickname#')}>#用户姓名#</Button>
+                                                </Tooltip>
+                                                <Tooltip title='系统将自动转化为[用户Id]' placement='top'>
+                                                    <Button size='small' onClick={() => that.onUserTargetClick('#userId#')} style={{marginLeft:3}}>#用户ID#</Button>
+                                                </Tooltip>
+                                                <Tooltip title='系统将自动转化为[会员时间]' placement='top'>
+                                                    <Button size='small' onClick={() => that.onUserTargetClick('#会员时间#')} style={{marginLeft:3}}>#会员时间#</Button>
+                                                </Tooltip>
+                                                <Tooltip title='系统将自动转化为[VIP天数]' placement='top'>
+                                                    <Button size='small' onClick={() => that.onUserTargetClick('#VIP天数#')} style={{marginLeft:3}}>#VIP天数#</Button>
                                                 </Tooltip>
                                             </Form.Item>
 
@@ -919,7 +932,7 @@ export default class WxReplyModal extends Component {
         })
     }
     //添加 #用户名# 按钮被点击 在对应参数后面添加 #name#
-    onUserTargetClick() {
+    onUserTargetClick(target) {
         let that = this;
         let last_select_input_box = that.state.last_select_input_box;
         let value = last_select_input_box.value;
@@ -932,7 +945,7 @@ export default class WxReplyModal extends Component {
         let last_value = curr_info[value];
         if (!last_value) last_value = "";
 
-        let curr_value = last_value + '#nickname#'
+        let curr_value = last_value + target
 
         let obj = {}
         obj[value] = curr_value;
@@ -1066,13 +1079,11 @@ export default class WxReplyModal extends Component {
             let info = infos[i];
             let content = info.content;
             if (content) {
-                infos[i].content = content.replaceAll("\"", "’");
+                infos[i].content = content.replaceAll("\"", "’").replaceAll('\\n', '\n');
             }
         }
 
         result_data.info = JSON.stringify(infos);
-
-
 
         // new_info = new_info.replace(/\n/g, "<br/>").replace("\"","\'");
 

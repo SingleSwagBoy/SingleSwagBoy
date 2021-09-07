@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-30 11:35:39
+ * @LastEditTime: 2021-09-06 16:18:09
  */
 
 import React, { Component } from 'react';
@@ -182,6 +182,7 @@ export default class Doc extends Component {
                                         that.formRef.current.setFieldsValue({ "value": new_value })
                                         that.forceUpdate();
                                     }}></Input>
+                                    <Button>上传图片</Button>
                                 </Form.Item>
                                 {
                                     that.formRef.current.getFieldValue("value") ?

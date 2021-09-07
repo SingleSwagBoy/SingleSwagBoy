@@ -30,12 +30,24 @@ export default class wxReplyModalTags extends Component {
                         {
                             tags.map((item, index) => {
                                 return (
-                                    <div className="custom-tag-item">
+                                    tag_select_id === index ? <div className="custom-tag-item">
+                                        <Tag className="custom-tag-pane" color="volcano" closable
+                                            onClick={() => that.onTagClick(index)} onClose={(e) => { that.onTagDeleteClick(e, index) }}>
+                                           {item.id}-{item.name}
+                                        </Tag>
+                                    </div> : <div />
+                                )
+                            })
+                        }
+                        {
+                            tags.map((item, index) => {
+                                return (
+                                    tag_select_id !== index ? <div className="custom-tag-item">
                                         <Tag className="custom-tag-pane" color={tag_select_id === index ? 'volcano' : ''} closable
                                             onClick={() => that.onTagClick(index)} onClose={(e) => { that.onTagDeleteClick(e, index) }}>
-                                            {item.name}
+                                              {item.id}-{item.name}
                                         </Tag>
-                                    </div>
+                                    </div> : <div />
                                 )
                             })
                         }
@@ -57,7 +69,6 @@ export default class wxReplyModalTags extends Component {
                     </div>
                 </div>
             )
-
         }
 
         return view;

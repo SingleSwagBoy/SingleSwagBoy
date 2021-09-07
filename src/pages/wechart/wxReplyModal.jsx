@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-06 21:23:31
+ * @LastEditTime: 2021-09-07 11:24:52
  * @Description: 微信自动回复模块
  */
 
@@ -284,22 +284,15 @@ export default class WxReplyModal extends Component {
                                                     </Form.Item>
                                                 </div>
                                             }
-                                            {
+                                            {/* {
                                                 menu_type === "keywords" &&
                                                 <div>
-                                                    {/* {
-                                                   that.titleFormRef.current.getFieldsValue("wxCode").map((item, index) => {
-
-                                                            return <div>{item}</div>
-                                                        })
-                                                    } */}
-
                                                     <Form.Item label='对应公众号'>
 
 
                                                     </Form.Item>
                                                 </div>
-                                            }
+                                            } */}
 
 
                                             {
@@ -489,7 +482,7 @@ export default class WxReplyModal extends Component {
             let info = item.info;
             try {
                 if (info) {
-                    info = info.replace(/\n/g, "<br/>");
+                    info = info.replace(/\n/g, "\\n ");
                     item.info = JSON.parse(info);
                 } else {
                     item.info = [];
@@ -747,9 +740,6 @@ export default class WxReplyModal extends Component {
 
                             </Tag>
                         )
-
-
-
                 })}
 
             </div>
@@ -1076,7 +1066,7 @@ export default class WxReplyModal extends Component {
             let info = infos[i];
             let content = info.content;
             if (content) {
-                infos[i].content = content.replace(/\n/g, "<br/>").replaceAll("\"", "’").replaceAll("<br/><br/>", "<br/>");
+                infos[i].content = content.replaceAll("\"", "’");
             }
         }
 

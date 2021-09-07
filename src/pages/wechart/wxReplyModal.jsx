@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-06 16:37:54
+ * @LastEditTime: 2021-09-06 21:23:31
  * @Description: 微信自动回复模块
  */
 
@@ -15,6 +15,7 @@ import SyncBtn from "@/components/syncBtn/syncBtn.jsx"
 
 import { PlusOutlined } from '@ant-design/icons';
 import WxReplyModalTags from "./wxReplyModalTags"
+import { parse } from '@babel/core';
 let { TabPane } = Tabs;
 let { TextArea, Search } = Input;
 let { Option } = Select;
@@ -155,8 +156,6 @@ export default class WxReplyModal extends Component {
                                                     ))}
                                                 </Select>
                                             </Form.Item>
-
-
                                         </div>
                                     }
                                     {
@@ -285,6 +284,23 @@ export default class WxReplyModal extends Component {
                                                     </Form.Item>
                                                 </div>
                                             }
+                                            {
+                                                menu_type === "keywords" &&
+                                                <div>
+                                                    {/* {
+                                                   that.titleFormRef.current.getFieldsValue("wxCode").map((item, index) => {
+
+                                                            return <div>{item}</div>
+                                                        })
+                                                    } */}
+
+                                                    <Form.Item label='对应公众号'>
+
+
+                                                    </Form.Item>
+                                                </div>
+                                            }
+
 
                                             {
                                                 // 图片回复
@@ -472,7 +488,12 @@ export default class WxReplyModal extends Component {
             //将info转为对象类型
             let info = item.info;
             try {
-                item.info = !info ? [] : JSON.parse(info);
+                if (info) {
+                    info = info.replace(/\n/g, "<br/>");
+                    item.info = JSON.parse(info);
+                } else {
+                    item.info = [];
+                }
             } catch (e) {
                 item.info = [];
             }
@@ -897,6 +918,9 @@ export default class WxReplyModal extends Component {
         let curr_info = that.replyFormRef.current.getFieldsValue()
 
         let new_info = Object.assign({}, last_info, curr_info)
+
+        that.replyFormRef.current.setFieldsValue(new_info);
+
         infos[reply_select_id] = new_info;
         that.setState({
             infos: infos
@@ -964,9 +988,6 @@ export default class WxReplyModal extends Component {
                 wxCode = wxCode.join(',');
             }
         }
-
-        console.log('-=-=-wxCode')
-        console.log(wxCode);
 
         return wxCode;
     }
@@ -1047,7 +1068,27 @@ export default class WxReplyModal extends Component {
         let result_data = Object.assign({}, data, extra_data);
         delete result_data.infos;
 
+
+        console.log('转换前')
+        console.log(infos)
+
+        for (let i = 0, len = infos.length; i < len; i++) {
+            let info = infos[i];
+            let content = info.content;
+            if (content) {
+                infos[i].content = content.replace(/\n/g, "<br/>").replaceAll("\"", "’").replaceAll("<br/><br/>", "<br/>");
+            }
+        }
+
         result_data.info = JSON.stringify(infos);
+
+
+
+        // new_info = new_info.replace(/\n/g, "<br/>").replace("\"","\'");
+
+        console.log('转换后')
+        console.log(result_data.info)
+
         result_data.replyObjType = 2;
         result_data.msgType = 'multi';
 

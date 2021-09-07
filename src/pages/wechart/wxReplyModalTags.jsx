@@ -64,7 +64,7 @@ export default class wxReplyModalTags extends Component {
         } else {
             view = (
                 <div className="custom-tag-wrapper">
-                    <div className="custom-tag-box">
+                    <div className="custom-tag-box-close">
                         <div className='custom-tag-empty' >
                             没有获取到Tag数据，请刷新列表。
                         </div>

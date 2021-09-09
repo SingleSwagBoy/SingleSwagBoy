@@ -8,18 +8,21 @@
     flex-direction: row;
     flex-wrap: wrap;
     background: #FFFFFF;
-    min-height: 46px;
+    min-height: 40px;
 }
 
 .custom-tag-box-close {
-    height: 46px;
+    height: 40px;
     overflow: hidden;
+    background: #FFFFFF;
 }
 
 .custom-tag-empty {
-    line-height: 46px;
+    line-height: 100%;
     min-width: 120px;
-    padding: 0 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .custom-tag-item {
@@ -29,11 +32,19 @@
     align-items: center;
 }
 
+.custom-tag-item-empty {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
 .custom-tag-pane {
     cursor: pointer;
-    padding: 0 20px;
-    line-height: 30px;
-    margin: 5px;
+    padding: 2px 5px;
+    line-height: 25px;
+    margin: 3px;
 }
 
 .custom-tag-pane:hover {

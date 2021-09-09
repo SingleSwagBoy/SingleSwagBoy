@@ -91,7 +91,12 @@ export default class AddressNews extends Component {
                     key: "type",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" :row.type === "mpnews"?"图文消息": "图文消息（外链）"}</div>
+                            <div>
+                                {row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" :row.type === "mpnews"?"图文消息": 
+                                row.type === "multi" ? JSON.parse(row.multiInfo)[0].msgType  === "text" ? "文字消息" : 
+                                JSON.parse(row.multiInfo)[0].msgType === "image" ? "图片消息" :
+                                JSON.parse(row.multiInfo)[0].msgType === "news"?"图文消息":"小程序卡片":"未知"}
+                            </div>
                         )
                     }
                 },

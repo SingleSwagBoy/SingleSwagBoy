@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 16:17:19
+ * @LastEditTime: 2021-09-09 17:19:21
  * @Description: 微信自动回复模块
  */
 
@@ -221,7 +221,7 @@ export default class WxReplyModal extends Component {
                                             }
 
                                             {
-                                                item.msg_type === 'minis' &&
+                                                item.msg_type === 'mini' &&
                                                 <div className='phone-box'>
                                                     <div className='head-img'>小程序</div>
                                                     <div className='phone-item-box'>
@@ -314,7 +314,7 @@ export default class WxReplyModal extends Component {
                                             }
                                             {
                                                 // 小程序卡片
-                                                that.replyFormRef.current.getFieldValue('msg_type') === 'minis' &&
+                                                that.replyFormRef.current.getFieldValue('msg_type') === 'mini' &&
                                                 <div>
                                                     <Form.Item label='卡片标题' name='title'>
                                                         <Input style={{ width: base_width }} placeholder='请输入小程序标题' onFocus={() => that.onInputGetFocus('卡片标题', 'title')} onBlur={() => that.onInputLoseFocus()} />
@@ -345,7 +345,7 @@ export default class WxReplyModal extends Component {
                             <div className="tab-wrapper"></div>
                             <div className="btn-wrapper">
                                 {
-                                    that.titleFormRef && that.titleFormRef.current && that.replyFormRef && that.replyFormRef.current &&
+                                    that.titleFormRef && that.titleFormRef.current && that.replyFormRef && that.replyFormRef.current && replys.length > 0 &&
                                     <Tooltip title='当前下的所有信息、推送信息，都将会被保存，请点击之前确认数据无误。' placement="top" color={'purple'} >
                                         <Button type="primary" onClick={() => that.onSaveEiditClick()} >{
                                             that.titleFormRef.current.getFieldValue('id') ? '更新信息' : '新增信息'
@@ -781,30 +781,6 @@ export default class WxReplyModal extends Component {
 
     }
 
-    //获取上传的图片路径
-    getUploadFileUrl(file, newItem) {
-        let that = this;
-        // that.replyFormRef.current.setFieldsValue({ "pic_url": newItem.url });
-
-        let infos = that.state.infos;
-        let reply_select_id = that.state.reply_select_id;
-
-        let last_info = infos[reply_select_id];
-        // let curr_info = that.replyFormRef.current.getFieldsValue()
-        // curr_info.pic_url = file;
-
-        let new_info = Object.assign({}, last_info)
-        new_info.pic_url = newItem.url;
-        console.log('newItem.url--->', newItem.url);
-
-        infos[reply_select_id] = new_info;
-        that.setState({
-            infos: infos
-        }, () => {
-            that.replyFormRef.current.setFieldsValue(new_info);
-            that.forceUpdate();
-        })
-    }
     //输入框获取焦点 存储获取焦点的输入框对象
     onInputGetFocus(key, value) {
         let that = this;

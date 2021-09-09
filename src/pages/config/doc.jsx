@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 14:26:40
+ * @LastEditTime: 2021-09-09 17:09:46
  */
 
 import React, { Component } from 'react';
@@ -114,7 +114,7 @@ export default class Doc extends Component {
                 }>
                 </Alert>
 
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1200, y: 600 }} />
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1200 }} />
 
                 {/* {
                     table_box.table_pages.totalCount !== 0 &&
@@ -126,6 +126,10 @@ export default class Doc extends Component {
                 <Modal title={modal_box.title} visible={modal_box.is_show} forceRender={true} width={800} onOk={() => this.onModalOkClick()} onCancel={() => this.onModalCancelClick()}>
                     {/* 第一层 */}
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
+
+                        <Form.Item label='id' name='id' rules={[{ required: true }]} >
+                            <Input style={{ width: 350 }} disabled placeholder="创建成功后将自动生成id" />
+                        </Form.Item>
                         {
                             table_box.table_layer.length === 0 &&
                             <div>
@@ -470,8 +474,6 @@ export default class Doc extends Component {
         let that = this;
         let object = that.formRef.current.getFieldsValue();
 
-        console.log(object);
-
         let table_layer = that.state.table_box.table_layer;
         let step = table_layer.length;
 
@@ -510,18 +512,25 @@ export default class Doc extends Component {
         if (object.name) object.name = object.name.replace(/(^\s*)|(\s*$)/g, "");
         if (object.value) object.value = object.value.replace(/(^\s*)|(\s*$)/g, "");
 
-        requestConfigAddDoc(step, object).then(res => {
-            message.success('数据添加成功');
-            //隐藏弹出框
-            let modal_box = that.state.modal_box;
-            modal_box.is_show = false;
 
-            that.setState({ modal_box: modal_box })
-            that.refreshList();
-        }).catch(res => {
-            message.error('数据添加失败：' + res.desc)
-            console.log(res);
-        })
+        let is_modify = object.id ? true : false;
+
+        (is_modify ? (requestConfigUpdateDoc(step, object)) : (requestConfigAddDoc(step, object)))
+            .then(res => {
+                message.success('保存成功');
+                //隐藏弹出框
+                let modal_box = that.state.modal_box;
+                modal_box.is_show = false;
+                that.setState({
+                    modal_box: modal_box
+                }, () => {
+                    that.refreshList();
+                });
+            }).catch(res => {
+                message.error('操作失败：' + res.desc)
+            })
+
+     
     }
 
     //弹出框Cancel被点击

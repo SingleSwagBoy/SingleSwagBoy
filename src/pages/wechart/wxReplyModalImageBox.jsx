@@ -2,12 +2,12 @@
  * @Author: HuangQS
  * @Date: 2021-09-07 18:41:59
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-08 16:46:01
+ * @LastEditTime: 2021-09-09 13:36:41
  * @Description: 多种类型的[微信公众号]上传对应图片
  */
 
 import React, { Component } from 'react';
-import { Input, Form } from 'antd';
+import { Input, Form, message, Button } from 'antd';
 import ImageUpload from "@/components/ImageUpload/index" //图片组件
 
 export default class wxReplyModalImageBox extends Component {
@@ -27,28 +27,31 @@ export default class wxReplyModalImageBox extends Component {
                 // }
             ],
             imgs: [],   //图片数据列表
-            //页面渲染的微信二维码
+            msg_type: '',  //页面渲染的微信二维码
         }
     }
 
     componentDidMount() {
         let that = this;
-        that.initFormRef();
         that.props.onRef(that);
+        that.initFormRef();
     }
     //获取Form表单的Ref对象 若未取到数据 将持续强制更新
     initFormRef() {
         let that = this;
         let interval = that.state.form_interval;
-
         if (that.imageFormRef && that.imageFormRef.current) {
             if (interval) {
                 clearInterval(interval);
+                that.forceUpdate();
             }
             return;
         }
         if (!interval) {
             interval = setInterval(() => {
+                // if (interval) {
+                //     clearInterval(interval);
+                // }
                 that.forceUpdate();
             }, 1000);
         }
@@ -57,7 +60,7 @@ export default class wxReplyModalImageBox extends Component {
 
     render() {
         let that = this;
-        let { imgs } = that.state;
+        let { imgs, msg_type } = that.state;
 
 
         return (
@@ -66,24 +69,51 @@ export default class wxReplyModalImageBox extends Component {
                     {that.imageFormRef && that.imageFormRef.current && (
                         <Form.Item label="图片上传">
                             <Form.Item>
-                                <label>根据微信的要求，需要指定且单独上传对应的微信公众号所需要的图片</label>
+                                {
+                                    (msg_type === 'image' || msg_type === 'mini') &&
+                                    <div>图片|小程序类型，需要上传对应的微信公众号所需要的图片</div>
+                                }
+                                {
+                                    msg_type === 'news' &&
+                                    <div>图文类型，后台将自动取第一张图片作为数据源，其他的无效。</div>
+                                }
                             </Form.Item>
+
                             {
-                                imgs.map((item, index) => (
-                                    <Form.Item label={item.name} name={item.wxCode} key={index}>
-                                        <ImageUpload
-                                            getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl(item.wxCode, newItem) }}
-                                            postUrl={`/mms/wxReply/addMedia?wxCode=${item.wxCode}`}
-                                            // imageUrl={imgs[index].url ? imgs[index].url : ""}
-                                            imageUrl={that.getImageUrlByCode(item.wxCode, index)}
-                                        />
-                                    </Form.Item>
-                                ))
+                                imgs.map((item, index) => {
+                                    // 图文类型 仅显示第一个数据
+                                    if (msg_type === 'news') {
+                                        if (index === 0) {
+                                            return (
+                                                <Form.Item label="上传图片" name={item.wxCode} key={index}>
+                                                    <ImageUpload
+                                                        getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl(item.wxCode, newItem) }}
+                                                        postUrl={`/mms/wxReply/addMedia?wxCode=${item.wxCode}`}
+                                                        imageUrl={that.getImageUrlByCode(item.wxCode, index)}
+                                                    />
+                                                </Form.Item>
+
+                                            )
+                                        } else return "";
+                                    }
+                                    //其他类型
+                                    else {
+                                        return (
+                                            <Form.Item label={item.name} name={item.wxCode} key={index}>
+                                                <ImageUpload
+                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl(item.wxCode, newItem) }}
+                                                    postUrl={`/mms/wxReply/addMedia?wxCode=${item.wxCode}`}
+                                                    imageUrl={that.getImageUrlByCode(item.wxCode, index)}
+                                                />
+                                            </Form.Item>
+                                        )
+                                    }
+
+                                })
                             }
                         </Form.Item>
                     )}
                 </Form>
-
             </div>
         );
     }
@@ -91,8 +121,14 @@ export default class wxReplyModalImageBox extends Component {
 
 
 
-    //传入当前选中的WxCode对应的keys
-    pushSelectWxCodeKeys(wxCodeKeys, data) {
+    /**
+     * 传入当前选中的WxCode对应的keys
+     * @param {*} wxCodeKeys 微信Code列表
+     * @param {*} msg_type   当前选择的类型 图片|图文|小程序
+     * @param {*} data       数据源
+     * @returns 
+     */
+    pushSelectWxCodeKeys(wxCodeKeys, msg_type, data) {
         if (!data) return;
         let that = this;
         let { dict_public_types } = that.props; //所有微信公众号列表
@@ -135,12 +171,15 @@ export default class wxReplyModalImageBox extends Component {
                 }
             }
         }
-
         that.setState({
             imgs: imgs,
+            msg_type: msg_type,
         }, () => {
             that.forceUpdate();
+            console.log('刷新成功')
+            console.log(imgs)
         })
+
     }
     /**
      * 获取上传的图片路径
@@ -156,6 +195,10 @@ export default class wxReplyModalImageBox extends Component {
         let url = newItem.url;
         let media_id = newItem.mediaID;
 
+        if (!url || !media_id) {
+            message.error('上传图片失败，请重新上传。')
+            return;
+        }
 
         for (let i = 0, ilen = imgs.length; i < ilen; i++) {
             let img = imgs[i];

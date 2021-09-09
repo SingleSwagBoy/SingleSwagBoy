@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-07 18:41:59
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 13:36:41
+ * @LastEditTime: 2021-09-09 16:14:20
  * @Description: 多种类型的[微信公众号]上传对应图片
  */
 
@@ -34,7 +34,7 @@ export default class wxReplyModalImageBox extends Component {
     componentDidMount() {
         let that = this;
         that.props.onRef(that);
-        that.initFormRef();
+        // that.initFormRef();
     }
     //获取Form表单的Ref对象 若未取到数据 将持续强制更新
     initFormRef() {
@@ -49,9 +49,6 @@ export default class wxReplyModalImageBox extends Component {
         }
         if (!interval) {
             interval = setInterval(() => {
-                // if (interval) {
-                //     clearInterval(interval);
-                // }
                 that.forceUpdate();
             }, 1000);
         }
@@ -70,7 +67,7 @@ export default class wxReplyModalImageBox extends Component {
                         <Form.Item label="图片上传">
                             <Form.Item>
                                 {
-                                    (msg_type === 'image' || msg_type === 'mini') &&
+                                    (msg_type === 'image' || msg_type === 'minis') &&
                                     <div>图片|小程序类型，需要上传对应的微信公众号所需要的图片</div>
                                 }
                                 {
@@ -85,11 +82,11 @@ export default class wxReplyModalImageBox extends Component {
                                     if (msg_type === 'news') {
                                         if (index === 0) {
                                             return (
-                                                <Form.Item label="上传图片" name={item.wxCode} key={index}>
+                                                <Form.Item label="上传图片" name={item.wx_code} key={index}>
                                                     <ImageUpload
-                                                        getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl(item.wxCode, newItem) }}
-                                                        postUrl={`/mms/wxReply/addMedia?wxCode=${item.wxCode}`}
-                                                        imageUrl={that.getImageUrlByCode(item.wxCode, index)}
+                                                        getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl(item.wx_code, newItem) }}
+                                                        postUrl={`/mms/wxReply/addMedia?wxCode=${item.wx_code}`}
+                                                        imageUrl={that.getImageUrlByCode(item.wx_code, index)}
                                                     />
                                                 </Form.Item>
 
@@ -99,11 +96,11 @@ export default class wxReplyModalImageBox extends Component {
                                     //其他类型
                                     else {
                                         return (
-                                            <Form.Item label={item.name} name={item.wxCode} key={index}>
+                                            <Form.Item label={item.name} name={item.wx_code} key={index}>
                                                 <ImageUpload
-                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl(item.wxCode, newItem) }}
-                                                    postUrl={`/mms/wxReply/addMedia?wxCode=${item.wxCode}`}
-                                                    imageUrl={that.getImageUrlByCode(item.wxCode, index)}
+                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl(item.wx_code, newItem) }}
+                                                    postUrl={`/mms/wxReply/addMedia?wxCode=${item.wx_code}`}
+                                                    imageUrl={that.getImageUrlByCode(item.wx_code, index)}
                                                 />
                                             </Form.Item>
                                         )
@@ -144,7 +141,7 @@ export default class wxReplyModalImageBox extends Component {
                 if (curr_code === temp_code) {
 
                     let obj = {
-                        wxCode: dict.code,
+                        wx_code: dict.code,
                         name: dict.name,
                     }
                     imgs.push(obj);
@@ -158,10 +155,10 @@ export default class wxReplyModalImageBox extends Component {
         if (temp_imgs) {
             for (let i = 0, ilen = temp_imgs.length; i < ilen; i++) {
                 let temp_img = temp_imgs[i];
-                let temp_code = temp_img.wxCode;
+                let temp_code = temp_img.wx_code;
                 for (let j = 0, jlen = imgs.length; j < jlen; j++) {
                     let curr_img = imgs[j];
-                    let curr_code = curr_img.wxCode;
+                    let curr_code = curr_img.wx_code;
 
                     if (temp_code === curr_code) {
                         curr_img.url = temp_img.url;
@@ -176,8 +173,6 @@ export default class wxReplyModalImageBox extends Component {
             msg_type: msg_type,
         }, () => {
             that.forceUpdate();
-            console.log('刷新成功')
-            console.log(imgs)
         })
 
     }
@@ -187,8 +182,6 @@ export default class wxReplyModalImageBox extends Component {
      * @param {*} newItem 
      */
     getUploadFileUrl(curr_code, newItem) {
-        console.log('获取图片路径');
-        console.log(newItem);
 
         let that = this;
         let { imgs } = that.state;
@@ -202,7 +195,7 @@ export default class wxReplyModalImageBox extends Component {
 
         for (let i = 0, ilen = imgs.length; i < ilen; i++) {
             let img = imgs[i];
-            let temp_code = img.wxCode;
+            let temp_code = img.wx_code;
             if (curr_code === temp_code) {
                 img.media_id = media_id;
                 img.url = url;
@@ -232,6 +225,8 @@ export default class wxReplyModalImageBox extends Component {
     getImgs() {
         let that = this;
         let { imgs } = that.state;
+        
+
 
         return imgs;
     }

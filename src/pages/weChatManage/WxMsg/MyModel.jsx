@@ -519,6 +519,7 @@ export default class AddressNews extends Component {
                     <Form.Item
                       label="微信小程序"
                       name="appid"
+                      // rules={[{ required: true, message: '请选择微信小程序' }]}
                     >
                       <Select
                         placeholder="请选择要插入的微信小程序"
@@ -536,6 +537,7 @@ export default class AddressNews extends Component {
                     <Form.Item
                       label="小程序标题"
                       name="mpTitle"
+                      rules={[{ required: true, message: '请输入小程序标题' }]}
                     >
                       <Input />
                     </Form.Item>
@@ -543,8 +545,10 @@ export default class AddressNews extends Component {
                     <Form.Item
                       label="小程序跳转路径"
                       name="mpPath"
+                      rules={[{ required: true, message: '请输入小程序跳转路径' }]}
                     >
                       <Input />
+                    
                     </Form.Item>
                     <Form.Item
                       label="封面图片"
@@ -675,10 +679,12 @@ export default class AddressNews extends Component {
   selectMsg(val) {
     console.log(val)
     this.closeModel(1)
-    let imageInfo = JSON.parse(this.formRef.current.getFieldValue("multiInfo"))[0]
-    imageInfo.picUrl = val.url
-    imageInfo.mediaId = val.mediaId
-    this.formRef.current.setFieldsValue({ "multiInfo": JSON.stringify([imageInfo]) })
+    if(this.formRef.current.getFieldValue("multiInfo")){
+      let imageInfo = JSON.parse(this.formRef.current.getFieldValue("multiInfo"))[0]
+      imageInfo.picUrl = val.url
+      imageInfo.mediaId = val.mediaId
+      this.formRef.current.setFieldsValue({ "multiInfo": JSON.stringify([imageInfo]) })
+    }
     this.formRef.current.setFieldsValue({ "url": val.url })
     this.setState({
       imageInfo: val,

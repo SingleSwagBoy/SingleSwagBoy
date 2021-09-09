@@ -341,7 +341,32 @@ export const requestTvTringAdConfigDuration = (params) => { return request.get(`
 export const requestTvTringAdConfigDurationL = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/config/lDuration`, { params: params }); }       //广告-配置L型广告持续时间
 export const requestTvTringAdSyncCache = (params) => { return request.post(`${baseUrl}/mms/ad/tvTrying/syncCache`, params) }                                //广告-数据同步-生成前台缓存
 export const requestTvTringShowConfig = (params) => { return request.get(`${baseUrl}/mms/ad/tvTrying/showConfig`, { params: params }) }                     //广告-查看广告节目单配置
-export const requestProductSkuList = (params) => { return request.post(`${baseUrl}/mms/p/product/sku`, params) }                                            //广告-二维码套餐类型
+export const requestProductSkuList = (params) => { return request.post(`${baseUrl}/mms/p/product/sku`, params) }     
+
+// 广告管理-个人中心登录页
+export const getHlcList = (params) => { //  广告管理-个人中心登录页-列表
+    return request.post(`${baseUrl}/mms/hlc/list`, params) 
+}    
+export const addHlcList = (params) => { //  广告管理-个人中心登录页-新增
+    return request.post(`${baseUrl}/mms/hlc/create`, params) 
+}   
+export const editHlcList = (params) => { //  广告管理-个人中心登录页-修改
+    return request.post(`${baseUrl}/mms/hlc/edit`, params) 
+}   
+export const syncHlcList = (params,header) => { //  广告管理-个人中心登录页-数据同步
+    return request.get(`${baseUrl}/mms/hlc/syncCache`, {params:params,headers:header}) 
+} 
+export const copyHlcList = (params) => { //  广告管理-个人中心登录页-复制
+    return request.get(`${baseUrl}/mms/hlc/duplicate`,  { params: params }) 
+}  
+export const deleteHlcList = (params) => { //  广告管理-个人中心登录页-删除
+    return request.get(`${baseUrl}/mms/hlc/deleteItem`,  { params: params }) 
+}  
+export const changeStateHlcList = (params) => { //  广告管理-个人中心登录页-修改状态
+    return request.get(`${baseUrl}/mms/hlc/changeState`,  { params: params }) 
+} 
+
+//广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型
 export const requestQrcodeTypes = () => {

@@ -263,7 +263,9 @@ export default class Teast extends Component {
                     </div>
                 }
 
-                <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} good_look_types={good_look_types} user_tag={user_tag} delivery_types={delivery_types} channel_list={channel_list} product_list={product_list}
+                <RecommendModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} modal_box={modal_box} 
+                    qrcode_types={qrcode_types} jump_types={jump_types} jump_menu_types={jump_menu_types} 
+                    good_look_types={good_look_types} user_tag={user_tag} delivery_types={delivery_types} channel_list={channel_list} product_list={product_list}
                     onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)} />
 
             </div>

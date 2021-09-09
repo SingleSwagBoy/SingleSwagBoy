@@ -37,6 +37,8 @@ const WxReply = lazy(() => import('pages/wechart/wxReply.jsx'));
 const wxPayTemplate = lazy(() => import('pages/wechart/wxPayTemplate.jsx'));
 
 const WxMsg = lazy(() => import('pages/weChatManage/WxMsg/index.jsx'))
+
+const LoginManage = lazy(() => import('pages/adManage/loginManage/index.jsx'))  // 广告管理---个人中心登陆管理
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
@@ -70,7 +72,7 @@ const adminRoutes = [
     { path: '/mms/channelManage/editSubject/:id', component: EditSubject, name: '编辑专题', icon: UnorderedListOutlined, code: "channelManage" },
 
     { path: '/mms/adManage/recommend', component: Recommend, name: '尝鲜版', icon: UnorderedListOutlined, code: "adManage" },
-
+    { path: '/mms/adManage/LoginManage', component: LoginManage, name: '个人中心登录', icon: UnorderedListOutlined, code: "adManage" },
 
     //配置管理
     { path: '/mms/doc', component: ConfigDoc, name: '文案管理', icon: UnorderedListOutlined, code: "configManage" },
@@ -84,7 +86,11 @@ const adminRoutes = [
 
     { path: '/mms/wx/msg', component: WxMsg, name: '客服消息', icon: UnorderedListOutlined, code: "WeChatManage" },
 
-    { path: '/mms/noPermission', component: NoPermission, name: '没有权限', meta: { isNav: false, roles: '*' } }
+    
+
+    { path: '/mms/noPermission', component: NoPermission, name: '没有权限', meta: { isNav: false, roles: '*' } },
+
+    
 
 
 

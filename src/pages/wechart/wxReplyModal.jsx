@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 13:34:33
+ * @LastEditTime: 2021-09-09 13:41:15
  * @Description: 微信自动回复模块
  */
 
@@ -11,14 +11,11 @@ import React, { Component } from 'react';
 import { Modal, Tabs, Divider, Button, Input, Tag, Image, message, Select, Switch, Alert, Tooltip, Form, Radio } from 'antd';
 
 import "./wxReplyModal.css";
-import ImageUpload from "@/components/ImageUpload/index" //图片组件
 import SyncBtn from "@/components/syncBtn/syncBtn.jsx"
 import WxReplyModalImageBox from "./wxReplyModalImageBox"
 
 
-import { PlusOutlined } from '@ant-design/icons';
 import WxReplyModalTags from "./wxReplyModalTags"
-import { parse } from '@babel/core';
 let { TabPane } = Tabs;
 let { TextArea, Search } = Input;
 let { Option } = Select;

@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 10:36:49
+ * @LastEditTime: 2021-09-09 13:34:33
  * @Description: 微信自动回复模块
  */
 
@@ -74,7 +74,6 @@ export default class WxReplyModal extends Component {
         }
 
 
-        // let replys = infos[reply_select_id];  //回复消息列表
 
         return (
             <div key='modal'>
@@ -124,7 +123,7 @@ export default class WxReplyModal extends Component {
 
                                             <Form.Item label='回复公众号' name='wxCode' >
                                                 <Select style={{ width: base_width }} mode="multiple" allowClear placeholder='请选择回复公众号'
-                                                    onChange={(value) => { that.refreshImageBoxByWxCode(null) }} onBlur={(view) => that.onInputLoseFocus(view)}>
+                                                    onChange={() => { that.refreshImageBoxByWxCode() }} onBlur={(view) => that.onInputLoseFocus(view)}>
                                                     {dict_public_types.map((item, index) => (
                                                         <Option value={item.code}>{item.name}</Option>
                                                     ))}
@@ -163,7 +162,7 @@ export default class WxReplyModal extends Component {
                                             </Form.Item>
                                             <Form.Item label='回复公众号' name='wxCode' >
                                                 <Select style={{ width: base_width }} mode="multiple" allowClear placeholder='请选择回复公众号'
-                                                    onChange={(value) => { that.refreshImageBoxByWxCode(null) }} onBlur={(view) => that.onInputLoseFocus(view)}>
+                                                    onChange={() => { that.refreshImageBoxByWxCode() }} onBlur={(view) => that.onInputLoseFocus(view)}>
                                                     {dict_public_types.map((item, index) => (
                                                         <Option value={item.code}>{item.name}</Option>
                                                     ))}
@@ -188,6 +187,64 @@ export default class WxReplyModal extends Component {
                                     </Form.Item>
                                 </Form>
                             </div>
+                            {/* 手机界面 */}
+                            <div className="phone-wrapper-outer">
+                                <div className="phone-wrapper">
+                                    {replys.map((item, index) => (
+                                        <div className='phone-message-box'>
+                                            {
+                                                item.msg_type === 'text' &&
+                                                <div className='phone-box'>
+                                                    <div className='head-img'>文字</div>
+                                                    <div className='phone-item-box'>
+                                                        <div className='phone-content'> {item.content}</div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            {
+                                                item.msg_type === 'image' &&
+                                                <div className='phone-box'>
+                                                    <div className='head-img'>图片</div>
+                                                    <div className='phone-item-box'>
+                                                        <div className='phone-image'>
+                                                            <Image width={140} height={140} src={item.imgs && item.imgs.length > 0 ? item.imgs[0].url : ''}></Image>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            {
+                                                item.msg_type === 'news' &&
+                                                <div className='phone-box'>
+                                                    <div className='head-img'>图文</div>
+                                                    <div className='phone-item-box'>
+                                                        <div className='title'>{item.title}</div>
+                                                        <div className='description' >{item.description}</div>
+                                                        <div className='phone-content'>{item.content}</div>
+                                                        <div className='phone-image'>
+                                                            <Image width={140} height={140} src={item.imgs && item.imgs.length > 0 ? item.imgs[0].url : ''}></Image>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            {
+                                                item.msg_type === 'mini' &&
+                                                <div className='phone-box'>
+                                                    <div className='head-img'>小程序</div>
+                                                    <div className='phone-item-box'>
+                                                        <div className='title'>{item.title}</div>
+                                                        <div className='mini-icon'>
+                                                            <Image width={140} height={140} src={item.imgs && item.imgs.length > 0 ? item.imgs[0].url : ''}></Image>
+                                                        </div>
+                                                        <div>小程序</div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
                         </div>
                         <div className="reply-wrapper">
                             <div className="tab-wrapper"></div>
@@ -260,9 +317,6 @@ export default class WxReplyModal extends Component {
                                                     <Form.Item label='摘要' name='description'>
                                                         <TextArea style={{ width: base_width }} rows={5} placeholder='请输入摘要' onFocus={() => that.onInputGetFocus('摘要', 'description')} onBlur={() => that.onInputLoseFocus()} />
                                                     </Form.Item>
-                                                    <Form.Item label='链接地址' name='url'>
-                                                        <TextArea style={{ width: base_width }} rows={3} placeholder='请输入链接地址' onBlur={() => that.onInputLoseFocus()} />
-                                                    </Form.Item>
                                                 </div>
                                             }
                                             {
@@ -284,8 +338,8 @@ export default class WxReplyModal extends Component {
                                     )}
                                 </Form>
                                 {that.replyFormRef && that.replyFormRef.current && that.replyFormRef.current.getFieldValue('msg_type') !== 'text' &&
-                                    <WxReplyModalImageBox dict_public_types={dict_public_types}
-                                        onRef={(val) => that.refreshImageBoxByWxCode(val)} onCallback={(imgs) => that.onImageBoxCallback(imgs)} />
+                                    <WxReplyModalImageBox dict_public_types={dict_public_types} onCallback={(imgs) => that.onImageBoxCallback(imgs)}
+                                        onRef={(val) => { that.setState({ image_box_ref: val }) }} />
                                 }
                             </div>
                         </div>
@@ -332,6 +386,8 @@ export default class WxReplyModal extends Component {
     //根据传入数据 转换为需要的类型
     initFormData(datas) {
         let that = this;
+        that.titleFormRef.current.resetFields();
+        that.replyFormRef.current.resetFields();
         if (!datas || datas.length <= 0) {
             that.setState({
                 tags: [],
@@ -343,8 +399,7 @@ export default class WxReplyModal extends Component {
             })
             return;
         }
-        that.titleFormRef.current.resetFields();
-        that.replyFormRef.current.resetFields();
+
 
         let menu_type = that.props.menu_type;
         let dict_user_tags = that.props.dict_user_tags;
@@ -511,6 +566,7 @@ export default class WxReplyModal extends Component {
             }, () => {
                 that.replyFormRef.current.setFieldsValue(reply[reply_select_id]);
                 that.titleFormRef.current.setFieldsValue(item);
+                that.refreshImageBoxByWxCode(); //渲染图片列表控件内部数据
                 that.forceUpdate();
             })
         } else {
@@ -829,11 +885,12 @@ export default class WxReplyModal extends Component {
         // }
     }
     //图片上传控件初始化成功 刷新图片列表 
-    refreshImageBoxByWxCode(val) {
+    refreshImageBoxByWxCode() {
         let that = this;
+        let ref = that.state.image_box_ref;
+        if (!ref) return;
 
-        let msg_type = that.titleFormRef.current.getFieldValue('msg_type');
-        if (msg_type === 'text') return;
+     
 
         let { menu_type } = that.props;
         let wxCodeKeys = [];
@@ -853,19 +910,12 @@ export default class WxReplyModal extends Component {
 
 
         let reply = datas[tag_select_id].info[reply_select_id];
+        let msg_type = reply.msg_type;
 
-        if (val) {
-            val.pushSelectWxCodeKeys(wxCodeKeys, reply);
-            that.setState({
-                image_box_ref: val
-            })
-        }
-        //不存在val 
-        else {
-            val = that.state.image_box_ref;
-            if (!val) return;
-            val.pushSelectWxCodeKeys(wxCodeKeys, reply);
-        }
+        if (msg_type === 'text') return;
+        
+        ref.pushSelectWxCodeKeys(wxCodeKeys, msg_type, reply);
+
     }
     //图片盒子上传图片回调
     onImageBoxCallback(imgs) {
@@ -945,6 +995,10 @@ export default class WxReplyModal extends Component {
         let tag_select_id = that.state.tag_select_id;
 
         let data = datas[tag_select_id];
+        if (!data) {
+            message.error('请刷新后重传数据');
+            return;
+        }
 
         //data层需要更新的数据
         let result_data = Object.assign({}, data, that.titleFormRef.current.getFieldsValue());

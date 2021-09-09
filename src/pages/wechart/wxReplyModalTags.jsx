@@ -30,7 +30,7 @@ export default class wxReplyModalTags extends Component {
                         {
                             tags.map((item, index) => {
                                 return (
-                                    tag_select_id === index ? <div className="custom-tag-item">
+                                    tag_select_id === index ? <div className="custom-tag-item" key={index}>
                                         <Tag className="custom-tag-pane" color="volcano" closable
                                             onClick={() => that.onTagClick(index)} onClose={(e) => { that.onTagDeleteClick(e, index) }}>
                                             {item.id ? `${item.id}-${item.name}` : `${item.name}`}
@@ -44,10 +44,10 @@ export default class wxReplyModalTags extends Component {
                         {
                             tags.map((item, index) => {
                                 return (
-                                    <div className="custom-tag-item">
+                                    <div className="custom-tag-item" key={index}>
                                         <Tag className="custom-tag-pane" color={tag_select_id === index ? 'volcano' : ''} closable
                                             onClick={() => that.onTagClick(index)} onClose={(e) => { that.onTagDeleteClick(e, index) }}>
-                                             {item.id ? `${item.id}-${item.name}` : `${item.name}`}
+                                            {item.id ? `${item.id}-${item.name}` : `${item.name}`}
                                         </Tag>
                                     </div>
                                 )
@@ -64,8 +64,8 @@ export default class wxReplyModalTags extends Component {
         } else {
             view = (
                 <div className="custom-tag-wrapper">
-                    <div className="custom-tag-box-close">
-                        <div className='custom-tag-empty' >
+                    <div className="custom-tag-box">
+                        <div className='custom-tag-item-empty' >
                             没有获取到Tag数据，请刷新列表。
                         </div>
                     </div>

@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-06 14:15:02
+ * @LastEditTime: 2021-09-07 16:38:32
  */
 import React, { Component } from 'react';
 import { Menu, message, Tooltip, Modal } from 'antd';
@@ -33,7 +33,7 @@ export default class WxReply extends Component {
                 { index: "2", code: "messageDefault", name: '收到消息回复' },
                 { index: "3", code: "addFriend", name: '搜索关注回复' },
                 { index: "4", code: "scanSubscribe", name: '第1次扫码关注回复' },
-                { index: "5", code: "scan", name: '第N次关注扫码回复' },
+                { index: "5", code: "scan", name: '第x次关注扫码回复' },
             ],
             dict_rule_type: [
                 { key: 1, value: '全匹配' },

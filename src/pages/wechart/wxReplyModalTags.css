@@ -32,9 +32,17 @@
     align-items: center;
 }
 
+.custom-tag-item-empty {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
 .custom-tag-pane {
     cursor: pointer;
-    padding:2px 5px;
+    padding: 2px 5px;
     line-height: 25px;
     margin: 3px;
 }

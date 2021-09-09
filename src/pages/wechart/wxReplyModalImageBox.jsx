@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-07 18:41:59
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 16:14:20
+ * @LastEditTime: 2021-09-09 17:30:04
  * @Description: 多种类型的[微信公众号]上传对应图片
  */
 
@@ -67,7 +67,7 @@ export default class wxReplyModalImageBox extends Component {
                         <Form.Item label="图片上传">
                             <Form.Item>
                                 {
-                                    (msg_type === 'image' || msg_type === 'minis') &&
+                                    (msg_type === 'image' || msg_type === 'mini') &&
                                     <div>图片|小程序类型，需要上传对应的微信公众号所需要的图片</div>
                                 }
                                 {

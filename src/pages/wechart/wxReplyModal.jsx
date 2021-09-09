@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 13:41:15
+ * @LastEditTime: 2021-09-09 16:07:11
  * @Description: 微信自动回复模块
  */
 
@@ -74,9 +74,9 @@ export default class WxReplyModal extends Component {
 
         return (
             <div key='modal'>
-                {/* <div>item</div>
+                <div>item</div>
                 <div>{JSON.stringify(item)}</div>
-                <div>replys</div>
+                {/* <div>replys</div>
                 <div>{JSON.stringify(replys)}</div> */}
                 <div>
                     <Alert className="alert-box" message="微信自动回复数据载体" type="success" action={
@@ -135,10 +135,6 @@ export default class WxReplyModal extends Component {
                                                         ))}
                                                     </Select>
                                                 </Form.Item>
-
-                                                {/* <Form.Item>
-                                                    {that.renderKeywordsTags()}
-                                                </Form.Item> */}
 
                                                 <Form.Item name='keywords' >
                                                     <Input style={{ width: base_width }} placeholder='请输入关键字' />
@@ -225,7 +221,7 @@ export default class WxReplyModal extends Component {
                                             }
 
                                             {
-                                                item.msg_type === 'mini' &&
+                                                item.msg_type === 'minis' &&
                                                 <div className='phone-box'>
                                                     <div className='head-img'>小程序</div>
                                                     <div className='phone-item-box'>
@@ -318,7 +314,7 @@ export default class WxReplyModal extends Component {
                                             }
                                             {
                                                 // 小程序卡片
-                                                that.replyFormRef.current.getFieldValue('msg_type') === 'mini' &&
+                                                that.replyFormRef.current.getFieldValue('msg_type') === 'minis' &&
                                                 <div>
                                                     <Form.Item label='卡片标题' name='title'>
                                                         <Input style={{ width: base_width }} placeholder='请输入小程序标题' onFocus={() => that.onInputGetFocus('卡片标题', 'title')} onBlur={() => that.onInputLoseFocus()} />
@@ -336,7 +332,11 @@ export default class WxReplyModal extends Component {
                                 </Form>
                                 {that.replyFormRef && that.replyFormRef.current && that.replyFormRef.current.getFieldValue('msg_type') !== 'text' &&
                                     <WxReplyModalImageBox dict_public_types={dict_public_types} onCallback={(imgs) => that.onImageBoxCallback(imgs)}
-                                        onRef={(val) => { that.setState({ image_box_ref: val }) }} />
+                                        onRef={(val) => {
+                                            that.setState({ image_box_ref: val }, () => {
+                                                that.refreshImageBoxByWxCode();
+                                            });
+                                        }} />
                                 }
                             </div>
                         </div>
@@ -572,6 +572,7 @@ export default class WxReplyModal extends Component {
             that.setState({
                 datas: datas,
             }, () => {
+                that.refreshImageBoxByWxCode();
                 that.forceUpdate();
             })
         }
@@ -738,18 +739,20 @@ export default class WxReplyModal extends Component {
     //回复列表标签被点击 切换标签
     onReplyItemChange(index) {
         let that = this;
-        let infos = that.state.infos;
-        let reply_select_id = that.state.reply_select_id;
+        let { datas, tag_select_id, reply_select_id } = that.state;
+
+        let data = datas[tag_select_id];
+        let infos = data.info;
 
         //存储老数据
         let last_info = infos[reply_select_id];
         let curr_info = that.replyFormRef.current.getFieldsValue()
 
+
         let new_info = Object.assign({}, last_info, curr_info)
         infos[reply_select_id] = new_info;
 
         that.setState({
-            image_box_ref: null,
             infos: infos,
             reply_select_id: index,
             last_select_input_box: {
@@ -887,8 +890,6 @@ export default class WxReplyModal extends Component {
         let ref = that.state.image_box_ref;
         if (!ref) return;
 
-     
-
         let { menu_type } = that.props;
         let wxCodeKeys = [];
         if (menu_type === 'keywords' || menu_type === 'other') {
@@ -910,7 +911,6 @@ export default class WxReplyModal extends Component {
         let msg_type = reply.msg_type;
 
         if (msg_type === 'text') return;
-        
         ref.pushSelectWxCodeKeys(wxCodeKeys, msg_type, reply);
 
     }
@@ -963,7 +963,7 @@ export default class WxReplyModal extends Component {
             new_data.tags = '';
         }
 
-        let new_info = [];
+        let new_info = [{ msg_type: 'text' }];
         new_data.info = new_info;
 
         datas.push(new_data)

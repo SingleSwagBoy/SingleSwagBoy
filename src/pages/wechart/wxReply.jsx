@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-07 16:38:32
+ * @LastEditTime: 2021-09-09 15:23:34
  */
 import React, { Component } from 'react';
 import { Menu, message, Tooltip, Modal } from 'antd';
@@ -44,7 +44,7 @@ export default class WxReply extends Component {
                 { key: 'text', value: '文字' },
                 { key: 'image', value: '图片' },
                 { key: 'news', value: '图文' },
-                { key: 'mini', value: '小程序卡片' },   //用于前端 穿给后端的时候 用文本形式上传
+                { key: 'minis', value: '小程序卡片' },   //用于前端 穿给后端的时候 用文本形式上传
             ],
             //关键字匹配规则
             dict_rule_types: [

@@ -31,10 +31,7 @@ export default class AddressNews extends Component {
       // msgList: ["图文信息", "图片信息", "文字信息", "小程序卡片"],
       msgList: ["图片信息"],
       templateList: [], //素材列表
-      tabIndex: 0,
-      activeIndex: 0,
       mpList: [], //小程序列表
-      selectContent: "",//素材选中内容
       previewUser: [],//预览用户
       parentsData: "", // 父组件传过来的数据
       openIdList: [],
@@ -45,7 +42,7 @@ export default class AddressNews extends Component {
     }
   }
   render() {
-    const { msgList, templateList, tabIndex, selectContent, activeIndex } = this.state;
+    const { msgList, templateList } = this.state;
     const divStyle = {
       "display": "flex",
       "flexWrap": "wrap",
@@ -196,7 +193,6 @@ export default class AddressNews extends Component {
                       onChange={(val) => {
                         console.log(val)
                         this.formRef.current.setFieldsValue({ "type": val ? "news" : "mpnews" })
-                        this.state.selectContent.type = val ? "news" : "mpnews"
                       }}
                     // optionFilterProp="name"
                     >
@@ -217,14 +213,6 @@ export default class AddressNews extends Component {
                   立即客服群发
                 </Button>
               </Form.Item>
-              {/* <Form.Item {...this.state.tailLayout}>
-                {
-                  selectContent ?
-                    <Card style={cardStyleOut}>
-                      {this.getCardContent(activeIndex, selectContent, 1)}
-                    </Card> : ""
-                }
-              </Form.Item> */}
               <Divider plain orientation="left">预览发送配置</Divider>
               <Form.Item
                 label="发送预览用户(多选)"
@@ -282,11 +270,9 @@ export default class AddressNews extends Component {
           wrapClassName="outClass"
         // style={{ zIndex: 9999 }}
         >
-          <Tabs tabPosition={"top"} activeKey={tabIndex.toString()}
+          <Tabs tabPosition={"top"} activeKey={"0"}
             onChange={(val) => {
-              console.log(val, "tabIndex")
               this.setState({
-                tabIndex: val,
                 page: 1,
                 pageSize: 10
               }, () => {
@@ -322,20 +308,14 @@ export default class AddressNews extends Component {
                   </div>
                   <Pagination defaultCurrent={1} total={this.state.totalCount}
                     current={this.state.page}
-                    pageSize={this.state.tabIndex == 0 ? 20 : this.state.pageSize}
+                    pageSize={20}
                     onChange={(page, pageSize) => {
                       console.log(page, pageSize)
                       this.setState({
                         page: page,
                         pageSize: pageSize
                       }, () => {
-                        if (this.state.tabIndex == 1) {
-                          this.getMsgTemplate("mpnews")
-                        } else if (this.state.tabIndex == 2) {
-                          this.getMsgTemplate("text")
-                        } else if (this.state.tabIndex == 0) {
-                          this.getTemplateImage()
-                        }
+                        this.getTemplateImage()
                       })
 
                     }} />
@@ -595,8 +575,10 @@ export default class AddressNews extends Component {
         </div>
         <Button type="primary" onClick={() => {
           if (!this.formRef.current.getFieldValue("wxCode")) return message.error("请先选择微信公众号")
-          this.setState({ materialModal: true, tabIndex: 0 })
-          this.getTemplateImage()
+          this.setState({ materialModal: true,page:1 },()=>{
+            this.getTemplateImage()
+          })
+        
         }}>
           选择素材
         </Button>
@@ -681,8 +663,6 @@ export default class AddressNews extends Component {
       }
       this.setState({
         sourceType: "edit",
-        // activeIndex: index,
-        // selectContent: index == 1 ? JSON.parse(formData.info) : index == 2 ? formData : JSON.parse(formData.info.replace(/\n/g, "<br/>"))
       })
 
       this.getTemplateUser(this.formRef.current.getFieldValue("wxCode"))
@@ -809,7 +789,6 @@ export default class AddressNews extends Component {
       ...item,
       tag: item.tag.length === 0 ? "" : item.tag.join(","),
       sendTime: item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
-      // info: this.state.tabIndex == 1 ? JSON.stringify(this.state.selectContent) : this.state.selectContent.info ? this.state.selectContent.info : JSON.stringify(this.state.selectContent),
       type: "multi",
       multiInfo: JSON.stringify(info)
     }

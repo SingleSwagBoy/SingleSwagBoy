@@ -315,9 +315,6 @@ export const sendMsg = (params) => { //发送客服消息
 export const addMsg = (params) => { //新增客服消息
     return request.post(`${baseUrl}/mms/wx/msg/task/add`, params)
 };
-export const getMpList = (params) => { //获取小程序列表
-    return request.post(`${baseUrl}/mms/wx/msg/getMpList`, params)
-};
 export const addMaterial = (params) => { //新增素材
     return request.post(`${baseUrl}/mms/wx/msg/addNews`, params)
 };
@@ -434,7 +431,7 @@ export const requestDictStatus = () => {
     });
 }
 
-
+export const requestWxProgramList = (params) => { return request2.post(`${baseUrl}/mms/wx/msg/getMpList`, params) };           //获取小程序列表
 
 //========== 配置管理 ==========
 export const requestConfigAddDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}add`, params); }                       //配置列表-添加配置
@@ -442,8 +439,7 @@ export const requestConfigDocList = (layer, params) => { return request2.post(`$
 export const requestConfigDeleteDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}del`, params); }                    //配置列表-删除配置
 export const requestConfigUpdateDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}update`, params); }                 //配置列表-更新配置
 
-
-//微信管理
+//========== 微信管理 ==========
 export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); }                           //获取微信回复
 export const requestWxReplyTypes = (params) => { return request2.post(`${baseUrl}/mms/wx/public/get`, params); }                    //获取回复公众号的类型
 export const requestWxReplyUpdate = params => { return request2.post(`${baseUrl}/mms/wxReply/update`, params); };                   //编辑|更新

@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 17:19:21
+ * @LastEditTime: 2021-09-09 18:42:01
  * @Description: 微信自动回复模块
  */
 
@@ -58,7 +58,7 @@ export default class WxReplyModal extends Component {
     render() {
         let that = this;
         let { menu_type, } = that.props;
-        let { dict_msg_type, dict_public_types, dict_user_tags, dict_rule_types } = that.props;
+        let { dict_msg_type, dict_public_types, dict_user_tags, dict_rule_types, dict_wx_program } = that.props;
         let { tags, datas, base_width, tag_select_id, reply_select_id, last_select_input_box } = that.state;
         let targetReplyId = parseInt(reply_select_id) + 1;
 
@@ -310,6 +310,9 @@ export default class WxReplyModal extends Component {
                                                     <Form.Item label='摘要' name='description'>
                                                         <TextArea style={{ width: base_width }} rows={5} placeholder='请输入摘要' onFocus={() => that.onInputGetFocus('摘要', 'description')} onBlur={() => that.onInputLoseFocus()} />
                                                     </Form.Item>
+                                                    <Form.Item label='链接地址' name='url'>
+                                                        <TextArea style={{ width: base_width }} rows={3} placeholder='请输入链接地址' onBlur={() => that.onInputLoseFocus()} />
+                                                    </Form.Item>
                                                 </div>
                                             }
                                             {
@@ -319,8 +322,16 @@ export default class WxReplyModal extends Component {
                                                     <Form.Item label='卡片标题' name='title'>
                                                         <Input style={{ width: base_width }} placeholder='请输入小程序标题' onFocus={() => that.onInputGetFocus('卡片标题', 'title')} onBlur={() => that.onInputLoseFocus()} />
                                                     </Form.Item>
-                                                    <Form.Item label='小程序appId' name='appid'>
-                                                        <Input style={{ width: base_width }} placeholder='请填写小程序Appid' onBlur={() => that.onInputLoseFocus()} />
+                                                    <Form.Item label='小程序' name='appid'>
+                                                        <Select style={{ width: base_width }} placeholder='请选择回复公众号'
+                                                            onChange={() => { that.forceUpdate() }} onBlur={(view) => that.onInputLoseFocus(view)}>
+                                                            {dict_wx_program.map((item, index) => (
+                                                                <Option value={item.appid}>{item.appName}</Option>
+                                                            ))}
+                                                        </Select>
+                                                    </Form.Item>
+                                                    <Form.Item label='appId' name='appid'>
+                                                        <Input style={{ width: base_width }} placeholder='请输入appid' onBlur={() => that.onInputLoseFocus()} />
                                                     </Form.Item>
                                                     <Form.Item label='小程序路径' name='path'>
                                                         <TextArea style={{ width: base_width }} rows={3} placeholder='小程序页面 示例：pages/index/hqs' onBlur={() => that.onInputLoseFocus()} />

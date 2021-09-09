@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-06 16:18:09
+ * @LastEditTime: 2021-09-09 14:26:40
  */
 
 import React, { Component } from 'react';
@@ -18,8 +18,9 @@ import {
 import './doc_style.css'
 import SyncBtn from "../../components/syncBtn/syncBtn.jsx"
 
-const { Option } = Select;
-const { TabPane } = Tabs;
+let { TextArea } = Input;
+let { Option } = Select;
+let { TabPane } = Tabs;
 export default class Doc extends Component {
     constructor(props) {
         super(props);
@@ -60,6 +61,7 @@ export default class Doc extends Component {
             //弹出框
             modal_box: {
                 is_show: false,
+                is_edit: false,
                 title: '新增',
             },
             last_item_edit_id: '',   //上一个被选中的id
@@ -182,7 +184,6 @@ export default class Doc extends Component {
                                         that.formRef.current.setFieldsValue({ "value": new_value })
                                         that.forceUpdate();
                                     }}></Input>
-                                    <Button>上传图片</Button>
                                 </Form.Item>
                                 {
                                     that.formRef.current.getFieldValue("value") ?
@@ -242,19 +243,19 @@ export default class Doc extends Component {
         if (layer_count === 0 || layer_count === 1) {
             titles.push({
                 title: '文案名称', dataIndex: 'name', key: 'name', render: (rowValue, row, index) => {
-                    return (that.renderTitleItem(row, 'is_edit_name', 'name'))
+                    return (that.renderTitleItem(layer_count, row, 'is_edit_name', 'name'))
                 }
             });
             titles.push({
                 title: '文案编码', dataIndex: 'code', key: 'code', render: (rowValue, row, index) => {
-                    return (that.renderTitleItem(row, 'is_edit_code', 'code'))
+                    return (that.renderTitleItem(layer_count, row, 'is_edit_code', 'code'))
                 }
             });
         }
         else if (layer_count === 2) {
             titles.push({
                 title: '参数', dataIndex: 'value', key: 'value', render: (rowValue, row, index) => {
-                    return (that.renderTitleItem(row, 'is_edit_value', 'value'))
+                    return (that.renderTitleItem(layer_count, row, 'is_edit_value', 'value'))
                 }
             });
         }
@@ -447,6 +448,8 @@ export default class Doc extends Component {
         }
         let modal_box = that.state.modal_box;
         modal_box.is_show = true;
+        modal_box.is_edit = false;
+        modal_box.data = {};
         that.setState({ modal_box: modal_box })
     }
     //编辑按钮被点击
@@ -525,8 +528,10 @@ export default class Doc extends Component {
     onModalCancelClick() {
         let that = this;
         let modal_box = that.state.modal_box;
+        modal_box.title = '新增';
         modal_box.is_show = false;
-
+        modal_box.is_edit = false;
+        modal_box.data = {};
         that.setState({ modal_box: modal_box })
     }
 
@@ -602,16 +607,18 @@ export default class Doc extends Component {
 
     /**
      * 渲染表格item 默认为按钮，被点击后出现输入框、失去焦点后判断更新数据、刷新列表
+     * @param {*} layer_count 层级
      * @param {*} row 
      * @param {*} flag_key 
      * @param {*} param_key 
      * @returns 
      */
-    renderTitleItem(row, flag_key, param_key) {
+    renderTitleItem(layer_count, row, flag_key, param_key) {
         let that = this;
         let is_edit = row[flag_key];
         let default_value = row[param_key];
         let last_item_edit_id = that.state.last_item_edit_id;
+
 
         //编辑形态 失去焦点 更新数据
         if (is_edit) {
@@ -621,7 +628,7 @@ export default class Doc extends Component {
                 return;
             }
 
-            return <Input defaultValue={default_value} onBlur={(e) => {
+            return <TextArea defaultValue={default_value} style={{ width: 350 }} autoSize={{ minRows: 2, maxRows: 6 }} onBlur={(e) => {
                 let new_value = e.target.value;
                 if (default_value === new_value) {
                     row[flag_key] = false;
@@ -636,12 +643,27 @@ export default class Doc extends Component {
         //按钮形态
         else {
             return <a type='link' onClick={() => {
-                row[flag_key] = true;
-                that.setState({
-                    last_item_edit_id: row.id,
-                }, () => {
-                    that.forceUpdate();
-                })
+                //第三层数据 
+                if (layer_count === 2) {
+                    let modal_box = that.state.modal_box;
+                    modal_box.title = '编辑';
+                    modal_box.is_show = true;
+                    modal_box.is_edit = true;
+                    modal_box.data = row;
+                    that.formRef.current.setFieldsValue(row);
+
+                    that.setState({ modal_box: modal_box })
+                }
+                //第1、2层数据
+                else {
+                    row[flag_key] = true;
+                    that.setState({
+                        last_item_edit_id: row.id,
+                    }, () => {
+                        that.forceUpdate();
+                    })
+                }
+
             }} >
                 {default_value}
             </a>

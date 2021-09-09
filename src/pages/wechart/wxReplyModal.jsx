@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 16:07:11
+ * @LastEditTime: 2021-09-09 16:17:19
  * @Description: 微信自动回复模块
  */
 
@@ -74,8 +74,8 @@ export default class WxReplyModal extends Component {
 
         return (
             <div key='modal'>
-                <div>item</div>
-                <div>{JSON.stringify(item)}</div>
+                {/* <div>item</div>
+                <div>{JSON.stringify(item)}</div> */}
                 {/* <div>replys</div>
                 <div>{JSON.stringify(replys)}</div> */}
                 <div>

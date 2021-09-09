@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getMsgTemplate, getTemplateImage, getTemplateUser, editMsg, sendMsg, addMsg, getMpList, addMaterial, syncWxMaterial, addText } from 'api'
+import { getMsgTemplate, getTemplateImage, getTemplateUser, editMsg, sendMsg, addMsg, requestWxProgramList, addMaterial, syncWxMaterial, addText } from 'api'
 import { Card, Button, message, Tabs, Radio, Modal, Form, Input, Select, DatePicker, Divider, Alert, InputNumber, Pagination } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
@@ -750,13 +750,14 @@ export default class AddressNews extends Component {
     })
   }
   getMpList() { //获取小程序
-    getMpList().then(res => {
-      if (res.data.errCode === 0) {
-        this.setState({
-          mpList: res.data.data
+    requestWxProgramList({})
+        .then(res=>{
+            this.setState({
+                mpList: res.data.data
+              })
+        }).catch(res=>{
+        
         })
-      }
-    })
   }
   // 编辑客服消息
   editMsg(item) {

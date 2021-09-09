@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 17:09:46
+ * @LastEditTime: 2021-09-09 17:42:52
  */
 
 import React, { Component } from 'react';
@@ -410,7 +410,7 @@ export default class Doc extends Component {
         Modal.confirm({
             title: '删除',
             content: (
-                <p>确定删除【{item.name}】这条数据？</p>
+                <p>确定删除这条数据？</p>
             ),
             okText: '删除',
             cancelText: '取消',

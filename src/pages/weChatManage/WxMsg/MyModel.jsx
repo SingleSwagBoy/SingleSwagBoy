@@ -906,7 +906,7 @@ export default class AddressNews extends Component {
     this.setState({
       addMaterialState: true,
     })
-    // this.formMaterial.current.setFieldsValue({ "msgType": "news" })
+    this.formMaterial.current.resetFields()
   }
   //获取上传的图片路径
   getUploadFileUrl(type, file, info) {

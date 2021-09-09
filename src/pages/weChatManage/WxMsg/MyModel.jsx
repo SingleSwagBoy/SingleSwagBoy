@@ -654,6 +654,7 @@ export default class AddressNews extends Component {
             mpTitle: arr[0].miniTitle,
             mpPath: arr[0].path,
             url: arr[0].picUrl,
+            appid: arr[0].appid,
           })
         }
         this.setState({

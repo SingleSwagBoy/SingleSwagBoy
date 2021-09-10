@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 15:23:34
+ * @LastEditTime: 2021-09-09 18:28:57
  */
 import React, { Component } from 'react';
 import { Menu, message, Tooltip, Modal } from 'antd';
@@ -15,6 +15,7 @@ import {
     requestWxReplyDelete,               //删除
     requestWxReplyCreate,               //添加
     getUserTag,                         //用户设备标签
+    requestWxProgramList,               //小程序列表
 } from 'api'
 import './wxReply.css';
 import WxReplyModal from "./wxReplyModal"
@@ -51,9 +52,10 @@ export default class WxReply extends Component {
                 { key: 1, value: '全匹配' },
                 { key: 2, value: '半匹配' },
             ],
-            dict_user_tags: [],                      //字典 用户标签
-            dict_public_types: [],                  //字典 微信公众号回复类型
-            dict_status: [],                        //字典 状态类型
+            dict_wx_program: [],                        //微信小程序列表
+            dict_user_tags: [],                         //字典 用户标签
+            dict_public_types: [],                      //字典 微信公众号回复类型
+            dict_status: [],                            //字典 状态类型
             table_box: {
                 table_title: [],
                 table_datas: [],
@@ -80,7 +82,7 @@ export default class WxReply extends Component {
 
     render() {
         let { table_box, menu_select_code, menu_list, request_box,
-            dict_public_types, dict_msg_type, dict_user_tags, dict_rule_types, } = this.state;
+            dict_public_types, dict_msg_type, dict_user_tags, dict_rule_types, dict_wx_program} = this.state;
 
         return (
             <div>
@@ -113,7 +115,7 @@ export default class WxReply extends Component {
 
 
                 <WxReplyModal onRef={(val) => { this.setState({ wxReplyModlRef: val }) }}
-                    dict_msg_type={dict_msg_type} dict_user_tags={dict_user_tags} dict_public_types={dict_public_types} dict_rule_types={dict_rule_types}
+                    dict_msg_type={dict_msg_type} dict_user_tags={dict_user_tags} dict_public_types={dict_public_types} dict_rule_types={dict_rule_types} dict_wx_program={dict_wx_program}
                     menu_type={menu_select_code} request_box={request_box}
                     onSave={this.onWxReplySaveClick.bind(this)} onDelete={this.onWxReplyDeleteClick.bind(this)} />
 
@@ -128,35 +130,39 @@ export default class WxReply extends Component {
     initData() {
         let that = this;
 
-        //用户标签
-        getUserTag().then(res => {
-            let datas = res.data.data;
-            let tags = [];
-            tags.push({ id: -1, code: 'default', name: '默认', });
+        //获取微信小程序列表
+        requestWxProgramList().then(res => {
+            that.setState({ dict_wx_program: res.data })
+            //用户标签
+            getUserTag().then(res => {
+                let datas = res.data.data;
+                let tags = [];
+                tags.push({ id: -1, code: 'default', name: '默认', });
 
-            for (let i = 0, len = datas.length; i < len; i++) {
-                let item = datas[i];
-                tags.push(item);
-            }
+                for (let i = 0, len = datas.length; i < len; i++) {
+                    let item = datas[i];
+                    tags.push(item);
+                }
 
-            that.setState({ dict_user_tags: tags });
-            //状态字典
-            requestDictStatus().then(res => {
-                that.setState({ dict_status: res, })
-                //获取回复公众号类型
-                requestWxReplyTypes().then(res => {
-                    let types = res.data;
-                    if (types && types.length > 0) {
-                        that.setState({
-                            dict_public_types: types
-                        }, () => {
-                            //渲染menu
-                            let code = that.state.menu_list[0].code;
-                            that.refreshTableTitleByMenuCode(code);
-                        })
-                    } else {
-                        message.error('获取字典[回复公众号类型]时发生错误，请刷新页面。')
-                    }
+                that.setState({ dict_user_tags: tags });
+                //状态字典
+                requestDictStatus().then(res => {
+                    that.setState({ dict_status: res, })
+                    //获取回复公众号类型
+                    requestWxReplyTypes().then(res => {
+                        let types = res.data;
+                        if (types && types.length > 0) {
+                            that.setState({
+                                dict_public_types: types
+                            }, () => {
+                                //渲染menu
+                                let code = that.state.menu_list[0].code;
+                                that.refreshTableTitleByMenuCode(code);
+                            })
+                        } else {
+                            message.error('获取字典[回复公众号类型]时发生错误，请刷新页面。')
+                        }
+                    })
                 })
             })
         })

@@ -33,7 +33,7 @@ export default class wxReplyModalTags extends Component {
                                     tag_select_id === index ? <div className="custom-tag-item" key={index}>
                                         <Tag className="custom-tag-pane" color="volcano" closable
                                             onClick={() => that.onTagClick(index)} onClose={(e) => { that.onTagDeleteClick(e, index) }}>
-                                            {index + 1}-{item.name}
+                                            当前选择-{index + 1}-{item.name}
                                         </Tag>
                                     </div> : ''
                                 )

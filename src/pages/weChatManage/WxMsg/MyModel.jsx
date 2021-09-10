@@ -10,7 +10,7 @@ import ImageUpload from "../../../components/ImageUpload/index" //图片组件
 import "./style.css"
 const { Option } = Select;
 const { TabPane } = Tabs;
-
+let contentProps =  ""//input的光标位置
 export default class AddressNews extends Component {
   formRef = React.createRef();
   formMaterial = React.createRef();
@@ -39,6 +39,8 @@ export default class AddressNews extends Component {
       addMaterialState: false,
       typeText: 0,
       imageInfo: "",//图片信息
+      wildcard: "",//通配符的位置记录
+     
     }
   }
   render() {
@@ -50,13 +52,6 @@ export default class AddressNews extends Component {
     }
     const cardStyle = {
       width: "32%",
-      height: "300px",
-      "margin": "0 0 20px 0",
-      boxShadow: " 0 2px 12px 0 rgb(0 0 0 / 10%)",
-      borderRadius: "10px"
-    }
-    const cardStyleOut = {
-      width: "50%",
       height: "300px",
       "margin": "0 0 20px 0",
       boxShadow: " 0 2px 12px 0 rgb(0 0 0 / 10%)",
@@ -276,15 +271,6 @@ export default class AddressNews extends Component {
                 page: 1,
                 pageSize: 10
               }, () => {
-                // if (val == 0) {
-                //   this.getMsgTemplate("mpnews")
-                // } else if (val == 2) {
-                //   this.getMsgTemplate("text")
-                // } else if (val == 1) {
-
-                // } else if (val == 3) {
-                //   this.getMsgTemplate("mini")
-                // }
                 this.getTemplateImage()
               })
 
@@ -373,15 +359,15 @@ export default class AddressNews extends Component {
             >
               {
                 this.formMaterial.current ?
-                <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this, 2)}
-                  key={new Date().getTime()}
-                  postUrl={"/mms/wxReply/addMedia"} //上传地址
-                  params={this.formMaterial.current.getFieldValue("wxCode")} //另外的参数
-                  imageUrl={this.formMaterial.current.getFieldValue("url")}
-                />
-                :""
+                  <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this, 2)}
+                    key={new Date().getTime()}
+                    postUrl={"/mms/wxReply/addMedia"} //上传地址
+                    params={this.formMaterial.current.getFieldValue("wxCode")} //另外的参数
+                    imageUrl={this.formMaterial.current.getFieldValue("url")}
+                  />
+                  : ""
               }
-             
+
             </Form.Item>
 
 
@@ -442,19 +428,32 @@ export default class AddressNews extends Component {
                 // onClose={onClose}
                 />
               </Form.Item>
+              {/* 通配符函数 */}
+              {
+                this.getWildCard("#nickName")
+              }
               <Form.Item
                 label="标题"
                 name="title"
                 rules={[{ required: true, message: '请输入标题' }]}
               >
-                <Input />
+                <Input  ref={(input) => { contentProps = input }} onFocus={() => {
+                  this.setState({
+                    wildcard: "title",
+                    wildType:"input"
+                  })
+                }} />
               </Form.Item>
               <Form.Item
                 label="摘要"
                 name="digest"
               // rules={[{ required: true, message: '请输入标题' }]}
               >
-                <Input.TextArea />
+                <Input.TextArea onFocus={() => {
+                  this.setState({
+                    wildcard: "digest"
+                  })
+                }} />
               </Form.Item>
               <Form.Item
                 label="封面图片"
@@ -470,7 +469,11 @@ export default class AddressNews extends Component {
                 name="content_source_url"
                 rules={[{ required: true, message: '请输入链接地址' }]}
               >
-                <Input />
+                <Input onFocus={() => {
+                  this.setState({
+                    wildcard: "not"
+                  })
+                }} />
               </Form.Item>
             </>
             :
@@ -500,16 +503,25 @@ export default class AddressNews extends Component {
                     // onClose={onClose}
                     />
                   </Form.Item>
+                  {/* 通配符函数 */}
+                  {
+                    this.getWildCard("#nickName")
+                  }
                   <Form.Item
                     label="消息内容"
                     name="content"
-                    rules={[{ required: true, message: '请输入消息内容' }]}
+                    rules={[{ required: true, message: '请输入消息内容' }]
+                    }
                   >
-                    <Input.TextArea />
+                    <Input.TextArea ref={(input) => { contentProps = input }} onFocus={() => {
+                      this.setState({
+                        wildcard: "content"
+                      })
+                    }} />
                   </Form.Item>
                 </>
                 :
-                // 文本消息
+                // 小程序消息
                 this.formRef.current && this.formRef.current.getFieldValue("msgType") == "mini" ?
                   <>
                     <Form.Item {...this.state.tailLayout}>
@@ -524,7 +536,7 @@ export default class AddressNews extends Component {
                     <Form.Item
                       label="微信小程序"
                       name="appid"
-                      // rules={[{ required: true, message: '请选择微信小程序' }]}
+                    // rules={[{ required: true, message: '请选择微信小程序' }]}
                     >
                       <Select
                         placeholder="请选择要插入的微信小程序"
@@ -539,12 +551,19 @@ export default class AddressNews extends Component {
                         }
                       </Select>
                     </Form.Item>
+                    {
+                      this.getWildCard("#nickName")
+                    }
                     <Form.Item
                       label="小程序标题"
                       name="mpTitle"
                       rules={[{ required: true, message: '请输入小程序标题' }]}
                     >
-                      <Input />
+                      <Input ref={(input) => { contentProps = input }} onFocus={() => {
+                        this.setState({
+                          wildcard: "mpTitle"
+                        })
+                      }} />
                     </Form.Item>
 
                     <Form.Item
@@ -553,7 +572,7 @@ export default class AddressNews extends Component {
                       rules={[{ required: true, message: '请输入小程序跳转路径' }]}
                     >
                       <Input />
-                    
+
                     </Form.Item>
                     <Form.Item
                       label="封面图片"
@@ -570,6 +589,67 @@ export default class AddressNews extends Component {
       </>
     )
   }
+  // 获取通配符
+  getWildCard(addInfo) {
+    return (
+      <Form.Item {...this.state.tailLayout}>
+        <div>
+          <div style={{ border: "1px solid #000", width: "fit-content", padding: "2px 5px", borderRadius: "5px" }}
+            onClick={() => {
+              if (this.state.wildcard == "not") {
+                return message.warn("该输入框不支持通配符")
+              }
+              if (this.state.wildcard) {
+                let word = this.formRef.current.getFieldValue([this.state.wildcard])
+                console.log(contentProps,"contentProps")
+                let props = ""
+                if(contentProps.resizableTextArea){
+                  props = contentProps.resizableTextArea.textArea; // 获取dom节点实例
+                }else{
+                  props = contentProps.input; // 获取dom节点实例
+                }
+                let position = this.getPositionForTextArea(props); // 光标的位置
+                console.log(position)
+                let length = 0;
+                // setFieldsValue方法是异步的
+                // 不加延时器就会发生光标还没插入文字呢 就已经把光标插入后的位置提前定位
+                if(word){
+                  length = addInfo.length
+                  word = word.substr(0,position.start)+addInfo+word.substr(position.start)
+                }else{
+                  word = addInfo
+                }
+                this.formRef.current.setFieldsValue({ [this.state.wildcard]: word})
+                setTimeout(()=>{
+                    this.setCursorPosition(props, position.start+length);
+                },100);
+              }
+            }}
+          >
+            用户姓名
+          </div>
+        </div>
+      </Form.Item>
+    )
+  }
+  getPositionForTextArea = (ctrl) => {
+    // 获取光标位置
+    let CaretPos = {
+      start: 0,
+      end: 0
+    };
+    if (ctrl.selectionStart) {// Firefox support
+      CaretPos.start = ctrl.selectionStart;
+    }
+    if (ctrl.selectionEnd) {
+      CaretPos.end = ctrl.selectionEnd;
+    }
+    return (CaretPos);
+  }
+  setCursorPosition = (ctrl, pos) => {
+    // ctrl.focus();
+    ctrl.setSelectionRange(pos, pos);
+  }
   //获取图片素材按钮
   getPostButton() {
     return (
@@ -584,10 +664,10 @@ export default class AddressNews extends Component {
         </div>
         <Button type="primary" onClick={() => {
           if (!this.formRef.current.getFieldValue("wxCode")) return message.error("请先选择微信公众号")
-          this.setState({ materialModal: true,page:1 },()=>{
+          this.setState({ materialModal: true, page: 1 }, () => {
             this.getTemplateImage()
           })
-        
+
         }}>
           选择素材
         </Button>
@@ -653,7 +733,7 @@ export default class AddressNews extends Component {
             content: arr[0].content,
 
           })
-        }else if (arr[0].msgType === "mini") {
+        } else if (arr[0].msgType === "mini") {
           this.formRef.current.setFieldsValue({
             "msgType": arr[0].msgType,
             mpTitle: arr[0].miniTitle,
@@ -663,10 +743,10 @@ export default class AddressNews extends Component {
           })
         }
         this.setState({
-          imageInfo:arr[0]
+          imageInfo: arr[0]
         })
-      }else{
-        this.formRef.current.setFieldsValue({ "msgType": formData.type === "mpnews"? "news": formData.type})
+      } else {
+        this.formRef.current.setFieldsValue({ "msgType": formData.type === "mpnews" ? "news" : formData.type })
       }
       if (formData.sendType != 3) {
         this.formRef.current.setFieldsValue({ "sendTime": moment(formData.sendTime * 1000) })
@@ -685,7 +765,7 @@ export default class AddressNews extends Component {
   selectMsg(val) {
     console.log(val)
     this.closeModel(1)
-    if(this.formRef.current.getFieldValue("multiInfo")){
+    if (this.formRef.current.getFieldValue("multiInfo")) {
       let imageInfo = JSON.parse(this.formRef.current.getFieldValue("multiInfo"))[0]
       imageInfo.picUrl = val.url
       imageInfo.mediaId = val.mediaId
@@ -756,23 +836,23 @@ export default class AddressNews extends Component {
   }
   getMpList() { //获取小程序
     requestWxProgramList({})
-        .then(res=>{
-            this.setState({
-                mpList: res.data
-              })
-        }).catch(res=>{
-        
+      .then(res => {
+        this.setState({
+          mpList: res.data
         })
+      }).catch(res => {
+
+      })
   }
   // 编辑客服消息
   editMsg(item) {
-    console.log(item,this.state.imageInfo)
+    console.log(item, this.state.imageInfo)
     // let { id, info, messageType, sendTime, sendType, tag, type, wxCode } = this.state.parentsData
     let info = []
     if (item.msgType == "image") {
       info.push({
-        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId ,
-        picUrl: this.state.imageInfo.url || this.state.imageInfo.picUrl ,
+        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+        picUrl: this.state.imageInfo.url || this.state.imageInfo.picUrl,
         msgType: item.msgType
       })
     } else if (item.msgType == "text") {
@@ -832,43 +912,43 @@ export default class AddressNews extends Component {
     console.log(formData, "formData")
     let params = {
       openid: this.state.openIdList.join(","),
-      tag: formData.tag?formData.tag.length === 0 ? "" : formData.tag.join(","):"",
+      tag: formData.tag ? formData.tag.length === 0 ? "" : formData.tag.join(",") : "",
       wxCode: formData.wxCode,
     }
-    if(formData.type === "multi"){  //新版本
+    if (formData.type === "multi") {  //新版本
       let arr = JSON.parse(formData.multiInfo)[0]
       console.log(arr)
       params = {
         ...params,
         ...arr
       }
-      if(arr.msgType == "mini"){
+      if (arr.msgType == "mini") {
         params.title = arr.miniTitle
         // params.path = arr.mpPath
       }
     }
-    if(this.state.sourceType == "add"){
+    if (this.state.sourceType == "add") {
       if (formData.msgType == "image") {
-        params.mediaId = this.state.imageInfo.mediaID || this.state.imageInfo.mediaId 
-        params.picUrl = this.state.imageInfo.url || this.state.imageInfo.picUrl 
-        params.msgType =formData.msgType
+        params.mediaId = this.state.imageInfo.mediaID || this.state.imageInfo.mediaId
+        params.picUrl = this.state.imageInfo.url || this.state.imageInfo.picUrl
+        params.msgType = formData.msgType
       } else if (formData.msgType == "text") {
-        params.content =formData.content
-        params.msgType =formData.msgType
+        params.content = formData.content
+        params.msgType = formData.msgType
       } else if (formData.msgType == "mini") {
-        params.appid =formData.appid
-        params.miniTitle =formData.mpTitle
-        params.path =formData.mpPath
-        params.mediaId =this.state.imageInfo.mediaID || this.state.imageInfo.mediaId
-        params.picUrl =this.state.imageInfo.url || this.state.imageInfo.picUrl
-        params.msgType =formData.msgType
+        params.appid = formData.appid
+        params.miniTitle = formData.mpTitle
+        params.path = formData.mpPath
+        params.mediaId = this.state.imageInfo.mediaID || this.state.imageInfo.mediaId
+        params.picUrl = this.state.imageInfo.url || this.state.imageInfo.picUrl
+        params.msgType = formData.msgType
       } else {
-        params.title =formData.title
-        params.mediaId =this.state.imageInfo.mediaID || this.state.imageInfo.mediaId
+        params.title = formData.title
+        params.mediaId = this.state.imageInfo.mediaID || this.state.imageInfo.mediaId
         params.picUrl = this.state.imageInfo.url || this.state.imageInfo.picUrl
         params.description = formData.digest
-        params.url =  formData.content_source_url
-        params.msgType =formData.msgType
+        params.url = formData.content_source_url
+        params.msgType = formData.msgType
       }
     }
     sendMsg(params).then(res => {
@@ -899,7 +979,7 @@ export default class AddressNews extends Component {
         appName: item.appName,
         miniTitle: item.mpTitle,
         path: item.mpPath,
-        mediaId: this.state.imageInfo.mediaID|| this.state.imageInfo.mediaId,
+        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
         picUrl: this.state.imageInfo.url,
         msgType: type
       })

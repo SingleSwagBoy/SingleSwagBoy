@@ -3,42 +3,39 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-02 13:52:13
+ * @LastEditTime: 2021-09-10 14:46:27
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
-const AyhChannel = lazy(() => import('pages/ayh/channel/index.jsx'))
-const NoPermission = lazy(() => import('pages/NoPermission/index.jsx'))
-const WinningNews = lazy(() => import('pages/ayh/winningNews/index.jsx'))
-const SportsProgram = lazy(() => import('pages/ayh/sportsProgram/index.jsx'))
-const MedalList = lazy(() => import('pages/ayh/medalList/index.jsx'))
-const EventList = lazy(() => import('pages/ayh/eventList/index.jsx'))
-const SpecialList = lazy(() => import('pages/ayh/specialList/index.jsx'))
-const ShortVideo = lazy(() => import('pages/ayh/shortVideo/index.jsx'))
-const Equity = lazy(() => import('pages/level/equity/index.jsx'))
-const LevelConfig = lazy(() => import('pages/level/levelConfig/index.jsx'))
-const GrowConfig = lazy(() => import('pages/level/growConfig/index.jsx'))
-const UserDemote = lazy(() => import('pages/level/userDemote/index.jsx'))
-const BonusPayment = lazy(() => import('pages/ayh/bonusPayment/index.jsx'))
-const AddressList = lazy(() => import('pages/level/addressList/index.jsx'))
-const ServiceLog = lazy(() => import('pages/service/serviceLog/index.jsx'))
-const ManageTag = lazy(() => import('pages/service/manageTag/index.jsx'))
-const MiniInput = lazy(() => import('pages/service/miniInput/index.jsx'))
-const Recommend = lazy(() => import('pages/recommend/recommend.jsx'));
-const Voting = lazy(() => import('pages/activeManagement/voting/index.jsx'))
-const ChannelLock = lazy(() => import('pages/channelManage/channelLock/index.jsx'))
-const LivePreview = lazy(() => import('pages/channelManage/livePreview/index.jsx'))
-const AddressNews = lazy(() => import('pages/configManage/addressNews/index.jsx'))
-const MiniConfig = lazy(() => import('pages/configManage/miniConfig/index.jsx'))
-const ChannelSubject = lazy(() => import('pages/channelManage/channelSubject/index.jsx'))
-const EditSubject = lazy(() => import('pages/channelManage/editSubject/index.jsx'))
-const ConfigDoc = lazy(() => import('pages/config/doc.jsx'));
-const WxReply = lazy(() => import('pages/wechart/wxReply.jsx'));
-const wxPayTemplate = lazy(() => import('pages/wechart/wxPayTemplate.jsx'));
+const AyhChannel = lazy(()=>import('pages/ayh/channel/index.jsx'))
+const NoPermission = lazy(()=>import('pages/NoPermission/index.jsx'))
+const WinningNews = lazy(()=>import('pages/ayh/winningNews/index.jsx'))
+const SportsProgram = lazy(()=>import('pages/ayh/sportsProgram/index.jsx'))
+const MedalList = lazy(()=>import('pages/ayh/medalList/index.jsx'))
+const EventList = lazy(()=>import('pages/ayh/eventList/index.jsx'))
+const SpecialList = lazy(()=>import('pages/ayh/specialList/index.jsx'))
+const ShortVideo = lazy(()=>import('pages/ayh/shortVideo/index.jsx'))
+const Equity = lazy(()=>import('pages/level/equity/index.jsx'))
+const LevelConfig = lazy(()=>import('pages/level/levelConfig/index.jsx'))
+const GrowConfig = lazy(()=>import('pages/level/growConfig/index.jsx'))
+const UserDemote = lazy(()=>import('pages/level/userDemote/index.jsx'))
+const BonusPayment = lazy(()=>import('pages/ayh/bonusPayment/index.jsx'))
+const AddressList = lazy(()=>import('pages/level/addressList/index.jsx'))
+const ServiceLog = lazy(()=>import('pages/service/serviceLog/index.jsx'))
+const ManageTag = lazy(()=>import('pages/service/manageTag/index.jsx'))
+const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
+const Recommend= lazy (()=>import ('pages/adManage/recommend/recommend.jsx'));
+const Voting = lazy(()=>import('pages/activeManagement/voting/index.jsx'))
+const ChannelLock = lazy(()=>import('pages/channelManage/channelLock/index.jsx'))
+const LivePreview = lazy(()=>import('pages/channelManage/livePreview/index.jsx'))
+const AddressNews = lazy(()=>import('pages/configManage/addressNews/index.jsx'))
+const ChannelSubject = lazy(()=>import('pages/channelManage/channelSubject/index.jsx'))
+const EditSubject = lazy(()=>import('pages/channelManage/editSubject/index.jsx'))
+const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
+const WxReply =  lazy(()=>import('pages/wechart/autoReply/wxReply.jsx'));  
+const wxPayTemplate =  lazy(()=>import('pages/wechart/wxPayTemplate.jsx'));
 
-const WxMsg = lazy(() => import('pages/weChatManage/WxMsg/index.jsx'))
-
-const LoginManage = lazy(() => import('pages/adManage/loginManage/index.jsx'))  // 广告管理---个人中心登陆管理
+const WxMsg = lazy(()=>import('pages/weChatManage/WxMsg/index.jsx'))
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
@@ -80,7 +77,6 @@ const adminRoutes = [
     //微信公众号管理
     { path: '/mms/wxReply', component: WxReply, name: '自动回复', icon: UnorderedListOutlined, code: "WeChatManage" },
     { path: '/mms/wxPayTemplate', component: wxPayTemplate, name: '支付模板消息', icon: UnorderedListOutlined, code: "WeChatManage" },
-
 
 
 

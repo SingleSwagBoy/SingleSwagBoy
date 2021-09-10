@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-30 16:23:56
+ * @LastEditTime: 2021-09-10 14:44:52
  */
 import {lazy} from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -24,7 +24,7 @@ const AddressList = lazy(()=>import('pages/level/addressList/index.jsx'))
 const ServiceLog = lazy(()=>import('pages/service/serviceLog/index.jsx'))
 const ManageTag = lazy(()=>import('pages/service/manageTag/index.jsx'))
 const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
-const Recommend= lazy (()=>import ('pages/recommend/recommend.jsx'));
+const Recommend= lazy (()=>import ('pages/adManage/recommend/recommend.jsx'));
 const Voting = lazy(()=>import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(()=>import('pages/channelManage/channelLock/index.jsx'))
 const LivePreview = lazy(()=>import('pages/channelManage/livePreview/index.jsx'))
@@ -32,7 +32,7 @@ const AddressNews = lazy(()=>import('pages/configManage/addressNews/index.jsx'))
 const ChannelSubject = lazy(()=>import('pages/channelManage/channelSubject/index.jsx'))
 const EditSubject = lazy(()=>import('pages/channelManage/editSubject/index.jsx'))
 const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
-const WxReply =  lazy(()=>import('pages/wechart/wxReply.jsx'));  
+const WxReply =  lazy(()=>import('pages/wechart/autoReply/wxReply.jsx'));  
 const wxPayTemplate =  lazy(()=>import('pages/wechart/wxPayTemplate.jsx'));
 
 const WxMsg = lazy(()=>import('pages/weChatManage/WxMsg/index.jsx'))

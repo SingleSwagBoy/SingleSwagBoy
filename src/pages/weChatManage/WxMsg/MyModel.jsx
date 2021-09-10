@@ -371,12 +371,17 @@ export default class AddressNews extends Component {
               name="url"
               rules={[{ required: true, message: '请上传图片' }]}
             >
-              <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this, 2)}
-                key={new Date().getTime()}
-                postUrl={"/mms/wxReply/addMedia"} //上传地址
-                params={this.formMaterial.current && this.formMaterial.current.getFieldValue("wxCode")} //另外的参数
-                imageUrl={this.formMaterial.current && this.formMaterial.current.getFieldValue("url")}
-              />
+              {
+                this.formMaterial.current ?
+                <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this, 2)}
+                  key={new Date().getTime()}
+                  postUrl={"/mms/wxReply/addMedia"} //上传地址
+                  params={this.formMaterial.current.getFieldValue("wxCode")} //另外的参数
+                  imageUrl={this.formMaterial.current.getFieldValue("url")}
+                />
+                :""
+              }
+             
             </Form.Item>
 
 

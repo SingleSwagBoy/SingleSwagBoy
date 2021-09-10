@@ -832,7 +832,7 @@ export default class AddressNews extends Component {
     console.log(formData, "formData")
     let params = {
       openid: this.state.openIdList.join(","),
-      tag: formData.tag.length === 0 ? "" : formData.tag.join(","),
+      tag: formData.tag?formData.tag.length === 0 ? "" : formData.tag.join(","):"",
       wxCode: formData.wxCode,
     }
     if(formData.type === "multi"){  //新版本
@@ -845,6 +845,30 @@ export default class AddressNews extends Component {
       if(arr.msgType == "mini"){
         params.title = arr.miniTitle
         // params.path = arr.mpPath
+      }
+    }
+    if(this.state.sourceType == "add"){
+      if (formData.msgType == "image") {
+        params.mediaId = this.state.imageInfo.mediaID || this.state.imageInfo.mediaId 
+        params.picUrl = this.state.imageInfo.url || this.state.imageInfo.picUrl 
+        params.msgType =formData.msgType
+      } else if (formData.msgType == "text") {
+        params.content =formData.content
+        params.msgType =formData.msgType
+      } else if (formData.msgType == "mini") {
+        params.appid =formData.appid
+        params.miniTitle =formData.mpTitle
+        params.path =formData.mpPath
+        params.mediaId =this.state.imageInfo.mediaID || this.state.imageInfo.mediaId
+        params.picUrl =this.state.imageInfo.url || this.state.imageInfo.picUrl
+        params.msgType =formData.msgType
+      } else {
+        params.title =formData.title
+        params.mediaId =this.state.imageInfo.mediaID || this.state.imageInfo.mediaId
+        params.picUrl = this.state.imageInfo.url || this.state.imageInfo.picUrl
+        params.description = formData.digest
+        params.url =  formData.content_source_url
+        params.msgType =formData.msgType
       }
     }
     sendMsg(params).then(res => {

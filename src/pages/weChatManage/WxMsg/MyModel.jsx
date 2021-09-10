@@ -758,7 +758,7 @@ export default class AddressNews extends Component {
     requestWxProgramList({})
         .then(res=>{
             this.setState({
-                mpList: res.data.data
+                mpList: res.data
               })
         }).catch(res=>{
         

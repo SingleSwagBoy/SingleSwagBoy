@@ -35,6 +35,8 @@ const EditSubject = lazy(()=>import('pages/channelManage/editSubject/index.jsx')
 const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
 const WxReply =  lazy(()=>import('pages/wechart/autoReply/wxReply.jsx'));  
 const wxPayTemplate =  lazy(()=>import('pages/wechart/wxPayTemplate.jsx'));
+const LoginManage =  lazy(()=>import('pages/adManage/loginManage/index.jsx'));
+const MiniConfig =  lazy(()=>import('pages/configManage/miniConfig/index.jsx'));
 
 const WxMsg = lazy(()=>import('pages/weChatManage/WxMsg/index.jsx'))
 // advertising management
@@ -73,7 +75,7 @@ const adminRoutes = [
 
   {path:'/mms/adManage/recommend',component:Recommend,name:'尝鲜版',icon:UnorderedListOutlined,code:"adManage"},
   { path: '/mms/adManage/LoginManage', component: LoginManage, name: '个人中心登录', icon: UnorderedListOutlined, code: "adManage" },
-  {path:'/mms/adManage/menuImage',component:MenuImage,name:'菜单栏图片配置',icon:UnorderedListOutlined,code:"adManage"},
+  // {path:'/mms/adManage/menuImage',component:MenuImage,name:'菜单栏图片配置',icon:UnorderedListOutlined,code:"adManage"},
  
  
   //配置管理

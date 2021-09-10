@@ -1,4 +1,11 @@
-// 节目推荐
+/*
+ * @Author: HuangQS
+ * @Date: 2021-09-10 14:41:09
+ * @LastEditors: HuangQS
+ * @LastEditTime: 2021-09-10 14:43:09
+ * @Description: 尝鲜版配置页
+ */
+
 import RecommendModal from "./recommend-modal"
 import moment from 'moment';
 import React, { Component } from 'react';

@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 18:42:01
+ * @LastEditTime: 2021-09-10 11:04:59
  * @Description: 微信自动回复模块
  */
 
@@ -737,7 +737,6 @@ export default class WxReplyModal extends Component {
         that.setState({
             tag_select_id: index,
             reply_select_id: 0,
-            image_box_ref: null,
             last_select_input_box: {
                 key: '',
                 value: '',
@@ -876,6 +875,7 @@ export default class WxReplyModal extends Component {
         let that = this;
         let ref = that.state.image_box_ref;
         if (!ref) return;
+
 
         let { menu_type } = that.props;
         let wxCodeKeys = [];

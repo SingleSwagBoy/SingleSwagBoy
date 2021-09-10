@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-07 18:41:59
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 17:30:04
+ * @LastEditTime: 2021-09-10 11:19:06
  * @Description: 多种类型的[微信公众号]上传对应图片
  */
 
@@ -68,11 +68,11 @@ export default class wxReplyModalImageBox extends Component {
                             <Form.Item>
                                 {
                                     (msg_type === 'image' || msg_type === 'mini') &&
-                                    <div>图片|小程序类型，需要上传对应的微信公众号所需要的图片</div>
+                                    <div>图片、小程序类型数据需要上传<label style={{ color: 'red' }}>对应微信公众号</label>所需要的图片。</div>
                                 }
                                 {
                                     msg_type === 'news' &&
-                                    <div>图文类型，后台将自动取第一张图片作为数据源，其他的无效。</div>
+                                    <div>图文类型数据上传的将影响到当前<label style={{ color: 'red' }}>所有微信公众号</label>的推送图片展示。</div>
                                 }
                             </Form.Item>
 
@@ -105,7 +105,6 @@ export default class wxReplyModalImageBox extends Component {
                                             </Form.Item>
                                         )
                                     }
-
                                 })
                             }
                         </Form.Item>
@@ -126,7 +125,15 @@ export default class wxReplyModalImageBox extends Component {
      * @returns 
      */
     pushSelectWxCodeKeys(wxCodeKeys, msg_type, data) {
-        if (!data) return;
+        if (!data) {
+            that.setState({
+                imgs: [],
+                msg_type: msg_type,
+            }, () => {
+                that.forceUpdate();
+            })
+            return;
+        }
         let that = this;
         let { dict_public_types } = that.props; //所有微信公众号列表
 
@@ -225,8 +232,9 @@ export default class wxReplyModalImageBox extends Component {
     getImgs() {
         let that = this;
         let { imgs } = that.state;
-        
 
+        console.log('show imgs ')
+        console.log(imgs);
 
         return imgs;
     }

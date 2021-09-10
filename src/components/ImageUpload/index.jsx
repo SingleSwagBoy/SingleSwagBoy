@@ -23,7 +23,11 @@ class ImageUpload extends Component {
         },
       },
     }
-    
+    if(this.props.params){
+      this.state.updateProps.data={
+        wxCode:this.props.params
+      }
+    }
   }
   componentDidMount(){
     

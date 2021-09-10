@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-10 11:04:59
+ * @LastEditTime: 2021-09-10 11:43:11
  * @Description: 微信自动回复模块
  */
 
@@ -558,7 +558,7 @@ export default class WxReplyModal extends Component {
             if (menu_type === 'keywords' || menu_type === 'other') {
                 let wxCode = item.wxCode;
                 if (wxCode.constructor === String) {
-                    wxCode = wxCode.split(',')
+                    item.wxCode = wxCode.split(',')
                 }
                 item.tags = '';
             }
@@ -566,6 +566,8 @@ export default class WxReplyModal extends Component {
             else {
 
             }
+
+
 
             item.is_empty = false;
             item.info = reply;
@@ -875,7 +877,6 @@ export default class WxReplyModal extends Component {
         let that = this;
         let ref = that.state.image_box_ref;
         if (!ref) return;
-
 
         let { menu_type } = that.props;
         let wxCodeKeys = [];

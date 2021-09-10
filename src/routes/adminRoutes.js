@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-10 14:44:52
+ * @LastEditTime: 2021-09-10 15:02:24
  */
 import {lazy} from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -25,6 +25,7 @@ const ServiceLog = lazy(()=>import('pages/service/serviceLog/index.jsx'))
 const ManageTag = lazy(()=>import('pages/service/manageTag/index.jsx'))
 const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
 const Recommend= lazy (()=>import ('pages/adManage/recommend/recommend.jsx'));
+const MenuImage= lazy (()=>import ('pages/adManage/menuImage/menuImage.jsx'));
 const Voting = lazy(()=>import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(()=>import('pages/channelManage/channelLock/index.jsx'))
 const LivePreview = lazy(()=>import('pages/channelManage/livePreview/index.jsx'))
@@ -69,6 +70,7 @@ const adminRoutes = [
 
 
   {path:'/mms/adManage/recommend',component:Recommend,name:'尝鲜版',icon:UnorderedListOutlined,code:"adManage"},
+  {path:'/mms/adManage/menuImage',component:MenuImage,name:'菜单栏图片配置',icon:UnorderedListOutlined,code:"adManage"},
  
  
   //配置管理

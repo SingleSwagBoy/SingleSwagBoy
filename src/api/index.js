@@ -434,22 +434,32 @@ export const requestDictStatus = () => {
 export const requestWxProgramList = (params) => { return request2.post(`${baseUrl}/mms/wx/msg/getMpList`, params) };           //获取小程序列表
 
 //========== 配置管理 ==========
-export const requestConfigAddDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}add`, params); }                       //配置列表-添加配置
-export const requestConfigDocList = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}get`, params); }                      //配置列表-配置列表
-export const requestConfigDeleteDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}del`, params); }                    //配置列表-删除配置
-export const requestConfigUpdateDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}update`, params); }                 //配置列表-更新配置
+export const requestConfigAddDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}add`, params); }                      //配置列表-添加配置
+export const requestConfigDocList = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}get`, params); }                     //配置列表-配置列表
+export const requestConfigDeleteDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}del`, params); }                   //配置列表-删除配置
+export const requestConfigUpdateDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}update`, params); }                //配置列表-更新配置
+
 
 //========== 微信管理 ==========
-export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); }                           //获取微信回复
-export const requestWxReplyTypes = (params) => { return request2.post(`${baseUrl}/mms/wx/public/get`, params); }                    //获取回复公众号的类型
-export const requestWxReplyUpdate = params => { return request2.post(`${baseUrl}/mms/wxReply/update`, params); };                   //编辑|更新
-export const requestWxReplyDelete = params => { return request2.post(`${baseUrl}/mms/wxReply/del`, params); };                      //删除
-export const requestWxReplyCreate = params => { return request2.post(`${baseUrl}/mms/wxReply/add`, params); };                      //添加
+export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); }                                                                                   //获取微信回复
+export const requestWxReplyTypes = (params) => { return request2.post(`${baseUrl}/mms/wx/public/get`, params); }                                                                            //获取回复公众号的类型
+export const requestWxReplyUpdate = (params) => { return request2.post(`${baseUrl}/mms/wxReply/update`, params); };                                                                         //编辑|更新
+export const requestWxReplyDelete = (params) => { return request2.post(`${baseUrl}/mms/wxReply/del`, params); };                                                                            //删除
+export const requestWxReplyCreate = (params) => { return request2.post(`${baseUrl}/mms/wxReply/add`, params); };                                                                            //添加
+
+export const requestConfigMenuImageList = (params) => { return request2.post(`${baseUrl}/mms/config/menu/image/list`, params); };                                                           //菜单栏配置 列表
+export const requestConfigMenuImageCreate = (params) => { return request2.post(`${baseUrl}/mms/config/menu/image/create`, params); };                                                       //菜单栏配置 新增
+export const requestConfigMenuImageEidt = (params) => { return request2.post(`${baseUrl}/mms/config/menu/image/edit`, params); };                                                           //菜单栏配置 编辑
+export const requestConfigMenuImageDelete = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/deleteItem`, params); };                                                    //菜单栏配置 删除
+export const requestConfigMenuImageChangeState = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/changeState`, params); };                                              //菜单栏配置 修改状态
+
+
 
 
 //========== 数据同步|数据缓存 ========== 
-export const syncOther = (params) => { return request2.get(`${baseUrl}/mms/sync/other`, { params: params }); };                                                             //其他缓存 其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)
-export const syncLiveCarousel = (params) => { return request2.get(`${baseUrl}/mms/sync/liveCarousel`, { params: params }); };                                               //直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)
-export const syncSyncConfig = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config`, { params: params }); };                                          //查找合集短视频 /mms/config/common/syn_config?key=
-export const syncWeChat = (params) => { return request2.get(`${baseUrl}/mms/sync/weChat`, { params: params }); };                                                           //微信自动回复/wxcode/微信二维码
+export const syncOther = (params) => { return request2.get(`${baseUrl}/mms/sync/other`, { params: params }); };                                                                             //其他缓存 其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)
+export const syncLiveCarousel = (params) => { return request2.get(`${baseUrl}/mms/sync/liveCarousel`, { params: params }); };                                                               //直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)
+export const syncSyncConfig = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config`, { params: params }); };                                                          //查找合集短视频 /mms/config/common/syn_config?key=
+export const syncWeChat = (params) => { return request2.get(`${baseUrl}/mms/sync/weChat`, { params: params }); };                                                                           //微信自动回复/wxcode/微信二维码
+export const syncMenuImage = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/syncCache`, { params: params }); };                                                        //广告菜单栏目录配置
 

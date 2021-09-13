@@ -515,7 +515,7 @@ export default class AddressNews extends Component {
                     rules={[{ required: true, message: '请输入消息内容' }]
                     }
                   >
-                    <Input.TextArea onFocus={(val) => {
+                    <Input.TextArea autoSize={true}  onFocus={(val) => {
                       contentProps = val
                       this.setState({
                         wildcard: "content"

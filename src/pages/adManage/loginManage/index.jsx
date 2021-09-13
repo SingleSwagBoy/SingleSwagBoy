@@ -128,6 +128,9 @@ export default class LoginManage extends Component{
               "pageSize": this.state.pageSize
             }
           }
+          this.setState({
+            hlcList:[]
+          })
         getHlcList(params).then(res=>{
             console.log(res);
             if(res.data.errCode==0){
@@ -277,8 +280,10 @@ export default class LoginManage extends Component{
                         modal_box: {
                             is_show: false,
                         }
+                    },()=>{
+                        this.initData();
                     })
-                    this.initData();
+                    
                 }else{
                     message.error(res.data.msg)
                 }
@@ -296,8 +301,10 @@ export default class LoginManage extends Component{
                         modal_box: {
                             is_show: false,
                         }
+                    },()=>{
+                        this.initData();
                     })
-                    this.initData();
+                    //this.initData();
                 }else{
                     message.error(res.data.msg)
                 }

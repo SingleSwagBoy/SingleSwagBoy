@@ -969,6 +969,7 @@ export default class AddressNews extends Component {
     let type = ""
     if(source == "copy"){
       info = JSON.parse(item.multiInfo)
+      item.createTime = new Date().getTime()/ 1000
       delete item.id
     }else{
       type = this.formRef.current.getFieldValue("msgType")
@@ -1008,7 +1009,7 @@ export default class AddressNews extends Component {
       messageType: "custom",
       sendTime: source == "copy"?item.sendTime : item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
       type: "multi",
-      tag: Array.isArray(item.tag) ? item.tag.length === 0 ? "" : item.tag.join(",") : "",
+      tag: Array.isArray(item.tag) ? item.tag.length === 0 ? "" : item.tag.join(",") : item.tag?item.tag:"",
       multiInfo: JSON.stringify(info)
     }
     // return console.log(params)

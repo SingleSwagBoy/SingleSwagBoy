@@ -963,42 +963,50 @@ export default class AddressNews extends Component {
       }
     })
   }
-  addMsg(item) {
+  addMsg(item,source) {
     console.log(item)
     let info = []
-    let type = this.formRef.current.getFieldValue("msgType")
-    if (type == "image") {
-      info.push({
-        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
-        picUrl: this.state.imageInfo.url,
-        msgType: type
-      })
-    } else if (type == "text") {
-      info.push({ content: item.content, msgType: type })
-    } else if (type == "mini") {
-      info.push({
-        appid: item.appid,
-        appName: item.appName,
-        miniTitle: item.mpTitle,
-        path: item.mpPath,
-        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
-        picUrl: this.state.imageInfo.url,
-        msgType: type
-      })
-    } else {
-      info.push({
-        title: item.title,
-        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
-        picUrl: this.state.imageInfo.url,
-        description: item.digest,
-        url: item.content_source_url,
-        msgType: type
-      })
+    let type = ""
+    if(source == "copy"){
+      info = JSON.parse(item.multiInfo)
+      delete item.id
+    }else{
+      type = this.formRef.current.getFieldValue("msgType")
+      if (type == "image") {
+        info.push({
+          mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+          picUrl: this.state.imageInfo.url,
+          msgType: type
+        })
+      } else if (type == "text") {
+        info.push({ content: item.content, msgType: type })
+      } else if (type == "mini") {
+        info.push({
+          appid: item.appid,
+          appName: item.appName,
+          miniTitle: item.mpTitle,
+          path: item.mpPath,
+          mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+          picUrl: this.state.imageInfo.url,
+          msgType: type
+        })
+      } else {
+        info.push({
+          title: item.title,
+          mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+          picUrl: this.state.imageInfo.url,
+          description: item.digest,
+          url: item.content_source_url,
+          msgType: type
+        })
+      }
     }
+    
+   
     let params = {
       ...item,
       messageType: "custom",
-      sendTime: item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
+      sendTime: source == "copy"?item.sendTime : item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
       type: "multi",
       tag: Array.isArray(item.tag) ? item.tag.length === 0 ? "" : item.tag.join(",") : "",
       multiInfo: JSON.stringify(info)

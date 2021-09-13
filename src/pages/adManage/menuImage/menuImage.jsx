@@ -2,13 +2,18 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-10 15:44:34
- * @Description: 菜单栏 图片配置页
+ * @LastEditTime: 2021-09-13 16:17:11
+ * @Description: 菜单栏图片配置页
  */
 
 
 import React, { Component } from 'react'
-import { Input, DatePicker, Button, Tooltip, Table, Pagination, Switch, Modal, Image, Alert, notification, message, Divider } from 'antd';
+import { Input, InputNumber, Form, DatePicker, Button, Tooltip, Table, Pagination, Switch, Modal, Image, Alert, notification, message, Divider } from 'antd';
+import moment from 'moment';
+import ImageUpload from "@/components/ImageUpload/index" //图片组件
+import SyncBtn from "@/components/syncBtn/syncBtn.jsx"
+
+
 
 import {
     requestConfigMenuImageList,                         //菜单栏配置 列表
@@ -18,16 +23,84 @@ import {
     requestConfigMenuImageChangeState,                  //菜单栏配置 修改状态
 } from 'api';
 
-import SyncBtn from "@/components/syncBtn/syncBtn.jsx"
+let { RangePicker } = DatePicker;
 
 export default class MenuImagePage extends Component {
 
     constructor(props) {
         super(props);
+        this.formRef = React.createRef();
+
         this.state = {
             table_box: {
                 table_title: [],
                 table_datas: [],
+                table_columns: [
+                    { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
+                    { title: '名字', dataIndex: 'title', key: 'title', width: 200, },
+                    { title: '数据上报key', dataIndex: 'name', key: 'name', width: 220, },
+                    { title: '标签', dataIndex: 'tag', key: 'tag', width: 120, },
+                    {
+                        title: '排序', dataIndex: 'sort', key: 'sort', width: 180,
+                        render: (rowValue, row, index) => { return <InputNumber min={1} max={9999999} value={row.sort} /> }
+                    },
+                    {
+                        title: '背景图片', dataIndex: 'backgroundImage', key: 'backgroundImage', width: 120,
+                        render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.backgroundImage} /> }
+                    },
+                    {
+                        title: '聚焦图片', dataIndex: 'focus_url', key: 'focus_url', width: 120,
+                        render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.focus_url} /> }
+                    },
+                    {
+                        title: '非聚焦图片', dataIndex: 'no_focus_url', key: 'no_focus_url', width: 120,
+                        render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.no_focus_url} /> }
+                    },
+                    {
+                        title: '时间范围', dataIndex: 'time', key: 'time', width: 400,
+                        render: (rowValue, row, index) => {
+                            let dateFormat = 'YYYY-MM-DD HH:mm:ss';
+                            let open_time = moment(row.startTime).format(dateFormat)
+                            let stop_time = moment(row.endTime).format(dateFormat)
+
+                            return (<RangePicker showTime disabled defaultValue={[moment(open_time, dateFormat), moment(stop_time, dateFormat)]} format={dateFormat} />);
+                        }
+                    },
+                    {
+                        title: '状态', dataIndex: 'status', key: 'status', width: 80,
+                        render: (rowValue, row, index) => {
+                            return (<Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="有效" unCheckedChildren="无效" onChange={(checked) => this.onStateChange(row, 'status', checked)} />)
+                        }
+                    },
+                    {
+                        title: '开启活动倒计时', dataIndex: 'hddjs', key: 'hddjs', width: 140,
+                        render: (rowValue, row, index) => {
+                            return (<Switch defaultChecked={row.hddjs === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => this.onStateChange(row, 'hddjs', checked)} />)
+                        }
+                    },
+                    {
+                        title: '显示距今结束时间', dataIndex: 'jljr', key: 'jljr', width: 150,
+                        render: (rowValue, row, index) => {
+                            return (<Switch defaultChecked={row.jljr === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => this.onStateChange(row, 'jljr', checked)} />)
+                        }
+                    },
+                    {
+                        title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 180,
+                        render: (rowValue, row, index) => {
+                            return (
+                                <div>
+                                    <Button size='small' onClick={() => this.onItemEditClick(row)}>编辑</Button>
+                                    <Button size='small' style={{ marginLeft: 3 }}>删除</Button>
+                                </div>
+                            );
+                        }
+                    },
+                ]
+            },
+            modal_box: {
+                is_show: false,
+                title: '',
+                select_item: {},
             },
         }
     }
@@ -39,24 +112,317 @@ export default class MenuImagePage extends Component {
 
     render() {
         let that = this;
-        let { table_box } = that.state;
+        let { table_box, modal_box } = that.state;
+        let input_width_size = 340;
 
         return (
             <div>
-                <SyncBtn type={4} name={'同步缓存'} />
 
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1300 }} />
+                <Alert className="alert-box" message="菜单栏图片配置" type="success" action={
+                    <div>
+                        <Button style={{ marginLeft: 5 }} onClick={() => that.onCreateClick()} >新增配置</Button>
+                        <SyncBtn type={4} name={'同步缓存'} />
+                    </div>
 
+                } />
+
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} columns={table_box.table_columns} pagination={false} scroll={{ x: 1500 }} />
+
+                <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
+
+                    footer={[
+                        <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
+                        <Button onClick={() => that.onModalConfirmClick()} >确定</Button>
+                    ]}
+                >
+                    <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
+                        {
+                            that.formRef && that.formRef.current &&
+                            <div>
+                                {
+                                    that.formRef.current.getFieldValue('id') &&
+                                    <Form.Item label="id" name='id' rules={[{ required: true }]} >
+                                        <Input style={{ width: input_width_size }} disabled />
+                                    </Form.Item>
+                                }
+
+                                <Form.Item label="名称" name='title' rules={[{ required: true }]}>
+                                    <Input style={{ width: input_width_size }} placeholder="请输入名称" />
+                                </Form.Item>
+
+                                <Form.Item label="排序" name='sort' rules={[{ required: true }]}>
+                                    <InputNumber style={{ width: input_width_size }} min={1} max={9999999} placeholder="数字越小排序越靠前" />
+                                </Form.Item>
+
+                                <Form.Item label="时间范围" name='time' rules={[{ required: true }]}>
+                                    <RangePicker showTime format={'YYYY-MM-DD HH:mm:ss'} />
+                                </Form.Item>
+                                <Form.Item label="状态" name='status' rules={[{ required: true }]} valuePropName='checked'>
+                                    <Switch checkedChildren="是" unCheckedChildren="否" />
+                                </Form.Item>
+
+                                <Form.Item label="开启活动倒计时" name='hddjs' rules={[{ required: true }]} valuePropName='checked'>
+                                    <Switch checkedChildren="是" unCheckedChildren="否" />
+                                </Form.Item>
+                                <Form.Item label="显示距今结束时间" name='jljr' rules={[{ required: true }]} valuePropName='checked'>
+                                    <Switch checkedChildren="是" unCheckedChildren="否" />
+                                </Form.Item>
+
+
+                                <Form.Item label="数据上报关键字" name='name'>
+                                    <Input style={{ width: input_width_size }} placeholder="数据上报关键字" />
+                                </Form.Item>
+
+                                <Form.Item label="标签" name='tag' >
+                                    <Input style={{ width: input_width_size }} placeholder="请选择标签" />
+                                </Form.Item>
+
+                                <Form.Item label="背景图"  >
+                                    <Form.Item name='backgroundImage' >
+                                        <ImageUpload
+                                            getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('backgroundImage', file, newItem) }}
+                                            imageUrl={that.getUploadFileImageUrlByType('backgroundImage')} />
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Input style={{ width: input_width_size }} placeholder="请上传背景图" value={that.getUploadFileImageUrlByType('backgroundImage')} />
+                                    </Form.Item>
+                                </Form.Item>
+
+
+                                <Form.Item label="焦点图片"  >
+                                    <Form.Item name='focus_url' >
+                                        <ImageUpload
+                                            getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('focus_url', file, newItem) }}
+                                            imageUrl={that.getUploadFileImageUrlByType('focus_url')} />
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Input style={{ width: input_width_size }} placeholder="请上传背景图" value={that.getUploadFileImageUrlByType('focus_url')} />
+                                    </Form.Item>
+                                </Form.Item>
+
+                                <Form.Item label="未选中焦点图片"  >
+                                    <Form.Item name='no_focus_url' >
+                                        <ImageUpload
+                                            getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('no_focus_url', file, newItem) }}
+                                            imageUrl={that.getUploadFileImageUrlByType('no_focus_url')} />
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Input style={{ width: input_width_size }} placeholder="请上传未选中焦点图片" value={that.getUploadFileImageUrlByType('no_focus_url')} />
+                                    </Form.Item>
+                                </Form.Item>
+                            </div>
+                        }
+                    </Form>
+                </Modal>
             </div>
         )
     }
 
     initData() {
+        let that = this;
+        that.refreshList();
 
+    }
+
+    refreshList() {
+        let that = this;
+        let { table_box } = that.state;
+
+        let obj = {};
+
+        that.setState({
+            table_box: [],
+        }, () => {
+            requestConfigMenuImageList(obj)
+                .then(res => {
+                    console.log(res);
+                    table_box.table_datas = res.data.data;
+
+                    that.setState({
+                        table_box: table_box,
+                    })
+                })
+                .catch(res => {
+
+                })
+        })
+    }
+
+    //状态变更
+    onStateChange(row, key, checked) {
+        let that = this;
+        //老状态
+        if (key === 'status') {
+            let obj = {
+                ids: row.id
+            }
+
+            requestConfigMenuImageChangeState(obj)
+                .then(res => {
+                    that.setState({
+                        modal_box: {
+                            is_show: false,
+                            title: '',
+                        }
+                    }, () => {
+                        that.refreshList();
+                    })
+
+                })
+                .catch(res => { })
+
+        }
+        //开启活动倒计时 显示距今结束时间	
+        else {
+            let value = checked === true ? 1 : 0;
+            row[key] = value;
+            requestConfigMenuImageEidt(row)
+                .then(res => {
+                    that.setState({
+                        modal_box: {
+                            is_show: false,
+                            title: '',
+                        }
+                    }, () => {
+                        that.refreshList();
+                    })
+                })
+                .catch(res => {
+                    message.error(res.desc);
+                    console.log(res);
+                })
+        }
+    }
+    //表格数据被点击
+    onItemEditClick(item) {
+        let that = this;
+        that.setState({
+            modal_box: {
+                is_show: true,
+                title: '修改',
+            }
+        }, () => {
+            that.forceUpdate()
+            that.formRef.current.resetFields();
+
+            let obj = Object.assign({}, item);
+            obj.time = [
+                moment(obj.startTime),
+                moment(obj.endTime)
+            ]
+
+            obj.status = obj.status === 1 ? true : false;
+
+            console.log(obj)
+
+            that.formRef.current.setFieldsValue(obj);
+        })
 
     }
 
 
+
+    onCreateClick() {
+        let that = this;
+        that.setState({
+            modal_box: {
+                is_show: true,
+                title: '新增',
+            }
+        }, () => {
+            that.forceUpdate();
+            that.formRef.current.resetFields();
+        })
+    }
+    //获取上传文件
+    getUploadFileUrl(type, file, newItem) {
+        let that = this;
+
+
+        let image_url = newItem.fileUrl;
+        let obj = {};
+        obj[type] = image_url;
+
+        that.formRef.current.setFieldsValue(obj);
+        that.forceUpdate();
+    }
+    //获取上传文件图片地址 
+    getUploadFileImageUrlByType(type) {
+        let that = this;
+        let image_url = that.formRef.current.getFieldValue(type);
+        return image_url ? image_url : '';
+    }
+
+
+    //弹出框取消按钮被点击
+    onModalCancelClick() {
+        let that = this;
+        that.setState({
+            modal_box: {
+                is_show: false,
+                title: '',
+            }
+        })
+    }
+
+    //弹出框确定按钮被点击
+    onModalConfirmClick() {
+        let that = this;
+        let value = that.formRef.current.getFieldsValue();
+
+        let id = value.id;
+
+        let tag = value.tag;
+        if (tag) {
+            if (tag.constructor === Array) {
+                value.tag = tag.join(',');
+            }
+        }
+
+        let sort = value.sort;
+        if (!sort) {
+            message.error('请填写排序');
+            return;
+        }
+
+
+        value.jljr = value.jljr === true ? 1 : 0;
+        value.hddjs = value.hddjs === true ? 1 : 0;
+        value.status = value.status === true ? 1 : 2;       //老状态 1：有效 2：无效
+        let time = value.time;
+        if (!time) {
+            message.error('请填写开始结束时间')
+            return
+        } else {
+            try {
+                value.startTime = time[0].valueOf();
+                value.endTime = time[1].valueOf();
+            } catch {
+                message.error('时间错误')
+                return;
+            }
+        }
+
+
+        (id ? requestConfigMenuImageEidt(value) : requestConfigMenuImageCreate(value))
+            .then(res => {
+                that.setState({
+                    modal_box: {
+                        is_show: false,
+                        title: '',
+                    }
+                }, () => {
+                    that.formRef.current.resetFields();
+                    that.refreshList();
+                })
+            })
+            .catch(res => {
+                message.error(res.desc);
+                console.log(res);
+            })
+
+
+    }
 
 
 }

@@ -422,7 +422,7 @@ export default class AddressNews extends Component {
               <Form.Item {...this.state.tailLayout}>
                 <Alert
                   message="标题通配符说明"
-                  description="插入用户昵称请在需要的地方填入 nikeName，仅限跳转外链配置使用。"
+                  description="插入用户昵称请在需要的地方填入 nickName，仅限跳转外链配置使用。"
                   type="error"
                 // closable
                 // onClose={onClose}
@@ -499,7 +499,7 @@ export default class AddressNews extends Component {
                   <Form.Item {...this.state.tailLayout}>
                     <Alert
                       message="标题通配符说明"
-                      description="插入用户昵称请在需要的地方填入 nikeName"
+                      description="插入用户昵称请在需要的地方填入 nickName"
                       type="error"
                     // closable
                     // onClose={onClose}
@@ -530,7 +530,7 @@ export default class AddressNews extends Component {
                     <Form.Item {...this.state.tailLayout}>
                       <Alert
                         message="标题通配符说明"
-                        description="插入用户昵称请在需要的地方填入 nikeName ，插入微信小程序链接请在需要的地方填入 mpLink。"
+                        description="插入用户昵称请在需要的地方填入 nickName ，插入微信小程序链接请在需要的地方填入 mpLink。"
                         type="error"
                       // closable
                       // onClose={onClose}

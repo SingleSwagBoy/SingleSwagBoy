@@ -349,7 +349,7 @@ export default class LoginManage extends Component{
                         }}
                         />
                         <MyModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} delivery_types={delivery_types} 
-                        modal_box={modal_box} onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)}></MyModal>
+                        user_tag={user_tag} modal_box={modal_box} onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)}></MyModal>
                 </Card>
             </div>
         )

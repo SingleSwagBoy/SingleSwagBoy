@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getMsg, getMsgLog, getPublicList, getUserTag ,deleteMsg} from 'api'
-import { Card, Breadcrumb, Button, message, Tabs, Table, Switch,Modal } from 'antd'
+import { getMsg, getMsgLog, getPublicList, getUserTag, deleteMsg } from 'api'
+import { Card, Breadcrumb, Button, message, Tabs, Table, Switch, Modal } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
 import util from 'utils'
@@ -45,7 +45,7 @@ export default class AddressNews extends Component {
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                                {index+1}-{rowValue}
+                                {index + 1}-{rowValue}
                             </div>
                         )
                     }
@@ -92,10 +92,10 @@ export default class AddressNews extends Component {
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                                {row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" :row.type === "mpnews"?"图文消息": 
-                                row.type === "multi" ? JSON.parse(row.multiInfo)[0].msgType  === "text" ? "文字消息" : 
-                                JSON.parse(row.multiInfo)[0].msgType === "image" ? "图片消息" :
-                                JSON.parse(row.multiInfo)[0].msgType === "news"?"图文消息":"小程序卡片":"未知"}
+                                {row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" : row.type === "mpnews" ? "图文消息" :
+                                    row.type === "multi" ? JSON.parse(row.multiInfo)[0].msgType === "text" ? "文字消息" :
+                                        JSON.parse(row.multiInfo)[0].msgType === "image" ? "图片消息" :
+                                            JSON.parse(row.multiInfo)[0].msgType === "news" ? "图文消息" : "小程序卡片" : "未知"}
                             </div>
                         )
                     }
@@ -150,6 +150,9 @@ export default class AddressNews extends Component {
                                 <Button
                                     size="small"
                                     dashed="true"
+                                    onClick={() => {
+                                        this.refs.getMyModal.addMsg(row,"copy")
+                                    }}
                                 >复制</Button>
                                 <Button
                                     size="small"
@@ -166,8 +169,8 @@ export default class AddressNews extends Component {
                                 <Button
                                     size="small"
                                     danger
-                                    onClick={()=>{
-                                       this.delArt(row)
+                                    onClick={() => {
+                                        this.delArt(row)
                                     }}
                                 >删除</Button>
                             </div>
@@ -211,6 +214,11 @@ export default class AddressNews extends Component {
                     title: "发送时间",
                     dataIndex: "createTime",
                     key: "createTime",
+                    render: (rowValue, row, index) => {
+                        return (
+                            <div>{util.formatTime(row.createTime, "", 1)}</div>
+                        )
+                    }
                 },
                 {
                     title: "执行时间",
@@ -272,7 +280,7 @@ export default class AddressNews extends Component {
                             }
                             this.setState({
                                 listType: val,
-                                loading:true
+                                loading: true
                             })
                         }}
                     >
@@ -284,7 +292,7 @@ export default class AddressNews extends Component {
                                         scroll={{ x: 1300 }}
                                         rowKey={item => item.id}
                                         expandable={{
-                                            expandedRowRender: record => <p style={{ margin: 0 }}>{record.info}</p>,
+                                            expandedRowRender: record => <p style={{ margin: 0 }}>{this.getListContent(record)}</p>,
                                             // rowExpandable: record => record.info !== '',
                                         }}
                                         loading={this.state.loading}
@@ -295,7 +303,7 @@ export default class AddressNews extends Component {
                                             total: this.state.total,
                                             onChange: this.changeSize,
                                         }}
-                                         />
+                                    />
                                 </TabPane>
                             ))
                         }
@@ -320,21 +328,47 @@ export default class AddressNews extends Component {
     changeSize = (page, pageSize) => {
         // 分页获取
         this.setState({
-          page,
-          pageSize
+            page,
+            pageSize
         }, () => {
-            if(this.state.listType == 0){
+            if (this.state.listType == 0) {
                 this.getMsg()
-            }else{
+            } else {
                 this.getMsgLog()
             }
         })
-    
-      }
+
+    }
+    getListContent(item) {
+        if(item.multiInfo){
+            let arr = JSON.parse(item.multiInfo)[0]
+            return (
+                arr.msgType === "news" ?
+                    <>
+                        <div>{arr.title}</div>
+                        <div><img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" /></div>
+                    </>
+                    :
+                    arr.msgType === "image" ?
+                        ""
+                        :
+                        arr.msgType === "text" ?
+                            `发送内容：${arr.content}`
+                            :
+                            arr.msgType === "mpnews" ?
+                                ""
+                                :
+                                ""
+            )
+        }else{
+            return "老数据新版本不支持"
+        }
+       
+    }
     getMsg() {
         let params = {
             messageType: "custom",
-            page: { currentPage: this.state.page, pageSize:this.state.pageSize}
+            page: { currentPage: this.state.page, pageSize: this.state.pageSize }
         }
         getMsg(params).then(res => {
             console.log(res)
@@ -356,7 +390,7 @@ export default class AddressNews extends Component {
     getMsgLog() {
         let params = {
             messageType: "custom",
-            page: { currentPage: this.state.page, pageSize:this.state.pageSize}
+            page: { currentPage: this.state.page, pageSize: this.state.pageSize }
         }
         getMsgLog(params).then(res => {
             console.log(res)
@@ -410,24 +444,24 @@ export default class AddressNews extends Component {
     }
     delArt(item) {
         Modal.confirm({
-          title: '删除此消息',
-          content: '确认删除？',
-          onOk: () => {
-            this.deleteMsg(item)
-          },
-          onCancel: () => {
-    
-          }
+            title: '删除此消息',
+            content: '确认删除？',
+            onOk: () => {
+                this.deleteMsg(item)
+            },
+            onCancel: () => {
+
+            }
         })
-      }
-    deleteMsg(val){
-        deleteMsg({id:val.id}).then(res=>{
-          if(res.data.errCode === 0){
-            this.getMsg()
-            message.success("删除成功")
-          }else{
-            message.error("删除失败")
-          }
+    }
+    deleteMsg(val) {
+        deleteMsg({ id: val.id }).then(res => {
+            if (res.data.errCode === 0) {
+                this.getMsg()
+                message.success("删除成功")
+            } else {
+                message.error("删除失败")
+            }
         })
-      }
+    }
 }

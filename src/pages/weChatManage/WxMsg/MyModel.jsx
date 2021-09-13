@@ -437,7 +437,8 @@ export default class AddressNews extends Component {
                 name="title"
                 rules={[{ required: true, message: '请输入标题' }]}
               >
-                <Input  ref={(input) => { contentProps = input }} onFocus={() => {
+                <Input onFocus={(val) => {
+                  contentProps = val
                   this.setState({
                     wildcard: "title",
                     wildType:"input"
@@ -449,7 +450,8 @@ export default class AddressNews extends Component {
                 name="digest"
               // rules={[{ required: true, message: '请输入标题' }]}
               >
-                <Input.TextArea onFocus={() => {
+                <Input.TextArea onFocus={(val) => {
+                  contentProps = val
                   this.setState({
                     wildcard: "digest"
                   })
@@ -513,7 +515,8 @@ export default class AddressNews extends Component {
                     rules={[{ required: true, message: '请输入消息内容' }]
                     }
                   >
-                    <Input.TextArea ref={(input) => { contentProps = input }} onFocus={() => {
+                    <Input.TextArea onFocus={(val) => {
+                      contentProps = val
                       this.setState({
                         wildcard: "content"
                       })
@@ -559,7 +562,8 @@ export default class AddressNews extends Component {
                       name="mpTitle"
                       rules={[{ required: true, message: '请输入小程序标题' }]}
                     >
-                      <Input ref={(input) => { contentProps = input }} onFocus={() => {
+                      <Input  onFocus={(val) => {
+                        contentProps = val
                         this.setState({
                           wildcard: "mpTitle"
                         })
@@ -571,7 +575,11 @@ export default class AddressNews extends Component {
                       name="mpPath"
                       rules={[{ required: true, message: '请输入小程序跳转路径' }]}
                     >
-                      <Input />
+                      <Input onFocus={() => {
+                        this.setState({
+                          wildcard: "not"
+                        })
+                      }} />
 
                     </Form.Item>
                     <Form.Item
@@ -601,15 +609,9 @@ export default class AddressNews extends Component {
               }
               if (this.state.wildcard) {
                 let word = this.formRef.current.getFieldValue([this.state.wildcard])
-                console.log(contentProps,"contentProps")
                 let props = ""
-                if(contentProps.resizableTextArea){
-                  props = contentProps.resizableTextArea.textArea; // 获取dom节点实例
-                }else{
-                  props = contentProps.input; // 获取dom节点实例
-                }
-                let position = this.getPositionForTextArea(props); // 光标的位置
-                console.log(position)
+                props = contentProps.target; // 获取dom节点实例
+                let position = util.getPositionForTextArea(props); // 光标的位置
                 let length = 0;
                 // setFieldsValue方法是异步的
                 // 不加延时器就会发生光标还没插入文字呢 就已经把光标插入后的位置提前定位
@@ -621,7 +623,7 @@ export default class AddressNews extends Component {
                 }
                 this.formRef.current.setFieldsValue({ [this.state.wildcard]: word})
                 setTimeout(()=>{
-                    this.setCursorPosition(props, position.start+length);
+                    util.setCursorPosition(props, position.start+length);
                 },100);
               }
             }}
@@ -632,24 +634,24 @@ export default class AddressNews extends Component {
       </Form.Item>
     )
   }
-  getPositionForTextArea = (ctrl) => {
-    // 获取光标位置
-    let CaretPos = {
-      start: 0,
-      end: 0
-    };
-    if (ctrl.selectionStart) {// Firefox support
-      CaretPos.start = ctrl.selectionStart;
-    }
-    if (ctrl.selectionEnd) {
-      CaretPos.end = ctrl.selectionEnd;
-    }
-    return (CaretPos);
-  }
-  setCursorPosition = (ctrl, pos) => {
-    // ctrl.focus();
-    ctrl.setSelectionRange(pos, pos);
-  }
+  // getPositionForTextArea = (ctrl) => {
+  //   // 获取光标位置
+  //   let CaretPos = {
+  //     start: 0,
+  //     end: 0
+  //   };
+  //   if (ctrl.selectionStart) {// Firefox support
+  //     CaretPos.start = ctrl.selectionStart;
+  //   }
+  //   if (ctrl.selectionEnd) {
+  //     CaretPos.end = ctrl.selectionEnd;
+  //   }
+  //   return (CaretPos);
+  // }
+  // setCursorPosition = (ctrl, pos) => {
+  //   ctrl.focus();
+  //   ctrl.setSelectionRange(pos, pos);
+  // }
   //获取图片素材按钮
   getPostButton() {
     return (

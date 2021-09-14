@@ -183,9 +183,27 @@ export function formatDateTwo(timeStamp, format = 'Y-M-D H:I:S', auto=true) {
   }  // 返回格式化的日期字符串
   return formatTime;
 }
+function getPositionForTextArea(ctrl){
+  // 获取光标位置
+  let CaretPos = {
+    start: 0,
+    end: 0
+  };
+  if (ctrl.selectionStart) {// Firefox support
+    CaretPos.start = ctrl.selectionStart;
+  }
+  if (ctrl.selectionEnd) {
+    CaretPos.end = ctrl.selectionEnd;
+  }
+  return (CaretPos);
+}
+function setCursorPosition(ctrl, pos){
+  ctrl.focus();
+  ctrl.setSelectionRange(pos, pos);
+}
 
 let objFun = {
-  splitStr,GetUrlParam,formatTime,getEveryTime,getBase64,formatDateTwo
+  splitStr,GetUrlParam,formatTime,getEveryTime,getBase64,formatDateTwo,getPositionForTextArea,setCursorPosition
 }
 
 export default objFun

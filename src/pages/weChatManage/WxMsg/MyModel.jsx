@@ -422,22 +422,23 @@ export default class AddressNews extends Component {
               <Form.Item {...this.state.tailLayout}>
                 <Alert
                   message="标题通配符说明"
-                  description="插入用户昵称请在需要的地方填入 nikeName，仅限跳转外链配置使用。"
+                  description="插入用户昵称请在需要的地方填入 nickName，仅限跳转外链配置使用。"
                   type="error"
                 // closable
                 // onClose={onClose}
                 />
               </Form.Item>
               {/* 通配符函数 */}
-              {
+              {/* {
                 this.getWildCard("#nickName")
-              }
+              } */}
               <Form.Item
                 label="标题"
                 name="title"
                 rules={[{ required: true, message: '请输入标题' }]}
               >
-                <Input  ref={(input) => { contentProps = input }} onFocus={() => {
+                <Input onFocus={(val) => {
+                  contentProps = val
                   this.setState({
                     wildcard: "title",
                     wildType:"input"
@@ -449,7 +450,8 @@ export default class AddressNews extends Component {
                 name="digest"
               // rules={[{ required: true, message: '请输入标题' }]}
               >
-                <Input.TextArea onFocus={() => {
+                <Input.TextArea onFocus={(val) => {
+                  contentProps = val
                   this.setState({
                     wildcard: "digest"
                   })
@@ -497,23 +499,24 @@ export default class AddressNews extends Component {
                   <Form.Item {...this.state.tailLayout}>
                     <Alert
                       message="标题通配符说明"
-                      description="插入用户昵称请在需要的地方填入 nikeName"
+                      description="插入用户昵称请在需要的地方填入 nickName"
                       type="error"
                     // closable
                     // onClose={onClose}
                     />
                   </Form.Item>
                   {/* 通配符函数 */}
-                  {
+                  {/* {
                     this.getWildCard("#nickName")
-                  }
+                  } */}
                   <Form.Item
                     label="消息内容"
                     name="content"
                     rules={[{ required: true, message: '请输入消息内容' }]
                     }
                   >
-                    <Input.TextArea ref={(input) => { contentProps = input }} onFocus={() => {
+                    <Input.TextArea autoSize={true}  onFocus={(val) => {
+                      contentProps = val
                       this.setState({
                         wildcard: "content"
                       })
@@ -527,7 +530,7 @@ export default class AddressNews extends Component {
                     <Form.Item {...this.state.tailLayout}>
                       <Alert
                         message="标题通配符说明"
-                        description="插入用户昵称请在需要的地方填入 nikeName ，插入微信小程序链接请在需要的地方填入 mpLink。"
+                        description="插入用户昵称请在需要的地方填入 nickName ，插入微信小程序链接请在需要的地方填入 mpLink。"
                         type="error"
                       // closable
                       // onClose={onClose}
@@ -551,15 +554,16 @@ export default class AddressNews extends Component {
                         }
                       </Select>
                     </Form.Item>
-                    {
+                    {/* {
                       this.getWildCard("#nickName")
-                    }
+                    } */}
                     <Form.Item
                       label="小程序标题"
                       name="mpTitle"
                       rules={[{ required: true, message: '请输入小程序标题' }]}
                     >
-                      <Input ref={(input) => { contentProps = input }} onFocus={() => {
+                      <Input  onFocus={(val) => {
+                        contentProps = val
                         this.setState({
                           wildcard: "mpTitle"
                         })
@@ -571,7 +575,11 @@ export default class AddressNews extends Component {
                       name="mpPath"
                       rules={[{ required: true, message: '请输入小程序跳转路径' }]}
                     >
-                      <Input />
+                      <Input onFocus={() => {
+                        this.setState({
+                          wildcard: "not"
+                        })
+                      }} />
 
                     </Form.Item>
                     <Form.Item
@@ -601,15 +609,9 @@ export default class AddressNews extends Component {
               }
               if (this.state.wildcard) {
                 let word = this.formRef.current.getFieldValue([this.state.wildcard])
-                console.log(contentProps,"contentProps")
                 let props = ""
-                if(contentProps.resizableTextArea){
-                  props = contentProps.resizableTextArea.textArea; // 获取dom节点实例
-                }else{
-                  props = contentProps.input; // 获取dom节点实例
-                }
-                let position = this.getPositionForTextArea(props); // 光标的位置
-                console.log(position)
+                props = contentProps.target; // 获取dom节点实例
+                let position = util.getPositionForTextArea(props); // 光标的位置
                 let length = 0;
                 // setFieldsValue方法是异步的
                 // 不加延时器就会发生光标还没插入文字呢 就已经把光标插入后的位置提前定位
@@ -621,7 +623,7 @@ export default class AddressNews extends Component {
                 }
                 this.formRef.current.setFieldsValue({ [this.state.wildcard]: word})
                 setTimeout(()=>{
-                    this.setCursorPosition(props, position.start+length);
+                    util.setCursorPosition(props, position.start+length);
                 },100);
               }
             }}
@@ -632,24 +634,24 @@ export default class AddressNews extends Component {
       </Form.Item>
     )
   }
-  getPositionForTextArea = (ctrl) => {
-    // 获取光标位置
-    let CaretPos = {
-      start: 0,
-      end: 0
-    };
-    if (ctrl.selectionStart) {// Firefox support
-      CaretPos.start = ctrl.selectionStart;
-    }
-    if (ctrl.selectionEnd) {
-      CaretPos.end = ctrl.selectionEnd;
-    }
-    return (CaretPos);
-  }
-  setCursorPosition = (ctrl, pos) => {
-    // ctrl.focus();
-    ctrl.setSelectionRange(pos, pos);
-  }
+  // getPositionForTextArea = (ctrl) => {
+  //   // 获取光标位置
+  //   let CaretPos = {
+  //     start: 0,
+  //     end: 0
+  //   };
+  //   if (ctrl.selectionStart) {// Firefox support
+  //     CaretPos.start = ctrl.selectionStart;
+  //   }
+  //   if (ctrl.selectionEnd) {
+  //     CaretPos.end = ctrl.selectionEnd;
+  //   }
+  //   return (CaretPos);
+  // }
+  // setCursorPosition = (ctrl, pos) => {
+  //   ctrl.focus();
+  //   ctrl.setSelectionRange(pos, pos);
+  // }
   //获取图片素材按钮
   getPostButton() {
     return (
@@ -711,7 +713,7 @@ export default class AddressNews extends Component {
       formData.tag = formData.tag ? Array.isArray(formData.tag) ? formData.tag : formData.tag.split(",") : []
       this.formRef.current.setFieldsValue(formData)
       if (formData.type === "multi") {
-        let arr = JSON.parse(formData.multiInfo)
+        let arr = JSON.parse(formData.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))
         console.log(formData.multiInfo)
         if (arr[0].msgType === "news") {
           this.formRef.current.setFieldsValue({
@@ -916,7 +918,7 @@ export default class AddressNews extends Component {
       wxCode: formData.wxCode,
     }
     if (formData.type === "multi") {  //新版本
-      let arr = JSON.parse(formData.multiInfo)[0]
+      let arr = JSON.parse(formData.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))[0]
       console.log(arr)
       params = {
         ...params,
@@ -961,44 +963,53 @@ export default class AddressNews extends Component {
       }
     })
   }
-  addMsg(item) {
+  addMsg(item,source) {
     console.log(item)
     let info = []
-    let type = this.formRef.current.getFieldValue("msgType")
-    if (type == "image") {
-      info.push({
-        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
-        picUrl: this.state.imageInfo.url,
-        msgType: type
-      })
-    } else if (type == "text") {
-      info.push({ content: item.content, msgType: type })
-    } else if (type == "mini") {
-      info.push({
-        appid: item.appid,
-        appName: item.appName,
-        miniTitle: item.mpTitle,
-        path: item.mpPath,
-        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
-        picUrl: this.state.imageInfo.url,
-        msgType: type
-      })
-    } else {
-      info.push({
-        title: item.title,
-        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
-        picUrl: this.state.imageInfo.url,
-        description: item.digest,
-        url: item.content_source_url,
-        msgType: type
-      })
+    let type = ""
+    if(source == "copy"){
+      info = JSON.parse(item.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))
+      item.createTime = new Date().getTime()/ 1000
+      delete item.id
+    }else{
+      type = this.formRef.current.getFieldValue("msgType")
+      if (type == "image") {
+        info.push({
+          mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+          picUrl: this.state.imageInfo.url,
+          msgType: type
+        })
+      } else if (type == "text") {
+        info.push({ content: item.content, msgType: type })
+      } else if (type == "mini") {
+        info.push({
+          appid: item.appid,
+          appName: item.appName,
+          miniTitle: item.mpTitle,
+          path: item.mpPath,
+          mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+          picUrl: this.state.imageInfo.url,
+          msgType: type
+        })
+      } else {
+        info.push({
+          title: item.title,
+          mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+          picUrl: this.state.imageInfo.url,
+          description: item.digest,
+          url: item.content_source_url,
+          msgType: type
+        })
+      }
     }
+    
+   
     let params = {
       ...item,
       messageType: "custom",
-      sendTime: item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
+      sendTime: source == "copy"?item.sendTime : item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
       type: "multi",
-      tag: Array.isArray(item.tag) ? item.tag.length === 0 ? "" : item.tag.join(",") : "",
+      tag: Array.isArray(item.tag) ? item.tag.length === 0 ? "" : item.tag.join(",") : item.tag?item.tag:"",
       multiInfo: JSON.stringify(info)
     }
     // return console.log(params)

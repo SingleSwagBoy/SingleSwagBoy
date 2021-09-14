@@ -221,15 +221,15 @@ export default class AddressNews extends Component {
                     console.log(val)
                     let user = this.state.previewUser.filter(item => [...val].some(l => item.id == l))
                     console.log(user)
+                    let arr = []
                     if (user.length > 0) {
-                      let arr = []
                       user.forEach(r => {
                         arr.push(r.openid)
                       })
-                      this.setState({
-                        openIdList: arr
-                      })
                     }
+                    this.setState({
+                      openIdList: arr
+                    })
                   }}
                 >
                   {

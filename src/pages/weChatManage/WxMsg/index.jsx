@@ -354,7 +354,7 @@ export default class AddressNews extends Component {
                         </>
                         :
                         arr.msgType === "image" ?
-                            ""
+                            <img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" />
                             :
                             arr.msgType === "text" ?
                                 `发送内容：${arr.content}`
@@ -371,19 +371,19 @@ export default class AddressNews extends Component {
             if(item.info){
                 let arr = JSON.parse(item.info)
                 return (
-                    arr.msgType === "news" ?
+                    item.type === "news" ?
                         <>
                             <div>{arr.title}</div>
                             <div><img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" /></div>
                         </>
                         :
-                        arr.msgType === "image" ?
-                            ""
+                        item.type === "image" ?
+                            <img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" />
                             :
-                            arr.msgType === "text" ?
+                            item.type === "text" ?
                                 `发送内容：${arr.content}`
                                 :
-                                arr.msgType === "mpnews" ?
+                                item.type === "mpnews" ?
                                     ""
                                     :
                                     ""

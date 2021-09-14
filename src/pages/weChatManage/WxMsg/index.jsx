@@ -94,9 +94,9 @@ export default class AddressNews extends Component {
                             <div>
                                 {row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" : (row.type === "mpnews" || row.type === "news") ? "图文消息" :
                                     row.type === "multi" ? 
-                                    JSON.parse(row.multiInfo)[0].msgType == "text" ? "文字消息" :
-                                        JSON.parse(row.multiInfo)[0].msgType == "image" ? "图片消息" :
-                                            JSON.parse(row.multiInfo)[0].msgType == "news" ? "图文消息" : "小程序卡片" 
+                                    JSON.parse(row.multiInfo.replace(/\n/g, "<br/>").replace(/\r/g,"\\r"))[0].msgType == "text" ? "文字消息" :
+                                    JSON.parse(row.multiInfo.replace(/\n/g, "<br/>").replace(/\r/g,"\\r"))[0].msgType == "image" ? "图片消息" :
+                                    JSON.parse(row.multiInfo.replace(/\n/g, "<br/>").replace(/\r/g,"\\r"))[0].msgType == "news" ? "图文消息" : "小程序卡片" 
                                             : "未知"}
                                             {/* {JSON.parse(row.multiInfo.replace(/\n/g, "<br/>"))[0].msgType} */}
                             </div>

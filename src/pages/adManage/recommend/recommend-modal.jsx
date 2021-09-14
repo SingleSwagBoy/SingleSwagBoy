@@ -3,8 +3,8 @@ import React, { Component } from 'react'
 import { baseUrl, } from 'api'
 import './style.css'
 import moment from 'moment';
-import Address from "../../components/address/index" //地域组件
-import Market from "../../components/market/index" //渠道组件
+import Address from "@/components/address/index" //地域组件
+import Market from "@/components/market/index" //渠道组件
 
 import { Input, DatePicker, Button, Tooltip, Switch, Modal, Form, Select, Radio, Divider, Upload, Image, message } from 'antd';
 const { Option } = Select;

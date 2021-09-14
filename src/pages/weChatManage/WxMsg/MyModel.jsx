@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getMsgTemplate, getTemplateImage, getTemplateUser, editMsg, sendMsg, addMsg, getMpList, addMaterial, syncWxMaterial, addText } from 'api'
+import { getMsgTemplate, getTemplateImage, getTemplateUser, editMsg, sendMsg, addMsg, requestWxProgramList, addMaterial, syncWxMaterial, addText } from 'api'
 import { Card, Button, message, Tabs, Radio, Modal, Form, Input, Select, DatePicker, Divider, Alert, InputNumber, Pagination } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
@@ -10,7 +10,7 @@ import ImageUpload from "../../../components/ImageUpload/index" //图片组件
 import "./style.css"
 const { Option } = Select;
 const { TabPane } = Tabs;
-
+let contentProps =  ""//input的光标位置
 export default class AddressNews extends Component {
   formRef = React.createRef();
   formMaterial = React.createRef();
@@ -19,7 +19,7 @@ export default class AddressNews extends Component {
     this.state = {
       page: 1,
       pageSize: 10,
-      totalCount:0,
+      totalCount: 0,
       layout: {
         labelCol: { span: 6 },
         wrapperCol: { span: 18 },
@@ -28,23 +28,23 @@ export default class AddressNews extends Component {
         wrapperCol: { offset: 6, span: 18 },
       },
       materialModal: false,
-      msgList: ["图文信息", "图片信息", "文字信息", "小程序卡片"],
+      // msgList: ["图文信息", "图片信息", "文字信息", "小程序卡片"],
+      msgList: ["图片信息"],
       templateList: [], //素材列表
-      tabIndex: 0,
-      activeIndex: 0,
       mpList: [], //小程序列表
-      selectContent: "",//素材选中内容
       previewUser: [],//预览用户
       parentsData: "", // 父组件传过来的数据
       openIdList: [],
       sourceType: "",
-      addMaterial: false,
+      addMaterialState: false,
       typeText: 0,
       imageInfo: "",//图片信息
+      wildcard: "",//通配符的位置记录
+     
     }
   }
   render() {
-    const { msgList, templateList, tabIndex, selectContent, activeIndex } = this.state;
+    const { msgList, templateList } = this.state;
     const divStyle = {
       "display": "flex",
       "flexWrap": "wrap",
@@ -52,13 +52,6 @@ export default class AddressNews extends Component {
     }
     const cardStyle = {
       width: "32%",
-      height: "300px",
-      "margin": "0 0 20px 0",
-      boxShadow: " 0 2px 12px 0 rgb(0 0 0 / 10%)",
-      borderRadius: "10px"
-    }
-    const cardStyleOut = {
-      width: "50%",
       height: "300px",
       "margin": "0 0 20px 0",
       boxShadow: " 0 2px 12px 0 rgb(0 0 0 / 10%)",
@@ -106,15 +99,9 @@ export default class AddressNews extends Component {
                   }
                 </Select>
               </Form.Item>
-              <Form.Item {...this.state.tailLayout}>
-                <Button type="primary" onClick={() => {
-                  if (!this.formRef.current.getFieldValue("wxCode")) return message.error("请先选择微信公众号")
-                  this.setState({ materialModal: true, tabIndex: 0 })
-                  this.getMsgTemplate("mpnews")
-                }}>
-                  选择客服消息素材
-                </Button>
-              </Form.Item>
+              {
+                this.getMsgTemp()
+              }
               <Divider plain orientation="left">定时发送配置</Divider>
               <Form.Item
                 label="定时发送方式"
@@ -201,7 +188,6 @@ export default class AddressNews extends Component {
                       onChange={(val) => {
                         console.log(val)
                         this.formRef.current.setFieldsValue({ "type": val ? "news" : "mpnews" })
-                        this.state.selectContent.type = val ? "news" : "mpnews"
                       }}
                     // optionFilterProp="name"
                     >
@@ -221,14 +207,6 @@ export default class AddressNews extends Component {
                 }}>
                   立即客服群发
                 </Button>
-              </Form.Item>
-              <Form.Item {...this.state.tailLayout}>
-                {
-                  selectContent ?
-                    <Card style={cardStyleOut}>
-                      {this.getCardContent(activeIndex, selectContent, 1)}
-                    </Card> : ""
-                }
               </Form.Item>
               <Divider plain orientation="left">预览发送配置</Divider>
               <Form.Item
@@ -287,22 +265,15 @@ export default class AddressNews extends Component {
           wrapClassName="outClass"
         // style={{ zIndex: 9999 }}
         >
-          <Tabs tabPosition={"top"} activeKey={tabIndex.toString()}
+          <Tabs tabPosition={"top"} activeKey={"0"}
             onChange={(val) => {
               this.setState({
-                tabIndex: val,
-                page:1,
-                pageSize:10
-              },()=>{
-                if (val == 0) {
-                  this.getMsgTemplate("mpnews")
-                } else if (val == 2) {
-                  this.getMsgTemplate("text")
-                } else if (val == 1) {
-                  this.getTemplateImage()
-                }
+                page: 1,
+                pageSize: 10
+              }, () => {
+                this.getTemplateImage()
               })
-             
+
             }}
           >
             {
@@ -315,7 +286,7 @@ export default class AddressNews extends Component {
                           <Card style={cardStyle} className="hoverStyle" onClick={() => {
                             this.selectMsg(l)
                           }}>
-                            {this.getCardContent(tabIndex, l)}
+                            {this.getCardContent(l)}
                           </Card>
                         )
                       })
@@ -323,22 +294,16 @@ export default class AddressNews extends Component {
                   </div>
                   <Pagination defaultCurrent={1} total={this.state.totalCount}
                     current={this.state.page}
-                    pageSize={this.state.tabIndex==1?20:this.state.pageSize}
+                    pageSize={20}
                     onChange={(page, pageSize) => {
                       console.log(page, pageSize)
                       this.setState({
-                        page:page,
-                        pageSize:pageSize
-                      },()=>{
-                        if (this.state.tabIndex == 0) {
-                          this.getMsgTemplate("mpnews")
-                        } else if (this.state.tabIndex == 2) {
-                          this.getMsgTemplate("text")
-                        } else if (this.state.tabIndex == 1) {
-                          this.getTemplateImage()
-                        }
+                        page: page,
+                        pageSize: pageSize
+                      }, () => {
+                        this.getTemplateImage()
                       })
-                     
+
                     }} />
                 </TabPane>
               ))
@@ -350,7 +315,7 @@ export default class AddressNews extends Component {
         <Modal
           title="新增素材"
           centered
-          visible={this.state.addMaterial}
+          visible={this.state.addMaterialState}
           onCancel={() => { this.closeModel(2) }}
           footer={null}
           forceRender={true}
@@ -388,142 +353,23 @@ export default class AddressNews extends Component {
               </Select>
             </Form.Item>
             <Form.Item
-              label="消息类型"
-              name="msgType"
-              rules={[{ required: true, message: '请选择消息类型' }]}
+              label="图片"
+              name="url"
+              rules={[{ required: true, message: '请上传图片' }]}
             >
-              <Radio.Group onChange={(val) => {
-                this.setState({
-                  typeText: 1
-                })
-              }} defaultValue={"news"}>
-                <Radio value={"news"}>图文消息</Radio>
-                <Radio value={"image"}>图片信息</Radio>
-                <Radio value={"text"}>文本消息</Radio>
-                <Radio value={"mpCard"}>小程序卡片</Radio>
-              </Radio.Group>
+              {
+                this.formMaterial.current ?
+                  <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this, 2)}
+                    key={new Date().getTime()}
+                    postUrl={"/mms/wxReply/addMedia"} //上传地址
+                    params={this.formMaterial.current.getFieldValue("wxCode")} //另外的参数
+                    imageUrl={this.formMaterial.current.getFieldValue("url")}
+                  />
+                  : ""
+              }
+
             </Form.Item>
-            {
-              this.formMaterial.current && this.formMaterial.current.getFieldValue("msgType") == "news" ?
-                <>
-                  <Form.Item {...this.state.tailLayout}>
-                    <Alert
-                      message="标题通配符说明"
-                      description="插入用户昵称请在需要的地方填入 nikeName，仅限跳转外链配置使用。"
-                      type="error"
-                    // closable
-                    // onClose={onClose}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="标题"
-                    name="title"
-                    rules={[{ required: true, message: '请输入标题' }]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    label="摘要"
-                    name="digest"
-                  // rules={[{ required: true, message: '请输入标题' }]}
-                  >
-                    <Input.TextArea />
-                  </Form.Item>
-                  <Form.Item
-                    label="内容"
-                    name="content"
-                    rules={[{ required: true, message: '请输入内容' }]}
-                  >
-                    <Input.TextArea />
-                  </Form.Item>
-                  <Form.Item
-                    label="封面图片"
-                    name="url"
-                    rules={[{ required: true, message: '请上传封面图片' }]}
-                  >
-                    <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this)}
-                      key={new Date().getTime()}
-                      postUrl={"/mms/wxReply/addMedia"} //上传地址
-                      params={this.formMaterial.current.getFieldValue("wxCode")} //另外的参数
-                      imageUrl={this.formMaterial.current.getFieldValue("url")}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="链接地址"
-                    name="content_source_url"
-                    rules={[{ required: true, message: '请输入链接地址' }]}
-                  >
-                    <Input />
-                  </Form.Item>
-                </>
-                :
-                // 图片消息
-                this.formMaterial.current && this.formMaterial.current.getFieldValue("msgType") == "image" ?
-                  <>
-                    <Form.Item
-                      label="图片"
-                      name="url"
-                      rules={[{ required: true, message: '请上传图片' }]}
-                    >
-                      <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this)}
-                        key={new Date().getTime()}
-                        postUrl={"/mms/wxReply/addMedia"}
-                        params={this.formMaterial.current.getFieldValue("wxCode")}
-                        imageUrl={this.formMaterial.current.getFieldValue("url")}
-                      />
-                    </Form.Item>
-                  </>
-                  :
-                  // 文本消息
-                  this.formMaterial.current && this.formMaterial.current.getFieldValue("msgType") == "text" ?
-                    <>
-                      <Form.Item {...this.state.tailLayout}>
-                        <Alert
-                          message="标题通配符说明"
-                          description="插入用户昵称请在需要的地方填入 nikeName ，插入微信小程序链接请在需要的地方填入 mpLink。"
-                          type="error"
-                        // closable
-                        // onClose={onClose}
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        label="微信小程序"
-                        name="appid"
-                      >
-                        <Select
-                          placeholder="请选择要插入的微信小程序"
-                          allowClear
-                        >
-                          {
-                            this.state.mpList.map(r => {
-                              return (
-                                <Option value={r.appid} key={r.appid}>{r.appName}</Option>
-                              )
-                            })
-                          }
-                        </Select>
-                      </Form.Item>
-                      <Form.Item
-                        label="小程序标题"
-                        name="mpTitle"
-                      >
-                        <Input />
-                      </Form.Item>
-                      <Form.Item
-                        label="小程序跳转路径"
-                        name="mpPath"
-                      >
-                        <Input />
-                      </Form.Item>
-                      <Form.Item
-                        label="消息内容"
-                        name="content"
-                        rules={[{ required: true, message: '请输入消息内容' }]}
-                      >
-                        <Input.TextArea />
-                      </Form.Item>
-                    </> : ""
-            }
+
 
             <Form.Item {...this.state.tailLayout}>
               <Button htmlType="submit" type="primary" >
@@ -539,57 +385,296 @@ export default class AddressNews extends Component {
   componentDidMount() {
     this.getMpList()
   }
-  getCardContent(tabIndex, l, type) {
+  getCardContent(l) {
     return (
-      tabIndex == 0 ?
-        <div>
-          {this.getImageAndWord(l, type)}
-        </div>
-        : tabIndex == 1 ?
-          <div>
-            <div style={{ width: "150px", height: "150px" }}><img src={l.url} alt="" style={{ width: "100%", height: "100%" }} /></div>
-            <div>{l.name}</div>
-          </div>
-          : tabIndex == 2 ?
-            <div>
-              {l.createTime ? <div>创建时间:{util.formatTime(l.createTime, "", 1)}</div> : ""}
-              {l.appName ? <div>微信小程序:{l.appName}</div> : ""}
-              {l.mpTitle ? <div>微信小程序跳转标题:{l.mpTitle}</div> : ""}
-              {l.info ? <div>消息内容:{l.info}</div> : ""}
-              {l.mpPath ? <div>微信小程序跳转页面:{l.mpPath}</div> : ""}
-            </div> : ""
+      <div>
+        <div style={{ width: "150px", height: "150px" }}><img src={l.url} alt="" style={{ width: "100%", height: "100%" }} /></div>
+        <div>{l.name}</div>
+      </div>
     )
   }
-  getImageAndWord(l, type) {
-    if (l.info && l.info.includes("{")) {
-      return (
-        <div>
-          <div>
-            {
-              type ? "" :
-                <>
-                  {util.formatTime(JSON.parse(l.info).updateTime, "", 1)}
-                  <span style={{ color: "#409eff", "margin": "0 0 0 20px", "cursor": "pointer" }} onClick={() => {
-                    window.open(JSON.parse(l.info).content.newsItem[0].url)
-                  }}>预览文章</span>
-                </>
-            }
-          </div>
-          <div>{JSON.parse(l.info).content.newsItem[0].title}</div>
-          <div style={{ width: "150px", height: "150px" }}><img src={JSON.parse(l.info).content.newsItem[0].picUrl} alt="" style={{ width: "100%", height: "100%" }} /></div>
-        </div>
-      )
-    } else if (l.type != "image" && l.type != "text") {
-      return (
-        <>
-          <div>{l.content ? l.content.newsItem ? l.content.newsItem[0].title : l.title : l.title}</div>
-          <div style={{ width: "150px", height: "150px" }}><img src={l.content ? l.content.newsItem ? l.content.newsItem[0].picUrl : l.picUrl : l.picUrl} alt="" style={{ width: "100%", height: "100%" }} /></div>
-        </>
-      )
-    } else {
 
-    }
+  /* 
+    素材列表
+  */
+  getMsgTemp() {
+    return (
+      <>
+        <Form.Item
+          label="消息类型"
+          name="msgType"
+          rules={[{ required: true, message: '请选择消息类型' }]}
+        >
+          <Radio.Group onChange={(val) => {
+            this.setState({
+              typeText: 1
+            })
+          }} defaultValue={"news"}>
+            <Radio value={"news"}>图文消息</Radio>
+            <Radio value={"image"}>图片信息</Radio>
+            <Radio value={"text"}>文本消息</Radio>
+            <Radio value={"mini"}>小程序卡片</Radio>
+          </Radio.Group>
+        </Form.Item>
+        {
+          this.formRef.current && this.formRef.current.getFieldValue("msgType") == "news" ?
+            <>
+              <Form.Item {...this.state.tailLayout}>
+                <Alert
+                  message="标题通配符说明"
+                  description="插入用户昵称请在需要的地方填入 nikeName，仅限跳转外链配置使用。"
+                  type="error"
+                // closable
+                // onClose={onClose}
+                />
+              </Form.Item>
+              {/* 通配符函数 */}
+              {
+                this.getWildCard("#nickName")
+              }
+              <Form.Item
+                label="标题"
+                name="title"
+                rules={[{ required: true, message: '请输入标题' }]}
+              >
+                <Input  ref={(input) => { contentProps = input }} onFocus={() => {
+                  this.setState({
+                    wildcard: "title",
+                    wildType:"input"
+                  })
+                }} />
+              </Form.Item>
+              <Form.Item
+                label="摘要"
+                name="digest"
+              // rules={[{ required: true, message: '请输入标题' }]}
+              >
+                <Input.TextArea onFocus={() => {
+                  this.setState({
+                    wildcard: "digest"
+                  })
+                }} />
+              </Form.Item>
+              <Form.Item
+                label="封面图片"
+                name="url"
+                rules={[{ required: true, message: '请上传封面图片' }]}
+              >
+                {
+                  this.getPostButton()
+                }
+              </Form.Item>
+              <Form.Item
+                label="链接地址"
+                name="content_source_url"
+                rules={[{ required: true, message: '请输入链接地址' }]}
+              >
+                <Input onFocus={() => {
+                  this.setState({
+                    wildcard: "not"
+                  })
+                }} />
+              </Form.Item>
+            </>
+            :
+            // 图片消息
+            this.formRef.current && this.formRef.current.getFieldValue("msgType") == "image" ?
+              <>
+                <Form.Item
+                  label="图片"
+                  name="url"
+                  rules={[{ required: true, message: '请上传图片' }]}
+                >
+                  {
+                    this.getPostButton()
+                  }
+                </Form.Item>
+              </>
+              :
+              // 文本消息
+              this.formRef.current && this.formRef.current.getFieldValue("msgType") == "text" ?
+                <>
+                  <Form.Item {...this.state.tailLayout}>
+                    <Alert
+                      message="标题通配符说明"
+                      description="插入用户昵称请在需要的地方填入 nikeName"
+                      type="error"
+                    // closable
+                    // onClose={onClose}
+                    />
+                  </Form.Item>
+                  {/* 通配符函数 */}
+                  {
+                    this.getWildCard("#nickName")
+                  }
+                  <Form.Item
+                    label="消息内容"
+                    name="content"
+                    rules={[{ required: true, message: '请输入消息内容' }]
+                    }
+                  >
+                    <Input.TextArea ref={(input) => { contentProps = input }} onFocus={() => {
+                      this.setState({
+                        wildcard: "content"
+                      })
+                    }} />
+                  </Form.Item>
+                </>
+                :
+                // 小程序消息
+                this.formRef.current && this.formRef.current.getFieldValue("msgType") == "mini" ?
+                  <>
+                    <Form.Item {...this.state.tailLayout}>
+                      <Alert
+                        message="标题通配符说明"
+                        description="插入用户昵称请在需要的地方填入 nikeName ，插入微信小程序链接请在需要的地方填入 mpLink。"
+                        type="error"
+                      // closable
+                      // onClose={onClose}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      label="微信小程序"
+                      name="appid"
+                    // rules={[{ required: true, message: '请选择微信小程序' }]}
+                    >
+                      <Select
+                        placeholder="请选择要插入的微信小程序"
+                        allowClear
+                      >
+                        {
+                          this.state.mpList.map(r => {
+                            return (
+                              <Option value={r.appid} key={r.appid}>{r.appName}</Option>
+                            )
+                          })
+                        }
+                      </Select>
+                    </Form.Item>
+                    {
+                      this.getWildCard("#nickName")
+                    }
+                    <Form.Item
+                      label="小程序标题"
+                      name="mpTitle"
+                      rules={[{ required: true, message: '请输入小程序标题' }]}
+                    >
+                      <Input ref={(input) => { contentProps = input }} onFocus={() => {
+                        this.setState({
+                          wildcard: "mpTitle"
+                        })
+                      }} />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="小程序跳转路径"
+                      name="mpPath"
+                      rules={[{ required: true, message: '请输入小程序跳转路径' }]}
+                    >
+                      <Input />
+
+                    </Form.Item>
+                    <Form.Item
+                      label="封面图片"
+                      name="url"
+                      rules={[{ required: true, message: '请上传封面图片' }]}
+                    >
+                      {
+                        this.getPostButton()
+                      }
+                    </Form.Item>
+                  </>
+                  : ""
+        }
+      </>
+    )
   }
+  // 获取通配符
+  getWildCard(addInfo) {
+    return (
+      <Form.Item {...this.state.tailLayout}>
+        <div>
+          <div style={{ border: "1px solid #000", width: "fit-content", padding: "2px 5px", borderRadius: "5px" }}
+            onClick={() => {
+              if (this.state.wildcard == "not") {
+                return message.warn("该输入框不支持通配符")
+              }
+              if (this.state.wildcard) {
+                let word = this.formRef.current.getFieldValue([this.state.wildcard])
+                console.log(contentProps,"contentProps")
+                let props = ""
+                if(contentProps.resizableTextArea){
+                  props = contentProps.resizableTextArea.textArea; // 获取dom节点实例
+                }else{
+                  props = contentProps.input; // 获取dom节点实例
+                }
+                let position = this.getPositionForTextArea(props); // 光标的位置
+                console.log(position)
+                let length = 0;
+                // setFieldsValue方法是异步的
+                // 不加延时器就会发生光标还没插入文字呢 就已经把光标插入后的位置提前定位
+                if(word){
+                  length = addInfo.length
+                  word = word.substr(0,position.start)+addInfo+word.substr(position.start)
+                }else{
+                  word = addInfo
+                }
+                this.formRef.current.setFieldsValue({ [this.state.wildcard]: word})
+                setTimeout(()=>{
+                    this.setCursorPosition(props, position.start+length);
+                },100);
+              }
+            }}
+          >
+            用户姓名
+          </div>
+        </div>
+      </Form.Item>
+    )
+  }
+  getPositionForTextArea = (ctrl) => {
+    // 获取光标位置
+    let CaretPos = {
+      start: 0,
+      end: 0
+    };
+    if (ctrl.selectionStart) {// Firefox support
+      CaretPos.start = ctrl.selectionStart;
+    }
+    if (ctrl.selectionEnd) {
+      CaretPos.end = ctrl.selectionEnd;
+    }
+    return (CaretPos);
+  }
+  setCursorPosition = (ctrl, pos) => {
+    // ctrl.focus();
+    ctrl.setSelectionRange(pos, pos);
+  }
+  //获取图片素材按钮
+  getPostButton() {
+    return (
+      <div style={{ display: "flex", "justifyContent": "flex-start" }}>
+        <div style={{ width: "20%" }}>
+          <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this, 1)}
+            key={new Date().getTime()}
+            postUrl={"/mms/wxReply/addMedia"} //上传地址
+            params={this.formRef.current.getFieldValue("wxCode")} //另外的参数
+            imageUrl={this.formRef.current.getFieldValue("url")}
+          />
+        </div>
+        <Button type="primary" onClick={() => {
+          if (!this.formRef.current.getFieldValue("wxCode")) return message.error("请先选择微信公众号")
+          this.setState({ materialModal: true, page: 1 }, () => {
+            this.getTemplateImage()
+          })
+
+        }}>
+          选择素材
+        </Button>
+      </div>
+    )
+  }
+
   closeModel(type) { // 1是关闭素材框 2是关闭外部框
     if (type === 1) {
       this.setState({
@@ -597,7 +682,7 @@ export default class AddressNews extends Component {
       })
     } else if (type === 2) {
       this.setState({
-        addMaterial: false
+        addMaterialState: false
       })
     } else {
       this.props.closeModel()
@@ -615,32 +700,59 @@ export default class AddressNews extends Component {
   }
   getFormData(data) { //获取父亲里面的这一行的数据
     console.log(data, "获取父亲里面的这一行的数据")
+    this.formRef.current.resetFields()
     if (data == 1) {
-      this.formRef.current.resetFields()
+      this.formRef.current.setFieldsValue({ "msgType": "news" })
       this.setState({
-        selectContent: "",
         sourceType: "add"
       })
     } else if (data) {
       let formData = data
       formData.tag = formData.tag ? Array.isArray(formData.tag) ? formData.tag : formData.tag.split(",") : []
       this.formRef.current.setFieldsValue(formData)
+      if (formData.type === "multi") {
+        let arr = JSON.parse(formData.multiInfo)
+        console.log(formData.multiInfo)
+        if (arr[0].msgType === "news") {
+          this.formRef.current.setFieldsValue({
+            "msgType": arr[0].msgType,
+            title: arr[0].title,
+            digest: arr[0].description,
+            url: arr[0].picUrl,
+            content_source_url: arr[0].url,
+          })
+        } else if (arr[0].msgType === "image") {
+          this.formRef.current.setFieldsValue({
+            "msgType": arr[0].msgType,
+            url: arr[0].picUrl,
+
+          })
+        } else if (arr[0].msgType === "text") {
+          this.formRef.current.setFieldsValue({
+            "msgType": arr[0].msgType,
+            content: arr[0].content,
+
+          })
+        } else if (arr[0].msgType === "mini") {
+          this.formRef.current.setFieldsValue({
+            "msgType": arr[0].msgType,
+            mpTitle: arr[0].miniTitle,
+            mpPath: arr[0].path,
+            url: arr[0].picUrl,
+            appid: arr[0].appid,
+          })
+        }
+        this.setState({
+          imageInfo: arr[0]
+        })
+      } else {
+        this.formRef.current.setFieldsValue({ "msgType": formData.type === "mpnews" ? "news" : formData.type })
+      }
       if (formData.sendType != 3) {
         this.formRef.current.setFieldsValue({ "sendTime": moment(formData.sendTime * 1000) })
       }
-
-      let index = 0
-      if (formData.type == "image") {
-        index = 1
-      } else if (formData.type == "text") {
-        index = 2
-      } else {
-        index = 0
-      }
       this.setState({
         sourceType: "edit",
-        activeIndex: index,
-        selectContent: index == 1 ? JSON.parse(formData.info) : index == 2 ? formData : JSON.parse(formData.info.replace(/\n/g, "<br/>"))
       })
 
       this.getTemplateUser(this.formRef.current.getFieldValue("wxCode"))
@@ -651,17 +763,18 @@ export default class AddressNews extends Component {
 
   }
   selectMsg(val) {
-    console.log(val, this.state.tabIndex)
-    if (this.state.tabIndex == 1) {
-      val.type = "image"
-    }
+    console.log(val)
     this.closeModel(1)
-    this.formRef.current.setFieldsValue({ "type": val.type })
+    if (this.formRef.current.getFieldValue("multiInfo")) {
+      let imageInfo = JSON.parse(this.formRef.current.getFieldValue("multiInfo"))[0]
+      imageInfo.picUrl = val.url
+      imageInfo.mediaId = val.mediaId
+      this.formRef.current.setFieldsValue({ "multiInfo": JSON.stringify([imageInfo]) })
+    }
+    this.formRef.current.setFieldsValue({ "url": val.url })
     this.setState({
-      selectContent: val,
-      activeIndex: this.state.tabIndex
+      imageInfo: val,
     })
-
   }
   getMsgTemplate(val) {
     let params = {
@@ -675,7 +788,7 @@ export default class AddressNews extends Component {
         console.log(res.data)
         this.setState({
           templateList: res.data.data,
-          totalCount:res.data.totalCount
+          totalCount: res.data.totalCount
         })
       } else {
         this.setState({
@@ -687,7 +800,7 @@ export default class AddressNews extends Component {
   getTemplateImage() {
     let params = {
       count: 20,
-      offset: (this.state.page -1 )* 20,
+      offset: (this.state.page - 1) * 20,
       type: "image",
       wxCode: this.formRef.current.getFieldValue("wxCode"),
     }
@@ -696,7 +809,7 @@ export default class AddressNews extends Component {
       if (res.data.errCode === 0 && res.data.data) {
         this.setState({
           templateList: res.data.data.item,
-          totalCount:res.data.data.totalCount
+          totalCount: res.data.data.totalCount
         })
       } else {
         this.setState({
@@ -722,27 +835,56 @@ export default class AddressNews extends Component {
     })
   }
   getMpList() { //获取小程序
-    getMpList().then(res => {
-      if (res.data.errCode === 0) {
+    requestWxProgramList({})
+      .then(res => {
         this.setState({
-          mpList: res.data.data
+          mpList: res.data
         })
-      }
-    })
+      }).catch(res => {
+
+      })
   }
   // 编辑客服消息
   editMsg(item) {
-    console.log(this.state.selectContent, this.state.tabIndex)
-    let { id, info, messageType, sendTime, sendType, tag, type, wxCode } = this.state.parentsData
+    console.log(item, this.state.imageInfo)
+    // let { id, info, messageType, sendTime, sendType, tag, type, wxCode } = this.state.parentsData
+    let info = []
+    if (item.msgType == "image") {
+      info.push({
+        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+        picUrl: this.state.imageInfo.url || this.state.imageInfo.picUrl,
+        msgType: item.msgType
+      })
+    } else if (item.msgType == "text") {
+      info.push({ content: item.content, msgType: item.msgType })
+    } else if (item.msgType == "mini") {
+      info.push({
+        appid: item.appid,
+        miniTitle: item.mpTitle,
+        path: item.mpPath,
+        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+        picUrl: this.state.imageInfo.url || this.state.imageInfo.picUrl,
+        msgType: item.msgType
+      })
+    } else {
+      info.push({
+        title: item.title,
+        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+        picUrl: this.state.imageInfo.url || this.state.imageInfo.picUrl,
+        description: item.digest,
+        url: item.content_source_url,
+        msgType: item.msgType
+      })
+    }
     let params = {
-      id, info, messageType, sendTime, sendType, type, tag, wxCode,
+      // id, messageType, sendTime, sendType, type, tag, wxCode,
+      ...this.state.parentsData,
       ...item,
       tag: item.tag.length === 0 ? "" : item.tag.join(","),
       sendTime: item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
-      info: this.state.tabIndex == 1 ? JSON.stringify(this.state.selectContent) : this.state.selectContent.info ? this.state.selectContent.info : JSON.stringify(this.state.selectContent),
-      type: this.state.selectContent.type || this.formRef.current.getFieldValue("type")
+      type: "multi",
+      multiInfo: JSON.stringify(info)
     }
-    console.log(params, "params")
     editMsg(params).then(res => {
       if (res.data.errCode === 0) {
         message.success("更新成功")
@@ -768,38 +910,47 @@ export default class AddressNews extends Component {
   sendMsg() {
     let formData = this.formRef.current.getFieldValue() //获取表单数据
     console.log(formData, "formData")
-    console.log(this.state.selectContent, "this.state.selectContent")
     let params = {
       openid: this.state.openIdList.join(","),
-      tag: formData.tag.length === 0 ? "" : formData.tag.join(","),
+      tag: formData.tag ? formData.tag.length === 0 ? "" : formData.tag.join(",") : "",
       wxCode: formData.wxCode,
     }
-    if (formData.type === "text") {
-      params.appid = formData.appid;
-      params.appName = formData.appName;
-      params.mpTitle = formData.mpTitle;
-      params.mpPath = formData.mpPath;
-      params.content = formData.info;
-      params.msgType = formData.type;
-    } else if (formData.type === "image") {
-      params.msgType = formData.type
-      params = {
-        ...params, ...this.state.selectContent,
-      }
-    } else if (formData.type === "mpnews") {
+    if (formData.type === "multi") {  //新版本
+      let arr = JSON.parse(formData.multiInfo)[0]
+      console.log(arr)
       params = {
         ...params,
-        ...(this.state.selectContent.content.newsItem[0]),
-        "mediaId": this.state.selectContent.mediaId,
-        "msgType": formData.type
+        ...arr
       }
-    } else if (formData.type === "news") {
-      params = {
-        ...params,
-        ...this.state.selectContent
+      if (arr.msgType == "mini") {
+        params.title = arr.miniTitle
+        // params.path = arr.mpPath
       }
     }
-    console.log(params, "params")
+    if (this.state.sourceType == "add") {
+      if (formData.msgType == "image") {
+        params.mediaId = this.state.imageInfo.mediaID || this.state.imageInfo.mediaId
+        params.picUrl = this.state.imageInfo.url || this.state.imageInfo.picUrl
+        params.msgType = formData.msgType
+      } else if (formData.msgType == "text") {
+        params.content = formData.content
+        params.msgType = formData.msgType
+      } else if (formData.msgType == "mini") {
+        params.appid = formData.appid
+        params.miniTitle = formData.mpTitle
+        params.path = formData.mpPath
+        params.mediaId = this.state.imageInfo.mediaID || this.state.imageInfo.mediaId
+        params.picUrl = this.state.imageInfo.url || this.state.imageInfo.picUrl
+        params.msgType = formData.msgType
+      } else {
+        params.title = formData.title
+        params.mediaId = this.state.imageInfo.mediaID || this.state.imageInfo.mediaId
+        params.picUrl = this.state.imageInfo.url || this.state.imageInfo.picUrl
+        params.description = formData.digest
+        params.url = formData.content_source_url
+        params.msgType = formData.msgType
+      }
+    }
     sendMsg(params).then(res => {
       if (res.data.errCode === 0) {
         message.success("推送成功")
@@ -811,14 +962,46 @@ export default class AddressNews extends Component {
     })
   }
   addMsg(item) {
+    console.log(item)
+    let info = []
+    let type = this.formRef.current.getFieldValue("msgType")
+    if (type == "image") {
+      info.push({
+        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+        picUrl: this.state.imageInfo.url,
+        msgType: type
+      })
+    } else if (type == "text") {
+      info.push({ content: item.content, msgType: type })
+    } else if (type == "mini") {
+      info.push({
+        appid: item.appid,
+        appName: item.appName,
+        miniTitle: item.mpTitle,
+        path: item.mpPath,
+        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+        picUrl: this.state.imageInfo.url,
+        msgType: type
+      })
+    } else {
+      info.push({
+        title: item.title,
+        mediaId: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+        picUrl: this.state.imageInfo.url,
+        description: item.digest,
+        url: item.content_source_url,
+        msgType: type
+      })
+    }
     let params = {
       ...item,
       messageType: "custom",
       sendTime: item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
-      type: this.state.selectContent.type || this.formRef.current.getFieldValue("type"),
+      type: "multi",
       tag: Array.isArray(item.tag) ? item.tag.length === 0 ? "" : item.tag.join(",") : "",
-      info: this.state.tabIndex == 1 ? JSON.stringify(this.state.selectContent) : this.state.selectContent.info ? this.state.selectContent.info : JSON.stringify(this.state.selectContent),
+      multiInfo: JSON.stringify(info)
     }
+    // return console.log(params)
     addMsg(params).then(res => {
       if (res.data.errCode === 0) {
         message.success("新增成功")
@@ -831,25 +1014,25 @@ export default class AddressNews extends Component {
   }
   openMaterialModal() { //打开新增素材弹窗
     this.setState({
-      addMaterial: true,
+      addMaterialState: true,
     })
-    this.formMaterial.current.setFieldsValue({ "msgType": "news" })
+    this.formMaterial.current.resetFields()
   }
   //获取上传的图片路径
-  getUploadFileUrl(file, newItem) {
-    console.log(file, newItem, "获取上传的图片路径")
-    this.formMaterial.current.setFieldsValue({ "url": newItem.url })
+  getUploadFileUrl(type, file, info) {
+    console.log(type, file, info, "获取上传的图片路径")
+    if (type === 1) {
+      this.formRef.current.setFieldsValue({ "url": info.url })
+    } else {
+      this.formMaterial.current.setFieldsValue({ "url": info.url })
+    }
     this.setState({
-      imageInfo: newItem
+      imageInfo: info
     })
     // console.log(this.formMaterial.current.getFieldValue(),"11")
   }
   submitMaterial(val) {
-    if (val.msgType == "text") {
-      this.addText(val)
-    } else {
-      this.addMaterial(val)
-    }
+    this.addMaterial(val)
   }
   addText(val) {
     let arr = this.state.mpList.filter(item => item.appid == val.appid)
@@ -870,7 +1053,8 @@ export default class AddressNews extends Component {
   addMaterial(val) { //新增素材
     let params = {
       ...val,
-      thumb_media_id: this.state.imageInfo.mediaID
+      thumb_media_id: this.state.imageInfo.mediaID || this.state.imageInfo.mediaId,
+      msgType: "image"
     }
     console.log(params, "新增")
     addMaterial(params).then(res => {

@@ -1,0 +1,205 @@
+/*
+ * @Author: HuangQS
+ * @Date: 2021-08-30 16:44:12
+ * @LastEditors: HuangQS
+ * @LastEditTime: 2021-09-01 20:40:22
+ * @Description: 微信自动回复弹出框 手机显示
+ */
+
+.reply-wrapper-out {
+    padding: 18px 0;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.tap-wrapper>.ant-tabs-top>.ant-tabs-nav, .ant-tabs-bottom>.ant-tabs-nav, .ant-tabs-top>div>.ant-tabs-nav, .ant-tabs-bottom>div>.ant-tabs-nav {
+    /* 强制Tabs下方控件 不存在留白 */
+    margin: 0 !important;
+}
+
+/* ant-tabs-nav */
+
+.reply-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+.reply-wrapper>.tab-wrapper {
+    width: 100px;
+}
+
+.reply-wrapper>.title-wrapper {
+    /* 额外 个性化需要展示的数据 */
+    width: 55%;
+    background: #FFFFFF;
+    padding-top: 15px;
+}
+
+.reply-wrapper>.btn-wrapper {
+    /* 额外 个性化需要展示的数据 */
+    width: 55%;
+    background: #FFFFFF;
+    padding: 30px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.reply-wrapper>.content-wrapper {
+    /* 消息切换框按钮盒子 */
+    width: 55%;
+    min-height: 300px;
+    background: #FFFFFF;
+}
+
+.phone-wrapper-outer {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 35%;
+    height: 440px;
+    right: 0;
+}
+
+.phone-wrapper-outer>.phone-wrapper {
+    /* 手机展示盒子 */
+    /* position: absolute; */
+    width: 280px;
+    /* min-height: 440px; */
+    height: 440px;
+    background: #FFFFFF;
+    /* border: 1px #FF0000 solid; */
+    border: 1px solid rgba(253, 32, 45, 0.2);
+    border-radius: 12px;
+    margin-left: 10px;
+    /* transform: translate( -50% 0);    */
+    top: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.phone-wrapper>.phone-message-box {
+    display: flex;
+    flex-direction: row;
+}
+
+.phone-message-box>.phone-topic {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 3px 0;
+}
+
+.phone-message-box>.phone-box {
+    display: flex;
+    flex-direction: row;
+    font-size: 8px;
+    margin: 30px 5px;
+}
+
+.phone-box>.head-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 3px;
+    border: 1px #F2B724 solid;
+    background: #584232;
+    color: #FAFAFA;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    text-align: center;
+}
+
+.phone-box>.phone-item-box {
+    width: 160px;
+    margin-left: 5px;
+    background: #FAFAFA;
+    border: 1px solid rgba(253, 32, 45, 0.2);
+    padding: 3px 5px;
+}
+
+.phone-item-box>.title {
+    font-size: 10px;
+    font-weight: bold;
+    margin: 3px 0;
+}
+
+.phone-item-box>.description {
+    font-size: 9px;
+}
+
+.phone-item-box>.phone-content {
+    font-size: 8px;
+}
+
+.phone-item-box>.phone-url {
+    font-size: 6px;
+}
+
+.phone-item-box>.phone-image {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.phone-item-box>.mini-icon {
+    /* 小程序图片 */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ====================================滚动条样式==================================== */
+
+.phone-wrapper-outer ::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 5px;
+    /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+
+.phone-wrapper-outer ::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #535353;
+}
+
+.phone-wrapper-outer ::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background: #ededed;
+    margin: 10px 0;
+}
+
+.empty-wrapper {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.empty-wrapper>.item {
+    width: 600px;
+    height: 50px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}

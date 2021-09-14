@@ -3,9 +3,9 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-25 11:56:55
+ * @LastEditTime: 2021-09-10 16:42:39
  */
-import {lazy} from 'react'
+import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
 const AyhChannel = lazy(()=>import('pages/ayh/channel/index.jsx'))
 const NoPermission = lazy(()=>import('pages/NoPermission/index.jsx'))
@@ -24,7 +24,8 @@ const AddressList = lazy(()=>import('pages/level/addressList/index.jsx'))
 const ServiceLog = lazy(()=>import('pages/service/serviceLog/index.jsx'))
 const ManageTag = lazy(()=>import('pages/service/manageTag/index.jsx'))
 const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
-const Recommend= lazy (()=>import ('pages/recommend/recommend.jsx'));
+const Recommend= lazy (()=>import ('pages/adManage/recommend/recommend.jsx'));
+const MenuImage= lazy (()=>import ('pages/adManage/menuImage/menuImage.jsx'));
 const Voting = lazy(()=>import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(()=>import('pages/channelManage/channelLock/index.jsx'))
 const LivePreview = lazy(()=>import('pages/channelManage/livePreview/index.jsx'))
@@ -32,12 +33,16 @@ const AddressNews = lazy(()=>import('pages/configManage/addressNews/index.jsx'))
 const ChannelSubject = lazy(()=>import('pages/channelManage/channelSubject/index.jsx'))
 const EditSubject = lazy(()=>import('pages/channelManage/editSubject/index.jsx'))
 const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
-// const WxReply =  lazy(()=>import('pages/wechart/wxReply.jsx'));
+const WxReply =  lazy(()=>import('pages/wechart/autoReply/wxReply.jsx'));  
+const wxPayTemplate =  lazy(()=>import('pages/wechart/wxPayTemplate.jsx'));
+const LoginManage =  lazy(()=>import('pages/adManage/loginManage/index.jsx'));
+const MiniConfig =  lazy(()=>import('pages/configManage/miniConfig/index.jsx'));
 
-// const WxMsg = lazy(()=>import('pages/weChatManage/WxMsg/index.jsx'))
+const WxMsg = lazy(()=>import('pages/weChatManage/WxMsg/index.jsx'))
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
+
   {path:'/mms/ayh/channel',component:AyhChannel,name:'奥运会节目单',icon:LineChartOutlined,code:"OlympicGames"},
   {path:'/mms/ayh/winningNews',component:WinningNews,name:'夺奖快讯',icon:LineChartOutlined,code:"OlympicGames"},
   {path:'/mms/ayh/sportsProgram',component:SportsProgram,name:'夺奖快讯',icon:LineChartOutlined,code:"OlympicGames"},
@@ -62,24 +67,25 @@ const adminRoutes = [
   {path:'/mms/channel/livePreview',component:LivePreview,name:'直播预告',icon:UnorderedListOutlined,code:"channelManage"},
 
   {path:'/mms/configManage/addressNews',component:AddressNews,name:'地域新闻',icon:UnorderedListOutlined,code:"configManage"},
+  { path: '/mms/config/miniConfig', component: MiniConfig, name: '小程序配置', icon: UnorderedListOutlined, code: "configManage" },
 
   {path:'/mms/channelManage/channelSubject',component:ChannelSubject,name:'频道专题',icon:UnorderedListOutlined,code:"channelManage"},
   {path:'/mms/channelManage/editSubject/:id',component:EditSubject,name:'编辑专题',icon:UnorderedListOutlined,code:"channelManage"},
 
+
   {path:'/mms/adManage/recommend',component:Recommend,name:'尝鲜版',icon:UnorderedListOutlined,code:"adManage"},
+  { path: '/mms/adManage/LoginManage', component: LoginManage, name: '个人中心登录', icon: UnorderedListOutlined, code: "adManage" },
+  {path:'/mms/adManage/menuImage',component:MenuImage,name:'菜单栏图片配置',icon:UnorderedListOutlined,code:"adManage"},
  
  
   //配置管理
   {path:'/mms/doc',component:ConfigDoc,name:'文案管理',icon:UnorderedListOutlined,code:"configManage"},
  
   //微信公众号管理
-  // {path:'/mms/wxReply',component:WxReply,name:'自动回复',icon:UnorderedListOutlined,code:"WeChatManage"},
+  {path:'/mms/wxReply',component:WxReply,name:'自动回复',icon:UnorderedListOutlined,code:"WeChatManage"},
+  {path:'/mms/wxPayTemplate',component:wxPayTemplate,name:'支付模板消息',icon:UnorderedListOutlined,code:"WeChatManage"},
  
- 
-
-
-  // {path:'/mms/wx/msg',component:WxMsg,name:'客服消息',icon:UnorderedListOutlined,code:"WeChatManage"},
-
+  {path:'/mms/wx/msg',component:WxMsg,name:'客服消息',icon:UnorderedListOutlined,code:"WeChatManage"},
   {path:'/mms/noPermission',component:NoPermission,name:'没有权限',meta:{isNav:false,roles:'*'}}
 
 

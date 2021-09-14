@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-08-26 11:02:24
+ * @LastEditTime: 2021-09-09 17:42:52
  */
 
 import React, { Component } from 'react';
@@ -18,8 +18,9 @@ import {
 import './doc_style.css'
 import SyncBtn from "../../components/syncBtn/syncBtn.jsx"
 
-const { Option } = Select;
-const { TabPane } = Tabs;
+let { TextArea } = Input;
+let { Option } = Select;
+let { TabPane } = Tabs;
 export default class Doc extends Component {
     constructor(props) {
         super(props);
@@ -60,9 +61,10 @@ export default class Doc extends Component {
             //弹出框
             modal_box: {
                 is_show: false,
+                is_edit: false,
                 title: '新增',
             },
-            temp: true,
+            last_item_edit_id: '',   //上一个被选中的id
         }
     }
 
@@ -112,7 +114,7 @@ export default class Doc extends Component {
                 }>
                 </Alert>
 
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1200, y: 600 }} />
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1200 }} />
 
                 {/* {
                     table_box.table_pages.totalCount !== 0 &&
@@ -124,6 +126,10 @@ export default class Doc extends Component {
                 <Modal title={modal_box.title} visible={modal_box.is_show} forceRender={true} width={800} onOk={() => this.onModalOkClick()} onCancel={() => this.onModalCancelClick()}>
                     {/* 第一层 */}
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
+
+                        <Form.Item label='id' name='id' rules={[{ required: true }]} >
+                            <Input style={{ width: 350 }} disabled placeholder="创建成功后将自动生成id" />
+                        </Form.Item>
                         {
                             table_box.table_layer.length === 0 &&
                             <div>
@@ -241,19 +247,19 @@ export default class Doc extends Component {
         if (layer_count === 0 || layer_count === 1) {
             titles.push({
                 title: '文案名称', dataIndex: 'name', key: 'name', render: (rowValue, row, index) => {
-                    return (that.renderTitleItem(row, 'is_edit_name', 'name'))
+                    return (that.renderTitleItem(layer_count, row, 'is_edit_name', 'name'))
                 }
             });
             titles.push({
                 title: '文案编码', dataIndex: 'code', key: 'code', render: (rowValue, row, index) => {
-                    return (that.renderTitleItem(row, 'is_edit_code', 'code'))
+                    return (that.renderTitleItem(layer_count, row, 'is_edit_code', 'code'))
                 }
             });
         }
         else if (layer_count === 2) {
             titles.push({
                 title: '参数', dataIndex: 'value', key: 'value', render: (rowValue, row, index) => {
-                    return (that.renderTitleItem(row, 'is_edit_value', 'value'))
+                    return (that.renderTitleItem(layer_count, row, 'is_edit_value', 'value'))
                 }
             });
         }
@@ -404,7 +410,7 @@ export default class Doc extends Component {
         Modal.confirm({
             title: '删除',
             content: (
-                <p>确定删除【{item.name}】这条数据？</p>
+                <p>确定删除这条数据？</p>
             ),
             okText: '删除',
             cancelText: '取消',
@@ -446,6 +452,8 @@ export default class Doc extends Component {
         }
         let modal_box = that.state.modal_box;
         modal_box.is_show = true;
+        modal_box.is_edit = false;
+        modal_box.data = {};
         that.setState({ modal_box: modal_box })
     }
     //编辑按钮被点击
@@ -465,8 +473,6 @@ export default class Doc extends Component {
     onModalOkClick() {
         let that = this;
         let object = that.formRef.current.getFieldsValue();
-
-        console.log(object);
 
         let table_layer = that.state.table_box.table_layer;
         let step = table_layer.length;
@@ -506,26 +512,35 @@ export default class Doc extends Component {
         if (object.name) object.name = object.name.replace(/(^\s*)|(\s*$)/g, "");
         if (object.value) object.value = object.value.replace(/(^\s*)|(\s*$)/g, "");
 
-        requestConfigAddDoc(step, object).then(res => {
-            message.success('数据添加成功');
-            //隐藏弹出框
-            let modal_box = that.state.modal_box;
-            modal_box.is_show = false;
 
-            that.setState({ modal_box: modal_box })
-            that.refreshList();
-        }).catch(res => {
-            message.error('数据添加失败：' + res.desc)
-            console.log(res);
-        })
+        let is_modify = object.id ? true : false;
+
+        (is_modify ? (requestConfigUpdateDoc(step, object)) : (requestConfigAddDoc(step, object)))
+            .then(res => {
+                message.success('保存成功');
+                //隐藏弹出框
+                let modal_box = that.state.modal_box;
+                modal_box.is_show = false;
+                that.setState({
+                    modal_box: modal_box
+                }, () => {
+                    that.refreshList();
+                });
+            }).catch(res => {
+                message.error('操作失败：' + res.desc)
+            })
+
+     
     }
 
     //弹出框Cancel被点击
     onModalCancelClick() {
         let that = this;
         let modal_box = that.state.modal_box;
+        modal_box.title = '新增';
         modal_box.is_show = false;
-
+        modal_box.is_edit = false;
+        modal_box.data = {};
         that.setState({ modal_box: modal_box })
     }
 
@@ -601,19 +616,28 @@ export default class Doc extends Component {
 
     /**
      * 渲染表格item 默认为按钮，被点击后出现输入框、失去焦点后判断更新数据、刷新列表
+     * @param {*} layer_count 层级
      * @param {*} row 
      * @param {*} flag_key 
      * @param {*} param_key 
      * @returns 
      */
-    renderTitleItem(row, flag_key, param_key) {
+    renderTitleItem(layer_count, row, flag_key, param_key) {
         let that = this;
         let is_edit = row[flag_key];
         let default_value = row[param_key];
+        let last_item_edit_id = that.state.last_item_edit_id;
+
 
         //编辑形态 失去焦点 更新数据
         if (is_edit) {
-            return <Input defaultValue={default_value} onBlur={(e) => {
+            if (last_item_edit_id !== row.id) {
+                row[flag_key] = false;
+                that.forceUpdate();
+                return;
+            }
+
+            return <TextArea defaultValue={default_value} style={{ width: 350 }} autoSize={{ minRows: 2, maxRows: 6 }} onBlur={(e) => {
                 let new_value = e.target.value;
                 if (default_value === new_value) {
                     row[flag_key] = false;
@@ -627,7 +651,29 @@ export default class Doc extends Component {
         }
         //按钮形态
         else {
-            return <a type='link' onClick={() => { row[flag_key] = true; that.forceUpdate(); }} >
+            return <a type='link' onClick={() => {
+                //第三层数据 
+                if (layer_count === 2) {
+                    let modal_box = that.state.modal_box;
+                    modal_box.title = '编辑';
+                    modal_box.is_show = true;
+                    modal_box.is_edit = true;
+                    modal_box.data = row;
+                    that.formRef.current.setFieldsValue(row);
+
+                    that.setState({ modal_box: modal_box })
+                }
+                //第1、2层数据
+                else {
+                    row[flag_key] = true;
+                    that.setState({
+                        last_item_edit_id: row.id,
+                    }, () => {
+                        that.forceUpdate();
+                    })
+                }
+
+            }} >
                 {default_value}
             </a>
         }

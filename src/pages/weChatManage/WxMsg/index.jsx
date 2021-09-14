@@ -209,7 +209,7 @@ export default class AddressNews extends Component {
                     key: "type",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{row.type ? row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" : "图文消息（外链）" : ""}</div>
+                            <div>{row.type ? row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" : row.type === "mini"?"小程序卡片":"图文消息（外链）" : ""}</div>
                         )
                     }
                 },

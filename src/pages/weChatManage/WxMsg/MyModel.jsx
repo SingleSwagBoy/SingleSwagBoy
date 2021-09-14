@@ -203,7 +203,7 @@ export default class AddressNews extends Component {
                   提交
                 </Button>
                 <Button type="primary" style={{ margin: "0 20px" }} onClick={() => {
-                  this.sendModal()
+                  this.sendModal(1)
                 }}>
                   立即客服群发
                 </Button>
@@ -897,26 +897,27 @@ export default class AddressNews extends Component {
       }
     })
   }
-  sendModal() {
+  sendModal(type) {
     Modal.confirm({
       title: '确认发送吗',
       content: '确认发送？',
       onOk: () => {
-        this.sendMsg()
+        this.sendMsg(type)
       },
       onCancel: () => {
 
       }
     })
   }
-  sendMsg() {
+  sendMsg(type) {
     let formData = this.formRef.current.getFieldValue() //获取表单数据
     console.log(formData, "formData")
     let params = {
-      openid: this.state.openIdList.join(","),
+      openid:type == 1 ? "" : this.state.openIdList.join(","),
       tag: formData.tag ? formData.tag.length === 0 ? "" : formData.tag.join(",") : "",
       wxCode: formData.wxCode,
     }
+   
     if (formData.type === "multi") {  //新版本
       let arr = JSON.parse(formData.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))[0]
       console.log(arr)

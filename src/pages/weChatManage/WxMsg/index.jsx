@@ -343,29 +343,56 @@ export default class AddressNews extends Component {
 
     }
     getListContent(item) {
-        if(item.multiInfo){
-            let arr = JSON.parse(item.multiInfo)[0]
-            return (
-                arr.msgType === "news" ?
-                    <>
-                        <div>{arr.title}</div>
-                        <div><img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" /></div>
-                    </>
-                    :
-                    arr.msgType === "image" ?
-                        ""
+        if(this.state.listType == 0){ //定时任务
+            if(item.multiInfo){
+                let arr = JSON.parse(item.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))[0]
+                return (
+                    arr.msgType === "news" ?
+                        <>
+                            <div>{arr.title}</div>
+                            <div><img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" /></div>
+                        </>
                         :
-                        arr.msgType === "text" ?
-                            `发送内容：${arr.content}`
+                        arr.msgType === "image" ?
+                            ""
                             :
-                            arr.msgType === "mpnews" ?
-                                ""
+                            arr.msgType === "text" ?
+                                `发送内容：${arr.content}`
                                 :
-                                ""
-            )
-        }else{
-            return "老数据新版本不支持"
+                                arr.msgType === "mpnews" ?
+                                    ""
+                                    :
+                                    ""
+                )
+            }else{
+                return "老数据新版本不支持"
+            }
+        }else{ //发送记录
+            if(item.info){
+                let arr = JSON.parse(item.info)
+                return (
+                    arr.msgType === "news" ?
+                        <>
+                            <div>{arr.title}</div>
+                            <div><img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" /></div>
+                        </>
+                        :
+                        arr.msgType === "image" ?
+                            ""
+                            :
+                            arr.msgType === "text" ?
+                                `发送内容：${arr.content}`
+                                :
+                                arr.msgType === "mpnews" ?
+                                    ""
+                                    :
+                                    ""
+                )
+            }else{
+                return "老数据新版本不支持"
+            } 
         }
+        
        
     }
     getMsg() {

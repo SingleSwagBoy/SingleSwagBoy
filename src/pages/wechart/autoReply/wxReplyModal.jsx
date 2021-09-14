@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-10 11:43:11
+ * @LastEditTime: 2021-09-14 11:51:26
  * @Description: 微信自动回复模块
  */
 
@@ -141,6 +141,23 @@ export default class WxReplyModal extends Component {
                                                 </Form.Item>
                                             </Form.Item>
 
+
+                                            <Form.Item >
+                                                <Form.Item label='开展活动'>
+                                           ß
+                                                </Form.Item>
+
+                                                <Form.Item label='VIP天数' name='activityDayType' >
+                                                    {/* 固定 随机 */}
+                                                </Form.Item>
+
+                                                <Form.Item label='天数' name='activityDays' >
+                                                    {/* 天数, 随机的话是0-配置的天数 */}
+                                                </Form.Item>
+                                                <Form.Item label='领取周期' name='activityCycle'>
+                                                    {/* 领取周期(100000表示永久, 小于100000表示配置天数 */}
+                                                </Form.Item>
+                                            </Form.Item>
 
                                         </div>
                                     }

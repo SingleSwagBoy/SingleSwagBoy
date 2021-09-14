@@ -429,9 +429,9 @@ export default class AddressNews extends Component {
                 />
               </Form.Item>
               {/* 通配符函数 */}
-              {
+              {/* {
                 this.getWildCard("#nickName")
-              }
+              } */}
               <Form.Item
                 label="标题"
                 name="title"
@@ -506,9 +506,9 @@ export default class AddressNews extends Component {
                     />
                   </Form.Item>
                   {/* 通配符函数 */}
-                  {
+                  {/* {
                     this.getWildCard("#nickName")
-                  }
+                  } */}
                   <Form.Item
                     label="消息内容"
                     name="content"
@@ -554,9 +554,9 @@ export default class AddressNews extends Component {
                         }
                       </Select>
                     </Form.Item>
-                    {
+                    {/* {
                       this.getWildCard("#nickName")
-                    }
+                    } */}
                     <Form.Item
                       label="小程序标题"
                       name="mpTitle"

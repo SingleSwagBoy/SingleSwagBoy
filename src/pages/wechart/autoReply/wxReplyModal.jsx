@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-14 11:51:26
+ * @LastEditTime: 2021-09-14 17:45:25
  * @Description: 微信自动回复模块
  */
 
@@ -13,6 +13,7 @@ import { Modal, Tabs, Divider, Button, Input, Tag, Image, message, Select, Switc
 import "./wxReplyModal.css";
 import SyncBtn from "@/components/syncBtn/syncBtn.jsx"
 import WxReplyModalImageBox from "./wxReplyModalImageBox"
+import WxReplyModalActivity from "./wxReplyModalActivity"
 
 
 import WxReplyModalTags from "./wxReplyModalTags"
@@ -26,12 +27,15 @@ export default class WxReplyModal extends Component {
         super(props);
         this.titleFormRef = React.createRef();      //如果有额外的title From 放这里
         this.replyFormRef = React.createRef();
+        this.actitityFormRef = React.createRef();
+
 
         // this.imageFormRef = React.createRef();
 
         this.state = {
             image_box_ref: null,                //图片盒子控件实例
-            form_interval: null,
+            activity_ref: null,                 //活动Form对象
+            form_interval: null,                //Form表格状态计时器
             base_width: 450,
             is_edit_mode: false,                //编辑模式
             datas: [],                          //数据源
@@ -111,6 +115,9 @@ export default class WxReplyModal extends Component {
                                     <Form.Item label='id' name='id' >
                                         <Input style={{ width: base_width }} placeholder='数据保存之后，服务端将自动生成id' disabled />
                                     </Form.Item>
+                                    <Form.Item label='状态' name='status' valuePropName='checked'>
+                                        <Switch checkedChildren="有效" unCheckedChildren="无效" />
+                                    </Form.Item>
                                     {
                                         menu_type === 'keywords' &&
                                         <div>
@@ -140,25 +147,6 @@ export default class WxReplyModal extends Component {
                                                     <Input style={{ width: base_width }} placeholder='请输入关键字' />
                                                 </Form.Item>
                                             </Form.Item>
-
-
-                                            <Form.Item >
-                                                <Form.Item label='开展活动'>
-                                           ß
-                                                </Form.Item>
-
-                                                <Form.Item label='VIP天数' name='activityDayType' >
-                                                    {/* 固定 随机 */}
-                                                </Form.Item>
-
-                                                <Form.Item label='天数' name='activityDays' >
-                                                    {/* 天数, 随机的话是0-配置的天数 */}
-                                                </Form.Item>
-                                                <Form.Item label='领取周期' name='activityCycle'>
-                                                    {/* 领取周期(100000表示永久, 小于100000表示配置天数 */}
-                                                </Form.Item>
-                                            </Form.Item>
-
                                         </div>
                                     }
                                     {
@@ -184,7 +172,7 @@ export default class WxReplyModal extends Component {
                                         menu_type !== 'keywords' && menu_type !== 'other' &&
                                         <div>
                                             <Form.Item label='标签' name='tags' >
-                                                <Select style={{ width: base_width }} placeholder="请选择用户设备标签" onChange={(value, option) => that.onUserTagSelectChange(value, option)}>
+                                                <Select style={{ width: base_width }} showSearch placeholder="请选择用户设备标签" onChange={(value, option) => that.onUserTagSelectChange(value, option)}>
                                                     {dict_user_tags.map((item, index) => (
                                                         <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
                                                     ))}
@@ -192,10 +180,18 @@ export default class WxReplyModal extends Component {
                                             </Form.Item>
                                         </div>
                                     }
-                                    <Form.Item label='状态' name='status' valuePropName='checked'>
-                                        <Switch checkedChildren="有效" unCheckedChildren="无效" />
-                                    </Form.Item>
+
                                 </Form>
+                                {
+                                    menu_type === 'keywords' &&
+                                    <WxReplyModalActivity onRef={(val) => {
+                                        that.setState({ activity_ref: val, }, () => {
+
+                                        })
+
+                                    }} >
+                                    </WxReplyModalActivity>
+                                }
                             </div>
                             {/* 手机界面 */}
                             <div className="phone-wrapper-outer">
@@ -584,6 +580,9 @@ export default class WxReplyModal extends Component {
 
             }
 
+            // 
+
+
 
 
             item.is_empty = false;
@@ -593,6 +592,11 @@ export default class WxReplyModal extends Component {
             }, () => {
                 that.replyFormRef.current.setFieldsValue(reply[reply_select_id]);
                 that.titleFormRef.current.setFieldsValue(item);
+                //关键字类型  
+                if (menu_type === 'keywords') {
+
+                }
+
                 that.refreshImageBoxByWxCode(); //渲染图片列表控件内部数据
                 that.forceUpdate();
             })

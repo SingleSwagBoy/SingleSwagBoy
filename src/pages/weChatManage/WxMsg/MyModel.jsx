@@ -713,7 +713,7 @@ export default class AddressNews extends Component {
       formData.tag = formData.tag ? Array.isArray(formData.tag) ? formData.tag : formData.tag.split(",") : []
       this.formRef.current.setFieldsValue(formData)
       if (formData.type === "multi") {
-        let arr = JSON.parse(formData.multiInfo)
+        let arr = JSON.parse(formData.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))
         console.log(formData.multiInfo)
         if (arr[0].msgType === "news") {
           this.formRef.current.setFieldsValue({
@@ -918,7 +918,7 @@ export default class AddressNews extends Component {
       wxCode: formData.wxCode,
     }
     if (formData.type === "multi") {  //新版本
-      let arr = JSON.parse(formData.multiInfo)[0]
+      let arr = JSON.parse(formData.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))[0]
       console.log(arr)
       params = {
         ...params,
@@ -968,7 +968,7 @@ export default class AddressNews extends Component {
     let info = []
     let type = ""
     if(source == "copy"){
-      info = JSON.parse(item.multiInfo)
+      info = JSON.parse(item.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))
       item.createTime = new Date().getTime()/ 1000
       delete item.id
     }else{

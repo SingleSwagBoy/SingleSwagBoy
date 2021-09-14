@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-25 18:41:48
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-10 15:42:50
+ * @LastEditTime: 2021-09-14 17:46:16
  */
 
 import React, { Component } from 'react'
@@ -88,7 +88,7 @@ export default class SyncBtn extends Component {
         if (type === 2) return syncLiveCarousel();                          //直播轮播缓存 (直播预告/轮播推荐/观影厅频道配置)
         if (type === 3) return syncSyncConfig(params);                      //查找合集短视频 /mms/config/common/syn_config?key=
         if (type === 4) return syncWeChat();                                //微信自动回复/wxcode/微信二维码
-        if (type === 4) return syncMenuImage();                             //广告菜单栏目录配置
+        if (type === 5) return syncMenuImage();                             //广告菜单栏目录配置
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

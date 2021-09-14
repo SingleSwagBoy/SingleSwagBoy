@@ -36,7 +36,8 @@ export default class myModal extends Component {
             endTime: '',
             backgroundImage:"",
             id:"",
-            tags:""
+            tags:"",
+            tagList:[],
             //address: '',        //地域
             //market: '',         //渠道
         }
@@ -93,16 +94,16 @@ export default class myModal extends Component {
                 moment(data.startTime), moment(data.endTime)
             ]
             //设备标签
-            // if (data.tags && data.tags.length > 0) {
-            //     if (data.tags.constructor === String) {
-            //         data.tags = data.tags.split(' ');
-            //     }
+            if (data.tags && data.tags.length > 0) {
+                if (data.tags.constructor === String) {
+                    data.tags = data.tags.split(',');
+                }
 
-            //     data.tags = data.tags.map((item, index) => {
-            //         return parseInt(item);
-            //     })
-            // }
-            // else data.tags = [];
+                data.tags = data.tags.map((item, index) => {
+                    return parseInt(item);
+                })
+            }
+            else data.tags = [];
 
             console.log(data);
             // let address = [];
@@ -203,6 +204,15 @@ export default class myModal extends Component {
                                 />
                              </div>
                             
+                        </Form.Item>
+                        <Form.Item label='用户设备标签' name='tags'>
+                            <Select className="input-wrapper-from" mode="multiple" placeholder='请选择用户设备标签(可多选)'>
+                                {user_tag.map((item, index) => {
+                                    return <Option value={item.id} key={item.id}>
+                                        <div>{item.id}-{item.name}</div>
+                                    </Option>
+                                })}
+                            </Select>
                         </Form.Item>
                         <Form.Item label="标签投放类型" name="deliveryType">
                             <Radio.Group>
@@ -320,20 +330,20 @@ export default class myModal extends Component {
         console.log(object)
 
         //用户标签
-        // let tags = object.tags;
-        // if (!tags) {
-        //     object.tags = '';
-        // }
-        // else if (tags.constructor === Array) {
-        //     object.tags = tags.join(',');
-        // }
+        let tags = object.tags;
+        if (!tags) {
+            object.tags = '';
+        }
+        else if (tags.constructor === Array) {
+            object.tags = tags.join(',');
+        }
         //用户图片
         let ad_image_url = that.state.ad_image_url;
         if (ad_image_url) object.picUrl = ad_image_url;
 
         let obj = Object.assign(object, {
             id:this.state.id,
-            tags:this.state.tags
+            //tags:this.state.tags
         })
         // for (let key in object) {
         //     let value = object[key];

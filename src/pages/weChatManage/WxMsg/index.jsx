@@ -93,12 +93,12 @@ export default class AddressNews extends Component {
                         return (
                             <div>
                                 {row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" : (row.type === "mpnews" || row.type === "news") ? "图文消息" :
-                                    row.type === "multi" ? 
-                                    JSON.parse(row.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))[0].msgType == "text" ? "文字消息" :
-                                    JSON.parse(row.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))[0].msgType == "image" ? "图片消息" :
-                                    JSON.parse(row.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))[0].msgType == "news" ? "图文消息" : "小程序卡片" 
-                                            : "未知"}
-                                            {/* {JSON.parse(row.multiInfo.replace(/\n/g, "<br/>"))[0].msgType} */}
+                                    row.type === "multi" ?
+                                        JSON.parse(row.multiInfo.replace(/\n/g, "\\n").replace(/\r/g, "\\r"))[0].msgType == "text" ? "文字消息" :
+                                            JSON.parse(row.multiInfo.replace(/\n/g, "\\n").replace(/\r/g, "\\r"))[0].msgType == "image" ? "图片消息" :
+                                                JSON.parse(row.multiInfo.replace(/\n/g, "\\n").replace(/\r/g, "\\r"))[0].msgType == "news" ? "图文消息" : "小程序卡片"
+                                        : "未知"}
+                                {/* {JSON.parse(row.multiInfo.replace(/\n/g, "<br/>"))[0].msgType} */}
                             </div>
                         )
                     }
@@ -154,7 +154,7 @@ export default class AddressNews extends Component {
                                     size="small"
                                     dashed="true"
                                     onClick={() => {
-                                        this.refs.getMyModal.addMsg(row,"copy")
+                                        this.refs.getMyModal.addMsg(row, "copy")
                                     }}
                                 >复制</Button>
                                 <Button
@@ -209,7 +209,7 @@ export default class AddressNews extends Component {
                     key: "type",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{row.type ? row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" : "图文消息（外链）" : ""}</div>
+                            <div>{row.type ? row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" : row.type === "mini"?"小程序卡片":"图文消息（外链）" : ""}</div>
                         )
                     }
                 },
@@ -343,9 +343,9 @@ export default class AddressNews extends Component {
 
     }
     getListContent(item) {
-        if(this.state.listType == 0){ //定时任务
-            if(item.multiInfo){
-                let arr = JSON.parse(item.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))[0]
+        if (this.state.listType == 0) { //定时任务
+            if (item.multiInfo) {
+                let arr = JSON.parse(item.multiInfo.replace(/\n/g, "\\n").replace(/\r/g, "\\r"))[0]
                 return (
                     arr.msgType === "news" ?
                         <>
@@ -354,7 +354,7 @@ export default class AddressNews extends Component {
                         </>
                         :
                         arr.msgType === "image" ?
-                            ""
+                            <img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" />
                             :
                             arr.msgType === "text" ?
                                 `发送内容：${arr.content}`
@@ -362,38 +362,52 @@ export default class AddressNews extends Component {
                                 arr.msgType === "mpnews" ?
                                     ""
                                     :
-                                    ""
+                                    arr.msgType === "mini" ?
+                                        <>
+                                            <div>标题：{arr.miniTitle}</div>
+                                            <div>路径：{arr.path}</div>
+                                            <div><img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" /></div>
+                                        </>
+                                        :
+                                        ""
                 )
-            }else{
+            } else {
                 return "老数据新版本不支持"
             }
-        }else{ //发送记录
-            if(item.info){
+        } else { //发送记录
+            if (item.info) {
                 let arr = JSON.parse(item.info)
                 return (
-                    arr.msgType === "news" ?
+                    item.type === "news" ?
                         <>
                             <div>{arr.title}</div>
                             <div><img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" /></div>
                         </>
                         :
-                        arr.msgType === "image" ?
-                            ""
+                        item.type === "image" ?
+                            <img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" />
                             :
-                            arr.msgType === "text" ?
+                            item.type === "text" ?
                                 `发送内容：${arr.content}`
                                 :
-                                arr.msgType === "mpnews" ?
+                                item.type === "mpnews" ?
                                     ""
                                     :
-                                    ""
+                                    item.type === "mini" ?
+                                        <>
+                                            <div>标题：{arr.title}</div>
+                                            <div>路径：{arr.path}</div>
+                                            <div><img style={{ width: "100px", height: "100px" }} src={arr.picUrl} alt="" /></div>
+                                        </>
+                                        :
+                                        ""
                 )
-            }else{
+            } else {
                 return "老数据新版本不支持"
-            } 
+            }
         }
-        
-       
+
+
     }
     getMsg() {
         let params = {

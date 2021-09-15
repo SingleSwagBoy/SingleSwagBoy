@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-15 14:04:17
+ * @LastEditTime: 2021-09-15 14:36:20
  * @Description: 微信自动回复模块
  */
 
@@ -543,7 +543,6 @@ export default class WxReplyModal extends Component {
         let that = this;
         let datas = that.state.datas;
 
-
         let tag_select_id = that.state.tag_select_id;
         let reply_select_id = that.state.reply_select_id;
         let menu_type = that.props.menu_type;
@@ -575,11 +574,6 @@ export default class WxReplyModal extends Component {
 
             }
 
-            // 
-
-
-
-
             item.is_empty = false;
             item.info = reply;
             that.setState({
@@ -592,12 +586,25 @@ export default class WxReplyModal extends Component {
                 if (menu_type === 'keywords') {
                     let replyActivity = item.replyActivity;
                     if (!replyActivity) {
-                        replyActivity = {
-                            isOpen: false,          //是否开启
-                            activityType: 0,        //1.vip活动
-                            activityDayType: '',    //1.固定 2.随机
-                            activityDays: '',       //天数, 随机的话是0-配置的天数
-                            activityCycle: '',      //领取周期(100000表示永久, 小于100000表示配置天数)
+                        //判断当前组件 是否存在，取出组件内数据
+                        let activity_ref = that.state.activity_ref;
+                        let isEmpty = true; //是否为空数据
+
+                        if (activity_ref) {
+                            replyActivity = activity_ref.getDatas();
+                            if (replyActivity) {
+                                isEmpty = false;
+                            }
+                        }
+
+                        if (isEmpty) {
+                            replyActivity = {
+                                isOpen: false,          //是否开启
+                                activityType: 0,        //1.vip活动
+                                activityDayType: '',    //1.固定 2.随机
+                                activityDays: '',       //天数, 随机的话是0-配置的天数
+                                activityCycle: '',      //领取周期(100000表示永久, 小于100000表示配置天数)
+                            }
                         }
                     } else {
                         replyActivity = JSON.parse(replyActivity);
@@ -775,6 +782,12 @@ export default class WxReplyModal extends Component {
                 value: '',
             }
         }, () => {
+            //清空活动组件数据
+            let activity_ref = that.state.activity_ref;
+            if (activity_ref) {
+                activity_ref.clear();
+            }
+
             that.renderFormData();
         })
     }

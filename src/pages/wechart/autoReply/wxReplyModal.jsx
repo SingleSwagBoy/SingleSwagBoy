@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-14 11:51:26
+ * @LastEditTime: 2021-09-15 15:01:20
  * @Description: 微信自动回复模块
  */
 
@@ -13,6 +13,7 @@ import { Modal, Tabs, Divider, Button, Input, Tag, Image, message, Select, Switc
 import "./wxReplyModal.css";
 import SyncBtn from "@/components/syncBtn/syncBtn.jsx"
 import WxReplyModalImageBox from "./wxReplyModalImageBox"
+import WxReplyModalActivity from "./wxReplyModalActivity"
 
 
 import WxReplyModalTags from "./wxReplyModalTags"
@@ -31,7 +32,9 @@ export default class WxReplyModal extends Component {
 
         this.state = {
             image_box_ref: null,                //图片盒子控件实例
-            form_interval: null,
+            activity_ref: null,                 //活动Form对象
+            form_interval: null,                //Form表格状态计时器
+
             base_width: 450,
             is_edit_mode: false,                //编辑模式
             datas: [],                          //数据源
@@ -47,8 +50,6 @@ export default class WxReplyModal extends Component {
                 key: '',
                 value: '',
             },
-
-            wxReplyModlTagsRef: null,
         }
     }
     componentDidMount() {
@@ -89,7 +90,7 @@ export default class WxReplyModal extends Component {
                     }>
                     </Alert>
 
-                    <WxReplyModalTags onRef={(val) => { this.setState({ wxReplyModlTagsRef: val }) }} tags={tags}
+                    <WxReplyModalTags onRef={(val) => { }} tags={tags}
                         tag_select_id={tag_select_id}
                         onSelectIdChange={(tag_select_id) => that.onTitleTagChangeClick(tag_select_id)}
                         onTabsDeleteClick={(index) => that.onTabsCreateDeleteClick(index, 'remove')}
@@ -110,6 +111,9 @@ export default class WxReplyModal extends Component {
                                 <Form style={{ width: 600, minHight: 500 }} name='title_form' labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} ref={that.titleFormRef}>
                                     <Form.Item label='id' name='id' >
                                         <Input style={{ width: base_width }} placeholder='数据保存之后，服务端将自动生成id' disabled />
+                                    </Form.Item>
+                                    <Form.Item label='状态' name='status' valuePropName='checked'>
+                                        <Switch checkedChildren="有效" unCheckedChildren="无效" />
                                     </Form.Item>
                                     {
                                         menu_type === 'keywords' &&
@@ -140,25 +144,6 @@ export default class WxReplyModal extends Component {
                                                     <Input style={{ width: base_width }} placeholder='请输入关键字' />
                                                 </Form.Item>
                                             </Form.Item>
-
-
-                                            <Form.Item >
-                                                <Form.Item label='开展活动'>
-                                           ß
-                                                </Form.Item>
-
-                                                <Form.Item label='VIP天数' name='activityDayType' >
-                                                    {/* 固定 随机 */}
-                                                </Form.Item>
-
-                                                <Form.Item label='天数' name='activityDays' >
-                                                    {/* 天数, 随机的话是0-配置的天数 */}
-                                                </Form.Item>
-                                                <Form.Item label='领取周期' name='activityCycle'>
-                                                    {/* 领取周期(100000表示永久, 小于100000表示配置天数 */}
-                                                </Form.Item>
-                                            </Form.Item>
-
                                         </div>
                                     }
                                     {
@@ -184,7 +169,7 @@ export default class WxReplyModal extends Component {
                                         menu_type !== 'keywords' && menu_type !== 'other' &&
                                         <div>
                                             <Form.Item label='标签' name='tags' >
-                                                <Select style={{ width: base_width }} placeholder="请选择用户设备标签" onChange={(value, option) => that.onUserTagSelectChange(value, option)}>
+                                                <Select style={{ width: base_width }} showSearch placeholder="请选择用户设备标签" onChange={(value, option) => that.onUserTagSelectChange(value, option)}>
                                                     {dict_user_tags.map((item, index) => (
                                                         <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
                                                     ))}
@@ -192,10 +177,16 @@ export default class WxReplyModal extends Component {
                                             </Form.Item>
                                         </div>
                                     }
-                                    <Form.Item label='状态' name='status' valuePropName='checked'>
-                                        <Switch checkedChildren="有效" unCheckedChildren="无效" />
-                                    </Form.Item>
+
                                 </Form>
+                                {
+                                    menu_type === 'keywords' &&
+                                    <WxReplyModalActivity onRef={(val) => {
+                                        that.setState({ activity_ref: val, }, () => {
+                                        })
+                                    }} >
+                                    </WxReplyModalActivity>
+                                }
                             </div>
                             {/* 手机界面 */}
                             <div className="phone-wrapper-outer">
@@ -552,7 +543,6 @@ export default class WxReplyModal extends Component {
         let that = this;
         let datas = that.state.datas;
 
-
         let tag_select_id = that.state.tag_select_id;
         let reply_select_id = that.state.reply_select_id;
         let menu_type = that.props.menu_type;
@@ -584,8 +574,6 @@ export default class WxReplyModal extends Component {
 
             }
 
-
-
             item.is_empty = false;
             item.info = reply;
             that.setState({
@@ -593,6 +581,39 @@ export default class WxReplyModal extends Component {
             }, () => {
                 that.replyFormRef.current.setFieldsValue(reply[reply_select_id]);
                 that.titleFormRef.current.setFieldsValue(item);
+
+                //关键字类型  活动控件数据配置
+                if (menu_type === 'keywords') {
+                    let replyActivity = item.replyActivity;
+                    if (!replyActivity) {
+                        //判断当前组件 是否存在，取出组件内数据
+                        let activity_ref = that.state.activity_ref;
+                        let isEmpty = true; //是否为空数据
+
+                        if (activity_ref) {
+                            replyActivity = activity_ref.getDatas();
+                            if (replyActivity) {
+                                isEmpty = false;
+                            }
+                        }
+
+                        if (isEmpty) {
+                            replyActivity = {
+                                isOpen: false,          //是否开启
+                                activityType: 0,        //1.vip活动
+                                activityDayType: '',    //1.固定 2.随机
+                                activityDays: '',       //天数, 随机的话是0-配置的天数
+                                activityCycle: '',      //领取周期(100000表示永久, 小于100000表示配置天数)
+                            }
+                        }
+                    } else {
+                        replyActivity = JSON.parse(replyActivity);
+                        replyActivity.isOpen = true;
+                    }
+
+                    that.refreshActivityBox(replyActivity);
+                }
+
                 that.refreshImageBoxByWxCode(); //渲染图片列表控件内部数据
                 that.forceUpdate();
             })
@@ -761,6 +782,12 @@ export default class WxReplyModal extends Component {
                 value: '',
             }
         }, () => {
+            //清空活动组件数据
+            let activity_ref = that.state.activity_ref;
+            if (activity_ref) {
+                activity_ref.clear();
+            }
+
             that.renderFormData();
         })
     }
@@ -917,8 +944,17 @@ export default class WxReplyModal extends Component {
 
         if (msg_type === 'text') return;
         ref.pushSelectWxCodeKeys(wxCodeKeys, msg_type, reply);
-
     }
+
+    //刷新活动控件
+    refreshActivityBox(item) {
+        let that = this;
+        let ref = that.state.activity_ref;
+        if (!ref) return;
+        ref.pushActivityData(item);
+    }
+
+
     //图片盒子上传图片回调
     onImageBoxCallback(imgs) {
         let that = this;
@@ -938,6 +974,9 @@ export default class WxReplyModal extends Component {
         let that = this;
         let datas = that.state.datas;
         let tags = that.state.tags;
+
+        let activity_ref = that.state.activity_ref;
+        if (activity_ref) activity_ref.clear();
 
         if (datas && datas.length > 0) {
             let last_data = datas[datas.length - 1];
@@ -1040,6 +1079,39 @@ export default class WxReplyModal extends Component {
         else {
             if (request_box.wxCode) result_data.wxCode = request_box.wxCode;
         }
+
+        //获取推送活动数据
+        if (menu_type === 'keywords') {
+            let activity_ref = that.state.activity_ref;
+            let activity_ref_data = activity_ref.getDatas();
+            if (activity_ref_data) {
+                let isOpen = activity_ref_data.isOpen;
+                if (isOpen) {
+                    delete activity_ref_data.isOpen;
+                    if (!activity_ref_data.activityType) {
+                        message.error('请选择开展的活动');
+                        return;
+                    }
+                    if (!activity_ref_data.activityDayType) {
+                        message.error('请选择活动Vip天数类型');
+                        return;
+                    }
+                    if (!activity_ref_data.activityDays) {
+                        message.error('请输入活动Vip天数');
+                        return;
+                    }
+                    if (!activity_ref_data.activityCycle) {
+                        message.error('请输入活动领取周期');
+                        return;
+                    }
+
+                    result_data.replyActivity = JSON.stringify(activity_ref_data);
+                } else {
+                    result_data.replyActivity = '';
+                }
+            }
+        }
+
 
         result_data.status = result_data.status === true ? 1 : 2;   //状态
 

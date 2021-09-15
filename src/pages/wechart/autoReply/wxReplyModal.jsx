@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-15 12:28:13
+ * @LastEditTime: 2021-09-15 14:04:17
  * @Description: 微信自动回复模块
  */
 
@@ -1072,6 +1072,23 @@ export default class WxReplyModal extends Component {
                 let isOpen = activity_ref_data.isOpen;
                 if (isOpen) {
                     delete activity_ref_data.isOpen;
+                    if (!activity_ref_data.activityType) {
+                        message.error('请选择开展的活动');
+                        return;
+                    }
+                    if (!activity_ref_data.activityDayType) {
+                        message.error('请选择活动Vip天数类型');
+                        return;
+                    }
+                    if (!activity_ref_data.activityDays) {
+                        message.error('请输入活动Vip天数');
+                        return;
+                    }
+                    if (!activity_ref_data.activityCycle) {
+                        message.error('请输入活动领取周期');
+                        return;
+                    }
+
                     result_data.replyActivity = JSON.stringify(activity_ref_data);
                 } else {
                     result_data.replyActivity = '';

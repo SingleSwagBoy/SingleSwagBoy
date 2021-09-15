@@ -38,6 +38,15 @@ export default class myModal extends Component {
             id:"",
             tags:"",
             tagList:[],
+            positions:[
+                { key: 1, value: '左上', },
+                { key: 2, value: '左下', },
+                { key: 3, value: '中心', },
+                { key: 4, value: '右上', },
+                { key: 5, value: '右下', },
+                { key: 6, value: '垂直居中', },
+                { key: 7, value: '横向居中', }
+            ]
             //address: '',        //地域
             //market: '',         //渠道
         }
@@ -142,8 +151,8 @@ export default class myModal extends Component {
 
 
     render() {
-        let { is_loading, ad_image_url, dateFormat ,isAdd} = this.state;
-        let { visible, qrcode_types, jump_types, jump_menu_types, good_look_types, user_tag, delivery_types, channel_list, product_list } = this.props;
+        let { is_loading, ad_image_url, dateFormat ,isAdd,positions} = this.state;
+        let { visible, qrcode_types, jump_types, jump_menu_types, good_look_types, user_tag,delivery_types, channel_list, product_list } = this.props;
 
         return (
             <div>
@@ -182,6 +191,15 @@ export default class myModal extends Component {
                                     <Input className="input-wrapper-from" addonBefore="纵" placeholder="例如:200" addonAfter="px" />
                                 </Form.Item>
                             </div>
+                        </Form.Item>
+                        <Form.Item label='二维码位置' name='position'>
+                            <Select className="input-wrapper-from" placeholder='二维码位置'>
+                                {positions.map((item, index) => {
+                                    return <Option value={item.key} key={item.key} name={item.value}>
+                                        <div>{item.value}</div>
+                                    </Option>
+                                })}
+                            </Select>
                         </Form.Item>
                         <Form.Item label="二维码颜色">
                             <div className="input-wrapper-box">

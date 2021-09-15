@@ -357,7 +357,7 @@ export default class LoginManage extends Component{
                             onChange: this.changeSize
                         }}
                         />
-                        <MyModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} delivery_types={delivery_types} 
+                        <MyModal onRef={(val) => { this.setState({ refRecommendModal: val }) }} visible={modal_box.is_show} delivery_types={delivery_types}
                         user_tag={user_tag} modal_box={modal_box} onOk={this.onModalConfirm.bind(this)} onCancel={this.onModalCancel.bind(this)}></MyModal>
                 </Card>
             </div>

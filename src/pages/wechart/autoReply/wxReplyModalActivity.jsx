@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-14 17:13:30
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-15 14:36:47
+ * @LastEditTime: 2021-09-15 15:19:30
  * @Description: 关键字类型 活动控件
  */
 
@@ -108,7 +108,9 @@ export default class wxReplyModalImageBox extends Component {
     clear() {
         let that = this;
         let activityFormRef = that.activityFormRef;
-        activityFormRef.current.resetFields();
+        if (activityFormRef && activityFormRef.current) {
+            activityFormRef.current.resetFields();
+        }
     }
 
 }

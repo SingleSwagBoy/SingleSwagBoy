@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-15 14:36:20
+ * @LastEditTime: 2021-09-15 15:01:20
  * @Description: 微信自动回复模块
  */
 
@@ -974,6 +974,9 @@ export default class WxReplyModal extends Component {
         let that = this;
         let datas = that.state.datas;
         let tags = that.state.tags;
+
+        let activity_ref = that.state.activity_ref;
+        if (activity_ref) activity_ref.clear();
 
         if (datas && datas.length > 0) {
             let last_data = datas[datas.length - 1];

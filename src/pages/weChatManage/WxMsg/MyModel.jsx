@@ -261,7 +261,7 @@ export default class AddressNews extends Component {
                     <div>图文</div>
                     <div>
                       <div className="title">{this.formRef.current.getFieldValue("title")}</div>
-                      <div className="content">{this.formRef.current.getFieldValue("digest")}</div>
+                      <div className="content" style={{fontSize:"10px",color:"#ccc"}}>{this.formRef.current.getFieldValue("digest")}</div>
                       {
                         this.formRef.current.getFieldValue("url") ?
                           <div className="image_box"><img src={this.formRef.current.getFieldValue("url")} alt="" /></div>

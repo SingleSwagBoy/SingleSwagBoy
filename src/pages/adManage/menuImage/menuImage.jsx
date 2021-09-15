@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-14 17:46:44
+ * @LastEditTime: 2021-09-15 12:49:56
  * @Description: 菜单栏图片配置页
  */
 
@@ -48,8 +48,9 @@ export default class MenuImagePage extends Component {
                         title: '标签', dataIndex: 'tag', key: 'tag', width: 300,
                         render: (rowValue, row, index) => {
                             return <Select defaultValue={row.tag} style={{ width: '100%' }} placeholder="请选择用户设备标签" disabled>
+
                                 {this.state.dict_user_tags.map((item, index) => (
-                                    <Option value={item.code.toString()} key={item.code}>{item.name}</Option>
+                                    <Option value={item.id.toString()} key={index}>{item.id}-{item.name}</Option>
                                 ))}
                             </Select>
                         }
@@ -187,7 +188,7 @@ export default class MenuImagePage extends Component {
                                 <Form.Item label="标签" name='tag' >
                                     <Select style={{ width: input_width_size }} showSearch placeholder="请选择用户设备标签" >
                                         {dict_user_tags.map((item, index) => (
-                                            <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
+                                            <Option value={item.id.toString()} key={index}>{item.id}-{item.name}</Option>
                                         ))}
                                     </Select>
                                 </Form.Item>

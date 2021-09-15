@@ -471,7 +471,7 @@ export default class AddressNews extends Component {
         {
           this.formRef.current && this.formRef.current.getFieldValue("msgType") == "news" ?
             <>
-              <Form.Item {...this.state.tailLayout}>
+              {/* <Form.Item {...this.state.tailLayout}>
                 <Alert
                   message="标题通配符说明"
                   description="插入用户昵称请在需要的地方填入 nickName，仅限跳转外链配置使用。"
@@ -479,7 +479,7 @@ export default class AddressNews extends Component {
                 // closable
                 // onClose={onClose}
                 />
-              </Form.Item>
+              </Form.Item> */}
               {/* 通配符函数 */}
               {/* {
                 this.getWildCard("#nickName")
@@ -495,7 +495,11 @@ export default class AddressNews extends Component {
                     wildcard: "title",
                     wildType: "input"
                   })
-                }} />
+                }} 
+                onBlur={(val)=>{
+                  this.forceUpdate()
+                }}
+                />
               </Form.Item>
               <Form.Item
                 label="摘要"
@@ -507,7 +511,11 @@ export default class AddressNews extends Component {
                   this.setState({
                     wildcard: "digest"
                   })
-                }} />
+                }}
+                onBlur={(val)=>{
+                  this.forceUpdate()
+                }}
+                 />
               </Form.Item>
               <Form.Item
                 label="封面图片"
@@ -527,7 +535,8 @@ export default class AddressNews extends Component {
                   this.setState({
                     wildcard: "not"
                   })
-                }} />
+                }}
+                 />
               </Form.Item>
             </>
             :
@@ -548,7 +557,7 @@ export default class AddressNews extends Component {
               // 文本消息
               this.formRef.current && this.formRef.current.getFieldValue("msgType") == "text" ?
                 <>
-                  <Form.Item {...this.state.tailLayout}>
+                  {/* <Form.Item {...this.state.tailLayout}>
                     <Alert
                       message="标题通配符说明"
                       description="插入用户昵称请在需要的地方填入 nickName"
@@ -556,7 +565,7 @@ export default class AddressNews extends Component {
                     // closable
                     // onClose={onClose}
                     />
-                  </Form.Item>
+                  </Form.Item> */}
                   {/* 通配符函数 */}
                   {/* {
                     this.getWildCard("#nickName")
@@ -572,14 +581,18 @@ export default class AddressNews extends Component {
                       this.setState({
                         wildcard: "content"
                       })
-                    }} />
+                    }}
+                    onBlur={(val)=>{
+                      this.forceUpdate()
+                    }}
+                     />
                   </Form.Item>
                 </>
                 :
                 // 小程序消息
                 this.formRef.current && this.formRef.current.getFieldValue("msgType") == "mini" ?
                   <>
-                    <Form.Item {...this.state.tailLayout}>
+                    {/* <Form.Item {...this.state.tailLayout}>
                       <Alert
                         message="标题通配符说明"
                         description="插入用户昵称请在需要的地方填入 nickName ，插入微信小程序链接请在需要的地方填入 mpLink。"
@@ -587,7 +600,7 @@ export default class AddressNews extends Component {
                       // closable
                       // onClose={onClose}
                       />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item
                       label="微信小程序"
                       name="appid"
@@ -619,7 +632,11 @@ export default class AddressNews extends Component {
                         this.setState({
                           wildcard: "mpTitle"
                         })
-                      }} />
+                      }}
+                      onBlur={(val)=>{
+                        this.forceUpdate()
+                      }}
+                       />
                     </Form.Item>
 
                     <Form.Item

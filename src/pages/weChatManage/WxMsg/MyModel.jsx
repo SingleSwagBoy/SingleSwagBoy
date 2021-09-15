@@ -10,7 +10,7 @@ import ImageUpload from "../../../components/ImageUpload/index" //图片组件
 import "./style.css"
 const { Option } = Select;
 const { TabPane } = Tabs;
-let contentProps =  ""//input的光标位置
+let contentProps = ""//input的光标位置
 export default class AddressNews extends Component {
   formRef = React.createRef();
   formMaterial = React.createRef();
@@ -40,7 +40,7 @@ export default class AddressNews extends Component {
       typeText: 0,
       imageInfo: "",//图片信息
       wildcard: "",//通配符的位置记录
-     
+
     }
   }
   render() {
@@ -67,191 +67,243 @@ export default class AddressNews extends Component {
           onCancel={() => { this.closeModel() }}
           footer={null}
           // forceRender={true}
-          width={800}
+          width={1200}
         >
-          {
-            <Form
-              {...this.state.layout}
-              name="voting"
-              ref={this.formRef}
-              onFinish={this.submitForm.bind(this)}
-            >
-              <Form.Item
-                label="选择微信公众号"
-                name="wxCode"
-                rules={[{ required: true, message: '请选择类型' }]}
-              // style={{ display: 'inline-flex', width: 'calc(50% - 8px)',}}
-              >
-                <Select
-                  placeholder="请选择类型"
-                  allowClear
-                  onChange={(val) => {
-                    console.log(val)
-                    this.getTemplateUser(val)
-                  }}
-                >
-                  {
-                    this.props.wxPublic.map(r => {
-                      return (
-                        <Option value={r.code} key={r.id}>{r.name}</Option>
-                      )
-                    })
-                  }
-                </Select>
-              </Form.Item>
-              {
-                this.getMsgTemp()
-              }
-              <Divider plain orientation="left">定时发送配置</Divider>
-              <Form.Item
-                label="定时发送方式"
-                // name="time"
-                rules={[{ required: true, message: '请选择定时发送方式' }]}
+          <div style={{ display: "flex" }}>
+            {
+              <Form
+                {...this.state.layout}
+                name="voting"
+                style={{ width: "70%" }}
+                ref={this.formRef}
+                onFinish={this.submitForm.bind(this)}
               >
                 <Form.Item
-                  name="sendType"
-                  rules={[{ required: true, message: '请选择定时发送方式' }]}
-                  style={{ display: 'inline-block', margin: '0 8px 0 0' }}
+                  label="选择微信公众号"
+                  name="wxCode"
+                  rules={[{ required: true, message: '请选择类型' }]}
+                // style={{ display: 'inline-flex', width: 'calc(50% - 8px)',}}
                 >
                   <Select
-                    placeholder="请选择定时发送方式"
+                    placeholder="请选择类型"
                     allowClear
                     onChange={(val) => {
-                      if (val != 3) {
-                        this.formRef.current.setFieldsValue({ "sendTime": "" })
-                      }
-                      this.setState({
-                        test: 1
-                      })
-
+                      console.log(val)
+                      this.getTemplateUser(val)
                     }}
                   >
-                    <Option value={1} key={1}>一次性定时发送</Option>
-                    <Option value={2} key={2}>循环定时发送</Option>
-                    <Option value={3} key={3}>相对时间定时发送</Option>
+                    {
+                      this.props.wxPublic.map(r => {
+                        return (
+                          <Option value={r.code} key={r.id}>{r.name}</Option>
+                        )
+                      })
+                    }
                   </Select>
                 </Form.Item>
                 {
-                  this.formRef.current && this.formRef.current.getFieldValue("sendType") === 3 ?
-                    <Form.Item
-                      name="sendTime"
-                      rules={[{ required: true, message: '请输入相对发送时间' }]}
-                      style={{ display: 'inline-block', }}
-                    >
-                      <InputNumber min={0}
-                        formatter={value => `小时 ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        // parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                        placeholder="请输入相对发送时间" style={{ width: "100%" }} />
-                    </Form.Item>
-                    :
-                    <Form.Item
-                      name="sendTime"
-                      rules={[{ required: true, message: '请选择结束时间' }]}
-                      style={{ display: 'inline-block', }}
-                    >
-                      <DatePicker showTime></DatePicker>
-                    </Form.Item>
+                  this.getMsgTemp()
                 }
-
-
-              </Form.Item>
-
-              <Form.Item
-                label="用户设备标签"
-                name="tag"
-              >
-                <Select
-                  placeholder="请选择用户设备标签"
-                  mode="multiple"
-                  allowClear
-                // optionFilterProp="name"
+                <Divider plain orientation="left">定时发送配置</Divider>
+                <Form.Item
+                  label="定时发送方式"
+                  // name="time"
+                  rules={[{ required: true, message: '请选择定时发送方式' }]}
                 >
-                  {
-                    this.props.userTagList.map(r => {
-                      return (
-                        <Option value={r.code} key={r.id} name={r.name}>{r.name}</Option>
-                      )
-                    })
-                  }
-                </Select>
-              </Form.Item>
-              {
-                this.formRef.current && (this.formRef.current.getFieldValue("type") == "news" || this.formRef.current.getFieldValue("type") == "mpnews") ?
                   <Form.Item
-                    label="图文消息是否跳转外链"
-                  // name="tag"
+                    name="sendType"
+                    rules={[{ required: true, message: '请选择定时发送方式' }]}
+                    style={{ display: 'inline-block', margin: '0 8px 0 0' }}
                   >
                     <Select
-                      placeholder="请选择图文消息是否跳转外链"
+                      placeholder="请选择定时发送方式"
                       allowClear
-                      defaultValue={this.formRef.current && this.formRef.current.getFieldValue("type") == "news"}
                       onChange={(val) => {
-                        console.log(val)
-                        this.formRef.current.setFieldsValue({ "type": val ? "news" : "mpnews" })
+                        if (val != 3) {
+                          this.formRef.current.setFieldsValue({ "sendTime": "" })
+                        }
+                        this.setState({
+                          test: 1
+                        })
+
                       }}
-                    // optionFilterProp="name"
                     >
-                      <Option value={true} key={1} >是</Option>
-                      <Option value={false} key={2} >否</Option>
+                      <Option value={1} key={1}>一次性定时发送</Option>
+                      <Option value={2} key={2}>循环定时发送</Option>
+                      <Option value={3} key={3}>相对时间定时发送</Option>
                     </Select>
                   </Form.Item>
-                  : ""
-              }
+                  {
+                    this.formRef.current && this.formRef.current.getFieldValue("sendType") === 3 ?
+                      <Form.Item
+                        name="sendTime"
+                        rules={[{ required: true, message: '请输入相对发送时间' }]}
+                        style={{ display: 'inline-block', }}
+                      >
+                        <InputNumber min={0}
+                          formatter={value => `小时 ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                          // parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                          placeholder="请输入相对发送时间" style={{ width: "100%" }} />
+                      </Form.Item>
+                      :
+                      <Form.Item
+                        name="sendTime"
+                        rules={[{ required: true, message: '请选择结束时间' }]}
+                        style={{ display: 'inline-block', }}
+                      >
+                        <DatePicker showTime></DatePicker>
+                      </Form.Item>
+                  }
 
-              <Form.Item {...this.state.tailLayout}>
-                <Button htmlType="submit" type="primary" >
-                  提交
-                </Button>
-                <Button type="primary" style={{ margin: "0 20px" }} onClick={() => {
-                  this.sendModal(1)
-                }}>
-                  立即客服群发
-                </Button>
-              </Form.Item>
-              <Divider plain orientation="left">预览发送配置</Divider>
-              <Form.Item
-                label="发送预览用户(多选)"
-              >
-                <Select
-                  placeholder="请选择预览用户"
-                  mode="multiple"
-                  allowClear
-                  optionFilterProp="name"
-                  onChange={(val) => {
-                    console.log(val)
-                    let user = this.state.previewUser.filter(item => [...val].some(l => item.id == l))
-                    console.log(user)
-                    let arr = []
-                    if (user.length > 0) {
-                      user.forEach(r => {
-                        arr.push(r.openid)
+
+                </Form.Item>
+
+                <Form.Item
+                  label="用户设备标签"
+                  name="tag"
+                >
+                  <Select
+                    placeholder="请选择用户设备标签"
+                    mode="multiple"
+                    allowClear
+                  // optionFilterProp="name"
+                  >
+                    {
+                      this.props.userTagList.map(r => {
+                        return (
+                          <Option value={r.code} key={r.id} name={r.name}>{r.name}</Option>
+                        )
                       })
                     }
-                    this.setState({
-                      openIdList: arr
-                    })
-                  }}
-                >
-                  {
-                    this.state.previewUser.map(r => {
-                      return (
-                        <Option value={r.id} key={r.id} name={r.name}>{r.name}</Option>
-                      )
-                    })
-                  }
-                </Select>
-              </Form.Item>
-              <Form.Item {...this.state.tailLayout}>
-                <Button type="primary" onClick={() => {
-                  if (this.state.openIdList.length == 0) return message.error("请添加预览用户")
-                  this.sendModal()
-                }}>
-                  发送到手机预览
-                </Button>
+                  </Select>
+                </Form.Item>
+                {
+                  this.formRef.current && (this.formRef.current.getFieldValue("type") == "news" || this.formRef.current.getFieldValue("type") == "mpnews") ?
+                    <Form.Item
+                      label="图文消息是否跳转外链"
+                    // name="tag"
+                    >
+                      <Select
+                        placeholder="请选择图文消息是否跳转外链"
+                        allowClear
+                        defaultValue={this.formRef.current && this.formRef.current.getFieldValue("type") == "news"}
+                        onChange={(val) => {
+                          console.log(val)
+                          this.formRef.current.setFieldsValue({ "type": val ? "news" : "mpnews" })
+                        }}
+                      // optionFilterProp="name"
+                      >
+                        <Option value={true} key={1} >是</Option>
+                        <Option value={false} key={2} >否</Option>
+                      </Select>
+                    </Form.Item>
+                    : ""
+                }
 
-              </Form.Item>
-            </Form>
-          }
+                <Form.Item {...this.state.tailLayout}>
+                  <Button htmlType="submit" type="primary" >
+                    提交
+                  </Button>
+                  <Button type="primary" style={{ margin: "0 20px" }} onClick={() => {
+                    this.sendModal(1)
+                  }}>
+                    立即客服群发
+                  </Button>
+                </Form.Item>
+                <Divider plain orientation="left">预览发送配置</Divider>
+                <Form.Item
+                  label="发送预览用户(多选)"
+                >
+                  <Select
+                    placeholder="请选择预览用户"
+                    mode="multiple"
+                    allowClear
+                    optionFilterProp="name"
+                    onChange={(val) => {
+                      console.log(val)
+                      let user = this.state.previewUser.filter(item => [...val].some(l => item.id == l))
+                      console.log(user)
+                      let arr = []
+                      if (user.length > 0) {
+                        user.forEach(r => {
+                          arr.push(r.openid)
+                        })
+                      }
+                      this.setState({
+                        openIdList: arr
+                      })
+                    }}
+                  >
+                    {
+                      this.state.previewUser.map(r => {
+                        return (
+                          <Option value={r.id} key={r.id} name={r.name}>{r.name}</Option>
+                        )
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+                <Form.Item {...this.state.tailLayout}>
+                  <Button type="primary" onClick={() => {
+                    if (this.state.openIdList.length == 0) return message.error("请添加预览用户")
+                    this.sendModal()
+                  }}>
+                    发送到手机预览
+                  </Button>
+
+                </Form.Item>
+              </Form>
+            }
+            <div className="preview">
+              {
+                this.formRef.current && this.formRef.current.getFieldValue("msgType") == "news" ?
+                  <div className="text">
+                    <div>图文</div>
+                    <div>
+                      <div className="title">{this.formRef.current.getFieldValue("title")}</div>
+                      <div className="content">{this.formRef.current.getFieldValue("digest")}</div>
+                      {
+                        this.formRef.current.getFieldValue("url") ?
+                          <div className="image_box"><img src={this.formRef.current.getFieldValue("url")} alt="" /></div>
+                          : ""
+                      }
+
+                    </div>
+                  </div> :
+                  this.formRef.current && this.formRef.current.getFieldValue("msgType") == "image" ?
+                    <div className="text">
+                      <div>图片</div>
+                      <div>
+                        {
+                          this.formRef.current.getFieldValue("url") ?
+                            <div className="image_box"><img src={this.formRef.current.getFieldValue("url")} alt="" /></div>
+                            : ""
+                        }
+
+                      </div>
+                    </div> :
+                    this.formRef.current && this.formRef.current.getFieldValue("msgType") == "text" ?
+                      <div className="text">
+                        <div>文本</div>
+                        <div>
+                          <div className="content">{this.formRef.current.getFieldValue("content")}</div>
+                        </div>
+                      </div> :
+                      this.formRef.current && this.formRef.current.getFieldValue("msgType") == "mini" ?
+                        <div className="text">
+                          <div>小程序</div>
+                          <div>
+                            <div className="title">{this.formRef.current.getFieldValue("mpTitle")}</div>
+                            <div className="image_box"><img src={this.formRef.current.getFieldValue("url")|| "http://test.cdn.dianshihome.com/test/ic_launcher.png"} alt="" /></div>
+                            <div className="content">小程序</div>
+                          </div>
+                        </div> : ""
+              }
+
+            </div>
+          </div>
+
+
         </Modal>
         {/* 编辑或者新增客服消息 */}
         <Modal
@@ -441,7 +493,7 @@ export default class AddressNews extends Component {
                   contentProps = val
                   this.setState({
                     wildcard: "title",
-                    wildType:"input"
+                    wildType: "input"
                   })
                 }} />
               </Form.Item>
@@ -515,7 +567,7 @@ export default class AddressNews extends Component {
                     rules={[{ required: true, message: '请输入消息内容' }]
                     }
                   >
-                    <Input.TextArea autoSize={true}  onFocus={(val) => {
+                    <Input.TextArea autoSize={true} onFocus={(val) => {
                       contentProps = val
                       this.setState({
                         wildcard: "content"
@@ -562,7 +614,7 @@ export default class AddressNews extends Component {
                       name="mpTitle"
                       rules={[{ required: true, message: '请输入小程序标题' }]}
                     >
-                      <Input  onFocus={(val) => {
+                      <Input onFocus={(val) => {
                         contentProps = val
                         this.setState({
                           wildcard: "mpTitle"
@@ -615,16 +667,16 @@ export default class AddressNews extends Component {
                 let length = 0;
                 // setFieldsValue方法是异步的
                 // 不加延时器就会发生光标还没插入文字呢 就已经把光标插入后的位置提前定位
-                if(word){
+                if (word) {
                   length = addInfo.length
-                  word = word.substr(0,position.start)+addInfo+word.substr(position.start)
-                }else{
+                  word = word.substr(0, position.start) + addInfo + word.substr(position.start)
+                } else {
                   word = addInfo
                 }
-                this.formRef.current.setFieldsValue({ [this.state.wildcard]: word})
-                setTimeout(()=>{
-                    util.setCursorPosition(props, position.start+length);
-                },100);
+                this.formRef.current.setFieldsValue({ [this.state.wildcard]: word })
+                setTimeout(() => {
+                  util.setCursorPosition(props, position.start + length);
+                }, 100);
               }
             }}
           >
@@ -713,7 +765,7 @@ export default class AddressNews extends Component {
       formData.tag = formData.tag ? Array.isArray(formData.tag) ? formData.tag : formData.tag.split(",") : []
       this.formRef.current.setFieldsValue(formData)
       if (formData.type === "multi") {
-        let arr = JSON.parse(formData.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))
+        let arr = JSON.parse(formData.multiInfo.replace(/\n/g, "\\n").replace(/\r/g, "\\r"))
         console.log(formData.multiInfo)
         if (arr[0].msgType === "news") {
           this.formRef.current.setFieldsValue({
@@ -913,12 +965,12 @@ export default class AddressNews extends Component {
     let formData = this.formRef.current.getFieldValue() //获取表单数据
     console.log(formData, "formData")
     let params = {
-      openid:type == 1 ? "" : this.state.openIdList.join(","),
+      openid: type == 1 ? "" : this.state.openIdList.join(","),
       tag: formData.tag ? formData.tag.length === 0 ? "" : formData.tag.join(",") : "",
       wxCode: formData.wxCode,
     }
     if (formData.type === "multi") {  //新版本
-      let arr = JSON.parse(formData.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))[0]
+      let arr = JSON.parse(formData.multiInfo.replace(/\n/g, "\\n").replace(/\r/g, "\\r"))[0]
       console.log(arr)
       params = {
         ...params,
@@ -963,15 +1015,15 @@ export default class AddressNews extends Component {
       }
     })
   }
-  addMsg(item,source) {
+  addMsg(item, source) {
     console.log(item)
     let info = []
     let type = ""
-    if(source == "copy"){
-      info = JSON.parse(item.multiInfo.replace(/\n/g, "\\n").replace(/\r/g,"\\r"))
-      item.createTime = new Date().getTime()/ 1000
+    if (source == "copy") {
+      info = JSON.parse(item.multiInfo.replace(/\n/g, "\\n").replace(/\r/g, "\\r"))
+      item.createTime = new Date().getTime() / 1000
       delete item.id
-    }else{
+    } else {
       type = this.formRef.current.getFieldValue("msgType")
       if (type == "image") {
         info.push({
@@ -1002,14 +1054,14 @@ export default class AddressNews extends Component {
         })
       }
     }
-    
-   
+
+
     let params = {
       ...item,
       messageType: "custom",
-      sendTime: source == "copy"?item.sendTime : item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
+      sendTime: source == "copy" ? item.sendTime : item.sendType == 3 ? item.sendTime : parseInt(item.sendTime.toDate().getTime() / 1000),
       type: "multi",
-      tag: Array.isArray(item.tag) ? item.tag.length === 0 ? "" : item.tag.join(",") : item.tag?item.tag:"",
+      tag: Array.isArray(item.tag) ? item.tag.length === 0 ? "" : item.tag.join(",") : item.tag ? item.tag : "",
       multiInfo: JSON.stringify(info)
     }
     // return console.log(params)

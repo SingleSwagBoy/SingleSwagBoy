@@ -206,9 +206,9 @@ export default class myModal extends Component {
                             
                         </Form.Item>
                         <Form.Item label='用户设备标签' name='tags'>
-                            <Select className="input-wrapper-from" mode="multiple" placeholder='请选择用户设备标签(可多选)'>
+                            <Select className="input-wrapper-from" mode="multiple" optionFilterProp="name" placeholder='请选择用户设备标签(可多选)'>
                                 {user_tag.map((item, index) => {
-                                    return <Option value={item.id} key={item.id}>
+                                    return <Option value={item.id} key={item.id} name={item.name}>
                                         <div>{item.id}-{item.name}</div>
                                     </Option>
                                 })}

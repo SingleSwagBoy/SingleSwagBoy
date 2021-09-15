@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-15 13:36:57
+ * @LastEditTime: 2021-09-15 14:52:36
  * @Description: 菜单栏图片配置页
  */
 
@@ -434,6 +434,7 @@ export default class MenuImagePage extends Component {
         let value = that.formRef.current.getFieldsValue();
         if (value.deliveryType == 0) delete value.deliveryType;
 
+
         let id = value.id;
 
         let tag = value.tag;
@@ -450,9 +451,10 @@ export default class MenuImagePage extends Component {
         }
 
 
-        value.jljr = value.jljr === true ? 1 : 0;
-        value.hddjs = value.hddjs === true ? 1 : 0;
-        value.status = value.status === true ? 1 : 2;       //老状态 1：有效 2：无效
+        if (value.jljr.constructor === Boolean)  value.jljr = value.jljr === true ? 1 : 0;
+        if (value.hddjs.constructor === Boolean)  value.hddjs = value.hddjs === true ? 1 : 0;
+        if (value.status.constructor === Boolean)  value.status = value.status === true ? 1 : 2;    //老数据状态 1：有效 2：无效
+
         let time = value.time;
         if (!time) {
             message.error('请填写开始结束时间')
@@ -466,7 +468,6 @@ export default class MenuImagePage extends Component {
                 return;
             }
         }
-
 
         (id ? requestConfigMenuImageEidt(value) : requestConfigMenuImageCreate(value))
             .then(res => {
@@ -484,8 +485,6 @@ export default class MenuImagePage extends Component {
                 message.error(res.desc);
                 console.log(res);
             })
-
-
     }
 
 

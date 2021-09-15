@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-15 10:59:42
+ * @LastEditTime: 2021-09-15 12:28:13
  * @Description: 微信自动回复模块
  */
 
@@ -27,8 +27,6 @@ export default class WxReplyModal extends Component {
         super(props);
         this.titleFormRef = React.createRef();      //如果有额外的title From 放这里
         this.replyFormRef = React.createRef();
-        this.actitityFormRef = React.createRef();
-
 
         // this.imageFormRef = React.createRef();
 
@@ -602,7 +600,8 @@ export default class WxReplyModal extends Component {
                             activityCycle: '',      //领取周期(100000表示永久, 小于100000表示配置天数)
                         }
                     } else {
-                        replyActivity = JSON.parse(replyActivity)
+                        replyActivity = JSON.parse(replyActivity);
+                        replyActivity.isOpen = true;
                     }
 
                     that.refreshActivityBox(replyActivity);
@@ -1070,7 +1069,13 @@ export default class WxReplyModal extends Component {
             let activity_ref = that.state.activity_ref;
             let activity_ref_data = activity_ref.getDatas();
             if (activity_ref_data) {
-                result_data.replyActivity = JSON.stringify(activity_ref_data);
+                let isOpen = activity_ref_data.isOpen;
+                if (isOpen) {
+                    delete activity_ref_data.isOpen;
+                    result_data.replyActivity = JSON.stringify(activity_ref_data);
+                } else {
+                    result_data.replyActivity = '';
+                }
             }
         }
 

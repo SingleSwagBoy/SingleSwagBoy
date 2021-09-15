@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-14 17:45:25
+ * @LastEditTime: 2021-09-15 10:59:42
  * @Description: 微信自动回复模块
  */
 
@@ -36,6 +36,7 @@ export default class WxReplyModal extends Component {
             image_box_ref: null,                //图片盒子控件实例
             activity_ref: null,                 //活动Form对象
             form_interval: null,                //Form表格状态计时器
+
             base_width: 450,
             is_edit_mode: false,                //编辑模式
             datas: [],                          //数据源
@@ -51,8 +52,6 @@ export default class WxReplyModal extends Component {
                 key: '',
                 value: '',
             },
-
-            wxReplyModlTagsRef: null,
         }
     }
     componentDidMount() {
@@ -93,7 +92,7 @@ export default class WxReplyModal extends Component {
                     }>
                     </Alert>
 
-                    <WxReplyModalTags onRef={(val) => { this.setState({ wxReplyModlTagsRef: val }) }} tags={tags}
+                    <WxReplyModalTags onRef={(val) => { }} tags={tags}
                         tag_select_id={tag_select_id}
                         onSelectIdChange={(tag_select_id) => that.onTitleTagChangeClick(tag_select_id)}
                         onTabsDeleteClick={(index) => that.onTabsCreateDeleteClick(index, 'remove')}
@@ -186,9 +185,7 @@ export default class WxReplyModal extends Component {
                                     menu_type === 'keywords' &&
                                     <WxReplyModalActivity onRef={(val) => {
                                         that.setState({ activity_ref: val, }, () => {
-
                                         })
-
                                     }} >
                                     </WxReplyModalActivity>
                                 }
@@ -592,9 +589,23 @@ export default class WxReplyModal extends Component {
             }, () => {
                 that.replyFormRef.current.setFieldsValue(reply[reply_select_id]);
                 that.titleFormRef.current.setFieldsValue(item);
-                //关键字类型  
-                if (menu_type === 'keywords') {
 
+                //关键字类型  活动控件数据配置
+                if (menu_type === 'keywords') {
+                    let replyActivity = item.replyActivity;
+                    if (!replyActivity) {
+                        replyActivity = {
+                            isOpen: false,          //是否开启
+                            activityType: 0,        //1.vip活动
+                            activityDayType: '',    //1.固定 2.随机
+                            activityDays: '',       //天数, 随机的话是0-配置的天数
+                            activityCycle: '',      //领取周期(100000表示永久, 小于100000表示配置天数)
+                        }
+                    } else {
+                        replyActivity = JSON.parse(replyActivity)
+                    }
+
+                    that.refreshActivityBox(replyActivity);
                 }
 
                 that.refreshImageBoxByWxCode(); //渲染图片列表控件内部数据
@@ -921,8 +932,17 @@ export default class WxReplyModal extends Component {
 
         if (msg_type === 'text') return;
         ref.pushSelectWxCodeKeys(wxCodeKeys, msg_type, reply);
-
     }
+
+    //刷新活动控件
+    refreshActivityBox(item) {
+        let that = this;
+        let ref = that.state.activity_ref;
+        if (!ref) return;
+        ref.pushActivityData(item);
+    }
+
+
     //图片盒子上传图片回调
     onImageBoxCallback(imgs) {
         let that = this;
@@ -1044,6 +1064,16 @@ export default class WxReplyModal extends Component {
         else {
             if (request_box.wxCode) result_data.wxCode = request_box.wxCode;
         }
+
+        //获取推送活动数据
+        if (menu_type === 'keywords') {
+            let activity_ref = that.state.activity_ref;
+            let activity_ref_data = activity_ref.getDatas();
+            if (activity_ref_data) {
+                result_data.replyActivity = JSON.stringify(activity_ref_data);
+            }
+        }
+
 
         result_data.status = result_data.status === true ? 1 : 2;   //状态
 

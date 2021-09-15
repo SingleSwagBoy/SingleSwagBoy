@@ -2,17 +2,16 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-13 16:17:11
+ * @LastEditTime: 2021-09-15 14:52:36
  * @Description: 菜单栏图片配置页
  */
 
 
 import React, { Component } from 'react'
-import { Input, InputNumber, Form, DatePicker, Button, Tooltip, Table, Pagination, Switch, Modal, Image, Alert, notification, message, Divider } from 'antd';
+import { Input, InputNumber, Form, Select, DatePicker, Button, Radio, Table, Pagination, Switch, Modal, Image, Alert, notification, message, Divider } from 'antd';
 import moment from 'moment';
 import ImageUpload from "@/components/ImageUpload/index" //图片组件
 import SyncBtn from "@/components/syncBtn/syncBtn.jsx"
-
 
 
 import {
@@ -21,8 +20,12 @@ import {
     requestConfigMenuImageEidt,                         //菜单栏配置 编辑
     requestConfigMenuImageDelete,                       //菜单栏配置 删除
     requestConfigMenuImageChangeState,                  //菜单栏配置 修改状态
+    requestDeliveryTypes,                               //投放类型
+    getUserTag,                                         //用户设备标签
+
 } from 'api';
 
+let { Option } = Select;
 let { RangePicker } = DatePicker;
 
 export default class MenuImagePage extends Component {
@@ -32,18 +35,26 @@ export default class MenuImagePage extends Component {
         this.formRef = React.createRef();
 
         this.state = {
+            dict_user_tags: [],                         //字典 用户标签
+            dict_delivery_types: [],                    //字典 投放类型 定向非定向
             table_box: {
                 table_title: [],
                 table_datas: [],
                 table_columns: [
                     { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
                     { title: '名字', dataIndex: 'title', key: 'title', width: 200, },
-                    { title: '数据上报key', dataIndex: 'name', key: 'name', width: 220, },
-                    { title: '标签', dataIndex: 'tag', key: 'tag', width: 120, },
+                    { title: '数据上报key', dataIndex: 'name', key: 'name', width: 200, },
                     {
-                        title: '排序', dataIndex: 'sort', key: 'sort', width: 180,
-                        render: (rowValue, row, index) => { return <InputNumber min={1} max={9999999} value={row.sort} /> }
+                        title: '标签', dataIndex: 'tag', key: 'tag', width: 300,
+                        render: (rowValue, row, index) => {
+                            return <Select defaultValue={row.tag} style={{ width: '100%' }} placeholder="请选择用户设备标签" disabled>
+                                {this.state.dict_user_tags.map((item, index) => (
+                                    <Option value={item.code.toString()} key={item.code}>{item.name}</Option>
+                                ))}
+                            </Select>
+                        }
                     },
+                    { title: '排序', dataIndex: 'sort', key: 'sort', width: 80 },
                     {
                         title: '背景图片', dataIndex: 'backgroundImage', key: 'backgroundImage', width: 120,
                         render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.backgroundImage} /> }
@@ -90,7 +101,7 @@ export default class MenuImagePage extends Component {
                             return (
                                 <div>
                                     <Button size='small' onClick={() => this.onItemEditClick(row)}>编辑</Button>
-                                    <Button size='small' style={{ marginLeft: 3 }}>删除</Button>
+                                    <Button size='small' onClick={() => this.onItemDeleteClick(row)} style={{ marginLeft: 3 }}>删除</Button>
                                 </div>
                             );
                         }
@@ -112,7 +123,7 @@ export default class MenuImagePage extends Component {
 
     render() {
         let that = this;
-        let { table_box, modal_box } = that.state;
+        let { table_box, modal_box, dict_user_tags, dict_delivery_types } = that.state;
         let input_width_size = 340;
 
         return (
@@ -121,7 +132,7 @@ export default class MenuImagePage extends Component {
                 <Alert className="alert-box" message="菜单栏图片配置" type="success" action={
                     <div>
                         <Button style={{ marginLeft: 5 }} onClick={() => that.onCreateClick()} >新增配置</Button>
-                        <SyncBtn type={4} name={'同步缓存'} />
+                        <SyncBtn type={5} name={'同步缓存'} />
                     </div>
 
                 } />
@@ -174,7 +185,19 @@ export default class MenuImagePage extends Component {
                                 </Form.Item>
 
                                 <Form.Item label="标签" name='tag' >
-                                    <Input style={{ width: input_width_size }} placeholder="请选择标签" />
+                                    <Select style={{ width: input_width_size }} showSearch placeholder="请选择用户设备标签" >
+                                        {dict_user_tags.map((item, index) => (
+                                            <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+
+                                <Form.Item label='投放类型' name='deliveryType'>
+                                    <Radio.Group>
+                                        {dict_delivery_types.map((item, index) => {
+                                            return <Radio value={item.key} key={index}> {item.value}</Radio>
+                                        })}
+                                    </Radio.Group>
                                 </Form.Item>
 
                                 <Form.Item label="背景图"  >
@@ -220,8 +243,30 @@ export default class MenuImagePage extends Component {
 
     initData() {
         let that = this;
-        that.refreshList();
 
+        //用户标签
+        getUserTag().then(res => {
+            let datas = res.data.data;
+            let tags = [];
+            // tags.push({ id: -1, code: 'default', name: '默认', });
+            for (let i = 0, len = datas.length; i < len; i++) {
+                let item = datas[i];
+                tags.push(item);
+            }
+            //投放类型
+            requestDeliveryTypes().then(res => {
+                that.setState({
+                    dict_delivery_types: res,
+                })
+            });
+
+
+            that.setState({
+                dict_user_tags: tags
+            }, () => {
+                that.refreshList();
+            });
+        });
     }
 
     refreshList() {
@@ -317,7 +362,25 @@ export default class MenuImagePage extends Component {
 
             that.formRef.current.setFieldsValue(obj);
         })
+    }
 
+    //表格数据删除按钮被点击
+    onItemDeleteClick(item) {
+        let that = this;
+        Modal.confirm({
+            title: '删除数据',
+            content: '确认删除这一条数据？',
+            onOk: () => {
+                requestConfigMenuImageDelete({ ids: item.id })
+                    .then(res => {
+                        message.success('删除成功')
+                        that.refreshList();
+                    })
+                    .catch(res => {
+
+                    })
+            }
+        })
     }
 
 
@@ -369,6 +432,8 @@ export default class MenuImagePage extends Component {
     onModalConfirmClick() {
         let that = this;
         let value = that.formRef.current.getFieldsValue();
+        if (value.deliveryType == 0) delete value.deliveryType;
+
 
         let id = value.id;
 
@@ -386,9 +451,10 @@ export default class MenuImagePage extends Component {
         }
 
 
-        value.jljr = value.jljr === true ? 1 : 0;
-        value.hddjs = value.hddjs === true ? 1 : 0;
-        value.status = value.status === true ? 1 : 2;       //老状态 1：有效 2：无效
+        if (value.jljr.constructor === Boolean)  value.jljr = value.jljr === true ? 1 : 0;
+        if (value.hddjs.constructor === Boolean)  value.hddjs = value.hddjs === true ? 1 : 0;
+        if (value.status.constructor === Boolean)  value.status = value.status === true ? 1 : 2;    //老数据状态 1：有效 2：无效
+
         let time = value.time;
         if (!time) {
             message.error('请填写开始结束时间')
@@ -402,7 +468,6 @@ export default class MenuImagePage extends Component {
                 return;
             }
         }
-
 
         (id ? requestConfigMenuImageEidt(value) : requestConfigMenuImageCreate(value))
             .then(res => {
@@ -420,8 +485,6 @@ export default class MenuImagePage extends Component {
                 message.error(res.desc);
                 console.log(res);
             })
-
-
     }
 
 

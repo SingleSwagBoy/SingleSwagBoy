@@ -439,7 +439,7 @@ export default class recommendModal extends Component {
         let object = this.formRef.current.getFieldsValue()
         let that = this;
         if (!object.status) object.status = false;
-
+        if (object.deliveryType == 0) delete object.deliveryType;
         // for (let key in object) {
         //     let item = object[key];
         //     console.log(key + ' --- ' + item)

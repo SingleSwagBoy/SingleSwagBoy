@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 11:40:35
+ * @LastEditTime: 2021-09-16 13:43:44
  * @Description: 菜单栏图片配置页
  */
 
@@ -329,6 +329,13 @@ export default class MenuImagePage extends Component {
         else {
             let value = checked === true ? 1 : 0;
             row[key] = value;
+            let tag = row.tag;
+            if (tag) {
+                if (tag.constructor === Array) {
+                    row.tag = tag.join(',');
+                }
+            }
+
             requestConfigMenuImageEidt(row)
                 .then(res => {
                     that.setState({

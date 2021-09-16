@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-25 18:41:48
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 16:20:34
+ * @LastEditTime: 2021-09-16 19:34:22
  */
 
 import React, { Component } from 'react'
@@ -116,4 +116,3 @@ export default class SyncBtn extends Component {
         return Promise.reject(obj);
     }
 }
-// export default SyncBtn;

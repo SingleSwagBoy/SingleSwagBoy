@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 19:07:59
+ * @LastEditTime: 2021-09-16 19:42:46
  * @Description: 菜单栏图片配置页
  */
 
@@ -18,7 +18,6 @@ import {
     requestConfigMenuImageEidt,                         //菜单栏配置 编辑
     requestConfigMenuImageDelete,                       //菜单栏配置 删除
     requestConfigMenuImageChangeState,                  //菜单栏配置 修改状态
-    requestDeliveryTypes,                               //投放类型
     getUserTag,                                         //用户设备标签
 } from 'api';
 
@@ -123,7 +122,7 @@ export default class MenuImagePage extends Component {
 
     render() {
         let that = this;
-        let { table_box, modal_box, dict_user_tags, dict_delivery_types } = that.state;
+        let { table_box, modal_box } = that.state;
         let input_width_size = 340;
 
         return (
@@ -183,23 +182,6 @@ export default class MenuImagePage extends Component {
                                     <Input style={{ width: input_width_size }} placeholder="数据上报关键字" />
                                 </Form.Item> */}
 
-
-                                {/* <Form.Item label="标签" name='tag' >
-                                    <Select style={{ width: input_width_size }} mode="multiple" showSearch placeholder="请选择用户设备标签" >
-                                        {dict_user_tags.map((item, index) => (
-                                            <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-
-                                <Form.Item label='投放类型' name='deliveryType'>
-                                    <Radio.Group>
-                                        {dict_delivery_types.map((item, index) => {
-                                            return <Radio value={item.key} key={index}> {item.value}</Radio>
-                                        })}
-                                    </Radio.Group>
-                                </Form.Item> */}
-
                                 <Form.Item label="背景图"  >
                                     <Form.Item name='backgroundImage' >
                                         <MyImageUpload
@@ -253,13 +235,6 @@ export default class MenuImagePage extends Component {
                 let item = datas[i];
                 tags.push(item);
             }
-            //投放类型
-            requestDeliveryTypes().then(res => {
-                that.setState({
-                    dict_delivery_types: res,
-                })
-            });
-
 
             that.setState({
                 dict_user_tags: tags
@@ -408,6 +383,10 @@ export default class MenuImagePage extends Component {
             }
         }, () => {
             that.forceUpdate();
+            let tag_types_ref = that.state.tag_types_ref;
+            if (tag_types_ref) {
+                tag_types_ref.pushData({});
+            }
             that.formRef.current.resetFields();
         })
     }
@@ -470,9 +449,6 @@ export default class MenuImagePage extends Component {
         } else {
             delete obj.tag;
         }
-        console.log(obj);
-
-
         that.submitData(obj);
     }
 

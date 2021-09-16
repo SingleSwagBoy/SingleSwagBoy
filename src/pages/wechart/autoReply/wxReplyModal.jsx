@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-15 15:01:20
+ * @LastEditTime: 2021-09-16 19:33:41
  * @Description: 微信自动回复模块
  */
 
@@ -11,9 +11,10 @@ import React, { Component } from 'react';
 import { Modal, Tabs, Divider, Button, Input, Tag, Image, message, Select, Switch, Alert, Tooltip, Form, Radio } from 'antd';
 
 import "./wxReplyModal.css";
-import SyncBtn from "@/components/syncBtn/syncBtn.jsx"
 import WxReplyModalImageBox from "./wxReplyModalImageBox"
 import WxReplyModalActivity from "./wxReplyModalActivity"
+
+import { MySyncBtn } from '@/components/views.js';
 
 
 import WxReplyModalTags from "./wxReplyModalTags"
@@ -82,7 +83,7 @@ export default class WxReplyModal extends Component {
                 <div>
                     <Alert className="alert-box" message="微信自动回复数据载体" type="success" action={
                         <div>
-                            <SyncBtn type={4} name={'微信缓存'} />
+                            <MySyncBtn type={4} name={'微信缓存'} />
                             <Tooltip title='新增数据' placement='top'>
                                 <Button type="primary" style={{ marginLeft: 10 }} onClick={() => { that.onCreateNewDataClick() }} >新增</Button>
                             </Tooltip>

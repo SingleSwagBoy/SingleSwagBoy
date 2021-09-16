@@ -201,9 +201,20 @@ function setCursorPosition(ctrl, pos){
   ctrl.focus();
   ctrl.setSelectionRange(pos, pos);
 }
-
+function operator(){ //运算符号
+  let operator=[
+    {"value": 1, "name": "="},
+    {"value": 2, "name": "!="},
+    {"value": 3, "name": ">"},
+    {"value": 4, "name": ">="},
+    {"value": 5, "name": "<"},
+    {"value": 6, "name": "<="},
+    {"value": 7, "name": "in"},
+  ]
+  return operator
+} 
 let objFun = {
-  splitStr,GetUrlParam,formatTime,getEveryTime,getBase64,formatDateTwo,getPositionForTextArea,setCursorPosition
+  splitStr,GetUrlParam,formatTime,getEveryTime,getBase64,formatDateTwo,getPositionForTextArea,setCursorPosition,operator
 }
 
 export default objFun

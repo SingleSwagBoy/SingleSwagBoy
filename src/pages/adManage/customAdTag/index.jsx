@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
 import { getAdTagList, getAdFieldList, getDictionary, delDIYTag, esQuery } from 'api'
-import { Card, Breadcrumb, Button, message, Tabs, Table, Switch, Modal, Input } from 'antd'
+import { Card, Breadcrumb, Button, message, Tabs, Table, Switch, Modal, Input,Select } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
 import util from 'utils'
 import "./style.css"
 import MyModel from "./MyModel"
 const { TabPane } = Tabs;
+const { Option } = Select;
 export default class AddressNews extends Component {
     formRef = React.createRef();
     constructor(props) {
@@ -168,6 +169,22 @@ export default class AddressNews extends Component {
 
                                 }} />
                         </div>
+                        <div className="everyBody">
+                            <div>标签类型:</div>
+                            <Select allowClear placeholder="请选择标签类型"
+                                onChange={(val) => {
+                                    this.state.searchTagType = val
+                                    this.setState({
+                                        page: 1,
+                                    }, () => {
+                                        this.getAdTagList()
+                                    })
+                                }}
+                            >
+                                <Option value={1} key={1}>设备标签</Option>
+                                <Option value={2} key={2}>用户标签</Option>
+                            </Select>
+                        </div>
                     </div>
                 }
                     extra={
@@ -238,10 +255,10 @@ export default class AddressNews extends Component {
     }
     getListContent(item) {
         let arr = ""
-        let ruleArr = Array.isArray(item.rule)?item.rule:JSON.parse(item.rule)
-        let indexArr = Array.isArray(item.index)?item.index:JSON.parse(item.index)
-        let filterArr = this.state.dictionaryList.filter(h=> [...indexArr].some(l=>l == h.key))
-        filterArr.forEach(r=>{
+        let ruleArr = Array.isArray(item.rule) ? item.rule : JSON.parse(item.rule)
+        let indexArr = Array.isArray(item.index) ? item.index : JSON.parse(item.index)
+        let filterArr = this.state.dictionaryList.filter(h => [...indexArr].some(l => l == h.key))
+        filterArr.forEach(r => {
             arr = arr + r.value
         })
         return (
@@ -250,11 +267,11 @@ export default class AddressNews extends Component {
                 <div>标签code：{item.code}</div>
                 <div>标签名字：{item.name}</div>
                 <div>标签描述：{item.description}</div>
-                <div>标签类型：{item.tagType === 1?"设备标签":"用户标签"}</div>
+                <div>标签类型：{item.tagType === 1 ? "设备标签" : "用户标签"}</div>
                 <div>标签规则：
                     {
-                        ruleArr.map((r,i)=>{
-                            return(
+                        ruleArr.map((r, i) => {
+                            return (
                                 <div key={i}>
                                     <span>field:{r.field}  </span>
                                     <span>运算符:{r.oper}  </span>
@@ -273,7 +290,7 @@ export default class AddressNews extends Component {
             name: this.state.searchWord ? this.state.searchWord : "",
             pageType: 2,
             status: -1,
-            tagType: 0,
+            tagType: this.state.searchTagType ? this.state.searchTagType : "",
             page: { currentPage: this.state.page, pageSize: this.state.pageSize }
         }
         getAdTagList(params).then(res => {

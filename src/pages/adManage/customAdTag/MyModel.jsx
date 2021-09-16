@@ -254,7 +254,7 @@ export default class AddressNews extends Component {
   addDIYTag(item,source) {
     let params = {}
     if(source == "copy"){
-      params.code = item.code + "copy"
+      params.code = util.randomWord(false, 10)
       params.name = item.name + "-copy"
       params.index = item.index
       params.rule = item.rule

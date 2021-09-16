@@ -238,7 +238,9 @@ export default class AddressNews extends Component {
     }
     getListContent(item) {
         let arr = ""
-        let filterArr = this.state.dictionaryList.filter(h=> [...JSON.parse(item.index)].some(l=>l == h.key))
+        let ruleArr = Array.isArray(item.rule)?item.rule:JSON.parse(item.rule)
+        let indexArr = Array.isArray(item.index)?item.index:JSON.parse(item.index)
+        let filterArr = this.state.dictionaryList.filter(h=> [...indexArr].some(l=>l == h.key))
         filterArr.forEach(r=>{
             arr = arr + r.value
         })
@@ -251,9 +253,9 @@ export default class AddressNews extends Component {
                 <div>标签类型：{item.tagType === 1?"设备标签":"用户标签"}</div>
                 <div>标签规则：
                     {
-                        JSON.parse(item.rule).map(r=>{
+                        ruleArr.map((r,i)=>{
                             return(
-                                <div>
+                                <div key={i}>
                                     <span>field:{r.field}  </span>
                                     <span>运算符:{r.oper}  </span>
                                     <span>取值:{r.value}  </span>

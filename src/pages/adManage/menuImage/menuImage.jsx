@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 11:03:35
+ * @LastEditTime: 2021-09-16 11:40:35
  * @Description: 菜单栏图片配置页
  */
 
@@ -206,9 +206,8 @@ export default class MenuImagePage extends Component {
                                             getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('backgroundImage', file, newItem) }}
                                             imageUrl={that.getUploadFileImageUrlByType('backgroundImage')} />
                                     </Form.Item>
-                                    <Form.Item>
-                                        <TextArea style={{ width: input_width_size }} placeholder="请上传背景图" defaultValue={that.getUploadFileImageUrlByType('backgroundImage')}
-                                            onBlur={(e) => that.onInputBlurCallback("backgroundImage", e)} />
+                                    <Form.Item name='backgroundImage' >
+                                        <TextArea style={{ width: input_width_size }} placeholder="请上传背景图" onBlur={(e) => that.onInputBlurCallback("backgroundImage", e)} />
                                     </Form.Item>
                                 </Form.Item>
 
@@ -219,9 +218,8 @@ export default class MenuImagePage extends Component {
                                             getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('focus_url', file, newItem) }}
                                             imageUrl={that.getUploadFileImageUrlByType('focus_url')} />
                                     </Form.Item>
-                                    <Form.Item>
-                                        <TextArea style={{ width: input_width_size }} placeholder="请上传背景图" defaultValue={that.getUploadFileImageUrlByType('focus_url')}
-                                            onBlur={(e) => that.onInputBlurCallback("focus_url", e)} />
+                                    <Form.Item name='focus_url' >
+                                        <TextArea style={{ width: input_width_size }} placeholder="请上传背景图" onBlur={(e) => that.onInputBlurCallback("focus_url", e)} />
                                     </Form.Item>
                                 </Form.Item>
 
@@ -231,9 +229,8 @@ export default class MenuImagePage extends Component {
                                             getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('no_focus_url', file, newItem) }}
                                             imageUrl={that.getUploadFileImageUrlByType('no_focus_url')} />
                                     </Form.Item>
-                                    <Form.Item>
-                                        <TextArea style={{ width: input_width_size }} placeholder="请上传未选中焦点图片" defaultValue={that.getUploadFileImageUrlByType('no_focus_url')}
-                                            onBlur={(e) => that.onInputBlurCallback("no_focus_url", e)} />
+                                    <Form.Item name='no_focus_url' >
+                                        <TextArea style={{ width: input_width_size }} placeholder="请上传未选中焦点图片" onBlur={(e) => that.onInputBlurCallback("no_focus_url", e)} />
                                     </Form.Item>
                                 </Form.Item>
                             </div>
@@ -361,7 +358,8 @@ export default class MenuImagePage extends Component {
                 obj.tag = tag.join(',');
             }
         }
-        obj.title = `${obj.title} copy`;
+        let tempTime = new Date().getTime();
+        obj.title = `${obj.title} ${tempTime}`;
 
         if (obj.jljr.constructor === Boolean) obj.jljr = obj.jljr === true ? 1 : 0;
         if (obj.hddjs.constructor === Boolean) obj.hddjs = obj.hddjs === true ? 1 : 0;
@@ -386,7 +384,6 @@ export default class MenuImagePage extends Component {
                 title: '修改',
             }
         }, () => {
-            that.formRef.current.resetFields();
 
             let obj = Object.assign({}, item);
             obj.time = [
@@ -394,6 +391,7 @@ export default class MenuImagePage extends Component {
                 moment(obj.endTime)
             ]
             obj.status = obj.status === 1 ? true : false;
+            that.formRef.current.resetFields();
             that.formRef.current.setFieldsValue(obj);
             that.forceUpdate()
         })

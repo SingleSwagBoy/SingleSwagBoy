@@ -516,3 +516,6 @@ export const addDIYTag = (params) => { //增加自定义规则标签
 export const delDIYTag = (params) => { //删除自定义规则标签
     return request.post(`${baseUrl}/mms/ad/tag/del`,params)
 };
+export const esQuery = (params) => { //esQuery
+    return request.post(`${baseUrl}/mms/ad/tag/esQuery`,params)
+};

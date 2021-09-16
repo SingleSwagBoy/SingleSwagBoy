@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getAdTagList, getAdFieldList, getDictionary, delDIYTag } from 'api'
-import { Card, Breadcrumb, Button, message, Tabs, Table, Switch, Modal,Input } from 'antd'
+import { getAdTagList, getAdFieldList, getDictionary, delDIYTag, esQuery } from 'api'
+import { Card, Breadcrumb, Button, message, Tabs, Table, Switch, Modal, Input } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
 import util from 'utils'
@@ -28,9 +28,11 @@ export default class AddressNews extends Component {
                 wrapperCol: { offset: 4, span: 20 },
             },
             visible: false,
+            esShowModal: false,
+            esResult: "",
             fieldList: [],//field列表
             dictionaryList: [],//数据远
-            searchWord:"",//搜索词
+            searchWord: "",//搜索词
             columns: [
                 {
                     title: "ID",
@@ -98,8 +100,7 @@ export default class AddressNews extends Component {
                 {
                     title: "操作",
                     key: "action",
-                    width: 200,
-                    fixed: 'right', width: 250,
+                    fixed: 'right', width: 350,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
@@ -129,6 +130,14 @@ export default class AddressNews extends Component {
                                         this.delArt(row)
                                     }}
                                 >删除</Button>
+                                <Button
+                                    size="small"
+                                    dashed="true"
+                                    style={{ margin: "0 10px" }}
+                                    onClick={() => {
+                                        this.esQuery(row)
+                                    }}
+                                >esQuery</Button>
                             </div>
                         )
                     }
@@ -196,6 +205,15 @@ export default class AddressNews extends Component {
                     closeModel={() => { this.setState({ visible: false }) }} getAdTagList={this.getAdTagList.bind(this)}
                     ref="getMyModal"
                 />
+                <Modal visible={this.state.esShowModal}
+                    title="Es Query"
+                    centered
+                    onCancel={() => { this.setState({ esShowModal: false }) }}
+                    footer={null}
+                // width={1200}
+                >
+                    <div>{this.state.esResult}</div>
+                </Modal>
             </div>
         )
     }
@@ -219,7 +237,33 @@ export default class AddressNews extends Component {
 
     }
     getListContent(item) {
-        return 1
+        let arr = ""
+        let filterArr = this.state.dictionaryList.filter(h=> [...JSON.parse(item.index)].some(l=>l == h.key))
+        filterArr.forEach(r=>{
+            arr = arr + r.value
+        })
+        return (
+            <>
+                <div>标签数据源：{arr}</div>
+                <div>标签code：{item.code}</div>
+                <div>标签名字：{item.name}</div>
+                <div>标签描述：{item.description}</div>
+                <div>标签类型：{item.tagType === 1?"设备标签":"用户标签"}</div>
+                <div>标签规则：
+                    {
+                        JSON.parse(item.rule).map(r=>{
+                            return(
+                                <div>
+                                    <span>field:{r.field}  </span>
+                                    <span>运算符:{r.oper}  </span>
+                                    <span>取值:{r.value}  </span>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            </>
+        )
     }
     getAdTagList() {
         let params = {
@@ -283,6 +327,18 @@ export default class AddressNews extends Component {
                 this.getAdTagList()
             } else {
                 message.success("删除失败")
+            }
+        })
+    }
+    esQuery(item) {
+        esQuery({ code: item.code }).then(res => {
+            if (res.data.errCode === 0) {
+                this.setState({
+                    esShowModal: true,
+                    esResult: res.data.data
+                })
+            } else {
+                message.success("失败")
             }
         })
     }

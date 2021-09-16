@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2017-09-01 10:13:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-07 16:09:28
+ * @LastEditTime: 2021-09-16 10:53:05
  * @Description: 
  *      成功：  then()中解决问题
  *              集合类型返回     {data, pages} 
@@ -119,7 +119,9 @@ request.interceptors.response.use(response => {
             }
             //出错了
             else {
-                return onFailCallback(status, err_code, '数据不存在');
+                let msg = data.msg;
+                if (!msg) msg = `数据返回错误 code:[${err_code}]`;
+                return onFailCallback(status, err_code, msg);
             }
         }
 

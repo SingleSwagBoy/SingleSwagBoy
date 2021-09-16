@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 13:43:44
+ * @LastEditTime: 2021-09-16 14:46:35
  * @Description: 菜单栏图片配置页
  */
 
@@ -284,8 +284,13 @@ export default class MenuImagePage extends Component {
                     let datas = res.data.data;
                     for (let i = 0, len = datas.length; i < len; i++) {
                         let item = datas[i];
-                        // item.tag ; 
-                        item.tag = item.tag.split(',');
+
+                        let tag = item.tag;
+                        if (tag) {
+                            item.tag = tag.split(',');
+                        } else {
+                            item.tag = [];
+                        }
                     }
 
 
@@ -360,17 +365,26 @@ export default class MenuImagePage extends Component {
         delete obj.id;
 
         let tag = obj.tag;
+
         if (tag) {
             if (tag.constructor === Array) {
-                obj.tag = tag.join(',');
+                if (tag.length <= 0) {
+                    delete obj.tag;
+                } else {
+                    obj.tag = tag.join(',');
+                }
             }
+        } else {
+            delete obj.tag;
         }
+
         let tempTime = new Date().getTime();
         obj.title = `${obj.title} ${tempTime}`;
 
         if (obj.jljr.constructor === Boolean) obj.jljr = obj.jljr === true ? 1 : 0;
         if (obj.hddjs.constructor === Boolean) obj.hddjs = obj.hddjs === true ? 1 : 0;
         if (obj.status.constructor === Boolean) obj.status = obj.status === true ? 1 : 2;         //老数据状态 1：有效 2：无效
+
 
         requestConfigMenuImageCreate(obj)
             .then(res => {
@@ -480,50 +494,58 @@ export default class MenuImagePage extends Component {
     onModalConfirmClick() {
         let that = this;
         let value = that.formRef.current.getFieldsValue();
-        if (value.deliveryType == 0) delete value.deliveryType;
+        let obj = Object.assign({}, value);
 
-        if (!value.title) {
+        if (obj.deliveryType == 0) delete obj.deliveryType;
+
+        if (!obj.title) {
             message.error('请填写名称');
             return;
         }
-        value.name = value.title;
+        obj.name = obj.title;
 
 
-        let id = value.id;
+        let id = obj.id;
 
-        let tag = value.tag;
+        let tag = obj.tag;
         if (tag) {
             if (tag.constructor === Array) {
-                value.tag = tag.join(',');
+                if (tag.length <= 0) {
+                    delete obj.tag;
+                } else {
+                    obj.tag = tag.join(',');
+                }
             }
+        } else {
+            delete obj.tag;
         }
 
-        let sort = value.sort;
+        let sort = obj.sort;
         if (!sort) {
             message.error('请填写排序');
             return;
         }
 
 
-        if (value.jljr.constructor === Boolean) value.jljr = value.jljr === true ? 1 : 0;
-        if (value.hddjs.constructor === Boolean) value.hddjs = value.hddjs === true ? 1 : 0;
-        if (value.status.constructor === Boolean) value.status = value.status === true ? 1 : 2;         //老数据状态 1：有效 2：无效
+        if (obj.jljr.constructor === Boolean) obj.jljr = obj.jljr === true ? 1 : 0;
+        if (obj.hddjs.constructor === Boolean) obj.hddjs = obj.hddjs === true ? 1 : 0;
+        if (obj.status.constructor === Boolean) obj.status = obj.status === true ? 1 : 2;         //老数据状态 1：有效 2：无效
 
-        let time = value.time;
+        let time = obj.time;
         if (!time) {
             message.error('请填写开始结束时间')
             return
         } else {
             try {
-                value.startTime = time[0].valueOf();
-                value.endTime = time[1].valueOf();
+                obj.startTime = time[0].valueOf();
+                obj.endTime = time[1].valueOf();
             } catch {
                 message.error('时间错误')
                 return;
             }
         }
 
-        (id ? requestConfigMenuImageEidt(value) : requestConfigMenuImageCreate(value))
+        (id ? requestConfigMenuImageEidt(obj) : requestConfigMenuImageCreate(obj))
             .then(res => {
                 that.setState({
                     modal_box: {

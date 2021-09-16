@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-15 16:35:42
+ * @LastEditTime: 2021-09-16 11:03:35
  * @Description: 菜单栏图片配置页
  */
 
@@ -12,7 +12,6 @@ import { Input, InputNumber, Form, Select, DatePicker, Button, Radio, Table, Pag
 import moment from 'moment';
 import ImageUpload from "@/components/ImageUpload/index" //图片组件
 import SyncBtn from "@/components/syncBtn/syncBtn.jsx"
-
 
 import {
     requestConfigMenuImageList,                         //菜单栏配置 列表
@@ -25,6 +24,7 @@ import {
 
 } from 'api';
 
+let { TextArea } = Input;
 let { Option } = Select;
 let { RangePicker } = DatePicker;
 
@@ -47,7 +47,7 @@ export default class MenuImagePage extends Component {
                     {
                         title: '标签', dataIndex: 'tag', key: 'tag', width: 300,
                         render: (rowValue, row, index) => {
-                            return <Select defaultValue={row.tag} style={{ width: '100%' }} placeholder="请选择用户设备标签" disabled>
+                            return <Select defaultValue={row.tag} mode="multiple" style={{ width: '100%' }} placeholder="请选择用户设备标签" disabled>
                                 {this.state.dict_user_tags.map((item, index) => (
                                     <Option value={item.code.toString()} key={item.code}>{item.name}</Option>
                                 ))}
@@ -96,11 +96,12 @@ export default class MenuImagePage extends Component {
                         }
                     },
                     {
-                        title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 180,
+                        title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 200,
                         render: (rowValue, row, index) => {
                             return (
                                 <div>
-                                    <Button size='small' onClick={() => this.onItemEditClick(row)}>编辑</Button>
+                                    <Button size='small' onClick={() => this.onItemCopyClick(row)}>复制</Button>
+                                    <Button size='small' onClick={() => this.onItemEditClick(row)} style={{ marginLeft: 3 }}>编辑</Button>
                                     <Button size='small' onClick={() => this.onItemDeleteClick(row)} style={{ marginLeft: 3 }}>删除</Button>
                                 </div>
                             );
@@ -179,13 +180,12 @@ export default class MenuImagePage extends Component {
                                     <Switch checkedChildren="是" unCheckedChildren="否" />
                                 </Form.Item>
 
-
                                 {/* <Form.Item label="数据上报关键字" name='name'>
                                     <Input style={{ width: input_width_size }} placeholder="数据上报关键字" />
                                 </Form.Item> */}
 
                                 <Form.Item label="标签" name='tag' >
-                                    <Select style={{ width: input_width_size }} showSearch placeholder="请选择用户设备标签" >
+                                    <Select style={{ width: input_width_size }} mode="multiple" showSearch placeholder="请选择用户设备标签" >
                                         {dict_user_tags.map((item, index) => (
                                             <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
                                         ))}
@@ -207,7 +207,8 @@ export default class MenuImagePage extends Component {
                                             imageUrl={that.getUploadFileImageUrlByType('backgroundImage')} />
                                     </Form.Item>
                                     <Form.Item>
-                                        <Input style={{ width: input_width_size }} placeholder="请上传背景图" value={that.getUploadFileImageUrlByType('backgroundImage')} />
+                                        <TextArea style={{ width: input_width_size }} placeholder="请上传背景图" defaultValue={that.getUploadFileImageUrlByType('backgroundImage')}
+                                            onBlur={(e) => that.onInputBlurCallback("backgroundImage", e)} />
                                     </Form.Item>
                                 </Form.Item>
 
@@ -219,7 +220,8 @@ export default class MenuImagePage extends Component {
                                             imageUrl={that.getUploadFileImageUrlByType('focus_url')} />
                                     </Form.Item>
                                     <Form.Item>
-                                        <Input style={{ width: input_width_size }} placeholder="请上传背景图" value={that.getUploadFileImageUrlByType('focus_url')} />
+                                        <TextArea style={{ width: input_width_size }} placeholder="请上传背景图" defaultValue={that.getUploadFileImageUrlByType('focus_url')}
+                                            onBlur={(e) => that.onInputBlurCallback("focus_url", e)} />
                                     </Form.Item>
                                 </Form.Item>
 
@@ -230,7 +232,8 @@ export default class MenuImagePage extends Component {
                                             imageUrl={that.getUploadFileImageUrlByType('no_focus_url')} />
                                     </Form.Item>
                                     <Form.Item>
-                                        <Input style={{ width: input_width_size }} placeholder="请上传未选中焦点图片" value={that.getUploadFileImageUrlByType('no_focus_url')} />
+                                        <TextArea style={{ width: input_width_size }} placeholder="请上传未选中焦点图片" defaultValue={that.getUploadFileImageUrlByType('no_focus_url')}
+                                            onBlur={(e) => that.onInputBlurCallback("no_focus_url", e)} />
                                     </Form.Item>
                                 </Form.Item>
                             </div>
@@ -281,7 +284,15 @@ export default class MenuImagePage extends Component {
             requestConfigMenuImageList(obj)
                 .then(res => {
                     console.log(res);
-                    table_box.table_datas = res.data.data;
+                    let datas = res.data.data;
+                    for (let i = 0, len = datas.length; i < len; i++) {
+                        let item = datas[i];
+                        // item.tag ; 
+                        item.tag = item.tag.split(',');
+                    }
+
+
+                    table_box.table_datas = datas;
 
                     that.setState({
                         table_box: table_box,
@@ -338,6 +349,34 @@ export default class MenuImagePage extends Component {
                 })
         }
     }
+    //复制按钮被点击
+    onItemCopyClick(item) {
+        let that = this;
+        let obj = Object.assign({}, item);
+        delete obj.id;
+
+        let tag = obj.tag;
+        if (tag) {
+            if (tag.constructor === Array) {
+                obj.tag = tag.join(',');
+            }
+        }
+        obj.title = `${obj.title} copy`;
+
+        if (obj.jljr.constructor === Boolean) obj.jljr = obj.jljr === true ? 1 : 0;
+        if (obj.hddjs.constructor === Boolean) obj.hddjs = obj.hddjs === true ? 1 : 0;
+        if (obj.status.constructor === Boolean) obj.status = obj.status === true ? 1 : 2;         //老数据状态 1：有效 2：无效
+
+        requestConfigMenuImageCreate(obj)
+            .then(res => {
+                message.success('复制成功');
+                that.refreshList();
+            })
+            .catch(res => {
+                // message.error(res.desc);
+            })
+    }
+
     //表格数据被点击
     onItemEditClick(item) {
         let that = this;
@@ -347,7 +386,6 @@ export default class MenuImagePage extends Component {
                 title: '修改',
             }
         }, () => {
-            that.forceUpdate()
             that.formRef.current.resetFields();
 
             let obj = Object.assign({}, item);
@@ -355,12 +393,9 @@ export default class MenuImagePage extends Component {
                 moment(obj.startTime),
                 moment(obj.endTime)
             ]
-
             obj.status = obj.status === 1 ? true : false;
-
-            console.log(obj)
-
             that.formRef.current.setFieldsValue(obj);
+            that.forceUpdate()
         })
     }
 
@@ -414,6 +449,14 @@ export default class MenuImagePage extends Component {
         let that = this;
         let image_url = that.formRef.current.getFieldValue(type);
         return image_url ? image_url : '';
+    }
+    //输入框失去焦点监听
+    onInputBlurCallback(type, e) {
+        let that = this;
+        let obj = {};
+        obj[type] = e.target.value;
+        that.formRef.current.setFieldsValue(obj);
+        that.forceUpdate();
     }
 
 
@@ -489,7 +532,6 @@ export default class MenuImagePage extends Component {
             })
             .catch(res => {
                 message.error(res.desc);
-                console.log(res);
             })
     }
 

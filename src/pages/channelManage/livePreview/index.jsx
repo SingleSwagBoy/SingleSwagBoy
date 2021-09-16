@@ -8,7 +8,7 @@ import util from 'utils'
 import "./style.css"
 import MyModel from "./MyModel"
 import Address from "../../../components/address/index" //地域组件
-import SyncBtn from "../../../components/syncBtn/syncBtn.jsx"
+import { MySyncBtn } from '@/components/views.js';
 
 
 export default class AddressNews extends Component {
@@ -23,7 +23,7 @@ export default class AddressNews extends Component {
             config: "",
             loading: false,
             searchWord: "",//搜索名称
-            searchDate:"",//搜索日期
+            searchDate: "",//搜索日期
             layout: {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 20 },
@@ -197,7 +197,7 @@ export default class AddressNews extends Component {
                         {/* <Breadcrumb>
                             <Breadcrumb.Item>直播预告</Breadcrumb.Item>
                         </Breadcrumb> */}
-                        <div style={{display:"flex"}}>
+                        <div style={{ display: "flex" }}>
                             <div className="everyBody">
                                 <div>节目名称:</div>
                                 <Input.Search
@@ -215,7 +215,7 @@ export default class AddressNews extends Component {
                                     }}
                                 />
                             </div>
-                            <div className="everyBody" style={{marginLeft:"20px"}}>
+                            <div className="everyBody" style={{ marginLeft: "20px" }}>
                                 <div>预告日期:</div>
                                 <Input.Search
                                     allowClear
@@ -261,8 +261,8 @@ export default class AddressNews extends Component {
                                 }}
                             >入口配置</Button>
 
-                            <SyncBtn type={2} name='直播轮播缓存' desc='直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)' />
-                            <SyncBtn type={3} name='入口配置缓存' desc='这是入口配置的缓存按钮' params={{ key: 'CHANNEL.PROGRAM_ADVANCE' }} />
+                            <MySyncBtn type={2} name='直播轮播缓存' desc='直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)' />
+                            <MySyncBtn type={3} name='入口配置缓存' desc='这是入口配置的缓存按钮' params={{ key: 'CHANNEL.PROGRAM_ADVANCE' }} />
 
                         </div>
                     }

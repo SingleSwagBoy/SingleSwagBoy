@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-09 17:42:52
+ * @LastEditTime: 2021-09-16 19:33:19
  */
 
 import React, { Component } from 'react';
@@ -16,7 +16,7 @@ import {
     requestConfigUpdateDoc,             //配置列表-更新配置
 } from 'api'
 import './doc_style.css'
-import SyncBtn from "../../components/syncBtn/syncBtn.jsx"
+import { MySyncBtn } from '@/components/views.js';
 
 let { TextArea } = Input;
 let { Option } = Select;
@@ -109,7 +109,7 @@ export default class Doc extends Component {
                             <Button onClick={() => this.onItemShowModalClick()} type="primary" style={{ 'marginLeft': '10px' }} >新增</Button>
                         </Tooltip>
 
-                        <SyncBtn type={1} name={'同步缓存'} />
+                        <MySyncBtn type={1} name={'同步缓存'} />
                     </div>
                 }>
                 </Alert>
@@ -530,7 +530,7 @@ export default class Doc extends Component {
                 message.error('操作失败：' + res.desc)
             })
 
-     
+
     }
 
     //弹出框Cancel被点击

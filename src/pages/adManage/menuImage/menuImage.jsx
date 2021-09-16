@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-15 13:36:57
+ * @LastEditTime: 2021-09-15 16:35:42
  * @Description: 菜单栏图片配置页
  */
 
@@ -43,7 +43,7 @@ export default class MenuImagePage extends Component {
                 table_columns: [
                     { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
                     { title: '名字', dataIndex: 'title', key: 'title', width: 200, },
-                    { title: '数据上报key', dataIndex: 'name', key: 'name', width: 200, },
+                    // { title: '数据上报key', dataIndex: 'name', key: 'name', width: 200, },
                     {
                         title: '标签', dataIndex: 'tag', key: 'tag', width: 300,
                         render: (rowValue, row, index) => {
@@ -180,9 +180,9 @@ export default class MenuImagePage extends Component {
                                 </Form.Item>
 
 
-                                <Form.Item label="数据上报关键字" name='name'>
+                                {/* <Form.Item label="数据上报关键字" name='name'>
                                     <Input style={{ width: input_width_size }} placeholder="数据上报关键字" />
-                                </Form.Item>
+                                </Form.Item> */}
 
                                 <Form.Item label="标签" name='tag' >
                                     <Select style={{ width: input_width_size }} showSearch placeholder="请选择用户设备标签" >
@@ -434,6 +434,13 @@ export default class MenuImagePage extends Component {
         let value = that.formRef.current.getFieldsValue();
         if (value.deliveryType == 0) delete value.deliveryType;
 
+        if (!value.title) {
+            message.error('请填写名称');
+            return;
+        }
+        value.name = value.title;
+
+
         let id = value.id;
 
         let tag = value.tag;
@@ -450,9 +457,10 @@ export default class MenuImagePage extends Component {
         }
 
 
-        value.jljr = value.jljr === true ? 1 : 0;
-        value.hddjs = value.hddjs === true ? 1 : 0;
-        value.status = value.status === true ? 1 : 2;       //老状态 1：有效 2：无效
+        if (value.jljr.constructor === Boolean) value.jljr = value.jljr === true ? 1 : 0;
+        if (value.hddjs.constructor === Boolean) value.hddjs = value.hddjs === true ? 1 : 0;
+        if (value.status.constructor === Boolean) value.status = value.status === true ? 1 : 2;         //老数据状态 1：有效 2：无效
+
         let time = value.time;
         if (!time) {
             message.error('请填写开始结束时间')
@@ -466,7 +474,6 @@ export default class MenuImagePage extends Component {
                 return;
             }
         }
-
 
         (id ? requestConfigMenuImageEidt(value) : requestConfigMenuImageCreate(value))
             .then(res => {
@@ -484,8 +491,6 @@ export default class MenuImagePage extends Component {
                 message.error(res.desc);
                 console.log(res);
             })
-
-
     }
 
 

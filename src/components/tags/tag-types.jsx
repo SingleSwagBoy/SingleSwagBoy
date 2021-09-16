@@ -3,11 +3,14 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 19:17:15
+ * @LastEditTime: 2021-09-16 19:28:49
  * @Description: 用户标签 - 投放类型 组合控件
  * 
- * tag_name:        可更改[用户标签]字段名称
- * delivery_name:   可更改[投放类型]字段名称
+ * tag_name:                可更改[用户标签]字段名称
+ * delivery_name:           可更改[投放类型]字段名称
+ * 
+ * is_disable_tag:          不开启[用户标签]标签
+ * is_disable_delivery:     不开启[投放类型]标签
  */
 import React, { Component } from 'react';
 import { Form, Select, Radio } from 'antd';
@@ -40,29 +43,34 @@ export default class WxReplyModal extends Component {
 
     render() {
         let that = this;
-        let { dict_user_tags, dict_delivery_types } = that.state;
         let input_width_size = 340;
+        let { dict_user_tags, dict_delivery_types } = that.state;
+        let { is_disable_tag, is_disable_delivery } = that.props;
 
 
         return (
             <div className='tag-types-wrapper'>
                 <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.viewFormRef}>
-                    <Form.Item label='用户标签' name={that.getTagName()} >
-                        <Select style={{ width: input_width_size }} mode="multiple" showSearch placeholder="请选择用户设备标签">
-                            {dict_user_tags.map((item, index) => (
-                                <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                    <Form.Item label='投放类型' name={that.getDeliveryName()}>
-                        <Radio.Group style={{ width: input_width_size }} >
-                            {dict_delivery_types.map((item, index) => {
-                                return <Radio value={item.key} key={index} onClick={(e) => that.onRadioClick(item.key)}>
-                                    {item.value}
-                                </Radio>
-                            })}
-                        </Radio.Group>
-                    </Form.Item>
+                    {!is_disable_tag &&
+                        <Form.Item label='用户标签' name={that.getTagName()} >
+                            <Select style={{ width: input_width_size }} mode="multiple" showSearch placeholder="请选择用户设备标签">
+                                {dict_user_tags.map((item, index) => (
+                                    <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    }
+                    {!is_disable_delivery &&
+                        <Form.Item label='投放类型' name={that.getDeliveryName()}>
+                            <Radio.Group style={{ width: input_width_size }} >
+                                {dict_delivery_types.map((item, index) => {
+                                    return <Radio value={item.key} key={index} onClick={(e) => that.onRadioClick(item.key)}>
+                                        {item.value}
+                                    </Radio>
+                                })}
+                            </Radio.Group>
+                        </Form.Item>
+                    }
                 </Form>
             </div>
         )

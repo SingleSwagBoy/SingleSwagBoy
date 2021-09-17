@@ -171,7 +171,7 @@ export default class AddressNews extends Component {
                         </div>
                         <div className="everyBody">
                             <div>标签类型:</div>
-                            <Select allowClear placeholder="请选择标签类型"
+                            <Select allowClear placeholder="请选择标签类型" style={{width:"200px"}}
                                 onChange={(val) => {
                                     this.state.searchTagType = val
                                     this.setState({
@@ -285,6 +285,9 @@ export default class AddressNews extends Component {
         )
     }
     getAdTagList() {
+        this.setState({
+            loading:true
+        })
         let params = {
             code: "",
             name: this.state.searchWord ? this.state.searchWord : "",

@@ -513,6 +513,9 @@ export const getDictionary = (params) => { //获取数据源
 export const addDIYTag = (params) => { //增加自定义规则标签
     return request.post(`${baseUrl}/mms/ad/tag/add`,params)
 };
+export const updateDIYTag = (params) => { //更新自定义规则标签
+    return request.post(`${baseUrl}/mms/ad/tag/update`,params)
+};
 export const delDIYTag = (params) => { //删除自定义规则标签
     return request.post(`${baseUrl}/mms/ad/tag/del`,params)
 };

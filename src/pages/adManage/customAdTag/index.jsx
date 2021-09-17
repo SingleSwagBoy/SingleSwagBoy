@@ -156,9 +156,6 @@ export default class AddressNews extends Component {
                         <div className="everyBody">
                             <div>名称:</div>
                             <Input.Search allowClear
-                                onChange={(val) => {
-                                    this.state.searchWord = val
-                                }}
                                 onSearch={(val) => {
                                     this.state.searchWord = val
                                     this.setState({

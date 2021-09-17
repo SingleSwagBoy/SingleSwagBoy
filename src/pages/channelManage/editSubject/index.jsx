@@ -367,7 +367,7 @@ export default class SportsProgram extends Component{
                                 {
                                     this.state.tagList.map(r => {
                                         return (
-                                            <Option value={r.id.toString()} key={r.id}>{r.name}</Option>
+                                            <Option value={r.code.toString()} key={r.code}>{r.name}</Option>
                                         )
                                     })
                                 }

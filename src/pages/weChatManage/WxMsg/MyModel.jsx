@@ -986,6 +986,7 @@ export default class AddressNews extends Component {
       tag: formData.tag ? formData.tag.length === 0 ? "" : formData.tag.join(",") : "",
       wxCode: formData.wxCode,
     }
+   
     if (formData.type === "multi") {  //新版本
       let arr = JSON.parse(formData.multiInfo.replace(/\n/g, "\\n").replace(/\r/g, "\\r"))[0]
       console.log(arr)

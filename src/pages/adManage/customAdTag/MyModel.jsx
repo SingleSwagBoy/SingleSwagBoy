@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { addDIYTag } from 'api'
+import { addDIYTag,updateDIYTag } from 'api'
 import { Button, message, Modal, Form, Input, Select, Divider, Space } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -56,6 +56,7 @@ export default class AddressNews extends Component {
               <Select
                 placeholder="请选择数据源"
                 allowClear
+                showArrow={true}
                 mode="multiple"
               >
                 {
@@ -133,15 +134,16 @@ export default class AddressNews extends Component {
                             label="运算符"
                             name={[field.name, 'oper']}
                             fieldKey={[field.fieldKey, 'oper']}
-                            // style={{ width: "200px" }}
+                            style={{ width: "100%" }}
                             rules={[{ required: true, message: '运算符' }]}
                           >
-                            <Select placeholder="请选择标签类型" allowClear onDropdownVisibleChange={() => {
+                            <Select placeholder="请选择标签类型"
+                            style={{width:"150px"}}
+                             allowClear onDropdownVisibleChange={() => {
                               if (!this.formRef.current.getFieldValue("rule")[index]) return
                               let arr = this.props.fieldList.filter(item => item.field == this.formRef.current.getFieldValue("rule")[index].field)
                               let operatorObj = Object.assign([], util.operator())
                               if (arr.length > 0) {
-                                console.log(arr, "arr")
                                 if (arr[0].fieldType === "number" || arr[0].fieldType === "array-num") {
                                   operatorObj.splice(6, 1)
                                 } else if (arr[0].fieldType === "string" || arr[0].fieldType === "array-str") {
@@ -166,7 +168,7 @@ export default class AddressNews extends Component {
                             label="取值"
                             name={[field.name, 'value']}
                             fieldKey={[field.fieldKey, 'value']}
-                            style={{ width: "100px" }}
+                            style={{ width: "200px" }}
                             rules={[{ required: true, message: '取值' }]}
                           >
                             <Input />
@@ -211,7 +213,7 @@ export default class AddressNews extends Component {
     if (this.state.sourceType == "add") {
       this.addDIYTag(val)
     } else {
-      this.editMsg(val)
+      this.updateDIYTag(val)
     }
 
 
@@ -226,9 +228,8 @@ export default class AddressNews extends Component {
       this.formRef.current.setFieldsValue(formData)
       this.setState({
         sourceType: "edit",
-        operatorList: util.operator()
+        operatorList: util.operator(),
       })
-
     } else {
       this.formRef.current.setFieldsValue({ "msgType": "news" })
       this.setState({
@@ -261,9 +262,6 @@ export default class AddressNews extends Component {
       params.description = item.description
       params.tagType = item.tagType
     }else{
-      item.rule.forEach(r => {
-        r.value1 = []
-      })
       params = {
         ...item,
         index: source === "copy"?item.index:JSON.stringify(item.index),
@@ -276,6 +274,22 @@ export default class AddressNews extends Component {
         this.props.getAdTagList()
       } else {
         message.error("新增失败")
+      }
+      this.props.closeModel()
+    })
+  }
+  updateDIYTag(item){
+    let params = {
+      ...this.formRef.current.getFieldValue(),
+      index: JSON.stringify(item.index),
+      rule: JSON.stringify(item.rule),
+    }
+    updateDIYTag(params).then(res => {
+      if (res.data.errCode === 0) {
+        message.success("更新成功")
+        this.props.getAdTagList()
+      } else {
+        message.error("更新失败")
       }
       this.props.closeModel()
     })

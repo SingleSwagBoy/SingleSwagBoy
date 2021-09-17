@@ -96,7 +96,7 @@ export default class AddressNews extends Component {
               rules={[{ required: true, message: '请选择标签类型' }]}
             // style={{ display: 'inline-block', margin: '0 8px 0 0' }}
             >
-              <Select placeholder="请选择标签类型" allowClear>
+              <Select placeholder="请选择标签类型" allowClear disabled={this.state.sourceType == "add"?false:true}>
                 <Option value={1} key={1}>设备标签</Option>
                 <Option value={2} key={2}>用户标签</Option>
               </Select>

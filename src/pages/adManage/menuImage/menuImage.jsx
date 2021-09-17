@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-17 14:26:23
+ * @LastEditTime: 2021-09-17 16:39:56
  * @Description: 菜单栏图片配置页
  */
 
@@ -96,6 +96,16 @@ export default class MenuImagePage extends Component {
                                 </Form.Item>
                                 <Form.Item label="状态" name='status' rules={[{ required: true }]} valuePropName='checked'>
                                     <Switch checkedChildren="是" unCheckedChildren="否" />
+                                </Form.Item>
+
+                                <Form.Item label="字体大小" name='fontSize' >
+                                    <Input style={{ width: input_width_size }} placeholder="请输入字体大小" />
+                                </Form.Item>
+                                <Form.Item label="字体颜色" name='fontColor' >
+                                    <Input style={{ width: input_width_size }} placeholder="请输入字体颜色 形如：#F1F2F3" />
+                                </Form.Item>
+                                <Form.Item label="倒计时背景" name='djsBackgroundColor' >
+                                    <Input style={{ width: input_width_size }} placeholder="请输入倒计时背景颜色 形如：#F1F2F3" />
                                 </Form.Item>
 
                                 <Form.Item label="开启活动倒计时" name='hddjs' rules={[{ required: true }]} valuePropName='checked'>
@@ -541,6 +551,20 @@ export default class MenuImagePage extends Component {
         } else {
             delete obj.tag;
         }
+
+        //字体
+        let fontSize = obj.fontSize;
+        if (fontSize) {
+            try {
+                obj.fontSize = parseInt(obj.fontSize);
+            } catch (e) {
+                delete obj.fontSize;
+            }
+        } else {
+            delete obj.fontSize;
+        }
+
+
 
         let id = obj.id;
         (id ? requestConfigMenuImageEidt(obj) : requestConfigMenuImageCreate(obj))

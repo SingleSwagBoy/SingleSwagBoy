@@ -2,16 +2,15 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 14:46:35
+ * @LastEditTime: 2021-09-17 16:39:56
  * @Description: 菜单栏图片配置页
  */
 
 
 import React, { Component } from 'react'
-import { Input, InputNumber, Form, Select, DatePicker, Button, Radio, Table, Pagination, Switch, Modal, Image, Alert, notification, message, Divider } from 'antd';
+import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message } from 'antd';
+import { MyImageUpload, MyTagTypes, MySyncBtn } from '@/components/views.js';
 import moment from 'moment';
-import ImageUpload from "@/components/ImageUpload/index" //图片组件
-import SyncBtn from "@/components/syncBtn/syncBtn.jsx"
 
 import {
     requestConfigMenuImageList,                         //菜单栏配置 列表
@@ -19,9 +18,7 @@ import {
     requestConfigMenuImageEidt,                         //菜单栏配置 编辑
     requestConfigMenuImageDelete,                       //菜单栏配置 删除
     requestConfigMenuImageChangeState,                  //菜单栏配置 修改状态
-    requestDeliveryTypes,                               //投放类型
     getUserTag,                                         //用户设备标签
-
 } from 'api';
 
 let { TextArea } = Input;
@@ -35,110 +32,36 @@ export default class MenuImagePage extends Component {
         this.formRef = React.createRef();
 
         this.state = {
+            tag_types_ref: null,
             dict_user_tags: [],                         //字典 用户标签
             dict_delivery_types: [],                    //字典 投放类型 定向非定向
             table_box: {
                 table_title: [],
                 table_datas: [],
-                table_columns: [
-                    { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
-                    { title: '名字', dataIndex: 'title', key: 'title', width: 200, },
-                    // { title: '数据上报key', dataIndex: 'name', key: 'name', width: 200, },
-                    {
-                        title: '标签', dataIndex: 'tag', key: 'tag', width: 300,
-                        render: (rowValue, row, index) => {
-                            return <Select defaultValue={row.tag} mode="multiple" style={{ width: '100%' }} placeholder="请选择用户设备标签" disabled>
-                                {this.state.dict_user_tags.map((item, index) => (
-                                    <Option value={item.code.toString()} key={item.code}>{item.name}</Option>
-                                ))}
-                            </Select>
-                        }
-                    },
-                    { title: '排序', dataIndex: 'sort', key: 'sort', width: 80 },
-                    {
-                        title: '背景图片', dataIndex: 'backgroundImage', key: 'backgroundImage', width: 120,
-                        render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.backgroundImage} /> }
-                    },
-                    {
-                        title: '聚焦图片', dataIndex: 'focus_url', key: 'focus_url', width: 120,
-                        render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.focus_url} /> }
-                    },
-                    {
-                        title: '非聚焦图片', dataIndex: 'no_focus_url', key: 'no_focus_url', width: 120,
-                        render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.no_focus_url} /> }
-                    },
-                    {
-                        title: '时间范围', dataIndex: 'time', key: 'time', width: 400,
-                        render: (rowValue, row, index) => {
-                            let dateFormat = 'YYYY-MM-DD HH:mm:ss';
-                            let open_time = moment(row.startTime).format(dateFormat)
-                            let stop_time = moment(row.endTime).format(dateFormat)
-
-                            return (<RangePicker showTime disabled defaultValue={[moment(open_time, dateFormat), moment(stop_time, dateFormat)]} format={dateFormat} />);
-                        }
-                    },
-                    {
-                        title: '状态', dataIndex: 'status', key: 'status', width: 80,
-                        render: (rowValue, row, index) => {
-                            return (<Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="有效" unCheckedChildren="无效" onChange={(checked) => this.onStateChange(row, 'status', checked)} />)
-                        }
-                    },
-                    {
-                        title: '开启活动倒计时', dataIndex: 'hddjs', key: 'hddjs', width: 140,
-                        render: (rowValue, row, index) => {
-                            return (<Switch defaultChecked={row.hddjs === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => this.onStateChange(row, 'hddjs', checked)} />)
-                        }
-                    },
-                    {
-                        title: '显示距今结束时间', dataIndex: 'jljr', key: 'jljr', width: 150,
-                        render: (rowValue, row, index) => {
-                            return (<Switch defaultChecked={row.jljr === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => this.onStateChange(row, 'jljr', checked)} />)
-                        }
-                    },
-                    {
-                        title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 200,
-                        render: (rowValue, row, index) => {
-                            return (
-                                <div>
-                                    <Button size='small' onClick={() => this.onItemCopyClick(row)}>复制</Button>
-                                    <Button size='small' onClick={() => this.onItemEditClick(row)} style={{ marginLeft: 3 }}>编辑</Button>
-                                    <Button size='small' onClick={() => this.onItemDeleteClick(row)} style={{ marginLeft: 3 }}>删除</Button>
-                                </div>
-                            );
-                        }
-                    },
-                ]
             },
             modal_box: {
                 is_show: false,
                 title: '',
-                select_item: {},
             },
         }
     }
 
-    componentDidMount() {
-        let that = this;
-        that.initData();
-    }
 
     render() {
         let that = this;
-        let { table_box, modal_box, dict_user_tags, dict_delivery_types } = that.state;
+        let { table_box, modal_box } = that.state;
         let input_width_size = 340;
 
         return (
             <div>
-
                 <Alert className="alert-box" message="菜单栏图片配置" type="success" action={
                     <div>
                         <Button style={{ marginLeft: 5 }} onClick={() => that.onCreateClick()} >新增配置</Button>
-                        <SyncBtn type={5} name={'同步缓存'} />
+                        <MySyncBtn type={5} name={'同步缓存'} />
                     </div>
-
                 } />
 
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} columns={table_box.table_columns} pagination={false} scroll={{ x: 1500 }} />
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
 
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
 
@@ -147,6 +70,8 @@ export default class MenuImagePage extends Component {
                         <Button onClick={() => that.onModalConfirmClick()} >确定</Button>
                     ]}
                 >
+                    <MyTagTypes tag_name='tag' delivery_name='deliveryType' onRef={(ref) => that.onTagTypesRefCallback(ref)} />
+
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
                         {
                             that.formRef && that.formRef.current &&
@@ -173,6 +98,16 @@ export default class MenuImagePage extends Component {
                                     <Switch checkedChildren="是" unCheckedChildren="否" />
                                 </Form.Item>
 
+                                <Form.Item label="字体大小" name='fontSize' >
+                                    <Input style={{ width: input_width_size }} placeholder="请输入字体大小" />
+                                </Form.Item>
+                                <Form.Item label="字体颜色" name='fontColor' >
+                                    <Input style={{ width: input_width_size }} placeholder="请输入字体颜色 形如：#F1F2F3" />
+                                </Form.Item>
+                                <Form.Item label="倒计时背景" name='djsBackgroundColor' >
+                                    <Input style={{ width: input_width_size }} placeholder="请输入倒计时背景颜色 形如：#F1F2F3" />
+                                </Form.Item>
+
                                 <Form.Item label="开启活动倒计时" name='hddjs' rules={[{ required: true }]} valuePropName='checked'>
                                     <Switch checkedChildren="是" unCheckedChildren="否" />
                                 </Form.Item>
@@ -184,25 +119,9 @@ export default class MenuImagePage extends Component {
                                     <Input style={{ width: input_width_size }} placeholder="数据上报关键字" />
                                 </Form.Item> */}
 
-                                <Form.Item label="标签" name='tag' >
-                                    <Select style={{ width: input_width_size }} mode="multiple" showSearch placeholder="请选择用户设备标签" >
-                                        {dict_user_tags.map((item, index) => (
-                                            <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-
-                                <Form.Item label='投放类型' name='deliveryType'>
-                                    <Radio.Group>
-                                        {dict_delivery_types.map((item, index) => {
-                                            return <Radio value={item.key} key={index}> {item.value}</Radio>
-                                        })}
-                                    </Radio.Group>
-                                </Form.Item>
-
                                 <Form.Item label="背景图"  >
                                     <Form.Item name='backgroundImage' >
-                                        <ImageUpload
+                                        <MyImageUpload
                                             getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('backgroundImage', file, newItem) }}
                                             imageUrl={that.getUploadFileImageUrlByType('backgroundImage')} />
                                     </Form.Item>
@@ -214,7 +133,7 @@ export default class MenuImagePage extends Component {
 
                                 <Form.Item label="焦点图片"  >
                                     <Form.Item name='focus_url' >
-                                        <ImageUpload
+                                        <MyImageUpload
                                             getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('focus_url', file, newItem) }}
                                             imageUrl={that.getUploadFileImageUrlByType('focus_url')} />
                                     </Form.Item>
@@ -225,7 +144,7 @@ export default class MenuImagePage extends Component {
 
                                 <Form.Item label="未选中焦点图片"  >
                                     <Form.Item name='no_focus_url' >
-                                        <ImageUpload
+                                        <MyImageUpload
                                             getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('no_focus_url', file, newItem) }}
                                             imageUrl={that.getUploadFileImageUrlByType('no_focus_url')} />
                                     </Form.Item>
@@ -241,9 +160,12 @@ export default class MenuImagePage extends Component {
         )
     }
 
+    componentDidMount() {
+        let that = this;
+        that.initData();
+    }
     initData() {
         let that = this;
-
         //用户标签
         getUserTag().then(res => {
             let datas = res.data.data;
@@ -253,31 +175,109 @@ export default class MenuImagePage extends Component {
                 let item = datas[i];
                 tags.push(item);
             }
-            //投放类型
-            requestDeliveryTypes().then(res => {
-                that.setState({
-                    dict_delivery_types: res,
-                })
-            });
-
 
             that.setState({
                 dict_user_tags: tags
             }, () => {
-                that.refreshList();
+                that.initTitle();
             });
         });
     }
+    initTitle() {
+        let that = this;
+        let dict_user_tags = that.state.dict_user_tags;
+
+        let table_title = [
+            { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
+            { title: '名字', dataIndex: 'title', key: 'title', width: 200, },
+            // { title: '数据上报key', dataIndex: 'name', key: 'name', width: 200, },
+            {
+                title: '标签', dataIndex: 'tag', key: 'tag', width: 300,
+                render: (rowValue, row, index) => {
+                    return <Select defaultValue={row.tag} mode="multiple" style={{ width: '100%' }} placeholder="请选择用户设备标签" disabled>
+                        {dict_user_tags.map((item, index) => (
+                            <Option value={item.code.toString()} key={item.code}>{item.name}</Option>
+                        ))}
+                    </Select>
+                }
+            },
+            { title: '排序', dataIndex: 'sort', key: 'sort', width: 80 },
+            {
+                title: '背景图片', dataIndex: 'backgroundImage', key: 'backgroundImage', width: 120,
+                render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.backgroundImage} /> }
+            },
+            {
+                title: '聚焦图片', dataIndex: 'focus_url', key: 'focus_url', width: 120,
+                render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.focus_url} /> }
+            },
+            {
+                title: '非聚焦图片', dataIndex: 'no_focus_url', key: 'no_focus_url', width: 120,
+                render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.no_focus_url} /> }
+            },
+            {
+                title: '时间范围', dataIndex: 'time', key: 'time', width: 400,
+                render: (rowValue, row, index) => {
+                    let dateFormat = 'YYYY-MM-DD HH:mm:ss';
+                    let open_time = moment(row.startTime).format(dateFormat)
+                    let stop_time = moment(row.endTime).format(dateFormat)
+
+                    return (<RangePicker showTime disabled defaultValue={[moment(open_time, dateFormat), moment(stop_time, dateFormat)]} format={dateFormat} />);
+                }
+            },
+            {
+                title: '状态', dataIndex: 'status', key: 'status', width: 80,
+                render: (rowValue, row, index) => {
+                    return (<Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="有效" unCheckedChildren="无效" onChange={(checked) => this.onStateChange(row, 'status', checked)} />)
+                }
+            },
+            {
+                title: '开启活动倒计时', dataIndex: 'hddjs', key: 'hddjs', width: 140,
+                render: (rowValue, row, index) => {
+                    return (<Switch defaultChecked={row.hddjs === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => this.onStateChange(row, 'hddjs', checked)} />)
+                }
+            },
+            {
+                title: '显示距今结束时间', dataIndex: 'jljr', key: 'jljr', width: 150,
+                render: (rowValue, row, index) => {
+                    return (<Switch defaultChecked={row.jljr === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => this.onStateChange(row, 'jljr', checked)} />)
+                }
+            },
+            {
+                title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 200,
+                render: (rowValue, row, index) => {
+                    return (
+                        <div>
+                            <Button size='small' onClick={() => this.onItemCopyClick(row)}>复制</Button>
+                            <Button size='small' onClick={() => this.onItemEditClick(row)} style={{ marginLeft: 3 }}>编辑</Button>
+                            <Button size='small' onClick={() => this.onItemDeleteClick(row)} style={{ marginLeft: 3 }}>删除</Button>
+                        </div>
+                    );
+                }
+            },
+        ]
+
+        let table_box = that.state.table_box;
+        table_box.table_title = table_title;
+
+        that.setState({
+            table_box: table_box,
+        }, () => {
+            that.refreshList();
+        })
+
+    }
+
 
     refreshList() {
         let that = this;
         let { table_box } = that.state;
 
-        let obj = {};
+        table_box.table_datas = [];
 
         that.setState({
-            table_box: [],
+            table_box: table_box,
         }, () => {
+            let obj = {};
             requestConfigMenuImageList(obj)
                 .then(res => {
                     console.log(res);
@@ -292,16 +292,10 @@ export default class MenuImagePage extends Component {
                             item.tag = [];
                         }
                     }
-
-
                     table_box.table_datas = datas;
-
                     that.setState({
                         table_box: table_box,
                     })
-                })
-                .catch(res => {
-
                 })
         })
     }
@@ -314,7 +308,6 @@ export default class MenuImagePage extends Component {
             let obj = {
                 ids: row.id
             }
-
             requestConfigMenuImageChangeState(obj)
                 .then(res => {
                     that.setState({
@@ -325,10 +318,8 @@ export default class MenuImagePage extends Component {
                     }, () => {
                         that.refreshList();
                     })
-
                 })
                 .catch(res => { })
-
         }
         //开启活动倒计时 显示距今结束时间	
         else {
@@ -358,43 +349,7 @@ export default class MenuImagePage extends Component {
                 })
         }
     }
-    //复制按钮被点击
-    onItemCopyClick(item) {
-        let that = this;
-        let obj = Object.assign({}, item);
-        delete obj.id;
 
-        let tag = obj.tag;
-
-        if (tag) {
-            if (tag.constructor === Array) {
-                if (tag.length <= 0) {
-                    delete obj.tag;
-                } else {
-                    obj.tag = tag.join(',');
-                }
-            }
-        } else {
-            delete obj.tag;
-        }
-
-        let tempTime = new Date().getTime();
-        obj.title = `${obj.title} ${tempTime}`;
-
-        if (obj.jljr.constructor === Boolean) obj.jljr = obj.jljr === true ? 1 : 0;
-        if (obj.hddjs.constructor === Boolean) obj.hddjs = obj.hddjs === true ? 1 : 0;
-        if (obj.status.constructor === Boolean) obj.status = obj.status === true ? 1 : 2;         //老数据状态 1：有效 2：无效
-
-
-        requestConfigMenuImageCreate(obj)
-            .then(res => {
-                message.success('复制成功');
-                that.refreshList();
-            })
-            .catch(res => {
-                // message.error(res.desc);
-            })
-    }
 
     //表格数据被点击
     onItemEditClick(item) {
@@ -414,7 +369,12 @@ export default class MenuImagePage extends Component {
             obj.status = obj.status === 1 ? true : false;
             that.formRef.current.resetFields();
             that.formRef.current.setFieldsValue(obj);
-            that.forceUpdate()
+            that.forceUpdate();
+
+            setTimeout(() => {
+                let tag_types_ref = that.state.tag_types_ref;
+                tag_types_ref.pushData(obj);
+            }, 10)
         })
     }
 
@@ -448,6 +408,10 @@ export default class MenuImagePage extends Component {
             }
         }, () => {
             that.forceUpdate();
+            let tag_types_ref = that.state.tag_types_ref;
+            if (tag_types_ref) {
+                tag_types_ref.pushData({});
+            }
             that.formRef.current.resetFields();
         })
     }
@@ -490,24 +454,15 @@ export default class MenuImagePage extends Component {
         })
     }
 
-    //弹出框确定按钮被点击
-    onModalConfirmClick() {
+    //复制按钮被点击
+    onItemCopyClick(item) {
         let that = this;
-        let value = that.formRef.current.getFieldsValue();
-        let obj = Object.assign({}, value);
+        let obj = Object.assign({}, item);
+        delete obj.id;
 
-        if (obj.deliveryType == 0) delete obj.deliveryType;
-
-        if (!obj.title) {
-            message.error('请填写名称');
-            return;
-        }
-        obj.name = obj.title;
-
-
-        let id = obj.id;
-
+        obj.title = `${obj.title} ${new Date().getTime()}`
         let tag = obj.tag;
+
         if (tag) {
             if (tag.constructor === Array) {
                 if (tag.length <= 0) {
@@ -519,6 +474,27 @@ export default class MenuImagePage extends Component {
         } else {
             delete obj.tag;
         }
+        that.submitData(obj);
+    }
+
+    //弹出框确定按钮被点击
+    onModalConfirmClick() {
+        let that = this;
+        let tag_types_ref = that.state.tag_types_ref;
+        let value = that.formRef.current.getFieldsValue();
+        let obj = Object.assign({}, value, tag_types_ref.loadData());
+        that.submitData(obj);
+    }
+
+
+    //上传数据
+    submitData(obj) {
+        let that = this;
+        if (!obj.title) {
+            message.error('请填写名称');
+            return;
+        }
+        obj.name = obj.title;
 
         let sort = obj.sort;
         if (!sort) {
@@ -526,40 +502,97 @@ export default class MenuImagePage extends Component {
             return;
         }
 
-
-        if (obj.jljr.constructor === Boolean) obj.jljr = obj.jljr === true ? 1 : 0;
-        if (obj.hddjs.constructor === Boolean) obj.hddjs = obj.hddjs === true ? 1 : 0;
-        if (obj.status.constructor === Boolean) obj.status = obj.status === true ? 1 : 2;         //老数据状态 1：有效 2：无效
+        if (obj.jljr === true) obj.jljr = 1;
+        else if (obj.jljr === false) obj.jljr = 0;
+        if (obj.hddjs === true) obj.hddjs = 1;
+        else if (obj.jlhddjsjr === false) obj.hddjs = 0;
+        //老数据状态 1：有效 2：无效
+        if (obj.status === true) obj.status = 1;
+        else if (obj.status === false) obj.status = 2;
 
         let time = obj.time;
-        if (!time) {
-            message.error('请填写开始结束时间')
-            return
-        } else {
+        if (time) {
             try {
                 obj.startTime = time[0].valueOf();
                 obj.endTime = time[1].valueOf();
+                delete obj.time;
             } catch {
                 message.error('时间错误')
                 return;
             }
         }
+        if (!obj.startTime || !obj.startTime) {
+            message.error('请填写开始结束时间')
+            return;
+        }
 
+
+        for (let key in obj) {
+            let item = obj[key];
+            if (item === undefined) {
+                delete obj[key];
+            }
+        }
+
+        // 标签列表
+        let tag = obj.tag;
+        if (tag) {
+            if (tag.constructor === Array) {
+                if (tag.length > 0) {
+                    obj.tag = tag.join(',');
+                } else {
+                    delete obj.tag;
+                }
+            } else {
+                if (tag.length <= 0) {
+                    delete obj.tag;
+                }
+            }
+        } else {
+            delete obj.tag;
+        }
+
+        //字体
+        let fontSize = obj.fontSize;
+        if (fontSize) {
+            try {
+                obj.fontSize = parseInt(obj.fontSize);
+            } catch (e) {
+                delete obj.fontSize;
+            }
+        } else {
+            delete obj.fontSize;
+        }
+
+
+
+        let id = obj.id;
         (id ? requestConfigMenuImageEidt(obj) : requestConfigMenuImageCreate(obj))
             .then(res => {
+                message.success('操作成功');
                 that.setState({
                     modal_box: {
                         is_show: false,
                         title: '',
                     }
                 }, () => {
-                    that.formRef.current.resetFields();
+                    if (that.formRef && that.formRef.current) {
+                        that.formRef.current.resetFields();
+                    }
                     that.refreshList();
                 })
             })
             .catch(res => {
                 message.error(res.desc);
             })
+    }
+
+    //标签类型实例回调
+    onTagTypesRefCallback(ref) {
+        let that = this;
+        that.setState({
+            tag_types_ref: ref,
+        })
     }
 
 

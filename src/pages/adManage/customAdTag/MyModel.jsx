@@ -72,6 +72,7 @@ export default class AddressNews extends Component {
               label="标签Code"
               name="code"
               rules={[{ required: true, message: '请输入标签Code' }]}
+              getValueFromEvent={util.getValueFromEvent}
             // style={{ display: 'inline-block', margin: '0 8px 0 0' }}
             >
               <Input placeholder="请输入标签Code" />
@@ -80,6 +81,7 @@ export default class AddressNews extends Component {
               label="标签名字"
               name="name"
               rules={[{ required: true, message: '请输入标签名字' }]}
+              getValueFromEvent={util.getValueFromEvent}
             // style={{ display: 'inline-block', margin: '0 8px 0 0' }}
             >
               <Input placeholder="请输入标签名字" />
@@ -87,6 +89,7 @@ export default class AddressNews extends Component {
             <Form.Item
               label="标签描述"
               name="description"
+              getValueFromEvent={util.getValueFromEvent}
             >
               <Input.TextArea placeholder="请输入标签描述" />
             </Form.Item>
@@ -170,6 +173,7 @@ export default class AddressNews extends Component {
                             fieldKey={[field.fieldKey, 'value']}
                             style={{ width: "200px" }}
                             rules={[{ required: true, message: '取值' }]}
+                            getValueFromEvent={util.getValueFromEvent}
                           >
                             <Input />
                           </Form.Item>

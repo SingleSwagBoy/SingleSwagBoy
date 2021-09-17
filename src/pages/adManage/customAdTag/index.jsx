@@ -157,7 +157,7 @@ export default class AddressNews extends Component {
                             <div>名称:</div>
                             <Input.Search allowClear
                                 onSearch={(val) => {
-                                    this.state.searchWord = val
+                                    this.state.searchWord = val.trim()
                                     this.setState({
                                         page: 1,
                                     }, () => {

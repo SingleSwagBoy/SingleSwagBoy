@@ -477,6 +477,11 @@ export const requestConfigMenuImageEidt = (params) => { return request2.post(`${
 export const requestConfigMenuImageDelete = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/deleteItem`, { params: params }); };                                        //菜单栏配置 删除
 export const requestConfigMenuImageChangeState = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/changeState`, { params: params }); };                                  //菜单栏配置 修改状态
 
+export const requestWxTemplateMsgConfigList = (params) => { return request2.post(`${baseUrl}/mms/tmpl/message/config/list`, params); };                                                     //微信模板消息 列表
+export const requestWxTemplateMsgConfigCreate = (params) => { return request2.post(`${baseUrl}/mms/tmpl/message/config/add`, params); };                                                    //微信模板消息 添加
+export const requestWxTemplateMsgConfigUpload = (params) => { return request2.post(`${baseUrl}/mms/tmpl/message/config/update`, params); };                                                 //微信模板消息 修改
+export const requestWxTemplateMsgConfigDelete = (params) => { return request2.post(`${baseUrl}/mms/tmpl/message/config/del`, params); };                                                    //微信模板消息 删除
+export const requestWxTemplateMsgConfigSend = (params) => { return request2.get(`${baseUrl}/mms/tmpl/message/config/send`, { params: params }); };                                          //微信模板消息 测试发送
 
 
 
@@ -486,6 +491,7 @@ export const syncLiveCarousel = (params) => { return request2.get(`${baseUrl}/mm
 export const syncSyncConfig = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config`, { params: params }); };                                                          //查找合集短视频 /mms/config/common/syn_config?key=
 export const syncWeChat = (params) => { return request2.get(`${baseUrl}/mms/sync/weChat`, { params: params }); };                                                                           //微信自动回复/wxcode/微信二维码
 export const syncMenuImage = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/syncCache`, { params: params }); };                                                        //广告菜单栏目录配置
+export const syncWxTemplateMsgConfig = (params) => { return request2.get(`${baseUrl}/mms/tmpl/message/config/sync`, { params: params }); };                                                 //微信模板消息 同步
 
 //小程序配置
 export const getMiniProList = (params) => { //获取小程序配置列表

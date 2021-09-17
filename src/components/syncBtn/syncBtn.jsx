@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-25 18:41:48
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 19:34:22
+ * @LastEditTime: 2021-09-17 13:35:58
  */
 
 import React, { Component } from 'react'
@@ -14,6 +14,7 @@ import {
     syncSyncConfig,                 //查找合集短视频 /mms/config/common/syn_config?key=
     syncWeChat,                     //微信自动回复/wxcode/微信二维码
     syncMenuImage,                  //广告菜单栏目录配置
+    syncWxTemplateMsgConfig,        //微信模板消息 同步
 } from 'api'
 
 
@@ -84,11 +85,12 @@ export default class SyncBtn extends Component {
      */
     getSyncFuncByType(type, params) {
         let that = this;
-        if (type === 1) return syncOther();                                 //其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)
-        if (type === 2) return syncLiveCarousel();                          //直播轮播缓存 (直播预告/轮播推荐/观影厅频道配置)
-        if (type === 3) return syncSyncConfig(params);                      //查找合集短视频 /mms/config/common/syn_config?key=
-        if (type === 4) return syncWeChat();                                //微信自动回复/wxcode/微信二维码
-        if (type === 5) return syncMenuImage();                             //广告菜单栏目录配置
+        if (type === 1) return syncOther();                                     //其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)
+        if (type === 2) return syncLiveCarousel();                              //直播轮播缓存 (直播预告/轮播推荐/观影厅频道配置)
+        if (type === 3) return syncSyncConfig(params);                          //查找合集短视频 /mms/config/common/syn_config?key=
+        if (type === 4) return syncWeChat();                                    //微信自动回复/wxcode/微信二维码
+        if (type === 5) return syncMenuImage();                                 //广告菜单栏目录配置
+        if (type === 6) return syncWxTemplateMsgConfig();                       //微信模板消息 同步
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

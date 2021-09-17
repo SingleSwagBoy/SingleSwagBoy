@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-10 16:42:39
+ * @LastEditTime: 2021-09-17 11:22:22
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -34,7 +34,7 @@ const ChannelSubject = lazy(()=>import('pages/channelManage/channelSubject/index
 const EditSubject = lazy(()=>import('pages/channelManage/editSubject/index.jsx'))
 const ConfigDoc = lazy(()=>import('pages/config/doc.jsx'));
 const WxReply =  lazy(()=>import('pages/wechart/autoReply/wxReply.jsx'));  
-const wxPayTemplate =  lazy(()=>import('pages/wechart/wxPayTemplate.jsx'));
+const wxTemplateMsg =  lazy(()=>import('pages/wechart/templateMsg/wxTemplateMsg.jsx'));
 const LoginManage =  lazy(()=>import('pages/adManage/loginManage/index.jsx'));
 const MiniConfig =  lazy(()=>import('pages/configManage/miniConfig/index.jsx'));
 
@@ -83,9 +83,9 @@ const adminRoutes = [
  
   //微信公众号管理
   {path:'/mms/wxReply',component:WxReply,name:'自动回复',icon:UnorderedListOutlined,code:"WeChatManage"},
-  {path:'/mms/wxPayTemplate',component:wxPayTemplate,name:'支付模板消息',icon:UnorderedListOutlined,code:"WeChatManage"},
- 
+  {path:'/mms/wx/tmplMsg',component:wxTemplateMsg,name:'支付模板消息',icon:UnorderedListOutlined,code:"WeChatManage"},
   {path:'/mms/wx/msg',component:WxMsg,name:'客服消息',icon:UnorderedListOutlined,code:"WeChatManage"},
+
   {path:'/mms/noPermission',component:NoPermission,name:'没有权限',meta:{isNav:false,roles:'*'}}
 
 

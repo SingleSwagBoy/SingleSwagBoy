@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 19:33:41
+ * @LastEditTime: 2021-09-17 13:38:04
  * @Description: 微信自动回复模块
  */
 
@@ -83,10 +83,10 @@ export default class WxReplyModal extends Component {
                 <div>
                     <Alert className="alert-box" message="微信自动回复数据载体" type="success" action={
                         <div>
-                            <MySyncBtn type={4} name={'微信缓存'} />
                             <Tooltip title='新增数据' placement='top'>
-                                <Button type="primary" style={{ marginLeft: 10 }} onClick={() => { that.onCreateNewDataClick() }} >新增</Button>
+                                <Button style={{ marginLeft: 10 }} onClick={() => { that.onCreateNewDataClick() }} >新增配置</Button>
                             </Tooltip>
+                            <MySyncBtn type={4} name={'微信缓存'} />
                         </div>
                     }>
                     </Alert>
@@ -508,8 +508,6 @@ export default class WxReplyModal extends Component {
     //点选按钮被点击
     onRadioClick(e) {
         let that = this;
-        // let value = e.target.value;
-
         let { datas, tag_select_id, reply_select_id } = that.state;
         if (!datas || datas.length === 0) {
             message.error('转变类型失败，请刷新页面后重试。')

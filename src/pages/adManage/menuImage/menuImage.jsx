@@ -2,15 +2,15 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 19:42:46
+ * @LastEditTime: 2021-09-17 14:26:23
  * @Description: 菜单栏图片配置页
  */
 
 
 import React, { Component } from 'react'
 import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message } from 'antd';
-import moment from 'moment';
 import { MyImageUpload, MyTagTypes, MySyncBtn } from '@/components/views.js';
+import moment from 'moment';
 
 import {
     requestConfigMenuImageList,                         //菜单栏配置 列表
@@ -38,87 +38,14 @@ export default class MenuImagePage extends Component {
             table_box: {
                 table_title: [],
                 table_datas: [],
-                table_columns: [
-                    { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
-                    { title: '名字', dataIndex: 'title', key: 'title', width: 200, },
-                    // { title: '数据上报key', dataIndex: 'name', key: 'name', width: 200, },
-                    {
-                        title: '标签', dataIndex: 'tag', key: 'tag', width: 300,
-                        render: (rowValue, row, index) => {
-                            return <Select defaultValue={row.tag} mode="multiple" style={{ width: '100%' }} placeholder="请选择用户设备标签" disabled>
-                                {this.state.dict_user_tags.map((item, index) => (
-                                    <Option value={item.code.toString()} key={item.code}>{item.name}</Option>
-                                ))}
-                            </Select>
-                        }
-                    },
-                    { title: '排序', dataIndex: 'sort', key: 'sort', width: 80 },
-                    {
-                        title: '背景图片', dataIndex: 'backgroundImage', key: 'backgroundImage', width: 120,
-                        render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.backgroundImage} /> }
-                    },
-                    {
-                        title: '聚焦图片', dataIndex: 'focus_url', key: 'focus_url', width: 120,
-                        render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.focus_url} /> }
-                    },
-                    {
-                        title: '非聚焦图片', dataIndex: 'no_focus_url', key: 'no_focus_url', width: 120,
-                        render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.no_focus_url} /> }
-                    },
-                    {
-                        title: '时间范围', dataIndex: 'time', key: 'time', width: 400,
-                        render: (rowValue, row, index) => {
-                            let dateFormat = 'YYYY-MM-DD HH:mm:ss';
-                            let open_time = moment(row.startTime).format(dateFormat)
-                            let stop_time = moment(row.endTime).format(dateFormat)
-
-                            return (<RangePicker showTime disabled defaultValue={[moment(open_time, dateFormat), moment(stop_time, dateFormat)]} format={dateFormat} />);
-                        }
-                    },
-                    {
-                        title: '状态', dataIndex: 'status', key: 'status', width: 80,
-                        render: (rowValue, row, index) => {
-                            return (<Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="有效" unCheckedChildren="无效" onChange={(checked) => this.onStateChange(row, 'status', checked)} />)
-                        }
-                    },
-                    {
-                        title: '开启活动倒计时', dataIndex: 'hddjs', key: 'hddjs', width: 140,
-                        render: (rowValue, row, index) => {
-                            return (<Switch defaultChecked={row.hddjs === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => this.onStateChange(row, 'hddjs', checked)} />)
-                        }
-                    },
-                    {
-                        title: '显示距今结束时间', dataIndex: 'jljr', key: 'jljr', width: 150,
-                        render: (rowValue, row, index) => {
-                            return (<Switch defaultChecked={row.jljr === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => this.onStateChange(row, 'jljr', checked)} />)
-                        }
-                    },
-                    {
-                        title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 200,
-                        render: (rowValue, row, index) => {
-                            return (
-                                <div>
-                                    <Button size='small' onClick={() => this.onItemCopyClick(row)}>复制</Button>
-                                    <Button size='small' onClick={() => this.onItemEditClick(row)} style={{ marginLeft: 3 }}>编辑</Button>
-                                    <Button size='small' onClick={() => this.onItemDeleteClick(row)} style={{ marginLeft: 3 }}>删除</Button>
-                                </div>
-                            );
-                        }
-                    },
-                ]
             },
             modal_box: {
                 is_show: false,
                 title: '',
-                select_item: {},
             },
         }
     }
 
-    componentDidMount() {
-        let that = this;
-        that.initData();
-    }
 
     render() {
         let that = this;
@@ -134,7 +61,7 @@ export default class MenuImagePage extends Component {
                     </div>
                 } />
 
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} columns={table_box.table_columns} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
 
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
 
@@ -223,9 +150,12 @@ export default class MenuImagePage extends Component {
         )
     }
 
+    componentDidMount() {
+        let that = this;
+        that.initData();
+    }
     initData() {
         let that = this;
-
         //用户标签
         getUserTag().then(res => {
             let datas = res.data.data;
@@ -239,20 +169,105 @@ export default class MenuImagePage extends Component {
             that.setState({
                 dict_user_tags: tags
             }, () => {
-                that.refreshList();
+                that.initTitle();
             });
         });
     }
+    initTitle() {
+        let that = this;
+        let dict_user_tags = that.state.dict_user_tags;
+
+        let table_title = [
+            { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
+            { title: '名字', dataIndex: 'title', key: 'title', width: 200, },
+            // { title: '数据上报key', dataIndex: 'name', key: 'name', width: 200, },
+            {
+                title: '标签', dataIndex: 'tag', key: 'tag', width: 300,
+                render: (rowValue, row, index) => {
+                    return <Select defaultValue={row.tag} mode="multiple" style={{ width: '100%' }} placeholder="请选择用户设备标签" disabled>
+                        {dict_user_tags.map((item, index) => (
+                            <Option value={item.code.toString()} key={item.code}>{item.name}</Option>
+                        ))}
+                    </Select>
+                }
+            },
+            { title: '排序', dataIndex: 'sort', key: 'sort', width: 80 },
+            {
+                title: '背景图片', dataIndex: 'backgroundImage', key: 'backgroundImage', width: 120,
+                render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.backgroundImage} /> }
+            },
+            {
+                title: '聚焦图片', dataIndex: 'focus_url', key: 'focus_url', width: 120,
+                render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.focus_url} /> }
+            },
+            {
+                title: '非聚焦图片', dataIndex: 'no_focus_url', key: 'no_focus_url', width: 120,
+                render: (rowValue, row, index) => { return <Image width={60} height={60} src={row.no_focus_url} /> }
+            },
+            {
+                title: '时间范围', dataIndex: 'time', key: 'time', width: 400,
+                render: (rowValue, row, index) => {
+                    let dateFormat = 'YYYY-MM-DD HH:mm:ss';
+                    let open_time = moment(row.startTime).format(dateFormat)
+                    let stop_time = moment(row.endTime).format(dateFormat)
+
+                    return (<RangePicker showTime disabled defaultValue={[moment(open_time, dateFormat), moment(stop_time, dateFormat)]} format={dateFormat} />);
+                }
+            },
+            {
+                title: '状态', dataIndex: 'status', key: 'status', width: 80,
+                render: (rowValue, row, index) => {
+                    return (<Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="有效" unCheckedChildren="无效" onChange={(checked) => this.onStateChange(row, 'status', checked)} />)
+                }
+            },
+            {
+                title: '开启活动倒计时', dataIndex: 'hddjs', key: 'hddjs', width: 140,
+                render: (rowValue, row, index) => {
+                    return (<Switch defaultChecked={row.hddjs === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => this.onStateChange(row, 'hddjs', checked)} />)
+                }
+            },
+            {
+                title: '显示距今结束时间', dataIndex: 'jljr', key: 'jljr', width: 150,
+                render: (rowValue, row, index) => {
+                    return (<Switch defaultChecked={row.jljr === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => this.onStateChange(row, 'jljr', checked)} />)
+                }
+            },
+            {
+                title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 200,
+                render: (rowValue, row, index) => {
+                    return (
+                        <div>
+                            <Button size='small' onClick={() => this.onItemCopyClick(row)}>复制</Button>
+                            <Button size='small' onClick={() => this.onItemEditClick(row)} style={{ marginLeft: 3 }}>编辑</Button>
+                            <Button size='small' onClick={() => this.onItemDeleteClick(row)} style={{ marginLeft: 3 }}>删除</Button>
+                        </div>
+                    );
+                }
+            },
+        ]
+
+        let table_box = that.state.table_box;
+        table_box.table_title = table_title;
+
+        that.setState({
+            table_box: table_box,
+        }, () => {
+            that.refreshList();
+        })
+
+    }
+
 
     refreshList() {
         let that = this;
         let { table_box } = that.state;
 
-        let obj = {};
+        table_box.table_datas = [];
 
         that.setState({
-            table_box: [],
+            table_box: table_box,
         }, () => {
+            let obj = {};
             requestConfigMenuImageList(obj)
                 .then(res => {
                     console.log(res);
@@ -509,6 +524,23 @@ export default class MenuImagePage extends Component {
             }
         }
 
+        // 标签列表
+        let tag = obj.tag;
+        if (tag) {
+            if (tag.constructor === Array) {
+                if (tag.length > 0) {
+                    obj.tag = tag.join(',');
+                } else {
+                    delete obj.tag;
+                }
+            } else {
+                if (tag.length <= 0) {
+                    delete obj.tag;
+                }
+            }
+        } else {
+            delete obj.tag;
+        }
 
         let id = obj.id;
         (id ? requestConfigMenuImageEidt(obj) : requestConfigMenuImageCreate(obj))

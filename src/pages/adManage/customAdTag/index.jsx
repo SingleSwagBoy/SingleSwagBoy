@@ -90,8 +90,8 @@ export default class AddressNews extends Component {
                                     key={new Date().getTime()}
                                     defaultChecked={rowValue === 1 ? true : false}
                                     onChange={(val) => {
-                                        // row.state = val ? 1 : 0
-                                        // this.changeStateVote(row)
+                                        row.status = val ? 1 : 2
+                                        this.refs.getMyModal.updateDIYTag(row,"status")
                                     }}
                                 />
                             </div>

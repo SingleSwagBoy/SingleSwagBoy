@@ -278,15 +278,18 @@ export default class AddressNews extends Component {
       this.props.closeModel()
     })
   }
-  updateDIYTag(item){
+  updateDIYTag(item,source){
     let params = {
-      ...this.formRef.current.getFieldValue(),
-      index: JSON.stringify(item.index),
-      rule: JSON.stringify(item.rule),
+      ...item,
+      ...(source=="status"?{}:this.formRef.current.getFieldValue()),
+      index: Array.isArray(item.index)?JSON.stringify(item.index):item.index,
+      rule: Array.isArray(item.rule)?JSON.stringify(item.rule):item.rule,
     }
     updateDIYTag(params).then(res => {
       if (res.data.errCode === 0) {
-        message.success("更新成功")
+        if(source!="status"){
+          message.success("更新成功")
+        }
         this.props.getAdTagList()
       } else {
         message.error("更新失败")

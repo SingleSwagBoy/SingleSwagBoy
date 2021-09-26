@@ -2,17 +2,20 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 11:56:33
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-17 18:00:37
+ * @LastEditTime: 2021-09-26 17:28:17
  * @Description: 微信支付模板消息
  */
 
 
 import React, { Component } from 'react';
-import { Menu, Button, Table, Switch, Input, Upload, Image, message, Select, Alert, Modal, Form, DatePicker } from 'antd';
-import { MySyncBtn } from '@/components/views.js';
+import { Menu, Button, Table, Switch, Input, Upload, Radio, message, Select, Alert, Modal, Form, DatePicker } from 'antd';
+import { MyTagTypes, MySyncBtn, MyTimeInterval } from '@/components/views.js';
+import '@/style/base.css';
+import myTimeUtils from '@/utils/time.js';
 
 import {
     requestWxReplyTypes,                                        //获取回复公众号的类型
+    requestWxProgramList,                                       //获取微信小程序列表
 
     requestWxTemplateMsgConfigList,                             //微信模板消息 列表
     requestWxTemplateMsgConfigCreate,                           //微信模板消息 添加
@@ -20,10 +23,11 @@ import {
     requestWxTemplateMsgConfigDelete,                           //微信模板消息 删除
     requestWxTemplateMsgConfigSend,                             //微信模板消息 测试发送
 } from 'api';
-import "@/style/base.css";
+
 
 let { Option } = Select;
 let { RangePicker } = DatePicker;
+let { TextArea } = Input;
 
 export default class WxPayTemplate extends Component {
     constructor(props) {
@@ -31,7 +35,11 @@ export default class WxPayTemplate extends Component {
         this.formRef = React.createRef();
 
         this.state = {
+            dict_wx_program: [],    //字典 微信小程序列表
             dict_public_types: [],  //字典 微信公众号回复类型
+
+            ref_tag_types: null,
+            ref_time_interval: null,
 
             table_box: {
                 table_title: [],
@@ -41,11 +49,21 @@ export default class WxPayTemplate extends Component {
                 is_show: false,
                 title: '',
             },
+            //小程序类型
+            mini_types: [
+                { key: '1', value: '跳转小程序' },
+                { key: '2', value: '跳转到外链' },
+            ],
+            //模板类型 选择模板 1=支付模板，后续其他模板，需要不断的去添加
+            tmpl_type: [
+                { key: '1', value: '支付模板' },
+            ]
         }
     }
     render() {
         let that = this;
-        let { table_box, modal_box, dict_public_types } = that.state;
+        let { table_box, modal_box, mini_types
+            , dict_public_types, dict_wx_program, tmpl_type } = that.state;
         return (
             <div>
                 <Alert className="alert-box" message="微信模板消息" type="success" action={
@@ -72,28 +90,88 @@ export default class WxPayTemplate extends Component {
                                         <Input className="base-input-wrapper" disabled />
                                     </Form.Item>
                                 }
+
+                                <Form.Item label="状态" name='status' valuePropName='checked'>
+                                    <Switch checkedChildren="有效" unCheckedChildren="无效" />
+                                </Form.Item>
+
+                                <Form.Item label="上下线时间">
+                                    <RangePicker className="base-input-wrapper" showTime />
+                                </Form.Item>
+
+                                <Form.Item label="模板类型" name='TmplType' >
+                                    <Select className="base-input-wrapper">
+                                        {tmpl_type.map((item, index) => (
+                                            <Option value={item.key} key={index}>{item.value}</Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+
+                                <Form.Item label="模板id" name='TmplId' >
+                                    <TextArea className="base-input-wrapper" autoSize={{ minRows: 2, maxRows: 5 }} />
+                                </Form.Item>
+
+
+                                <Form.Item label="播放时间段" name='TimeBucket' >
+                                    <MyTimeInterval onRef={(ref) => that.setState({ ref_time_interval: ref })} />
+                                </Form.Item>
+
+                                <Form.Item label="微信公众号" name='WxCode' >
+                                    <Select className="base-input-wrapper">
+                                        {dict_public_types.map((item, index) => (
+                                            <Option value={item.code} key={index}>{item.name}</Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item label="编辑内容">
+                                    <TextArea className="base-input-wrapper" autoSize={{ minRows: 5, maxRows: 5 }} placeholder='请输入待编辑内容' />
+                                </Form.Item>
+
+                                <Form.Item label="跳转人群" >
+                                    <Form.Item name='Mini'>
+                                        <Radio.Group className="base-input-wrapper" >
+                                            {mini_types.map((item, index) => {
+                                                return <Radio value={item.key} key={index} onClick={(e) => that.onRadioClick(item.key)}>
+                                                    {item.value}
+                                                </Radio>
+                                            })}
+                                        </Radio.Group>
+                                    </Form.Item>
+
+                                    {
+                                        //跳转类型为小程序类型
+                                        that.formRef.current.getFieldValue('Mini') === '1' &&
+                                        <div>
+                                            <Form.Item className="base-input-wrapper" label='小程序'>
+                                                <Select placeholder='请选择小程序' onChange={() => { that.forceUpdate() }}>
+                                                    {dict_wx_program.map((item, index) => (
+                                                        <Option value={item.appid}>{item.appName}</Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                            <Form.Item className="base-input-wrapper" label='跳转路径'>
+                                                <TextArea placeholder='输入跳转小程序页面，例:page/main' autoSize={{ minRows: 2, maxRows: 3 }} />
+                                            </Form.Item>
+                                            <Form.Item className="base-input-wrapper" label='备用地址'>
+                                                <TextArea placeholder='不支持跳转的小程序将跳转到此' autoSize={{ minRows: 2, maxRows: 3 }} />
+                                            </Form.Item>
+                                        </div>
+                                    }
+                                    {
+                                        //跳转类型为外链类型
+                                        that.formRef.current.getFieldValue('Mini') === '2' &&
+                                        <Form.Item >
+                                            <TextArea className="base-input-wrapper" placeholder='请输入http://开头的地址' />
+                                        </Form.Item>
+                                    }
+                                </Form.Item>
+
                             </div>
                         }
-
-                        <Form.Item label="上下线时间"  >
-                            <RangePicker showTime className="base-input-wrapper" />
-                        </Form.Item>
-
-                        <Form.Item label="播放时间段"  >
-
-                        </Form.Item>
-
-                        <Form.Item label="微信公众号" name='wxCode' >
-                            <Select className="base-input-wrapper">
-                                {dict_public_types.map((item, index) => (
-                                    <Option value={item.code} key={index}>{item.name}</Option>
-                                ))}
-                            </Select>
-
-                        </Form.Item>
-
-
                     </Form>
+
+                    {/* 标签类型 */}
+                    <MyTagTypes tag_type='type' tag_name='tag' delivery_name='delivery' onRef={(ref) => that.setState({ ref_tag_types: ref })} />
 
 
 
@@ -110,13 +188,23 @@ export default class WxPayTemplate extends Component {
     initData() {
         let that = this;
 
+        // requestWxProgramList
+
+        // Promise.all([requestWxReplyTypes, requestWxProgramList])
+
         requestWxReplyTypes().then(res => {
             let types = res.data;
 
             that.setState({
-                dict_public_types: types
+                dict_public_types: types,
             }, () => {
-                that.initTitle();
+                requestWxProgramList().then(res => {
+                    that.setState({
+                        dict_wx_program: res.data
+                    }, () => {
+                        that.initTitle();
+                    })
+                })
             });
         })
 
@@ -147,11 +235,12 @@ export default class WxPayTemplate extends Component {
             // { title: '模板Id', dataIndex: 'TmplId', key: 'TmplId', width: 80, },
             // { title: '跳转地址', dataIndex: 'Jump', key: 'Jump', width: 80, },
             {
-                title: '上下线时间', dataIndex: 'Time', key: 'Time', width: 200,
+                title: '上下线时间', dataIndex: 'Time', key: 'Time', width: 350,
                 render: (rowValue, row, index) => {
                     return (
                         <div>
-                            <div>{row.StartTime} -{row.EndTime}</div>
+                            {/* <div>{row.StartTime} -{row.EndTime}</div> */}
+                            <div>{myTimeUtils.parseTime(row.StartTime)} -- {myTimeUtils.parseTime(row.EndTime)}</div>
                         </div>
                     )
                 }
@@ -219,11 +308,18 @@ export default class WxPayTemplate extends Component {
         }, () => {
             that.forceUpdate();
             that.formRef.current.resetFields();
+
+            setTimeout(() => {
+                let ref_tag_types = that.state.ref_tag_types;
+                if (ref_tag_types) ref_tag_types.pushData({});
+            }, 10)
+
         })
     }
 
     //编辑按钮被点击
     onItemEditClick(item) {
+        // console.log(item);
         let that = this;
         that.setState({
             modal_box: {
@@ -231,9 +327,16 @@ export default class WxPayTemplate extends Component {
                 title: '编辑',
             }
         }, () => {
+            console.log(item);
             that.forceUpdate();
             that.formRef.current.resetFields();
             that.formRef.current.setFieldsValue(item);
+
+            let obj = Object.assign({}, item);
+            setTimeout(() => {
+                let ref_tag_types = that.state.ref_tag_types;
+                ref_tag_types.pushData(obj);
+            }, 10)
         })
     }
 
@@ -251,6 +354,30 @@ export default class WxPayTemplate extends Component {
 
     //弹出框确定按钮被点击
     onModalConfirmClick() {
+        let that = this;
+        let { ref_time_interval, ref_tag_types } = that.state;
+
+        let value = that.formRef.current.getFieldsValue();  //表格数据
+        let data = Object.assign({}, value, ref_tag_types.loadData());  //用户标签-投放类型
+
+        data.time_bucket = ref_time_interval.getData();
+
+        //数据状态 不存在
+        if (data.status === undefined) delete data.status;
+        //数据状态转换
+        else {
+
+        }
+
+
+        console.log(data);
+    }
+
+
+    //跳转人群选项被点击
+    onRadioClick() {
+        let that = this;
+        that.forceUpdate();
     }
 
 

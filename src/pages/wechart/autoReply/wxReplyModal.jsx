@@ -332,7 +332,7 @@ export default class WxReplyModal extends Component {
                                                         <Input style={{ width: base_width }} placeholder='请输入小程序标题' onFocus={() => that.onInputGetFocus('卡片标题', 'title')} onBlur={() => that.onInputLoseFocus()} />
                                                     </Form.Item>
                                                     <Form.Item label='小程序' name='appid'>
-                                                        <Select style={{ width: base_width }} placeholder='请选择回复公众号'
+                                                        <Select style={{ width: base_width }} placeholder='请选择小程序'
                                                             onChange={() => { that.forceUpdate() }} onBlur={(view) => that.onInputLoseFocus(view)}>
                                                             {dict_wx_program.map((item, index) => (
                                                                 <Option value={item.appid}>{item.appName}</Option>

@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 11:56:33
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-26 17:28:17
+ * @LastEditTime: 2021-09-26 17:39:50
  * @Description: 微信支付模板消息
  */
 
@@ -145,7 +145,7 @@ export default class WxPayTemplate extends Component {
                                             <Form.Item className="base-input-wrapper" label='小程序'>
                                                 <Select placeholder='请选择小程序' onChange={() => { that.forceUpdate() }}>
                                                     {dict_wx_program.map((item, index) => (
-                                                        <Option value={item.appid}>{item.appName}</Option>
+                                                        <Option value={item.appid} key={index}>{item.appName}</Option>
                                                     ))}
                                                 </Select>
                                             </Form.Item>
@@ -245,7 +245,23 @@ export default class WxPayTemplate extends Component {
                     )
                 }
             },
-            { title: '投放时间段', dataIndex: 'TimeBucket', key: 'TimeBucket', width: 200, },
+            {
+                title: '投放时间段', dataIndex: 'TimeBucket', key: 'TimeBucket', width: 200,
+                render: (rowValue, row, index) => {
+                    let time_array = [];
+                    if (rowValue) {
+                        time_array = rowValue.split(',');
+                    }
+                    return (
+                        <div>
+                            {
+                                time_array.map((item, index) => {
+                                    return <div key={index} >{item}</div>
+                                })}
+                        </div>
+                    );
+                }
+            },
             {
                 title: '状态', dataIndex: 'Status', key: 'Status', width: 80,
                 render: (rowValue, row, index) => {

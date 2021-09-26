@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-17 13:38:04
+ * @LastEditTime: 2021-09-26 17:42:11
  * @Description: 微信自动回复模块
  */
 
@@ -127,7 +127,7 @@ export default class WxReplyModal extends Component {
                                                 <Select style={{ width: base_width }} mode="multiple" allowClear placeholder='请选择回复公众号'
                                                     onChange={() => { that.refreshImageBoxByWxCode() }} onBlur={(view) => that.onInputLoseFocus(view)}>
                                                     {dict_public_types.map((item, index) => (
-                                                        <Option value={item.code}>{item.name}</Option>
+                                                        <Option value={item.code} key={index}>{item.name}</Option>
                                                     ))}
                                                 </Select>
                                             </Form.Item>
@@ -160,7 +160,7 @@ export default class WxReplyModal extends Component {
                                                 <Select style={{ width: base_width }} mode="multiple" allowClear placeholder='请选择回复公众号'
                                                     onChange={() => { that.refreshImageBoxByWxCode() }} onBlur={(view) => that.onInputLoseFocus(view)}>
                                                     {dict_public_types.map((item, index) => (
-                                                        <Option value={item.code}>{item.name}</Option>
+                                                        <Option value={item.code} key={index}>{item.name}</Option>
                                                     ))}
                                                 </Select>
                                             </Form.Item>
@@ -193,7 +193,7 @@ export default class WxReplyModal extends Component {
                             <div className="phone-wrapper-outer">
                                 <div className="phone-wrapper">
                                     {replys.map((item, index) => (
-                                        <div className='phone-message-box'>
+                                        <div className='phone-message-box' key={index}>
                                             {
                                                 item.msg_type === 'text' &&
                                                 <div className='phone-box'>
@@ -262,7 +262,7 @@ export default class WxReplyModal extends Component {
                                     <Tabs type="editable-card" tabPosition={"left"} activeKey={`${reply_select_id}`}
                                         onEdit={(targetKey, action) => that.onReplyItemClick(targetKey, action)} onChange={(activeKey) => that.onReplyItemChange(activeKey)}>
                                         {replys.map((item, index) => (
-                                            <TabPane tab={`第${index + 1}条`} key={`${index}`}></TabPane>
+                                            <TabPane tab={`第${index + 1}条`} key={index}></TabPane>
                                         ))}
                                     </Tabs>
                                 }
@@ -276,7 +276,7 @@ export default class WxReplyModal extends Component {
                                             <Form.Item label='消息类型' name='msg_type' >
                                                 <Radio.Group onChange={(e) => that.onRadioClick(e)}>
                                                     {dict_msg_type.map((item, index) => (
-                                                        <Radio value={item.key}>{item.value}</Radio>
+                                                        <Radio value={item.key} key={index}>{item.value}</Radio>
                                                     ))}
                                                 </Radio.Group>
                                             </Form.Item>
@@ -335,7 +335,7 @@ export default class WxReplyModal extends Component {
                                                         <Select style={{ width: base_width }} placeholder='请选择小程序'
                                                             onChange={() => { that.forceUpdate() }} onBlur={(view) => that.onInputLoseFocus(view)}>
                                                             {dict_wx_program.map((item, index) => (
-                                                                <Option value={item.appid}>{item.appName}</Option>
+                                                                <Option value={item.appid} key={index}>{item.appName}</Option>
                                                             ))}
                                                         </Select>
                                                     </Form.Item>

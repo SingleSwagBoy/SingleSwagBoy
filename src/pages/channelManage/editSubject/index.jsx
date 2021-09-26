@@ -233,6 +233,11 @@ export default class SportsProgram extends Component{
             headerImage:fill
         })
     }
+    deleteHeaderImage(){  // 删除tab文字图片
+        this.setState({
+            headerImage:""
+        })
+    }
     submitForm(obj){
         console.log("submitFormsubmitForm",obj)
         if(obj.whiteList==undefined){
@@ -338,10 +343,19 @@ export default class SportsProgram extends Component{
                             // 如果没有下面这一句会报错
                             getValueFromEvent={normFile} 
                         >
-                            <ImageUpload getUploadFileUrl={this.getUploadFileUrlHeader.bind(this)}
-                                imageUrl={this.state.headerImage}
-                                // this.formRef.current ? this.formRef.current.getFieldValue("backImage") : ""
-                            />
+                            <div className='upload-delete'>
+                                <ImageUpload getUploadFileUrl={this.getUploadFileUrlHeader.bind(this)}
+                                    imageUrl={this.state.headerImage}
+                                />
+                                {/* <Button type="primary" style={{margin:"0 20px"}}>删除</Button> */}
+                                {
+                                    this.state.headerImage!='' &&
+                                    <div className='button-form-div'>
+                                        <Button type="primary" onClick={this.deleteHeaderImage.bind(this)}>删除</Button>
+                                    </div>
+                                }
+                                
+                            </div>
                         </Form.Item>
 
                         <Form.Item label="排序" name="column" rules={[{ required: true, message: '请填写排序' }]}>

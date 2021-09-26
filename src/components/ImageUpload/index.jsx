@@ -60,6 +60,7 @@ class ImageUpload extends Component {
                     console.log(info)
                     if(info.file.response.errCode === 0){
                       this.props.getUploadFileUrl(info.file.response.data.fileUrl,info.file.response.data)
+                      this.setState({ loading: false });
                       message.success(`上传成功`);
                     }else{
                       this.setState({ loading: false });

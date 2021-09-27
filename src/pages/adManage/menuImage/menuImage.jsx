@@ -2,7 +2,11 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
+<<<<<<< HEAD
  * @LastEditTime: 2021-09-26 17:31:01
+=======
+ * @LastEditTime: 2021-09-17 16:39:56
+>>>>>>> feature/hqs/tagTypes
  * @Description: 菜单栏图片配置页
  */
 
@@ -70,7 +74,7 @@ export default class MenuImagePage extends Component {
                         <Button onClick={() => that.onModalConfirmClick()} >确定</Button>
                     ]}
                 >
-                    <MyTagTypes tag_name='tag' delivery_name='deliveryType' onRef={(ref) => that.onTagTypesRefCallback(ref)} />
+                    <MyTagTypes union_type='unionType' tag_name='tag' delivery_name='deliveryType' onRef={(ref) => that.onTagTypesRefCallback(ref)} />
 
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
                         {
@@ -96,6 +100,16 @@ export default class MenuImagePage extends Component {
                                 </Form.Item>
                                 <Form.Item label="状态" name='status' rules={[{ required: true }]} valuePropName='checked'>
                                     <Switch checkedChildren="是" unCheckedChildren="否" />
+                                </Form.Item>
+
+                                <Form.Item label="字体大小" name='fontSize' >
+                                    <Input style={{ width: input_width_size }} placeholder="请输入字体大小" />
+                                </Form.Item>
+                                <Form.Item label="字体颜色" name='fontColor' >
+                                    <Input style={{ width: input_width_size }} placeholder="请输入字体颜色 形如：#F1F2F3" />
+                                </Form.Item>
+                                <Form.Item label="倒计时背景" name='djsBackgroundColor' >
+                                    <Input style={{ width: input_width_size }} placeholder="请输入倒计时背景颜色 形如：#F1F2F3" />
                                 </Form.Item>
 
                                 <Form.Item label="开启活动倒计时" name='hddjs' rules={[{ required: true }]} valuePropName='checked'>
@@ -543,6 +557,20 @@ export default class MenuImagePage extends Component {
         } else {
             delete obj.tag;
         }
+
+        //字体
+        let fontSize = obj.fontSize;
+        if (fontSize) {
+            try {
+                obj.fontSize = parseInt(obj.fontSize);
+            } catch (e) {
+                delete obj.fontSize;
+            }
+        } else {
+            delete obj.fontSize;
+        }
+
+
 
         let id = obj.id;
         (id ? requestConfigMenuImageEidt(obj) : requestConfigMenuImageCreate(obj))

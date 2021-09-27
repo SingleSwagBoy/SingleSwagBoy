@@ -231,10 +231,7 @@ export default class WinningNews extends Component {
         >
           <Table
             dataSource={this.state.lists}
-            // scroll={{
-            //   // y: 300,
-            //   x: `100%`,
-            // }}
+            scroll={{ x: 1500 }}
             pagination={{
               current: this.state.page,
               pageSize: this.state.pageSize,

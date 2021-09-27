@@ -26,6 +26,7 @@ const ManageTag = lazy(()=>import('pages/service/manageTag/index.jsx'))
 const MiniInput = lazy(()=>import('pages/service/miniInput/index.jsx'))
 const Recommend= lazy (()=>import ('pages/adManage/recommend/recommend.jsx'));
 const MenuImage= lazy (()=>import ('pages/adManage/menuImage/menuImage.jsx'));
+const CustomAdTag= lazy (()=>import ('pages/adManage/customAdTag/index.jsx'));
 const Voting = lazy(()=>import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(()=>import('pages/channelManage/channelLock/index.jsx'))
 const LivePreview = lazy(()=>import('pages/channelManage/livePreview/index.jsx'))
@@ -76,6 +77,7 @@ const adminRoutes = [
   {path:'/mms/adManage/recommend',component:Recommend,name:'尝鲜版',icon:UnorderedListOutlined,code:"adManage"},
   { path: '/mms/adManage/LoginManage', component: LoginManage, name: '个人中心登录', icon: UnorderedListOutlined, code: "adManage" },
   {path:'/mms/adManage/menuImage',component:MenuImage,name:'菜单栏图片配置',icon:UnorderedListOutlined,code:"adManage"},
+  {path:'/mms/ad/customAdTag',component:CustomAdTag,name:'自定义规则便签',icon:UnorderedListOutlined,code:"adManage"},
  
  
   //配置管理

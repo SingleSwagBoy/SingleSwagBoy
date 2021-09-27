@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-18 14:11:57
+ * @LastEditTime: 2021-09-27 19:04:32
  * @Description: 用户标签 - 投放类型 组合控件
  * 
  * 不传不显示下面对应的参数 不传时，获取数据也不会获取到对应参数
@@ -11,7 +11,7 @@
  * delivery_name:           可更改[投放类型]字段名称
  */
 import React, { Component } from 'react';
-import { Form, Select, Radio } from 'antd';
+import { Form, Select, Radio, message } from 'antd';
 import './tag-types.css';
 import {
     getUserTag,                         //用户设备标签
@@ -28,13 +28,13 @@ export default class TagTypes extends Component {
         this.viewFormRef = React.createRef();
 
         this.state = {
-            dict_user_tags: [],
-            dict_delivery_types: [],
-            // 标签类型
-            dict_tag_type: [
-                { key: '0', value: '满足全部标签', },
-                { key: '1', value: '满足指定标签', },
+            //标签判断逻辑
+            dict_union_type: [
+                { key: 1, value: '满足全部标签' },
+                { key: 2, value: '满足部分标签' },
             ],
+            dict_user_tags: [],         //用户设备标签
+            dict_delivery_types: [],    //投放类型
         }
 
     }
@@ -47,18 +47,18 @@ export default class TagTypes extends Component {
 
     render() {
         let that = this;
-        let { dict_user_tags, dict_delivery_types, dict_tag_type } = that.state;
-        let { tag_type, tag_name, delivery_name } = that.props;
+        let { dict_union_type, dict_user_tags, dict_delivery_types } = that.state;
+        let { union_type, tag_name, delivery_name } = that.props;
 
         return (
             <div className='tag-types-wrapper'>
                 <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.viewFormRef}>
                     {
-                        tag_type &&
-                        <Form.Item label='标签类型' name={tag_type} >
+                        union_type &&
+                        <Form.Item label='标签逻辑' name={union_type} >
                             <Radio.Group className="base-input-wrapper" >
-                                {dict_tag_type.map((item, index) => {
-                                    return <Radio value={item.key} key={index} onClick={(e) => that.onRadioClick(item.key)}>
+                                {dict_union_type.map((item, index) => {
+                                    return <Radio value={item.key} key={index} onClick={(e) => that.onUnionTypeRadioClick(item.key)}>
                                         {item.value}
                                     </Radio>
                                 })}
@@ -133,6 +133,9 @@ export default class TagTypes extends Component {
 
         item[tag_name] = tags;
 
+        console.log('item')
+        console.log(item)
+
         voewFormRef.current.resetFields();
         voewFormRef.current.setFieldsValue(item);
     }
@@ -142,11 +145,21 @@ export default class TagTypes extends Component {
      */
     loadData() {
         let that = this;
-        let { tag_name } = that.props;
-        let { delivery_name } = that.props;
+        let { union_type, tag_name, delivery_name } = that.props;
         let voewFormRef = that.viewFormRef;
         let value = voewFormRef.current.getFieldsValue();
         let obj = {};
+
+        //标签判断逻辑
+        if (union_type) {
+            let union = value[union_type];
+            if (union) {
+                obj[union_type] = union;
+            } else {
+                message.error('请选择标签判断逻辑')
+            }
+        }
+
 
         //用户标签
         let tags = value[tag_name];
@@ -172,6 +185,18 @@ export default class TagTypes extends Component {
         }
 
         return obj;
+    }
+
+    //标签类型逻辑
+    onUnionTypeRadioClick() {
+        let that = this;
+        let viewFormRef = that.viewFormRef;
+        let { union_type } = that.props;
+
+
+        let obj = {};
+        obj[union_type] = '';
+        viewFormRef.current.setFieldsValue(obj);
     }
 
     //监听单选框 被选中的数据 再次被点击 将清除当前数据

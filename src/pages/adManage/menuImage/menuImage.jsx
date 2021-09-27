@@ -70,7 +70,7 @@ export default class MenuImagePage extends Component {
                         <Button onClick={() => that.onModalConfirmClick()} >确定</Button>
                     ]}
                 >
-                    <MyTagTypes tag_name='tag' delivery_name='deliveryType' onRef={(ref) => that.onTagTypesRefCallback(ref)} />
+                    <MyTagTypes union_type='unionType' tag_name='tag' delivery_name='deliveryType' onRef={(ref) => that.onTagTypesRefCallback(ref)} />
 
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
                         {

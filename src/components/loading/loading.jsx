@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-25 13:36:29
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-01 17:15:54
+ * @LastEditTime: 2021-09-26 18:43:28
  */
 
 
@@ -13,16 +13,23 @@ import { Modal } from 'antd';
 import img_loading from './loading.gif';
 import './loading.css'
 
+
 class Loading extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            is_init: false,
             is_show: false,
             img_url: './loading.gif',
-
         }
-
     }
+    componentDidMount() {
+        let that = this;
+        that.setState({
+            is_init: true,
+        })
+    }
+
     render() {
         let that = this;
         let { is_show, img_url } = that.state;
@@ -35,7 +42,7 @@ class Loading extends Component {
                     })
                 }}>
                 <div className="main">
-                    <img className='img' src={img_loading} alt />
+                    <img className='img' src={img_loading} alt='true' />
                     <span className='desc'>加载中</span>
                 </div>
             </Modal >
@@ -45,18 +52,25 @@ class Loading extends Component {
 
     showLoading() {
         let that = this;
-        that.setState({ is_show: true })
+        let { is_init } = that.state;
+        if (is_init) {
+            that.setState({ is_show: true })
+        }
     }
 
     hideLoading() {
         let that = this;
-        that.setState({ is_show: false })
+        let { is_init } = that.state;
+        if (is_init) {
+            that.setState({ is_show: false })
+        }
     }
 
 }
 
 // ========================
 let div = document.createElement('div');
+
 let props = {};
 
 let Box = ReactDOM.render(React.createElement(

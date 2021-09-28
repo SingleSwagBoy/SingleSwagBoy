@@ -481,7 +481,7 @@ export const requestWxTemplateMsgConfigList = (params) => { return request2.post
 export const requestWxTemplateMsgConfigCreate = (params) => { return request2.post(`${baseUrl}/mms/tmpl/message/config/add`, params); };                                                    //微信模板消息 添加
 export const requestWxTemplateMsgConfigUpload = (params) => { return request2.post(`${baseUrl}/mms/tmpl/message/config/update`, params); };                                                 //微信模板消息 修改
 export const requestWxTemplateMsgConfigDelete = (params) => { return request2.post(`${baseUrl}/mms/tmpl/message/config/del`, params); };                                                    //微信模板消息 删除
-export const requestWxTemplateMsgConfigSend = (params) => { return request2.get(`${baseUrl}/mms/tmpl/message/config/send`, { params: params }); };                                          //微信模板消息 测试发送
+export const requestWxTemplateMsgConfigSend = (params) => { return request2.post(`${baseUrl}/mms/tmpl/message/config/send`, params); };                                                     //微信模板消息 测试发送
 
 
 
@@ -508,23 +508,23 @@ export const delMpConfig = (params) => { //删除小程序配置列表
 
 //广告光立---自定义规则便签
 export const getAdTagList = (params) => { //获取列表
-    return request.post(`${baseUrl}/mms/ad/tag/get`,params)
+    return request.post(`${baseUrl}/mms/ad/tag/get`, params)
 };
 export const getAdFieldList = (params) => { //获取Field列表
-    return request.post(`${baseUrl}/mms/dict/tagDic/get`,params)
+    return request.post(`${baseUrl}/mms/dict/tagDic/get`, params)
 };
 export const getDictionary = (params) => { //获取数据源
-    return request.post(`${baseUrl}/mms/config/dictionary/get`,params)
+    return request.post(`${baseUrl}/mms/config/dictionary/get`, params)
 };
 export const addDIYTag = (params) => { //增加自定义规则标签
-    return request.post(`${baseUrl}/mms/ad/tag/add`,params)
+    return request.post(`${baseUrl}/mms/ad/tag/add`, params)
 };
 export const updateDIYTag = (params) => { //更新自定义规则标签
-    return request.post(`${baseUrl}/mms/ad/tag/update`,params)
+    return request.post(`${baseUrl}/mms/ad/tag/update`, params)
 };
 export const delDIYTag = (params) => { //删除自定义规则标签
-    return request.post(`${baseUrl}/mms/ad/tag/del`,params)
+    return request.post(`${baseUrl}/mms/ad/tag/del`, params)
 };
 export const esQuery = (params) => { //esQuery
-    return request.post(`${baseUrl}/mms/ad/tag/esQuery`,params)
+    return request.post(`${baseUrl}/mms/ad/tag/esQuery`, params)
 };

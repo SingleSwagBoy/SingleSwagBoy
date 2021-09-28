@@ -2,12 +2,12 @@
  * @Author: HuangQS
  * @Date: 2021-09-27 14:10:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-27 17:17:51
+ * @LastEditTime: 2021-09-28 10:49:27
  * @Description: 模版内容行数据
  */
 
 import React, { Component } from 'react';
-import { Input, Button, Divider, Row, Col } from 'antd';
+import { Input, Button, Divider, Modal, Row, Col, message } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import './wxTemplateMsgContent.css';
 
@@ -20,11 +20,11 @@ export default class WxTemplateMsgContent extends Component {
             is_show_help: false,
 
             content_array: [
-                {
-                    key: '',
-                    color: '',
-                    title: '',
-                }
+                // {
+                //     key: '',
+                //     color: '',
+                //     value: '',
+                // }
             ],
         }
     }
@@ -36,8 +36,6 @@ export default class WxTemplateMsgContent extends Component {
 
         return (
             <div div className='wx-msg-content-wrapper' >
-                {/*mini_config  {\n    \"appid\": \"wx9e8718eb2360dfb8\",\n    \"pagepath\": \"pages/recharge/main?source=mb\"\n} */}
-            
                 <Button type="primary" size='default' className='wx-msg-content-btn' icon={<PlusOutlined />} onClick={() => that.onCreateClick()} >增加模板内容行数据</Button>
                 {
                     content_array.map((item, index) => {
@@ -58,7 +56,7 @@ export default class WxTemplateMsgContent extends Component {
                                         </Col>
                                     </Row>
 
-                                    <TextArea value={item.title} style={{ marginTop: 5 }} placeholder='请输入文案内容' autoSize={{ minRows: 2, maxRows: 5 }} onChange={(e) => { that.onInputChange(e, index, 'title', item) }} />
+                                    <TextArea value={item.value} style={{ marginTop: 5 }} placeholder='请输入文案内容' autoSize={{ minRows: 2, maxRows: 5 }} onChange={(e) => { that.onInputChange(e, index, 'value', item) }} />
                                 </div>
                             </div>
                         )
@@ -101,10 +99,29 @@ export default class WxTemplateMsgContent extends Component {
     parseData() {
         let that = this;
         let value = that.props.value;
+        let content_array = [];
+
         if (value) {
             console.log('wx_msg_content');
-            console.log(value);
+            console.log(JSON.parse(value));
+            //解析数据
+            try {
+                value = JSON.parse(value);
+
+                for (let key in value) {
+                    let temp = value[key];
+                    let obj = {};
+                    obj.key = key;
+                    obj.color = temp.color;
+                    obj.value = temp.value;
+                    content_array.push(obj);
+                }
+            } catch (e) {
+            }
         }
+        that.setState({
+            content_array: content_array,
+        })
     }
 
 
@@ -127,13 +144,19 @@ export default class WxTemplateMsgContent extends Component {
     }
     //数据删除
     onItemDelete(item, index) {
-        let that = this;
-        let { content_array } = that.state;
-
-        content_array.splice(index, 1);
-
-        that.setState({
-            content_array: content_array,
+        Modal.confirm({
+            title: '删除',
+            content: '确认删除当前编辑内容？',
+            onOk: () => {
+                let that = this;
+                let { content_array } = that.state;
+                content_array.splice(index, 1);
+                that.setState({
+                    content_array: content_array,
+                }, () => {
+                    message.success('删除成功！')
+                })
+            }
         })
     }
 
@@ -160,5 +183,21 @@ export default class WxTemplateMsgContent extends Component {
             is_show_help: !is_show_help,
         })
 
+    }
+
+
+    loadData() {
+        let that = this;
+        let { content_array } = that.state;
+
+        let result = {};
+        for (let i = 0, len = content_array.length; i < len; i++) {
+            let item = content_array[i];
+            result[item.key] = {
+                color: item.color,
+                value: item.value,
+            }
+        }
+        return JSON.stringify(result);
     }
 }

@@ -2,11 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
-<<<<<<< HEAD
- * @LastEditTime: 2021-09-26 17:31:01
-=======
- * @LastEditTime: 2021-09-17 16:39:56
->>>>>>> feature/hqs/tagTypes
+ * @LastEditTime: 2021-09-27 20:48:58
  * @Description: 菜单栏图片配置页
  */
 
@@ -103,13 +99,13 @@ export default class MenuImagePage extends Component {
                                 </Form.Item>
 
                                 <Form.Item label="字体大小" name='fontSize' >
-                                    <Input style={{ width: input_width_size }} placeholder="请输入字体大小" />
+                                    <Input className="base-input-wrapper" placeholder="请输入字体大小" />
                                 </Form.Item>
                                 <Form.Item label="字体颜色" name='fontColor' >
-                                    <Input style={{ width: input_width_size }} placeholder="请输入字体颜色 形如：#F1F2F3" />
+                                    <Input className="base-input-wrapper" placeholder="请输入字体颜色 形如：#F1F2F3" />
                                 </Form.Item>
                                 <Form.Item label="倒计时背景" name='djsBackgroundColor' >
-                                    <Input style={{ width: input_width_size }} placeholder="请输入倒计时背景颜色 形如：#F1F2F3" />
+                                    <Input className="base-input-wrapper" placeholder="请输入倒计时背景颜色 形如：#F1F2F3" />
                                 </Form.Item>
 
                                 <Form.Item label="开启活动倒计时" name='hddjs' rules={[{ required: true }]} valuePropName='checked'>

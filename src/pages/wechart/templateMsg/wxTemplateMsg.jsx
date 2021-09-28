@@ -2,13 +2,13 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 11:56:33
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-27 18:08:29
+ * @LastEditTime: 2021-09-28 10:50:51
  * @Description: 微信支付模板消息
  */
 
 
 import React, { Component } from 'react';
-import { Menu, Button, Table, Switch, Input, Upload, Radio, message, Select, Alert, Modal, Form, DatePicker } from 'antd';
+import { Button, Table, Switch, Input, Modal, Radio, message, Select, Alert, Form, DatePicker } from 'antd';
 import { MyTagTypes, MySyncBtn, MyTimeInterval } from '@/components/views.js';
 import '@/style/base.css';
 import myTimeUtils from '@/utils/time.js';
@@ -64,7 +64,7 @@ export default class WxPayTemplate extends Component {
             ],
             //模板类型 选择模板 1=支付模板，后续其他模板，需要不断的去添加
             tmpl_type: [
-                { key: '1', value: '支付模板' },
+                { key: 1, value: '支付模板' },
             ],
 
         }
@@ -173,7 +173,7 @@ export default class WxPayTemplate extends Component {
                                     </Form.Item>
                                 }
 
-                                {/* <Form.Item label="发送标签" name='all'>
+                                <Form.Item label="发送人群" name='all'>
                                     <Radio.Group className="base-input-wrapper" >
                                         {dict_alls.map((item, index) => {
                                             return <Radio value={item.key} key={index} onClick={(e) => that.onTagTypeRadioClick(item.key)}>
@@ -181,23 +181,16 @@ export default class WxPayTemplate extends Component {
                                             </Radio>
                                         })}
                                     </Radio.Group>
-                                </Form.Item> */}
+                                </Form.Item>
 
                             </div>
                         }
                     </Form>
 
-                    <MyTagTypes tag_type='all' tag_name='tag' delivery_name='delivery' onRef={(ref) => that.setState({ ref_tag_types: ref })} />
-
-                    {/* 标签类型 */}
-                    {
-                        that.formRef && that.formRef.current && that.formRef.current.getFieldValue('all') === 2 &&
-                        <div>
-                            {/* <MyTagTypes tag_type='type' tag_name='tag' delivery_name='delivery' onRef={(ref) => that.setState({ ref_tag_types: ref })} /> */}
-                        </div>
-                    }
-
-
+                    {/* 用户标签 - 投放类型 */}
+                    <div style={{ display: that.formRef && that.formRef.current && that.formRef.current.getFieldValue('all') === 2 ? 'block' : 'none' }} >
+                        <MyTagTypes union_type='all' tag_name='tag' delivery_name='delivery' onRef={(ref) => that.setState({ ref_tag_types: ref })} />
+                    </div>
 
 
                 </Modal >
@@ -241,7 +234,7 @@ export default class WxPayTemplate extends Component {
 
         let table_title = [
             { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
-            { title: '名称', dataIndex: 'name', key: 'name', width: 80, },
+            { title: '名称', dataIndex: 'name', key: 'name', width: 200, },
             // { title: 'Title', dataIndex: 'Title', key: 'Title', width: 80, },
             {
                 title: '微信公众号', dataIndex: 'wx_code', key: 'wx_code', width: 120,
@@ -290,7 +283,7 @@ export default class WxPayTemplate extends Component {
             {
                 title: '状态', dataIndex: 'status', key: 'status', width: 80,
                 render: (rowValue, row, index) => {
-                    return (<Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" />)
+                    return (<Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => that.onItemStatusChange(row, checked)} />)
                 }
             },
             {
@@ -298,10 +291,10 @@ export default class WxPayTemplate extends Component {
                 render: (rowValue, row, index) => {
                     return (
                         <div>
-                            <Button size='small' style={{ marginLeft: 3 }}>复制</Button>
-                            <Button size='small' style={{ marginLeft: 3 }}>发送</Button>
+                            <Button size='small' style={{ marginLeft: 3 }} onClick={() => that.onItemCopyClick(row)}>复制</Button>
+                            <Button size='small' style={{ marginLeft: 3 }} onClick={() => that.onItemSendClick(row)}>发送</Button>
                             <Button size='small' style={{ marginLeft: 3 }} onClick={() => that.onItemEditClick(row)}>编辑</Button>
-                            <Button size='small' style={{ marginLeft: 3 }}>删除</Button>
+                            <Button size='small' style={{ marginLeft: 3 }} onClick={() => that.onItemDlelteClick(row)}>删除</Button>
                         </div>
                     )
                 }
@@ -358,9 +351,62 @@ export default class WxPayTemplate extends Component {
         })
     }
 
+    //状态变化触发数据更新
+    onItemStatusChange(row, checked) {
+        console.log(checked);
+
+        row.status = checked === true ? 1 : 2;
+        let that = this;
+
+        requestWxTemplateMsgConfigUpload(row)
+            .then(res => {
+                that.refreshList();
+                message.success('更新成功');
+            })
+    }
+
+    //复制按钮被点击
+    onItemCopyClick(item) {
+        let that = this;
+        Modal.confirm({
+            title: '复制',
+            content: `确认复制【${item.name}】吗？`,
+            onOk: () => {
+                let obj = Object.assign({}, item);
+                delete obj.id;
+
+                obj.name = `${obj.name}_`
+
+                requestWxTemplateMsgConfigCreate(obj)
+                    .then(res => {
+                        that.refreshList();
+                        message.success('复制成功');
+                    })
+            }
+        })
+    }
+
+    //发送按钮被点击
+    onItemSendClick(item) {
+        let that = this;
+        Modal.confirm({
+            title: '提示',
+            content: '确认立即执行该配置的模版消息吗?',
+            onOk: () => {
+                let obj = {
+                    id: item.id,
+                }
+                requestWxTemplateMsgConfigSend(obj)
+                    .then(res => {
+                        message.success('发送成功');
+                        that.refreshList();
+                    })
+            }
+        })
+    }
+
     //编辑按钮被点击
     onItemEditClick(item) {
-        // console.log(item);
         let that = this;
         that.setState({
             modal_box: {
@@ -383,6 +429,30 @@ export default class WxPayTemplate extends Component {
         })
     }
 
+    //删除按钮被点击
+    onItemDlelteClick(item) {
+        let that = this;
+        Modal.confirm({
+            title: '删除',
+            content: '确认删除此配置信息？',
+            onOk: () => {
+                let obj = {
+                    id: item.id,
+                };
+                requestWxTemplateMsgConfigDelete(obj)
+                    .then(res => {
+                        message.success('删除成功');
+                        that.refreshList();
+                    })
+                    .catch(res => {
+
+                    })
+
+            }
+        })
+
+    }
+
 
     //弹出框取消按钮被点击
     onModalCancelClick() {
@@ -398,12 +468,13 @@ export default class WxPayTemplate extends Component {
     //弹出框确定按钮被点击
     onModalConfirmClick() {
         let that = this;
-        let { ref_time_interval, ref_tag_types } = that.state;
+        let { ref_time_interval, ref_tag_types, ref_template_content } = that.state;
 
         let value = that.formRef.current.getFieldsValue();  //表格数据
         let data = Object.assign({}, value, ref_tag_types.loadData());  //用户标签-投放类型
 
-        data.time_bucket = ref_time_interval.getData();
+        data.time_bucket = ref_time_interval.getData();     //播放时间段
+        data.data = ref_template_content.loadData();        //编辑内容
 
         //数据状态 不存在
         if (data.status === undefined) delete data.status;
@@ -418,6 +489,22 @@ export default class WxPayTemplate extends Component {
             return;
         }
 
+        let id = data.id;
+
+
+        (id ? requestWxTemplateMsgConfigUpload(data) : requestWxTemplateMsgConfigCreate(data))
+            .then(res => {
+
+                that.setState({
+                    modal_box: {
+                        is_show: false,
+                        title: '',
+                    }
+                }, () => {
+                    message.success('操作成功');
+                    that.refreshList();
+                })
+            });
 
     }
 

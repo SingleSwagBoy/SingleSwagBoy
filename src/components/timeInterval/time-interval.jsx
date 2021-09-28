@@ -2,12 +2,12 @@
  * @Author: HuangQS
  * @Date: 2021-09-26 11:44:16
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-27 15:21:30
+ * @LastEditTime: 2021-09-27 21:09:37
  * @Description: 时间段 投放时间段 播放时间段 时间段选择器
  */
 
 import React, { Component } from 'react';
-import { TimePicker, Button } from 'antd';
+import { TimePicker, Button, Modal, message } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import './time-interval.css';
 import moment from 'moment';
@@ -90,15 +90,24 @@ export default class TimeInterval extends Component {
     }
     //数据删除
     onItemDelete(item, index) {
-        let that = this;
-        let { time_interval_array } = that.state;
-        time_interval_array.splice(index, 1);
 
-        that.setState({
-            time_interval_array: time_interval_array,
-        }, () => {
-            that.forceUpdate()
+
+        Modal.confirm({
+            title: '删除',
+            content: '确认删除当前播放时间段配置信息？',
+            onOk: () => {
+                let that = this;
+                let { time_interval_array } = that.state;
+                time_interval_array.splice(index, 1);
+
+                that.setState({
+                    time_interval_array: time_interval_array,
+                }, () => {
+                    message.success('删除成功！')
+                })
+            }
         })
+
     }
 
     //时间选择器监听

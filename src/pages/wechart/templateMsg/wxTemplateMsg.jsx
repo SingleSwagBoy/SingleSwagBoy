@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 11:56:33
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-28 10:50:51
+ * @LastEditTime: 2021-09-28 11:16:27
  * @Description: 微信支付模板消息
  */
 
@@ -476,17 +476,27 @@ export default class WxPayTemplate extends Component {
         data.time_bucket = ref_time_interval.getData();     //播放时间段
         data.data = ref_template_content.loadData();        //编辑内容
 
+
+
+
         //数据状态 不存在
         if (data.status === undefined) delete data.status;
         //数据状态转换
         else {
-
+            if (data.status === true) data.status = 1;
+            else if (data.status === false) data.status = 2;
         }
         //上下线时间
         let start_end_time = data.start_end_time;
         if (!start_end_time) {
             message.error('请选择输入上下线时间');
             return;
+        } else {
+            delete data.start_end_time;
+
+            data.start_time = start_end_time[0].valueOf();
+            data.end_time = start_end_time[1].valueOf();
+
         }
 
         let id = data.id;

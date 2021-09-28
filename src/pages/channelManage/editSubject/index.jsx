@@ -40,6 +40,7 @@ export default class SportsProgram extends Component{
             tailLayout: {
                 wrapperCol: { offset: 4, span: 20 },
             },
+            headerImage:"",
             dataSource:[],
             defaultAddress: [],
             visible:false,
@@ -202,7 +203,8 @@ export default class SportsProgram extends Component{
                             currentObj:res.data.data.dataList[i],
                             currentItem:res.data.data.dataList[i],
                             defaultAddress:(res.data.data.dataList[i].area && res.data.data.dataList[i].area.includes(","))?res.data.data.dataList[i].area.split(","):res.data.data.dataList[i].area,
-                            backImage:res.data.data.dataList[i].backImage
+                            backImage:res.data.data.dataList[i].backImage,
+                            headerImage:res.data.data.dataList[i].headerImage
                         },()=>{
                             console.log(this.state.defaultAddress)
                         })
@@ -219,6 +221,21 @@ export default class SportsProgram extends Component{
         this.formRef.current.setFieldsValue({ "backImage": fill });
         this.setState({
             backImage:fill
+        })
+    }
+    getUploadFileUrlHeader(fill){
+        console.log(fill)
+        let _img = this.formRef.current.getFieldValue("headerImage")
+        console.log(_img, "_img")
+        //arr[index].avtor = file
+        this.formRef.current.setFieldsValue({ "headerImage": fill });
+        this.setState({
+            headerImage:fill
+        })
+    }
+    deleteHeaderImage(){  // 删除tab文字图片
+        this.setState({
+            headerImage:""
         })
     }
     submitForm(obj){
@@ -253,6 +270,7 @@ export default class SportsProgram extends Component{
             tags: _tages,
             //whiteList:obj.whiteList!=""?obj.whiteList.join(","):"",
             backImage:this.state.backImage,
+            headerImage:this.state.headerImage,
             //channelName:this.state.channelName,
             ID:this.state.parentId*1 || 0
         }
@@ -321,6 +339,24 @@ export default class SportsProgram extends Component{
                        <Form.Item label="专题名称" name="title" rules={[{ required: true, message: '请填写标题' }]}>
                             <Input placeholder="请填写标题" />
                         </Form.Item>
+                        <Form.Item label="tab文字图片" name="headerImage" valuePropName="fileList" 
+                            // 如果没有下面这一句会报错
+                            getValueFromEvent={normFile} 
+                        >
+                            <div className='upload-delete'>
+                                <ImageUpload getUploadFileUrl={this.getUploadFileUrlHeader.bind(this)}
+                                    imageUrl={this.state.headerImage}
+                                />
+                                {/* <Button type="primary" style={{margin:"0 20px"}}>删除</Button> */}
+                                {
+                                    this.state.headerImage!='' &&
+                                    <div className='button-form-div'>
+                                        <Button type="primary" onClick={this.deleteHeaderImage.bind(this)}>删除</Button>
+                                    </div>
+                                }
+                                
+                            </div>
+                        </Form.Item>
 
                         <Form.Item label="排序" name="column" rules={[{ required: true, message: '请填写排序' }]}>
                             <InputNumber min={-1} />
@@ -348,6 +384,7 @@ export default class SportsProgram extends Component{
                                 // this.formRef.current ? this.formRef.current.getFieldValue("backImage") : ""
                             />
                         </Form.Item>
+
                         <Form.Item label="预告片" name="svIds" rules={[{ required: true, message: '请填写预告片ID' }]}>
                             {/* <Select placeholder="请选择视频">
                                 {this.state.videoLists.map((item, index) => {

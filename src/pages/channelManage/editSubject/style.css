@@ -1,0 +1,13 @@
+.button-form-div{
+    display: inline-block !important;
+    /* padding-top: 60px; */
+}
+.ant-upload-picture-card-wrapper{
+    width: 120px !important;
+}
+.upload-delete{
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}

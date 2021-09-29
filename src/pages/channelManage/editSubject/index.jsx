@@ -384,7 +384,6 @@ export default class SportsProgram extends Component{
                                 // this.formRef.current ? this.formRef.current.getFieldValue("backImage") : ""
                             />
                         </Form.Item>
-
                         <Form.Item label="预告片" name="svIds" rules={[{ required: true, message: '请填写预告片ID' }]}>
                             {/* <Select placeholder="请选择视频">
                                 {this.state.videoLists.map((item, index) => {

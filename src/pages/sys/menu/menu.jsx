@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-28 11:34:45
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-29 17:52:07
+ * @LastEditTime: 2021-09-29 18:26:14
  * @Description: 菜单列表
  */
 
@@ -15,7 +15,7 @@ import {
     requestSysMenuDelete,
 } from 'api';
 import adminRoutes from '@/routes/adminRoutes.js'
-
+import '@/style/base.css';
 
 
 
@@ -68,25 +68,25 @@ export default class SysMenu extends Component {
                                 {
                                     that.formRef.current.getFieldValue('id') &&
                                     <Form.Item label="id" name='id' rules={[{ required: true }]} >
-                                        <Input disabled />
+                                        <Input className="base-input-wrapper" disabled />
                                     </Form.Item>
                                 }
                                 <Form.Item label='名称' name='name' rules={[{ required: true }]}>
-                                    <Input placeholder='请输入名称' />
+                                    <Input className="base-input-wrapper" placeholder='请输入名称' />
                                 </Form.Item>
                                 <Form.Item label='code' name='code' rules={[{ required: true }]}>
-                                    <Input placeholder='请输入code' />
+                                    <Input className="base-input-wrapper" placeholder='请输入code' />
                                 </Form.Item>
                                 <Form.Item label='访问路径' name='path' rules={[{ required: true }]}>
-                                    <Input placeholder='请输入访问路径' />
+                                    <Input className="base-input-wrapper" placeholder='请输入访问路径' />
                                 </Form.Item>
 
                                 <Form.Item label='层级' name='level' rules={[{ required: true }]}>
-                                    <InputNumber min={1} max={999} placeholder='请输入页面层级' />
+                                    <InputNumber className="base-input-wrapper" min={1} max={999} placeholder='请输入页面层级' />
                                 </Form.Item>
 
                                 <Form.Item label='排序' name='sortOrder' >
-                                    <InputNumber min={1} max={999} placeholder='请输入排序' />
+                                    <InputNumber className="base-input-wrapper" min={1} max={999} placeholder='请输入排序' />
                                 </Form.Item>
                             </div>
                         }

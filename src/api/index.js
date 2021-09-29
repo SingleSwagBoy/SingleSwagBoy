@@ -478,6 +478,23 @@ export const requestConfigMenuImageDelete = (params) => { return request2.get(`$
 export const requestConfigMenuImageChangeState = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/changeState`, { params: params }); };                                  //菜单栏配置 修改状态
 
 
+//权限管理
+export const requestSysUser = params => { return request2.post(`${baseUrl}/mms/sys/user/get`, params); };                   //权限管理-用户列表
+export const requestSysUserCreate = params => { return request2.post(`${baseUrl}/mms/sys/user/add`, params); };             //权限管理-创建用户
+export const requestSysUserUpdate = params => { return request2.post(`${baseUrl}/mms/sys/user/update`, params); };          //权限管理-用户更新
+export const requestSysUserDelete = params => { return request2.post(`${baseUrl}/mms/sys/user/del`, params); };             //权限管理-用户删除
+
+export const requestSysRole = params => { return request2.post(`${baseUrl}/mms/sys/role/get`, params); };                   //角色列表
+export const requestSysRoleCreate = params => { return request2.post(`${baseUrl}/mms/sys/role/add`, params); };
+export const requestSysRoleUpdate = params => { return request2.post(`${baseUrl}/mms/sys/role/update`, params); };
+export const requestSysRoleDelete = params => { return request2.post(`${baseUrl}/mms/sys/role/del`, params); };
+
+export const requestSysMenu = params => { return request2.post(`${baseUrl}/mms/sys/menu/get`, params); };
+export const requestSysMenuCreate = params => { return request2.post(`${baseUrl}/mms/sys/menu/add`, params); };
+export const requestSysMenuUpdate = params => { return request2.post(`${baseUrl}/mms/sys/menu/update`, params); };
+export const requestSysMenuDelete = params => { return request2.post(`${baseUrl}/mms/sys/menu/del`, params); };
+
+
 
 
 //========== 数据同步|数据缓存 ========== 
@@ -502,23 +519,23 @@ export const delMpConfig = (params) => { //删除小程序配置列表
 
 //广告光立---自定义规则便签
 export const getAdTagList = (params) => { //获取列表
-    return request.post(`${baseUrl}/mms/ad/tag/get`,params)
+    return request.post(`${baseUrl}/mms/ad/tag/get`, params)
 };
 export const getAdFieldList = (params) => { //获取Field列表
-    return request.post(`${baseUrl}/mms/dict/tagDic/get`,params)
+    return request.post(`${baseUrl}/mms/dict/tagDic/get`, params)
 };
 export const getDictionary = (params) => { //获取数据源
-    return request.post(`${baseUrl}/mms/config/dictionary/get`,params)
+    return request.post(`${baseUrl}/mms/config/dictionary/get`, params)
 };
 export const addDIYTag = (params) => { //增加自定义规则标签
-    return request.post(`${baseUrl}/mms/ad/tag/add`,params)
+    return request.post(`${baseUrl}/mms/ad/tag/add`, params)
 };
 export const updateDIYTag = (params) => { //更新自定义规则标签
-    return request.post(`${baseUrl}/mms/ad/tag/update`,params)
+    return request.post(`${baseUrl}/mms/ad/tag/update`, params)
 };
 export const delDIYTag = (params) => { //删除自定义规则标签
-    return request.post(`${baseUrl}/mms/ad/tag/del`,params)
+    return request.post(`${baseUrl}/mms/ad/tag/del`, params)
 };
 export const esQuery = (params) => { //esQuery
-    return request.post(`${baseUrl}/mms/ad/tag/esQuery`,params)
+    return request.post(`${baseUrl}/mms/ad/tag/esQuery`, params)
 };

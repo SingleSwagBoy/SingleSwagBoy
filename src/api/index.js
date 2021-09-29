@@ -483,6 +483,23 @@ export const requestWxTemplateMsgConfigUpload = (params) => { return request2.po
 export const requestWxTemplateMsgConfigDelete = (params) => { return request2.post(`${baseUrl}/mms/tmpl/message/config/del`, params); };                                                    //微信模板消息 删除
 export const requestWxTemplateMsgConfigSend = (params) => { return request2.post(`${baseUrl}/mms/tmpl/message/config/send`, params); };                                                     //微信模板消息 测试发送
 
+//权限管理
+export const requestSysUser = params => { return request2.post(`${baseUrl}/mms/sys/user/get`, params); };                   //权限管理-用户列表
+export const requestSysUserCreate = params => { return request2.post(`${baseUrl}/mms/sys/user/add`, params); };             //权限管理-创建用户
+export const requestSysUserUpdate = params => { return request2.post(`${baseUrl}/mms/sys/user/update`, params); };          //权限管理-用户更新
+export const requestSysUserDelete = params => { return request2.post(`${baseUrl}/mms/sys/user/del`, params); };             //权限管理-用户删除
+
+export const requestSysRole = params => { return request2.post(`${baseUrl}/mms/sys/role/get`, params); };                   //角色列表
+export const requestSysRoleCreate = params => { return request2.post(`${baseUrl}/mms/sys/role/add`, params); };
+export const requestSysRoleUpdate = params => { return request2.post(`${baseUrl}/mms/sys/role/update`, params); };
+export const requestSysRoleDelete = params => { return request2.post(`${baseUrl}/mms/sys/role/del`, params); };
+
+export const requestSysMenu = params => { return request2.post(`${baseUrl}/mms/sys/menu/get`, params); };
+export const requestSysMenuCreate = params => { return request2.post(`${baseUrl}/mms/sys/menu/add`, params); };
+export const requestSysMenuUpdate = params => { return request2.post(`${baseUrl}/mms/sys/menu/update`, params); };
+export const requestSysMenuDelete = params => { return request2.post(`${baseUrl}/mms/sys/menu/del`, params); };
+
+
 
 
 //========== 数据同步|数据缓存 ========== 

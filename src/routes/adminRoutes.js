@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-10 16:42:39
+ * @LastEditTime: 2021-09-28 15:46:46
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -40,6 +40,14 @@ const LoginManage =  lazy(()=>import('pages/adManage/loginManage/index.jsx'));
 const MiniConfig =  lazy(()=>import('pages/configManage/miniConfig/index.jsx'));
 
 const WxMsg = lazy(()=>import('pages/weChatManage/WxMsg/index.jsx'))
+
+//用户权限相关
+const SysRole = lazy(()=>import('pages/sys/role/role.jsx'));
+const SysUser = lazy(()=>import('pages/sys/user/user.jsx'));
+const SysMenu = lazy(()=>import('pages/sys/menu/menu.jsx'));
+const SysPermission = lazy(()=>import('pages/sys/permission/permission.jsx'));
+
+
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
@@ -79,6 +87,12 @@ const adminRoutes = [
   {path:'/mms/adManage/menuImage',component:MenuImage,name:'菜单栏图片配置',icon:UnorderedListOutlined,code:"adManage"},
   {path:'/mms/ad/customAdTag',component:CustomAdTag,name:'自定义规则便签',icon:UnorderedListOutlined,code:"adManage"},
  
+  //用户权限相关
+    {path:'/mms/sys/role',component:SysRole,name:'角色列表',icon:UnorderedListOutlined,code:"sessionManage"},
+    {path:'/mms/sys/user',component:SysUser,name:'用户列表',icon:UnorderedListOutlined,code:"sessionManage"},
+    {path:'/mms/sys/menu',component:SysMenu,name:'功能列表',icon:UnorderedListOutlined,code:"sessionManage"},
+    {path:'/mms/sys/role/permission',component:SysPermission,name:'权限列表',icon:UnorderedListOutlined,code:"sessionManage"},
+
  
   //配置管理
   {path:'/mms/doc',component:ConfigDoc,name:'文案管理',icon:UnorderedListOutlined,code:"configManage"},

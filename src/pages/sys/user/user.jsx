@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-28 11:35:08
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-29 16:12:37
+ * @LastEditTime: 2021-09-29 18:24:28
  * @Description: 用户列表
  */
 
@@ -16,6 +16,10 @@ import {
     requestSysUserDelete,
     requestSysRole,
 } from 'api';
+
+import timeUtils from '@/utils/time.js';
+import '@/style/base.css';
+
 
 let { Option } = Select;
 
@@ -68,23 +72,23 @@ export default class SysUser extends Component {
                                 {
                                     that.formRef.current.getFieldValue('id') &&
                                     <Form.Item label="id" name='id' rules={[{ required: true }]} >
-                                        <Input disabled />
+                                        <Input className="base-input-wrapper" disabled />
                                     </Form.Item>
                                 }
                                 <Form.Item label='登录账号' name='loginName' rules={[{ required: true }]}>
-                                    <Input placeholder='请输入登录账号' />
+                                    <Input className="base-input-wrapper" placeholder='请输入登录账号' />
                                 </Form.Item>
 
                                 <Form.Item label='登录姓名' name='userName' rules={[{ required: true }]}>
-                                    <Input placeholder='请输入姓名' />
+                                    <Input className="base-input-wrapper" placeholder='请输入姓名' />
                                 </Form.Item>
 
                                 <Form.Item label='手机号' name='mobile'>
-                                    <Input placeholder='请输入手机号' />
+                                    <Input className="base-input-wrapper" placeholder='请输入手机号' />
                                 </Form.Item>
 
                                 <Form.Item label='角色' name='roleId'>
-                                    <Select placeholder="请选择用户角色">
+                                    <Select className="base-input-wrapper" placeholder="请选择用户角色">
                                         {dict_role_lise.map((item, index) => (
                                             <Option key={index} value={item.id}>{item.id}-{item.name}</Option>
                                         ))}
@@ -133,8 +137,8 @@ export default class SysUser extends Component {
                 render: (rowValue, row, index) => {
                     return (
                         <div>
-                            <div>创建时间:{row.createTime}</div>
-                            <div>更新时间:{row.updateTime}</div>
+                            <div>创建时间:{timeUtils.parseTime(row.createTime * 1000)}</div>
+                            <div>更新时间:{timeUtils.parseTime(row.updateTime * 1000)}</div>
                         </div>
                     )
                 }

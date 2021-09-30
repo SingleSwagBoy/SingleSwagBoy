@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2017-09-01 10:13:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 10:53:05
+ * @LastEditTime: 2021-09-26 10:43:32
  * @Description: 
  *      成功：  then()中解决问题
  *              集合类型返回     {data, pages} 
@@ -14,7 +14,7 @@
 import axios from 'axios'
 import { message } from 'antd'
 import { createHashHistory } from 'history'
-import Loading from '../components/loading/loading.jsx';
+import Loading from '@/components/loading/loading.jsx';
 
 let history = createHashHistory()
 let isTestMode = true;

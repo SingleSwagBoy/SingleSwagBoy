@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-07 18:41:59
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-10 11:19:06
+ * @LastEditTime: 2021-09-26 17:54:29
  * @Description: 多种类型的[微信公众号]上传对应图片
  */
 
@@ -91,7 +91,7 @@ export default class wxReplyModalImageBox extends Component {
                                                 </Form.Item>
 
                                             )
-                                        } else return "";
+                                        } else return <div key={index} />;
                                     }
                                     //其他类型
                                     else {

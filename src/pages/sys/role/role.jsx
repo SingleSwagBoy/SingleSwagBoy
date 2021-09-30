@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-28 11:34:45
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-29 16:12:13
+ * @LastEditTime: 2021-09-29 18:26:26
  * @Description: 角色列表
  */
 
@@ -14,6 +14,7 @@ import {
     requestSysRoleUpdate,
     requestSysRoleDelete,
 } from 'api';
+import '@/style/base.css';
 
 export default class SysRole extends Component {
     constructor(props) {
@@ -60,14 +61,14 @@ export default class SysRole extends Component {
                                 {
                                     that.formRef.current.getFieldValue('id') &&
                                     <Form.Item label="id" name='id' rules={[{ required: true }]} >
-                                        <Input disabled />
+                                        <Input className="base-input-wrapper" disabled />
                                     </Form.Item>
                                 }
                                 <Form.Item label='角色' name='name' rules={[{ required: true }]}>
-                                    <Input placeholder='请输入角色名称' />
+                                    <Input className="base-input-wrapper" placeholder='请输入角色名称' />
                                 </Form.Item>
                                 <Form.Item label='code' name='code' rules={[{ required: true }]}>
-                                    <Input placeholder='请输入角色code' />
+                                    <Input className="base-input-wrapper" placeholder='请输入角色code' />
                                 </Form.Item>
                             </div>
                         }

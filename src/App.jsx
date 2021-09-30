@@ -13,7 +13,6 @@ export default class App extends Component {
           <Route  path="/mms" render={(routeProps)=>{
             // 判断是否登录，登录了可以访问，否则补鞥呢访问
             const token = localStorage.getItem('user')
-            console.log(token,"token")
             if(token) {
               if(JSON.parse(token).authorization){
                 return <Admin {...routeProps}/>

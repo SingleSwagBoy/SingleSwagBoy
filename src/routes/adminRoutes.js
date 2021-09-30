@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-29 18:14:26
+ * @LastEditTime: 2021-09-30 15:15:01
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -52,57 +52,58 @@ const SysPermission = lazy(() => import('pages/sys/permission/permission.jsx'));
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
 
-    { path: '/mms/ayh/channel', component: AyhChannel, name: '奥运会节目单', icon: LineChartOutlined, code: "OlympicGames" },
-    { path: '/mms/ayh/winningNews', component: WinningNews, name: '夺奖快讯', icon: LineChartOutlined, code: "OlympicGames" },
-    { path: '/mms/ayh/sportsProgram', component: SportsProgram, name: '夺奖快讯', icon: LineChartOutlined, code: "OlympicGames" },
-    { path: '/mms/ayh/medalList', component: MedalList, name: '奖牌榜', icon: LineChartOutlined, code: "OlympicGames" },
-    { path: '/mms/ayh/eventList', component: EventList, name: '赛事列表', icon: LineChartOutlined, code: "OlympicGames" },
-    { path: '/mms/ayh/specialList', component: SpecialList, name: '赛事列表', icon: LineChartOutlined, code: "OlympicGames" },
-    { path: '/mms/ayh/shortVideo', component: ShortVideo, name: '短视频搜索', icon: LineChartOutlined, code: "OlympicGames" },
-    { path: '/mms/ayh/bonusPayment', component: BonusPayment, name: '奖金发放', icon: LineChartOutlined, code: "OlympicGames" },
+    { name: '奥运会节目单', icon: LineChartOutlined, path: '/mms/ayh/channel', component: AyhChannel, code: "OlympicGames", sub_code: 'ayhProgramList' },
+    { name: '夺奖快讯', icon: LineChartOutlined, path: '/mms/ayh/winningNews', component: WinningNews, code: "OlympicGames", sub_code: 'winningNews' },
+    { name: '体育节目', icon: LineChartOutlined, path: '/mms/ayh/sportsProgram', component: SportsProgram, code: "OlympicGames", sub_code: 'sportsProgram' },
+    { name: '奖牌榜', icon: LineChartOutlined, path: '/mms/ayh/medalList', component: MedalList, code: "OlympicGames", sub_code: 'medalList' },
+    { name: '赛事列表', icon: LineChartOutlined, path: '/mms/ayh/eventList', component: EventList, code: "OlympicGames", sub_code: 'EventList' },
+    { name: '专题', icon: LineChartOutlined, path: '/mms/ayh/specialList', component: SpecialList, code: "OlympicGames", sub_code: 'SpecialList' },
+    { name: '短视频搜索', icon: LineChartOutlined, path: '/mms/ayh/shortVideo', component: ShortVideo, code: "OlympicGames", sub_code: 'AyhShortVideo' },
+    { name: '奖金发放', icon: LineChartOutlined, path: '/mms/ayh/bonusPayment', component: BonusPayment, code: "OlympicGames", sub_code: 'BonusPayment' },
 
-    { path: '/mms/level/equity', component: Equity, name: '权益配置', icon: UnorderedListOutlined, code: "LevelManage" },
-    { path: '/mms/level/levelConfig', component: LevelConfig, name: '等级配置', icon: UnorderedListOutlined, code: "LevelManage" },
-    { path: '/mms/level/growConfig', component: GrowConfig, name: '等级配置', icon: UnorderedListOutlined, code: "LevelManage" },
-    { path: '/mms/level/userDemote', component: UserDemote, name: '用户降级', icon: UnorderedListOutlined, code: "LevelManage" },
-    { path: '/mms/level/addressList', component: AddressList, name: '用户降级', icon: UnorderedListOutlined, code: "LevelManage" },
+    { name: '权益配置', icon: UnorderedListOutlined, path: '/mms/level/equity', component: Equity, code: "LevelManage", sub_code: 'EquityConfig' },
+    { name: '等级配置', icon: UnorderedListOutlined, path: '/mms/level/levelConfig', component: LevelConfig, code: "LevelManage", sub_code: 'LevelConfig' },
+    { name: '成长值配置', icon: UnorderedListOutlined, path: '/mms/level/growConfig', component: GrowConfig, code: "LevelManage", sub_code: 'GrowConfig' },
+    { name: '用户降级', icon: UnorderedListOutlined, path: '/mms/level/userDemote', component: UserDemote, code: "LevelManage", sub_code: 'UserDemote' },
+    { name: '用户降级', icon: UnorderedListOutlined, path: '/mms/level/addressList', component: AddressList, code: "LevelManage", sub_code: 'UserAddressList' },
 
-    { path: '/mms/service/serviceLog', component: ServiceLog, name: '服务分类', icon: UnorderedListOutlined, code: "LifeService" },
-    { path: '/mms/service/manageTag/:categoryId', component: ManageTag, name: '管理类别', icon: UnorderedListOutlined, code: "LifeService" },
-    { path: '/mms/service/miniInput', component: MiniInput, name: '小程序录入', icon: UnorderedListOutlined, code: "LifeService" },
+    //生活服务
+    { name: '管理类别', icon: UnorderedListOutlined, path: '/mms/service/manageTag/:categoryId', component: ManageTag, code: "LifeService" },                   //?????????????????
+    { name: '服务分类', icon: UnorderedListOutlined, path: '/mms/service/serviceLog', component: ServiceLog, code: "LifeService", sub_code: 'ServiceLog' },
+    { name: '小程序录入', icon: UnorderedListOutlined, path: '/mms/service/miniInput', component: MiniInput, code: "LifeService", sub_code: 'MiniInput' },
 
-    { path: '/mms/activeManagement/voting', component: Voting, name: '投票活动', icon: UnorderedListOutlined, code: "ActiveManagement" },
-    { path: '/mms/channelManage/channelLock', component: ChannelLock, name: '专享台解锁', icon: UnorderedListOutlined, code: "channelManage" },
-    { path: '/mms/channel/livePreview', component: LivePreview, name: '直播预告', icon: UnorderedListOutlined, code: "channelManage" },
+    //活动管理
+    { name: '投票活动', icon: UnorderedListOutlined, path: '/mms/activeManagement/voting', component: Voting, code: "ActiveManagement", sub_code: 'Voting' },
 
-    { path: '/mms/configManage/addressNews', component: AddressNews, name: '地域新闻', icon: UnorderedListOutlined, code: "configManage" },
-    { path: '/mms/config/miniConfig', component: MiniConfig, name: '小程序配置', icon: UnorderedListOutlined, code: "configManage" },
-
-    { path: '/mms/channelManage/channelSubject', component: ChannelSubject, name: '频道专题', icon: UnorderedListOutlined, code: "channelManage" },
-    { path: '/mms/channelManage/editSubject/:id', component: EditSubject, name: '编辑专题', icon: UnorderedListOutlined, code: "channelManage" },
+    { name: '专享台解锁', icon: UnorderedListOutlined, path: '/mms/channelManage/channelLock', component: ChannelLock, code: "channelManage", sub_code: 'ChannelLock' },
+    { name: '直播预告', icon: UnorderedListOutlined, path: '/mms/channel/livePreview', component: LivePreview, code: "channelManage", sub_code: 'livePreview' },
+    { name: '频道专题', icon: UnorderedListOutlined, path: '/mms/channelManage/channelSubject', component: ChannelSubject, code: "channelManage", sub_code: 'ChannelSubject' },
+    { name: '编辑专题', icon: UnorderedListOutlined, path: '/mms/channelManage/editSubject/:id', component: EditSubject, code: "channelManage" }, //频道专题二级页面
 
 
-    { path: '/mms/adManage/recommend', component: Recommend, name: '尝鲜版', icon: UnorderedListOutlined, code: "adManage" },
-    { path: '/mms/adManage/LoginManage', component: LoginManage, name: '个人中心登录', icon: UnorderedListOutlined, code: "adManage" },
-    { path: '/mms/adManage/menuImage', component: MenuImage, name: '菜单栏图片配置', icon: UnorderedListOutlined, code: "adManage" },
-    { path: '/mms/ad/customAdTag', component: CustomAdTag, name: '自定义规则便签', icon: UnorderedListOutlined, code: "adManage" },
+    { name: '尝鲜版', path: '/mms/adManage/recommend', component: Recommend, icon: UnorderedListOutlined, code: "adManage", sub_code: 'Recommend' },
+    { name: '个人中心登录', path: '/mms/adManage/LoginManage', component: LoginManage, icon: UnorderedListOutlined, code: "adManage", sub_code: 'LoginManage' },
+    { name: '菜单栏图片配置', path: '/mms/adManage/menuImage', component: MenuImage, icon: UnorderedListOutlined, code: "adManage", sub_code: 'menuImage' },
+    { name: '自定义规则便签', path: '/mms/ad/customAdTag', component: CustomAdTag, icon: UnorderedListOutlined, code: "adManage", sub_code: 'customAdTag' },
 
     //用户权限相关
-    { path: '/mms/sys/role', component: SysRole, name: '角色列表', icon: UnorderedListOutlined, code: "sessionManage" },
-    { path: '/mms/sys/user', component: SysUser, name: '用户列表', icon: UnorderedListOutlined, code: "sessionManage" },
-    { path: '/mms/sys/menu', component: SysMenu, name: '功能列表', icon: UnorderedListOutlined, code: "sessionManage" },
-    { path: '/mms/sys/role/permission', component: SysPermission, name: '权限列表', icon: UnorderedListOutlined, code: "sessionManage" },
-
+    { name: '角色列表', icon: UnorderedListOutlined, path: '/mms/sys/role', component: SysRole, code: "sessionManage", sub_code: 'sysRole' },
+    { name: '用户列表', icon: UnorderedListOutlined, path: '/mms/sys/user', component: SysUser, code: "sessionManage", sub_code: 'sysUser' },
+    { name: '功能列表', icon: UnorderedListOutlined, path: '/mms/sys/menu', component: SysMenu, code: "sessionManage", sub_code: 'sysMenu' },
+    { name: '权限列表', icon: UnorderedListOutlined, path: '/mms/sys/permission', component: SysPermission, code: "sessionManage", sub_code: 'sysPermission' },
 
     //配置管理
-    { path: '/mms/doc', component: ConfigDoc, name: '文案管理', icon: UnorderedListOutlined, code: "configManage" },
+    { name: '文案管理', icon: UnorderedListOutlined, path: '/mms/doc', component: ConfigDoc, code: "configManage", sub_code: 'DocManager' },
+    { name: '地域新闻', icon: UnorderedListOutlined, path: '/mms/configManage/addressNews', component: AddressNews, code: "configManage", sub_code: 'AddressNews' },
+    { name: '小程序配置', icon: UnorderedListOutlined, path: '/mms/config/miniConfig', component: MiniConfig, code: "configManage", sub_code: 'MiniConfig' },
 
     //微信公众号管理
-    { path: '/mms/wxReply', component: WxReply, name: '自动回复', icon: UnorderedListOutlined, code: "WeChatManage" },
-    { path: '/mms/wx/tmplMsg', component: wxTemplateMsg, name: '支付模板消息', icon: UnorderedListOutlined, code: "WeChatManage" },
-    { path: '/mms/wx/msg', component: WxMsg, name: '客服消息', icon: UnorderedListOutlined, code: "WeChatManage" },
+    { name: '自动回复', icon: UnorderedListOutlined, path: '/mms/wxReply', component: WxReply, code: "WeChatManage", sub_code: 'wxReply' },
+    { name: '支付模板', icon: UnorderedListOutlined, path: '/mms/wx/tmplMsg', component: wxTemplateMsg, code: "WeChatManage", sub_code: 'TmplMsgTag' },
+    { name: '客服消息', icon: UnorderedListOutlined, path: '/mms/wx/msg', component: WxMsg, code: "WeChatManage", sub_code: 'wxMsg' },
 
-    { path: '/mms/noPermission', component: NoPermission, name: '没有权限', meta: { isNav: false, roles: '*' } }
+    //其他
+    { name: '没有权限', icon: UnorderedListOutlined, path: '/mms/noPermission', component: NoPermission, meta: { isNav: false, roles: '*' } }
 
 
 

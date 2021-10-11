@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-25 18:41:48
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-17 13:35:58
+ * @LastEditTime: 2021-10-11 20:00:21
  */
 
 import React, { Component } from 'react'
@@ -12,6 +12,7 @@ import {
     syncOther,                      //其他缓存
     syncLiveCarousel,               //直播轮播缓存
     syncSyncConfig,                 //查找合集短视频 /mms/config/common/syn_config?key=
+    syncSynSlice,                   //配置管理 简单的接口
     syncWeChat,                     //微信自动回复/wxcode/微信二维码
     syncMenuImage,                  //广告菜单栏目录配置
     syncWxTemplateMsgConfig,        //微信模板消息 同步
@@ -91,6 +92,7 @@ export default class SyncBtn extends Component {
         if (type === 4) return syncWeChat();                                    //微信自动回复/wxcode/微信二维码
         if (type === 5) return syncMenuImage();                                 //广告菜单栏目录配置
         if (type === 6) return syncWxTemplateMsgConfig();                       //微信模板消息 同步
+        if (type === 7) return syncSynSlice(params);                            //简单接口 
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

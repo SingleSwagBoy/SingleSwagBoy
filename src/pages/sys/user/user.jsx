@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-28 11:35:08
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-29 18:24:28
+ * @LastEditTime: 2021-09-30 18:12:36
  * @Description: 用户列表
  */
 
@@ -216,13 +216,13 @@ export default class SysUser extends Component {
     //弹出框确认按钮被点击
     onModalConfirmClick() {
         let that = this;
-        that.requestToCreateModifyUser();
+        that.requestToCreateModify();
     }
 
 
 
     //申请创建修改用户信息
-    requestToCreateModifyUser() {
+    requestToCreateModify() {
         let that = this;
         let id = that.formRef.current.getFieldValue('id');
 

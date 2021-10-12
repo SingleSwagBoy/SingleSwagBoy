@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-27 18:46:05
+ * @LastEditTime: 2021-09-28 10:31:55
  * @Description: 用户标签 - 投放类型 组合控件
  * 
  * 不传不显示下面对应的参数 不传时，获取数据也不会获取到对应参数
@@ -11,12 +11,13 @@
  * delivery_name:           可更改[投放类型]字段名称
  */
 import React, { Component } from 'react';
-import { Form, Select, Radio, message } from 'antd';
+import { Form, Select, Radio, Tooltip, message } from 'antd';
 import './tag-types.css';
 import {
     getUserTag,                         //用户设备标签
     requestDeliveryTypes,               //投放类型
 } from 'api';
+import '@/style/base.css';
 
 let { Option } = Select;
 
@@ -54,15 +55,31 @@ export default class TagTypes extends Component {
                 <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.viewFormRef}>
                     {
                         union_type &&
-                        <Form.Item label='标签逻辑' name={union_type} >
-                            <Radio.Group className="base-input-wrapper" >
-                                {dict_union_type.map((item, index) => {
-                                    return <Radio value={item.key} key={index} onClick={(e) => that.onUnionTypeRadioClick(item.key)}>
-                                        {item.value}
-                                    </Radio>
-                                })}
-                            </Radio.Group>
-                        </Form.Item>
+                        <Tooltip title='是以按当前配置的[用户标签]为基础，进行全匹配，模糊匹配。' placement="top" color={'blue'}>
+                            <Form.Item label='标签逻辑' name={union_type} >
+                                <Radio.Group className="base-input-wrapper" >
+                                    {dict_union_type.map((item, index) => {
+                                        return <Radio value={item.key} key={index} onClick={(e) => that.onUnionTypeRadioClick(item.key)}>
+                                            {item.value}
+                                        </Radio>
+                                    })}
+                                </Radio.Group>
+                            </Form.Item>
+                        </Tooltip>
+                    }
+
+                    {delivery_name &&
+                        <Tooltip title='投放类型取消或不选，都将默认为[非定向]' placement="top" color={'blue'}>
+                            <Form.Item label='投放类型' name={delivery_name}>
+                                <Radio.Group className="base-input-wrapper" >
+                                    {dict_delivery_types.map((item, index) => {
+                                        return <Radio value={item.key} key={index} onClick={(e) => that.onRadioClick(item.key)}>
+                                            {item.value}
+                                        </Radio>
+                                    })}
+                                </Radio.Group>
+                            </Form.Item>
+                        </Tooltip>
                     }
 
                     {tag_name &&
@@ -72,17 +89,6 @@ export default class TagTypes extends Component {
                                     <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
                                 ))}
                             </Select>
-                        </Form.Item>
-                    }
-                    {delivery_name &&
-                        <Form.Item label='投放类型' name={delivery_name}>
-                            <Radio.Group className="base-input-wrapper" >
-                                {dict_delivery_types.map((item, index) => {
-                                    return <Radio value={item.key} key={index} onClick={(e) => that.onRadioClick(item.key)}>
-                                        {item.value}
-                                    </Radio>
-                                })}
-                            </Radio.Group>
                         </Form.Item>
                     }
                 </Form>
@@ -131,9 +137,6 @@ export default class TagTypes extends Component {
         }
 
         item[tag_name] = tags;
-
-        console.log('item')
-        console.log(item)
 
         voewFormRef.current.resetFields();
         voewFormRef.current.setFieldsValue(item);

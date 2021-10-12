@@ -1,0 +1,20 @@
+.wx-msg-content-wrapper {
+    margin-top: 5px;
+    padding: 3px;
+    border: 1px dashed #F00232;
+    width: 380px !important;
+}
+
+.wx-msg-content-line {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+}
+
+.wx-msg-content-btn {
+    width: 100%;
+}
+
+.wx-msg-content-range {
+    width: 100%;
+}

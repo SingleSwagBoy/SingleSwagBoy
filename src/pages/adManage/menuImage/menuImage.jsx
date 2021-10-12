@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-17 16:39:56
+ * @LastEditTime: 2021-09-27 20:48:58
  * @Description: 菜单栏图片配置页
  */
 
@@ -11,6 +11,7 @@ import React, { Component } from 'react'
 import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message } from 'antd';
 import { MyImageUpload, MyTagTypes, MySyncBtn } from '@/components/views.js';
 import moment from 'moment';
+import '@/style/base.css';
 
 import {
     requestConfigMenuImageList,                         //菜单栏配置 列表
@@ -32,7 +33,7 @@ export default class MenuImagePage extends Component {
         this.formRef = React.createRef();
 
         this.state = {
-            tag_types_ref: null,
+            ref_tag_types: null,
             dict_user_tags: [],                         //字典 用户标签
             dict_delivery_types: [],                    //字典 投放类型 定向非定向
             table_box: {
@@ -50,7 +51,6 @@ export default class MenuImagePage extends Component {
     render() {
         let that = this;
         let { table_box, modal_box } = that.state;
-        let input_width_size = 340;
 
         return (
             <div>
@@ -79,16 +79,16 @@ export default class MenuImagePage extends Component {
                                 {
                                     that.formRef.current.getFieldValue('id') &&
                                     <Form.Item label="id" name='id' rules={[{ required: true }]} >
-                                        <Input style={{ width: input_width_size }} disabled />
+                                        <Input className="base-input-wrapper" disabled />
                                     </Form.Item>
                                 }
 
                                 <Form.Item label="名称" name='title' rules={[{ required: true }]}>
-                                    <Input style={{ width: input_width_size }} placeholder="请输入名称" />
+                                    <Input className="base-input-wrapper" placeholder="请输入名称" />
                                 </Form.Item>
 
                                 <Form.Item label="排序" name='sort' rules={[{ required: true }]}>
-                                    <InputNumber style={{ width: input_width_size }} min={1} max={9999999} placeholder="数字越小排序越靠前" />
+                                    <InputNumber className="base-input-wrapper" min={1} max={9999999} placeholder="数字越小排序越靠前" />
                                 </Form.Item>
 
                                 <Form.Item label="时间范围" name='time' rules={[{ required: true }]}>
@@ -99,13 +99,13 @@ export default class MenuImagePage extends Component {
                                 </Form.Item>
 
                                 <Form.Item label="字体大小" name='fontSize' >
-                                    <Input style={{ width: input_width_size }} placeholder="请输入字体大小" />
+                                    <Input className="base-input-wrapper" placeholder="请输入字体大小" />
                                 </Form.Item>
                                 <Form.Item label="字体颜色" name='fontColor' >
-                                    <Input style={{ width: input_width_size }} placeholder="请输入字体颜色 形如：#F1F2F3" />
+                                    <Input className="base-input-wrapper" placeholder="请输入字体颜色 形如：#F1F2F3" />
                                 </Form.Item>
                                 <Form.Item label="倒计时背景" name='djsBackgroundColor' >
-                                    <Input style={{ width: input_width_size }} placeholder="请输入倒计时背景颜色 形如：#F1F2F3" />
+                                    <Input className="base-input-wrapper" placeholder="请输入倒计时背景颜色 形如：#F1F2F3" />
                                 </Form.Item>
 
                                 <Form.Item label="开启活动倒计时" name='hddjs' rules={[{ required: true }]} valuePropName='checked'>
@@ -116,7 +116,7 @@ export default class MenuImagePage extends Component {
                                 </Form.Item>
 
                                 {/* <Form.Item label="数据上报关键字" name='name'>
-                                    <Input style={{ width: input_width_size }} placeholder="数据上报关键字" />
+                                    <Input  className="base-input-wrapper"placeholder="数据上报关键字" />
                                 </Form.Item> */}
 
                                 <Form.Item label="背景图"  >
@@ -126,7 +126,7 @@ export default class MenuImagePage extends Component {
                                             imageUrl={that.getUploadFileImageUrlByType('backgroundImage')} />
                                     </Form.Item>
                                     <Form.Item name='backgroundImage' >
-                                        <TextArea style={{ width: input_width_size }} placeholder="请上传背景图" onBlur={(e) => that.onInputBlurCallback("backgroundImage", e)} />
+                                        <TextArea className="base-input-wrapper" placeholder="请上传背景图" onBlur={(e) => that.onInputBlurCallback("backgroundImage", e)} />
                                     </Form.Item>
                                 </Form.Item>
 
@@ -138,7 +138,7 @@ export default class MenuImagePage extends Component {
                                             imageUrl={that.getUploadFileImageUrlByType('focus_url')} />
                                     </Form.Item>
                                     <Form.Item name='focus_url' >
-                                        <TextArea style={{ width: input_width_size }} placeholder="请上传背景图" onBlur={(e) => that.onInputBlurCallback("focus_url", e)} />
+                                        <TextArea className="base-input-wrapper" placeholder="请上传背景图" onBlur={(e) => that.onInputBlurCallback("focus_url", e)} />
                                     </Form.Item>
                                 </Form.Item>
 
@@ -149,7 +149,7 @@ export default class MenuImagePage extends Component {
                                             imageUrl={that.getUploadFileImageUrlByType('no_focus_url')} />
                                     </Form.Item>
                                     <Form.Item name='no_focus_url' >
-                                        <TextArea style={{ width: input_width_size }} placeholder="请上传未选中焦点图片" onBlur={(e) => that.onInputBlurCallback("no_focus_url", e)} />
+                                        <TextArea className="base-input-wrapper" placeholder="请上传未选中焦点图片" onBlur={(e) => that.onInputBlurCallback("no_focus_url", e)} />
                                     </Form.Item>
                                 </Form.Item>
                             </div>
@@ -372,8 +372,8 @@ export default class MenuImagePage extends Component {
             that.forceUpdate();
 
             setTimeout(() => {
-                let tag_types_ref = that.state.tag_types_ref;
-                tag_types_ref.pushData(obj);
+                let ref_tag_types = that.state.ref_tag_types;
+                ref_tag_types.pushData(obj);
             }, 10)
         })
     }
@@ -408,10 +408,12 @@ export default class MenuImagePage extends Component {
             }
         }, () => {
             that.forceUpdate();
-            let tag_types_ref = that.state.tag_types_ref;
-            if (tag_types_ref) {
-                tag_types_ref.pushData({});
-            }
+
+            setTimeout(() => {
+                let ref_tag_types = that.state.ref_tag_types;
+                if (ref_tag_types) ref_tag_types.pushData({});
+            }, 10)
+
             that.formRef.current.resetFields();
         })
     }
@@ -480,9 +482,9 @@ export default class MenuImagePage extends Component {
     //弹出框确定按钮被点击
     onModalConfirmClick() {
         let that = this;
-        let tag_types_ref = that.state.tag_types_ref;
+        let ref_tag_types = that.state.ref_tag_types;
         let value = that.formRef.current.getFieldsValue();
-        let obj = Object.assign({}, value, tag_types_ref.loadData());
+        let obj = Object.assign({}, value, ref_tag_types.loadData());
         that.submitData(obj);
     }
 
@@ -591,7 +593,7 @@ export default class MenuImagePage extends Component {
     onTagTypesRefCallback(ref) {
         let that = this;
         that.setState({
-            tag_types_ref: ref,
+            ref_tag_types: ref,
         })
     }
 

@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-12 15:48:06
+ * @LastEditTime: 2021-10-12 16:31:13
  * @Description:
  *
  * 需求背景:
@@ -42,7 +42,7 @@ export default class offlineConfig extends Component {
             dict_apk: [],
             //菜单类型
             dict_menu_type: [
-                { key: 1, value: '3.0菜单栏H5' },
+                // { key: 1, value: '3.0菜单栏H5' },
                 { key: 2, value: '通知H5' },
                 { key: 3, value: '进入应用H5' },
             ],
@@ -119,19 +119,27 @@ export default class offlineConfig extends Component {
                                     <Input className="base-input-wrapper" placeholder="请输入排序位置" />
                                 </Form.Item>
                                 <Form.Item label="菜单类型" name='menuType' rules={[{ required: true }]}>
-                                    <Select className="base-input-wrapper" showSearch placeholder='请选择菜单类型'>
+                                    <Select className="base-input-wrapper" showSearch placeholder='请选择菜单类型' onChange={(val) => {
+                                        that.formRef.current.setFieldsValue({ 'menuType': val })
+                                        that.forceUpdate();
+                                    }}>
                                         {dict_menu_type.map((item, index) => {
                                             return <Option key={index} value={item.key}>{item.value}</Option>
                                         })}
                                     </Select>
                                 </Form.Item>
-                                <Form.Item label="进入应用" name='into' rules={[{ required: true }]}>
-                                    <Select className="base-input-wrapper" showSearch placeholder='请选择进入应用的类型'>
-                                        {dict_into.map((item, index) => {
-                                            return <Option key={index} value={item.key}>{item.value}</Option>
-                                        })}
-                                    </Select>
-                                </Form.Item>
+
+                                {
+                                    that.formRef.current.getFieldValue('menuType') === 2 &&
+                                    <Form.Item label="进入应用" name='into' rules={[{ required: true }]}>
+                                        <Select className="base-input-wrapper" showSearch placeholder='请选择进入应用的类型'>
+                                            {dict_into.map((item, index) => {
+                                                return <Option key={index} value={item.key}>{item.value}</Option>
+                                            })}
+                                        </Select>
+                                    </Form.Item>
+                                }
+
                                 <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
                                     <RangePicker className="base-input-wrapper" showTime />
                                 </Form.Item>

@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-12 16:31:13
+ * @LastEditTime: 2021-10-12 20:33:16
  * @Description:
  *
  * 需求背景:
@@ -130,7 +130,7 @@ export default class offlineConfig extends Component {
                                 </Form.Item>
 
                                 {
-                                    that.formRef.current.getFieldValue('menuType') === 2 &&
+                                    that.formRef.current.getFieldValue('menuType') === 3 &&
                                     <Form.Item label="进入应用" name='into' rules={[{ required: true }]}>
                                         <Select className="base-input-wrapper" showSearch placeholder='请选择进入应用的类型'>
                                             {dict_into.map((item, index) => {
@@ -244,7 +244,7 @@ export default class offlineConfig extends Component {
                 render: (rowValue, row, index) => {
                     let time = [moment(new Date(row.startTime)), moment(new Date(row.endTime)),]
                     return (
-                        <RangePicker defaultValue={time} showTime format={dateFormat} disabled/>
+                        <RangePicker defaultValue={time} showTime format={dateFormat} disabled />
                     );
                 }
             },

@@ -199,6 +199,14 @@ export const requestSysMenuUpdate = params => { return request2.post(`${baseUrl}
 export const requestSysMenuDelete = params => { return request2.post(`${baseUrl}/mms/sys/menu/del`, params); };
 
 
+export const requestSysUserRolePermissions = params => { return request2.post(`${baseUrl}/mms/sys/role/permission/get`, params); };                                                         //获取用户角色权限列表
+export const requestSysUserRolePermissionCreate = params => { return request2.post(`${baseUrl}/mms/sys/role/permission/add`, params); };
+export const requestSysUserRolePermissionUpdate = params => { return request2.post(`${baseUrl}/mms/sys/role/permission/update`, params); };
+export const requestSysUserRolePermissionDelete = params => { return request2.post(`${baseUrl}/mms/sys/role/permission/del`, params); };
+
+
+
+
 //========== 数据同步|数据缓存 ========== 
 export const syncOther = (params) => { return request2.get(`${baseUrl}/mms/sync/other`, { params: params }); };                                                                             //其他缓存 其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)
 export const syncLiveCarousel = (params) => { return request2.get(`${baseUrl}/mms/sync/liveCarousel`, { params: params }); };                                                               //直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)

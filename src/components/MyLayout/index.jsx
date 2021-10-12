@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-29 18:13:44
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-30 15:15:21
+ * @LastEditTime: 2021-09-30 19:37:32
  * @Description: 目录文件配置(改)
  */
 import React, { Component } from 'react'
@@ -52,8 +52,8 @@ class MyLayout extends Component {
         });
     };
     componentDidMount() {
-        if (window.localStorage.getItem("routesList_tmp")) {
-            let router = JSON.parse(window.localStorage.getItem("routesList_tmp"))
+        if (window.localStorage.getItem("router_list")) {
+            let router = JSON.parse(window.localStorage.getItem("router_list"))
             this.setState({
                 navRoutes: this.getLocalMenu(router)
             })
@@ -93,9 +93,12 @@ class MyLayout extends Component {
                         }
                     }
                 }
-                window.localStorage.setItem("routesList_tmp", JSON.stringify(list))
+
+                let routers = that.getLocalMenu(list);
+
+                window.localStorage.setItem("router_list", JSON.stringify(routers))
                 that.setState({
-                    navRoutes: that.getLocalMenu(list)
+                    navRoutes: routers,
                 })
             }
         })
@@ -139,6 +142,7 @@ class MyLayout extends Component {
                 for (let l = 0, llen = local_router.length; l < llen; l++) {
                     let inter_router = local_router[l];
                     if (child.code === inter_router.sub_code) {
+                        child.icon = inter_router.icon;
                         new_children.push(child);
                         break;
                     }
@@ -179,7 +183,7 @@ class MyLayout extends Component {
                         <div className="logo">电视家CMS</div>
                         {/*  点击导航跳转 */}
                         <Menu theme="dark" mode="inline" defaultselectedkeys={this.props.location.pathname} selectedKeys={this.selectKeys()} key={this.defaultOpenKeys()} defaultOpenKeys={this.defaultOpenKeys()}
-                            onClick={({ key }) => {this.props.history.push({ pathname: key }) }}>
+                            onClick={({ key }) => { this.props.history.push({ pathname: key }) }}>
                             {navRoutes.map(nav => {
                                 return (
                                     nav.children.length > 0 ?
@@ -225,7 +229,7 @@ class MyLayout extends Component {
         this.props.logout();
         message.success('退出成功', 1, () => {
             this.props.history.push("/login")
-            window.localStorage.removeItem("routesList_tmp")
+            window.localStorage.removeItem("router_list")
             window.localStorage.removeItem("user")
         })
     }

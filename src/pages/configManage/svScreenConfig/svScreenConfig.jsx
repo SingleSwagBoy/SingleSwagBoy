@@ -78,7 +78,7 @@ export default class svScreenConfig extends Component {
                             <div>
                                 {
                                     that.formRef.current.getFieldValue('indexId') &&
-                                    <Form.Item label="indexId" name='indexId' rules={[{ required: true }]} >
+                                    <Form.Item label="id" name='indexId' rules={[{ required: true }]} >
                                         <Input className="base-input-wrapper" disabled />
                                     </Form.Item>
                                 }
@@ -114,7 +114,7 @@ export default class svScreenConfig extends Component {
 
 
         let table_title = [
-            { title: 'id', dataIndex: 'indexId', key: 'indexId', width: 200, },
+            // { title: 'id', dataIndex: 'indexId', key: 'indexId', width: 200, },
             { title: '排序位置', dataIndex: 'rank', key: 'rank', width: 200, },
             { title: '短视频ID', dataIndex: 'vid', key: 'vid', width: 200, },
             { title: '展示比例', dataIndex: 'showRate', key: 'showRate', width: 200, },

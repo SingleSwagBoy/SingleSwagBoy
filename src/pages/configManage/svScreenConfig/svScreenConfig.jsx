@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-11 14:19:18
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-11 20:23:24
+ * @LastEditTime: 2021-10-12 15:28:12
  * @Description: 短视频首屏配置
  */
 import React, { Component } from 'react'
@@ -67,7 +67,7 @@ export default class svScreenConfig extends Component {
                 } />
                 <Table columns={table_box.table_title} dataSource={table_box.table_datas_movie} pagination={false} scroll={{ x: '80vw', y: '75vh' }} />
 
-                <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
+                <Modal visible={modal_box.is_show} title={modal_box.title} width={800} maskClosable={false} transitionName="" onCancel={() => that.onModalCancelClick()}
                     footer={[
                         <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
                         <Button onClick={() => that.onModalConfirmClick()} >保存</Button>
@@ -216,16 +216,14 @@ export default class svScreenConfig extends Component {
                         })
 
                     })
-
                 }
-
-
             }
         })
     }
 
 
 
+    //新增按钮被点击
     onCreateClick(key_code) {
         let that = this;
         let modal_box = {
@@ -267,6 +265,7 @@ export default class svScreenConfig extends Component {
             that.formRef.current.setFieldsValue(obj);
         })
     }
+    //item删除按钮被点击
     onItemDeleteClick(item) {
         let that = this;
         let key_code = item.key_code;

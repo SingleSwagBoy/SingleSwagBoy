@@ -162,6 +162,8 @@ export const requestConfigDocList = (layer, params) => { return request2.post(`$
 export const requestConfigDeleteDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}del`, params); };                  //配置列表-删除配置
 export const requestConfigUpdateDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}update`, params); };               //配置列表-更新配置
 
+export const requestOperateApk = (params) => { return request2.post(`${baseUrl}/mms/offline/apk/get`, params); };                                                                           //获取运营APK列表
+
 
 //========== 微信管理 ==========
 export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); };                                                                                  //获取微信回复

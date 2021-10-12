@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-12 11:30:09
+ * @LastEditTime: 2021-10-12 11:57:10
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -39,6 +39,7 @@ const wxTemplateMsg = lazy(() => import('pages/wechart/templateMsg/wxTemplateMsg
 const LoginManage = lazy(() => import('pages/adManage/loginManage/index.jsx'));
 const MiniConfig = lazy(() => import('pages/configManage/miniConfig/index.jsx'));
 const SvScreenConfig = lazy(() => import('pages/configManage/svScreenConfig/svScreenConfig.jsx'));
+const OffineConfig = lazy(() => import('pages/configManage/offlineConfig/offlineConfig.jsx'));
 
 const WxMsg = lazy(() => import('pages/weChatManage/WxMsg/index.jsx'))
 
@@ -99,6 +100,7 @@ const adminRoutes = [
     { name: '地域新闻', icon: UnorderedListOutlined, path: '/mms/configManage/addressNews', component: AddressNews, code: "configManage", sub_code: 'AddressNews' },
     { name: '小程序配置', icon: UnorderedListOutlined, path: '/mms/config/miniConfig', component: MiniConfig, code: "configManage", sub_code: 'MiniConfig' },
     { name: '短视频首屏配置', icon: UnorderedListOutlined, path: '/mms/config/svScreenConfig', component: SvScreenConfig, code: "configManage", sub_code: 'svScreenConfig' },
+    { name: '停服下线通知配置', icon: UnorderedListOutlined, path: '/mms/config/offlineConfig', component: OffineConfig, code: "configManage", sub_code: 'offlineConfig' },
 
 
 

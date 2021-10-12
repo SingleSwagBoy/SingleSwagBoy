@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-12 15:48:06
+ * @LastEditTime: 2021-10-12 16:07:39
  * @Description:
  *
  * 需求背景:
@@ -194,7 +194,9 @@ export default class offlineConfig extends Component {
 
     initData() {
         let that = this;
-        let { table_box, config_key, dateFormat } = that.state;
+        let { table_box, config_key, dateFormat,
+            dict_apk, dict_menu_type, dict_into, dict_product_line, dict_download_type, dict_status,
+        } = that.state;
 
         //获取运营APK列表
         requestOperateApk({ page: { isPage: 9 } }).then(res => {
@@ -205,20 +207,51 @@ export default class offlineConfig extends Component {
 
         let table_title = [
             { title: '配置名称', dataIndex: 'name', key: 'name', width: 200, },
-            { title: '菜单类型', dataIndex: 'menuType', key: 'menuType', width: 200, },
-            { title: '是否进入', dataIndex: 'into', key: 'into', width: 200, },
             {
-                title: '配置时间', dataIndex: 'time', key: 'time', width: 200,
+                title: '菜单类型', dataIndex: 'menuType', key: 'menuType', width: 200,
                 render: (rowValue, row, index) => {
-                    let time = [];
-
-
                     return (
-                        <RangePicker defaultValue={[moment('2015-06-06', dateFormat), moment('2015-06-06', dateFormat)]} showTime format={dateFormat} />
+                        <Select defaultValue={rowValue} disabled style={{ width: '100%' }}>
+                            {dict_menu_type.map((item, index) => {
+                                return <Option key={index} value={item.key}>{item.value}</Option>
+                            })}
+                        </Select>
                     );
                 }
             },
-            { title: '状态', dataIndex: 'status', key: 'status', width: 200, },
+            {
+                title: '是否进入', dataIndex: 'into', key: 'into', width: 200,
+                render: (rowValue, row, index) => {
+                    return (
+                        <Select defaultValue={rowValue} disabled style={{ width: '100%' }}>
+                            {dict_into.map((item, index) => {
+                                return <Option key={index} value={item.key}>{item.value}</Option>
+                            })}
+                        </Select>
+                    );
+                }
+            },
+            {
+                title: '配置时间', dataIndex: 'time', key: 'time',
+                render: (rowValue, row, index) => {
+                    let time = [moment(new Date(row.startTime)), moment(new Date(row.endTime)),]
+                    return (
+                        <RangePicker defaultValue={time} showTime format={dateFormat} disabled/>
+                    );
+                }
+            },
+            {
+                title: '状态', dataIndex: 'status', key: 'status', width: 200,
+                render: (rowValue, row, index) => {
+                    return (
+                        <Select defaultValue={rowValue} disabled style={{ width: '100%' }}>
+                            {dict_status.map((item, index) => {
+                                return <Option key={index} value={item.key}>{item.value}</Option>
+                            })}
+                        </Select>
+                    );
+                }
+            },
             {
                 title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 145,
                 render: (rowValue, row, index) => {

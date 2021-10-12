@@ -163,6 +163,9 @@ export const requestConfigDeleteDoc = (layer, params) => { return request2.post(
 export const requestConfigUpdateDoc = (layer, params) => { return request2.post(`${baseUrl}/mms/doc/${layer === 0 ? '' : layer === 1 ? 'key/' : 'value/'}update`, params); };               //配置列表-更新配置
 
 export const requestOperateApk = (params) => { return request2.post(`${baseUrl}/mms/offline/apk/get`, params); };                                                                           //获取运营APK列表
+// export const addOperateApk = params => { return axios.post(`${base}/mms/offline/apk/add`, params); };
+// export const updateOperateApk = params => { return axios.post(`${base}/mms/offline/apk/update`, params); };
+// export const removeOperateApk = params => { return axios.post(`${base}/mms/offline/apk/del`, params); };
 
 
 //========== 微信管理 ==========

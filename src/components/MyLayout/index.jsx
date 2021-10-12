@@ -1,10 +1,3 @@
-/*
- * @Author: HuangQS
- * @Date: 2021-09-29 18:13:44
- * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-30 19:37:32
- * @Description: 目录文件配置(改)
- */
 import React, { Component } from 'react'
 import { getMenu } from "../../api/index"
 import { Layout, Menu, Avatar, Dropdown, message, Badge } from 'antd';
@@ -14,7 +7,6 @@ import {
     UserOutlined,
     UnorderedListOutlined
 } from '@ant-design/icons';
-
 
 import './style.css'
 // import adminRoutes from '../../routes/adminRoutes.js'
@@ -52,29 +44,45 @@ class MyLayout extends Component {
         });
     };
     componentDidMount() {
-        if (window.localStorage.getItem("router_list")) {
-            let router = JSON.parse(window.localStorage.getItem("router_list"))
+        if (window.localStorage.getItem("routesList_tmp")) {
+            let router = JSON.parse(window.localStorage.getItem("routesList_tmp"))
             this.setState({
                 navRoutes: this.getLocalMenu(router)
             })
         } else {
-            this.initMenu()
+            this.getMenu()
         }
     }
-
-    //初始化目录
-    initMenu() {
+    getLocalMenu(arr) { //获取本地存在的路径
+        let localList = []
+        admintRouter.filter(item => item.code).forEach(r => {
+            localList.push(r.code)
+        })
+        let array = [...new Set(localList)]
+        let newRouter = arr.filter(x => array.some(y => y === x.code))
+        newRouter.forEach(r => { //过滤已存在的一级菜单下面的老二级菜单
+            r.children = r.children.filter(x => admintRouter.some(y => y.path === x.path))
+        })
+        return newRouter
+    }
+    getMenu() {
         let base = "http://" + window.location.host;
-        let that = this;
-        let id;
-        if (base.indexOf("localhost") !== -1) id = 1
-        else if (window.location.host === "cms.tvplus.club") id = 61
-        else if (window.location.host === "cms2.tvplus.club") id = 61
-        else if (window.location.host === "bak04.tvplus.club") id = 61
-        else if (window.location.host === "bak03.tvplus.club") id = 61
-        else if (window.location.host === "test2.cms.tvplus.club") id = 1
-        else id = 1
-
+        let id = 1
+        if (base.indexOf("localhost") !== -1) {
+            id = 1
+        } else if (window.location.host === "cms.tvplus.club") {
+            id = 61
+        } else if (window.location.host === "test2.cms.tvplus.club") {
+            id = 1
+        } else if (window.location.host === "cms2.tvplus.club") {
+            id = 61
+        } else if (window.location.host === "bak04.tvplus.club") {
+            id = 61
+        } else if (window.location.host === "bak03.tvplus.club") {
+            id = 61
+        } else {
+            id = 1
+        }
         getMenu({ id: id }).then(res => {
             if (res.data.errCode === 0) {
                 let tmp = res.data.data;
@@ -82,8 +90,11 @@ class MyLayout extends Component {
                 let tmpChild = [];
                 for (let i in tmp) {
                     let t = tmp[i];
-                    if (t.level === 1) list.push(t)
-                    else if (t.level === 2) tmpChild.push(t)
+                    if (t.level === 1) {
+                        list.push(t)
+                    } else if (t.level === 2) {
+                        tmpChild.push(t)
+                    }
                 }
                 for (let j in list) {
                     list[j].children = [];
@@ -93,111 +104,58 @@ class MyLayout extends Component {
                         }
                     }
                 }
-
-                let routers = that.getLocalMenu(list);
-
-                window.localStorage.setItem("router_list", JSON.stringify(routers))
-                that.setState({
-                    navRoutes: routers,
+                console.log(list, "list")
+                window.localStorage.setItem("routesList_tmp", JSON.stringify(list))
+                this.setState({
+                    navRoutes: this.getLocalMenu(list)
                 })
             }
         })
     }
-
-    getLocalMenu(root_router) { //获取本地存在的路径
-        //转换本地路由列表
-        let local_router = [];
-        for (let key in admintRouter) {
-            let router = admintRouter[key];
-            local_router.push(router);
-        }
-
-        let newst_router = [];
-
-        //筛选出本地存在的根目录
-        for (let r = 0, rlen = root_router.length; r < rlen; r++) {
-            let outer_router = root_router[r];
-
-            for (let l = 0, llen = local_router.length; l < llen; l++) {
-                let inter_router = local_router[l];
-
-                //存在当前目录 更新子目录
-                if (outer_router.code === inter_router.code) {
-                    outer_router.icon = <UserOutlined />;       //目录Logo
-                    // outer_router.children = [];
-                    newst_router.push(outer_router);
-                    break;
-                }
-            }
-        }
-
-        //填充本地存在的子目录 更新目录为网络副本
-        for (let n = 0, nlen = newst_router.length; n < nlen; n++) {
-            let new_children = [];
-            let temp_router = newst_router[n];
-            let children = temp_router.children;
-
-            for (let c = 0, clen = children.length; c < clen; c++) {
-                let child = children[c];
-                for (let l = 0, llen = local_router.length; l < llen; l++) {
-                    let inter_router = local_router[l];
-                    if (child.code === inter_router.sub_code) {
-                        child.icon = inter_router.icon;
-                        new_children.push(child);
-                        break;
-                    }
-                }
-            }
-            temp_router.children = new_children;
-        }
-        return newst_router;
-
-
-
-        // let localList = []
-        // admintRouter.filter(item => item.code).forEach(r => {
-        //     localList.push(r.code)
-        // })
-        // let array = [...new Set(localList)]
-        // let newRouter = root_router.filter(x => array.some(y => y === x.code))
-        // newRouter.forEach(r => { //过滤已存在的一级菜单下面的老二级菜单
-        //     r.children = r.children.filter(x => admintRouter.some(y => y.path === x.path))
-        // })
-        // return newRouter
-    }
     render() {
-        let that = this;
-
-        let menu = (
+        const menu = (
             <Menu>
-                <Menu.Item onClick={() => { that.props.history.push('/mms/transition') }}>首页</Menu.Item>
+                <Menu.Item onClick={() => {
+                    this.props.history.push('/mms/transition')
+                }}>首页</Menu.Item>
                 <Menu.Item onClick={this.loginOut}>退出登录</Menu.Item>
             </Menu>
         );
-        let { navRoutes } = that.state;
-
         return (
             <div id="admin">
                 <Layout>
                     <Sider trigger={null} collapsible collapsed={this.state.collapsed}   >
                         <div className="logo">电视家CMS</div>
                         {/*  点击导航跳转 */}
-                        <Menu theme="dark" mode="inline" defaultselectedkeys={this.props.location.pathname} selectedKeys={this.selectKeys()} key={this.defaultOpenKeys()} defaultOpenKeys={this.defaultOpenKeys()}
-                            onClick={({ key }) => { this.props.history.push({ pathname: key }) }}>
-                            {navRoutes.map(nav => {
-                                return (
-                                    nav.children.length > 0 ?
-                                        <SubMenu icon={nav.icon} title={nav.name} key={nav.path} defaultselectedkeys={[nav.children[0].path]}>
-                                            {nav.children.map((child) => {
-                                                return (<Menu.Item key={child.path}>{child.name}</Menu.Item>)
-                                            })}
-                                        </SubMenu>
-                                        :
-                                        <Menu.Item icon={<UserOutlined />} key={nav.path}>
-                                            {nav.name}
-                                        </Menu.Item>
-                                )
-                            })}
+                        <Menu theme="dark" mode="inline"
+                            onClick={({ key }) => {
+                                console.log(key)
+                                this.props.history.push(key)
+                            }}
+                            defaultselectedkeys={this.props.location.pathname}
+                            selectedKeys={this.selectKeys()}
+                            key={this.defaultOpenKeys()}
+                            defaultOpenKeys={this.defaultOpenKeys()}   >
+                            {
+                                this.state.navRoutes.map(nav => {
+                                    return (
+                                        nav.children.length > 0 ?
+                                            <SubMenu icon={<UserOutlined />} title={nav.name} key={nav.path} defaultselectedkeys={[nav.children[0].path]}     >
+                                                {
+                                                    nav.children.map(child => {
+                                                        return (
+                                                            <Menu.Item key={child.path}>{child.name}</Menu.Item>
+                                                        )
+                                                    })
+                                                }
+                                            </SubMenu>
+                                            :
+                                            <Menu.Item icon={<UserOutlined />} key={nav.path}>
+                                                {nav.name}
+                                            </Menu.Item>
+                                    )
+                                })
+                            }
                         </Menu>
                     </Sider>
                     <Layout className="site-layout" style={{ minHeight: "100vh", overflow: "auto" }}>
@@ -218,7 +176,7 @@ class MyLayout extends Component {
                             </div>
                         </Header>
                         <Content className="site-layout-background" style={{ margin: '24px 16px', padding: 24, minHeight: 280, height: "88vh", overflowY: "auto", position: "relative" }}   >
-                            <div key='children'> {this.props.children}</div>
+                            <div key ='children'> {this.props.children}</div>
                         </Content>
                     </Layout>
                 </Layout>
@@ -229,12 +187,12 @@ class MyLayout extends Component {
         this.props.logout();
         message.success('退出成功', 1, () => {
             this.props.history.push("/login")
-            window.localStorage.removeItem("router_list")
+            window.localStorage.removeItem("routesList_tmp")
             window.localStorage.removeItem("user")
         })
     }
     selectKeys = () => {
-        let pathName = this.props.location.pathname;
+        const pathName = this.props.location.pathname;
         return pathName
     }
     defaultOpenKeys() {

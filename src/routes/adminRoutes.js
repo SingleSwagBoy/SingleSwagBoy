@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-12 18:15:11
+ * @LastEditTime: 2021-10-12 19:22:31
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -88,11 +88,11 @@ const adminRoutes = [
     { name: '菜单栏图片配置', path: '/mms/adManage/menuImage', component: MenuImage, icon: UnorderedListOutlined, code: "adManage", sub_code: 'menuImage' },
     { name: '自定义规则便签', path: '/mms/ad/customAdTag', component: CustomAdTag, icon: UnorderedListOutlined, code: "adManage", sub_code: 'customAdTag' },
 
-    //用户权限相关
-    { name: '角色列表', icon: UnorderedListOutlined, path: '/mms/sys/role', component: SysRole, code: "sessionManage", sub_code: 'sysRole' },
-    { name: '用户列表', icon: UnorderedListOutlined, path: '/mms/sys/user', component: SysUser, code: "sessionManage", sub_code: 'sysUser' },
-    { name: '功能列表', icon: UnorderedListOutlined, path: '/mms/sys/menu', component: SysMenu, code: "sessionManage", sub_code: 'sysMenu' },
-    { name: '权限列表', icon: UnorderedListOutlined, path: '/mms/sys/permission', component: SysPermission, code: "sessionManage", sub_code: 'sysPermission' },
+    // //用户权限相关
+    // { name: '角色列表', icon: UnorderedListOutlined, path: '/mms/sys/role', component: SysRole, code: "sessionManage", sub_code: 'sysRole' },
+    // { name: '用户列表', icon: UnorderedListOutlined, path: '/mms/sys/user', component: SysUser, code: "sessionManage", sub_code: 'sysUser' },
+    // { name: '功能列表', icon: UnorderedListOutlined, path: '/mms/sys/menu', component: SysMenu, code: "sessionManage", sub_code: 'sysMenu' },
+    // { name: '权限列表', icon: UnorderedListOutlined, path: '/mms/sys/permission', component: SysPermission, code: "sessionManage", sub_code: 'sysPermission' },
 
     //配置管理
     { name: '文案管理', icon: UnorderedListOutlined, path: '/mms/doc', component: ConfigDoc, code: "configManage", sub_code: 'DocManager' },
@@ -105,7 +105,7 @@ const adminRoutes = [
 
     //微信公众号管理
     { name: '自动回复', icon: UnorderedListOutlined, path: '/mms/wxReply', component: WxReply, code: "WeChatManage", sub_code: 'wxReply' },
-    { name: '支付模板', icon: UnorderedListOutlined, path: '/mms/wx/tmplMsg', component: wxTemplateMsg, code: "WeChatManage", sub_code: 'TmplMsgTag' },
+    // { name: '支付模板', icon: UnorderedListOutlined, path: '/mms/wx/tmplMsg', component: wxTemplateMsg, code: "WeChatManage", sub_code: 'TmplMsgTag' },
     { name: '客服消息', icon: UnorderedListOutlined, path: '/mms/wx/msg', component: WxMsg, code: "WeChatManage", sub_code: 'wxMsg' },
 
     //其他

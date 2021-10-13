@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-13 16:44:14
+ * @LastEditTime: 2021-10-13 17:30:41
  * @Description:
  *
  * 需求背景:
@@ -47,6 +47,11 @@ export default class offlineConfig extends Component {
                 { key: 3, value: '进入应用H5' },
             ],
 
+            //会员开关配置
+            dict_vip_switch: [
+                { key: 1, value: '开启' },
+                { key: 2, value: '关闭' },
+            ],
             //是否进入
             dict_into: [
                 { key: 1, value: '进入' },
@@ -89,7 +94,7 @@ export default class offlineConfig extends Component {
     render() {
         let that = this;
         let { table_box, modal_box, config_key, address, marketChannel,
-            dict_apk, dict_menu_type, dict_into, dict_product_line, dict_download_type, dict_status,
+            dict_apk, dict_menu_type, dict_vip_switch, dict_into, dict_product_line, dict_download_type, dict_status,
 
         } = that.state;
 
@@ -127,6 +132,14 @@ export default class offlineConfig extends Component {
                                         })}
                                     </Select>
                                 </Form.Item>
+                                <Form.Item label="会员开关" name='vipSwitch' rules={[{ required: true }]}>
+                                    <Select className="base-input-wrapper" showSearch placeholder='请选择会员开关'>
+                                        {dict_vip_switch.map((item, index) => {
+                                            return <Option key={index} value={item.key}>{item.value}</Option>
+                                        })}
+                                    </Select>
+                                </Form.Item>
+
                                 <Form.Item label="菜单类型" name='menuType' rules={[{ required: true }]}>
                                     <Select className="base-input-wrapper" showSearch placeholder='请选择菜单类型' onChange={(val) => {
                                         that.formRef.current.setFieldsValue({ 'menuType': val })

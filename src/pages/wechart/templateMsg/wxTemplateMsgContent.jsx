@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-27 14:10:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-28 10:49:27
+ * @LastEditTime: 2021-10-13 14:46:23
  * @Description: 模版内容行数据
  */
 
@@ -77,6 +77,10 @@ export default class WxTemplateMsgContent extends Component {
                         <div>#msg1# 代替消息中的msg1</div>
                         <div>#msg2#" 代替消息中的msg2</div>
                         <div>#msg12#" 代替消息中的msg12</div>
+                        <div>#orderId# 支付订单号</div>
+                        <div>#price# 套餐价格</div>
+                        <div>#productDesc# 套餐描述</div>
+                        <div>#adExpireTime# 权益到起时间</div>
                     </div>
                 }
 

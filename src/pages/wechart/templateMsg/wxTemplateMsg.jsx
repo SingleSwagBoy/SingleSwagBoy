@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 11:56:33
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-28 11:16:27
+ * @LastEditTime: 2021-10-13 14:45:03
  * @Description: 微信支付模板消息
  */
 
@@ -44,6 +44,11 @@ export default class WxPayTemplate extends Component {
                 { key: 1, value: '公众号全量' },
                 { key: 2, value: '非全量' },
             ],
+            //状态
+            dict_status: [
+                { key: 1, value: '有效' },
+                { key: 2, value: '无效' },
+            ],
 
             ref_tag_types: null,
             ref_time_interval: null,
@@ -59,8 +64,8 @@ export default class WxPayTemplate extends Component {
             },
             //小程序类型
             dict_mini_types: [
-                { key: '1', value: '跳转小程序' },
-                { key: '2', value: '跳转到外链' },
+                { key: 1, value: '跳转小程序' },
+                { key: 2, value: '跳转到外链' },
             ],
             //模板类型 选择模板 1=支付模板，后续其他模板，需要不断的去添加
             tmpl_type: [
@@ -71,8 +76,8 @@ export default class WxPayTemplate extends Component {
     }
     render() {
         let that = this;
-        let { table_box, modal_box, dict_mini_types
-            , dict_alls, dict_public_types, dict_wx_program, tmpl_type } = that.state;
+        let { table_box, modal_box
+            , dict_mini_types, dict_status, dict_alls, dict_public_types, dict_wx_program, tmpl_type } = that.state;
         return (
             <div>
                 <Alert className="alert-box" message="微信模板消息" type="success" action={
@@ -99,9 +104,17 @@ export default class WxPayTemplate extends Component {
                                     </Form.Item>
                                 }
 
-                                <Form.Item label="状态" name='status' valuePropName='checked' rules={[{ required: true }]} >
-                                    <Switch checkedChildren="有效" unCheckedChildren="无效" />
+                                <Form.Item label="状态" name='status' rules={[{ required: true }]} >
+                                    {/* <Switch checkedChildren="有效" unCheckedChildren="无效" /> */}
+                                    <Select placeholder='请选择状态' className="base-input-wrapper" >
+                                        {dict_status.map((item, index) => {
+                                            return <Option key={index} value={item.key}>{item.value}</Option>
+                                        })}
+                                    </Select>
+
                                 </Form.Item>
+
+
 
                                 <Form.Item label="上下线时间" name='start_end_time' rules={[{ required: true }]} >
                                     <RangePicker className="base-input-wrapper" showTime format={'YYYY-MM-DD HH:mm:ss'} />
@@ -147,27 +160,24 @@ export default class WxPayTemplate extends Component {
                                 </Form.Item>
                                 {
                                     //跳转类型为小程序类型
-                                    that.formRef.current.getFieldValue('mini') === '1' &&
+                                    that.formRef.current.getFieldValue('mini') === 1 &&
                                     <div>
                                         {/*mini_config  {\n    \"appid\": \"wx9e8718eb2360dfb8\",\n    \"pagepath\": \"pages/recharge/main?source=mb\"\n} */}
-                                        <Form.Item label='小程序'>
+                                        <Form.Item label='小程序' name='appid'>
                                             <Select placeholder='请选择小程序' onChange={() => { that.forceUpdate() }} className="base-input-wrapper">
                                                 {dict_wx_program.map((item, index) => (
                                                     <Option value={item.appid} key={index}>{item.appName}</Option>
                                                 ))}
                                             </Select>
                                         </Form.Item>
-                                        <Form.Item label='跳转路径'>
+                                        <Form.Item label='跳转路径' name='pagepath'>
                                             <TextArea placeholder='输入跳转小程序页面，例:page/main' className="base-input-wrapper" autoSize={{ minRows: 2, maxRows: 3 }} />
-                                        </Form.Item>
-                                        <Form.Item label='备用地址'>
-                                            <TextArea placeholder='不支持跳转的小程序将跳转到此' className="base-input-wrapper" autoSize={{ minRows: 2, maxRows: 3 }} />
                                         </Form.Item>
                                     </div>
                                 }
                                 {
                                     //跳转类型为外链类型
-                                    that.formRef.current.getFieldValue('mini') === '2' &&
+                                    that.formRef.current.getFieldValue('mini') === 2 &&
                                     <Form.Item label='跳转路径' name='jump'>
                                         <TextArea className="base-input-wrapper" placeholder='请输入http://开头的地址' />
                                     </Form.Item>
@@ -230,7 +240,7 @@ export default class WxPayTemplate extends Component {
 
     initTitle() {
         let that = this;
-        let { table_box, dict_public_types } = that.state;
+        let { table_box, dict_public_types, dict_status } = that.state;
 
         let table_title = [
             { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
@@ -253,14 +263,13 @@ export default class WxPayTemplate extends Component {
             // { title: '模板Id', dataIndex: 'TmplId', key: 'TmplId', width: 80, },
             // { title: '跳转地址', dataIndex: 'Jump', key: 'Jump', width: 80, },
             {
-                title: '上下线时间', dataIndex: 'time', key: 'time', width: 350,
+                title: '上下线时间', dataIndex: 'time', key: 'time',
                 render: (rowValue, row, index) => {
-                    return (
-                        <div>
-                            {/* <div>{row.StartTime} -{row.EndTime}</div> */}
-                            <div>{myTimeUtils.parseTime(row.start_time)} -- {myTimeUtils.parseTime(row.end_time)}</div>
-                        </div>
-                    )
+
+                    let open_time = row.start_time ? row.start_time : "";
+                    let stop_time = row.end_time ? row.end_time : "";
+                    let time = [moment(new Date(open_time)), moment(new Date(stop_time))];
+                    return (<RangePicker defaultValue={time} showTime disabled />)
                 }
             },
             {
@@ -281,13 +290,19 @@ export default class WxPayTemplate extends Component {
                 }
             },
             {
-                title: '状态', dataIndex: 'status', key: 'status', width: 80,
+                title: '状态', dataIndex: 'status', key: 'status', width: 120,
                 render: (rowValue, row, index) => {
-                    return (<Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => that.onItemStatusChange(row, checked)} />)
+                    // return (<Switch defaultChecked={row.status === 1 ? true : false} checkedChildren="是" unCheckedChildren="否" onChange={(checked) => that.onItemStatusChange(row, checked)} />)
+                    return <Select defaultValue={rowValue} disabled placeholder='请选择状态'>
+                        {dict_status.map((item, index) => {
+                            return <Option key={index} value={item.key}>{item.value}</Option>
+                        })}
+                    </Select>
+
                 }
             },
             {
-                title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 200,
+                title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 240,
                 render: (rowValue, row, index) => {
                     return (
                         <div>
@@ -314,21 +329,27 @@ export default class WxPayTemplate extends Component {
     refreshList() {
         let that = this;
         let { table_box } = that.state;
-        let obj = {
-            page: {
-                currentPage: 1,
-                pageSize: 999999,
-            }
-        };
-        requestWxTemplateMsgConfigList(obj)
-            .then(res => {
-                console.log(res.data);
 
-                table_box.table_datas = res.data;
-                that.setState({
-                    table_box: table_box,
-                });
-            })
+
+        table_box.table_datas = [];
+        that.setState({
+            table_box: table_box,
+        }, () => {
+            let obj = {
+                page: {
+                    currentPage: 1,
+                    pageSize: 999999,
+                }
+            };
+            requestWxTemplateMsgConfigList(obj)
+                .then(res => {
+                    console.log(res.data);
+                    table_box.table_datas = res.data;
+                    that.setState({
+                        table_box: table_box,
+                    });
+                })
+        })
 
     }
 
@@ -414,14 +435,27 @@ export default class WxPayTemplate extends Component {
                 title: '编辑',
             }
         }, () => {
-            //需要展示模板信息
-            item.start_end_time = [moment(item.start_time), moment(item.end_time)];
+            that.forceUpdate();
+            let obj = Object.assign({}, item);
+            obj.start_end_time = [moment(obj.start_time), moment(obj.end_time)];
+
+            //小程序配置
+            let mini_config = obj.mini_config;
+            if (mini_config) {
+                mini_config = JSON.parse(mini_config);
+                console.log('-------->>>');
+                console.log(mini_config);
+
+                obj.appid = mini_config.appid ? mini_config.appid : '';
+                obj.pagepath = mini_config.pagepath ? mini_config.pagepath : '';
+            } else {
+                obj.appid = "";
+                obj.pagepath = "";
+            }
 
             that.formRef.current.resetFields();
-            that.formRef.current.setFieldsValue(item);
-            that.forceUpdate();
+            that.formRef.current.setFieldsValue(obj);
 
-            let obj = Object.assign({}, item);
             setTimeout(() => {
                 let ref_tag_types = that.state.ref_tag_types;
                 ref_tag_types.pushData(obj);
@@ -499,8 +533,14 @@ export default class WxPayTemplate extends Component {
 
         }
 
-        let id = data.id;
+        //小程序配置
+        let mini_config = {
+            appid: data.appid,
+            pagepath: data.pagepath,
+        };
+        data.mini_config = JSON.stringify(mini_config);
 
+        let id = data.id;
 
         (id ? requestWxTemplateMsgConfigUpload(data) : requestWxTemplateMsgConfigCreate(data))
             .then(res => {

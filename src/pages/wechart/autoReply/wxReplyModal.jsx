@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 15:27:40
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-26 17:42:11
+ * @LastEditTime: 2021-10-13 16:51:17
  * @Description: 微信自动回复模块
  */
 
@@ -297,6 +297,9 @@ export default class WxReplyModal extends Component {
                                                     </Tooltip>
                                                     <Tooltip title='系统将自动转化为[VIP天数]' placement='top'>
                                                         <Button size='small' onClick={() => that.onUserTargetClick('#days#')} style={{ marginLeft: 3 }}>#VIP天数#</Button>
+                                                    </Tooltip>
+                                                    <Tooltip title='系统将自动转化为[退费]' placement='top'>
+                                                        <Button size='small' onClick={() => that.onUserTargetClick('#refund#')} style={{ marginLeft: 3 }}>#退费#</Button>
                                                     </Tooltip>
                                                 </Form.Item>
                                             }

@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-13 14:59:23
+ * @LastEditTime: 2021-10-13 15:19:52
  * @Description:
  *
  * 需求背景:
@@ -221,18 +221,6 @@ export default class offlineConfig extends Component {
                     return (
                         <Select defaultValue={rowValue} disabled style={{ width: '100%' }}>
                             {dict_menu_type.map((item, index) => {
-                                return <Option key={index} value={item.key}>{item.value}</Option>
-                            })}
-                        </Select>
-                    );
-                }
-            },
-            {
-                title: '是否进入', dataIndex: 'into', key: 'into', width: 200,
-                render: (rowValue, row, index) => {
-                    return (
-                        <Select defaultValue={rowValue} disabled style={{ width: '100%' }}>
-                            {dict_into.map((item, index) => {
                                 return <Option key={index} value={item.key}>{item.value}</Option>
                             })}
                         </Select>

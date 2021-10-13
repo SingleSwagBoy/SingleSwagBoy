@@ -4,7 +4,6 @@ import { Checkbox, Row, Col } from 'antd';
 import { } from '@ant-design/icons';
 import { } from 'react-router-dom'
 import { } from 'react-redux'
-const CheckboxGroup = Checkbox.Group;
 
 class MyChannel extends Component {
     constructor(props) {
@@ -20,16 +19,20 @@ class MyChannel extends Component {
         this.getDict()
     }
     render() {
+        // 传出的数据如[aaaa,bbbb,cccc]类型 需要在外层进一步处理数据aaaa,bbbb,cccc
+
         let that = this;
         //被选中的列表
         let { id, formRef } = that.props;
-
+        let { dict_product_line_list, is_fold_product, } = that.state;
         let curr_check_data = formRef.current.getFieldValue(id);
 
         if (!curr_check_data) {
             let obj = {};
-            obj[id] = [];
+            curr_check_data = [];
+            obj[id] = curr_check_data;
             formRef.current.setFieldsValue(obj);
+
         }
         //
         else if (curr_check_data.constructor === String) {
@@ -39,7 +42,7 @@ class MyChannel extends Component {
             formRef.current.setFieldsValue(obj);
         }
 
-        let { dict_product_line_list, is_fold_product, } = that.state;
+
         let is_check_all = dict_product_line_list.length === curr_check_data.length;        //是否选择所有数据
 
         return (

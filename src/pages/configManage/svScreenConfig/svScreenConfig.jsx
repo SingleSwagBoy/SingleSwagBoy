@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-11 14:19:18
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-12 15:28:12
+ * @LastEditTime: 2021-10-13 11:17:43
  * @Description: 短视频首屏配置
  */
 import React, { Component } from 'react'
@@ -15,9 +15,9 @@ import {
     updateList,     //更新列表数据
     deleteConfig,   //删除列表数据
 } from 'api';
-
-
 import { MySyncBtn } from '@/components/views.js';
+
+let { RangePicker } = DatePicker;
 
 
 export default class svScreenConfig extends Component {
@@ -57,7 +57,7 @@ export default class svScreenConfig extends Component {
                         <MySyncBtn type={7} name='同步缓存' params={{ key: config_key_guess_u_like }} />
                     </div>
                 } />
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas_like} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas_like} pagination={false} scroll={{ x: "80vw", y: '75vh' }} />
 
                 <Alert className="alert-box" style={{ marginTop: 8 }} message="影视" type="success" action={
                     <div>
@@ -70,7 +70,7 @@ export default class svScreenConfig extends Component {
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={800} maskClosable={false} transitionName="" onCancel={() => that.onModalCancelClick()}
                     footer={[
                         <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
-                        <Button onClick={() => that.onModalConfirmClick()} >保存</Button>
+                        <Button onClick={() => that.onModalConfirmClick()}>保存</Button>
                     ]}>
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef}>
                         {
@@ -83,7 +83,7 @@ export default class svScreenConfig extends Component {
                                     </Form.Item>
                                 }
                                 <Form.Item label="排序位置" name='rank' rules={[{ required: true }]}>
-                                    <InputNumber className="base-input-wrapper" placeholder="请输入排序位置" />
+                                    <InputNumber min={1} max={10} className="base-input-wrapper" placeholder="请输入排序位置" />
                                 </Form.Item>
                                 <Form.Item label="短视频ID" name='vid' rules={[{ required: true }]}>
                                     <InputNumber className="base-input-wrapper" placeholder="请输入短视频的ID" />
@@ -91,8 +91,8 @@ export default class svScreenConfig extends Component {
                                 <Form.Item label="展示比例" name='showRate' rules={[{ required: true }]}>
                                     <InputNumber className="base-input-wrapper" placeholder="请输入展示比例如:0.45" />
                                 </Form.Item>
-                                <Form.Item label="过期时间" name='expiration' rules={[{ required: true }]}>
-                                    <DatePicker className="base-input-wrapper" showTime />
+                                <Form.Item label="时间范围" name='time' rules={[{ required: true }]}>
+                                    <RangePicker className="base-input-wrapper" showTime placeholder={["开始展示时间", "过期时间"]} />
                                 </Form.Item>
                             </div>
                         }
@@ -119,20 +119,14 @@ export default class svScreenConfig extends Component {
             { title: '短视频ID', dataIndex: 'vid', key: 'vid', width: 200, },
             { title: '展示比例', dataIndex: 'showRate', key: 'showRate', width: 200, },
             {
-                title: '过期时间', dataIndex: 'expiration', key: 'expiration',
+                title: '时间范围', dataIndex: 'expiration', key: 'expiration',
                 render: (rowValue, row, index) => {
-                    let expiration = row.expiration
-                    if (expiration) {
-                        expiration = moment(new Date(expiration));
-                    } else {
-                        expiration = '';
-                    }
 
-                    return (
-                        <div>
-                            <DatePicker defaultValue={expiration} showTime disabled />
-                        </div>
-                    )
+                    let open_time = row.startShowTime ? row.startShowTime : "";
+                    let stop_time = row.expiration ? row.expiration : "";
+                    let time = [moment(new Date(open_time)), moment(new Date(stop_time))];
+
+                    return (<RangePicker defaultValue={time} className="base-input-wrapper" showTime disabled placeholder={["开始展示时间", "过期时间"]} />)
                 }
             },
             {
@@ -174,49 +168,44 @@ export default class svScreenConfig extends Component {
     }
 
 
-    refreshList(code) {
+    refreshList(key_code) {
         let that = this;
         let { table_box, config_key_guess_u_like, config_key_movie } = that.state;
-        getList({ key: code }).then(res => {
+        getList({ key: key_code }).then(res => {
             if (res.data.errCode == 0) {
                 let data = res.data.data;
 
-                if (data.length > 0) {
+                //like
+                if (key_code == config_key_guess_u_like) {
+                    table_box.table_datas_like = [];
+                }
+                //move
+                else if (key_code == config_key_movie) {
+                    table_box.table_datas_movie = [];
+                }
+
+                that.setState({
+                    table_box: table_box,
+                }, () => {
+                    //为数据添加标识
+                    for (let i = 0, len = data.length; i < len; i++) {
+                        let item = data[i];
+                        item.key_code = key_code;
+                    }
 
                     //like
-                    if (code == config_key_guess_u_like) {
-                        table_box.table_datas_like = [];
+                    if (key_code == config_key_guess_u_like) {
+                        table_box.table_datas_like = data;
                     }
                     //move
-                    else if (code == config_key_movie) {
-                        table_box.table_datas_movie = [];
+                    else if (key_code == config_key_movie) {
+                        table_box.table_datas_movie = data;
                     }
-
                     that.setState({
                         table_box: table_box,
-                    }, () => {
-                        //为数据添加标识
-                        for (let i = 0, len = data.length; i < len; i++) {
-                            let item = data[i];
-                            item.key_code = code;
-                        }
-
-                        //like
-                        if (code == config_key_guess_u_like) {
-                            table_box.table_datas_like = data;
-                        }
-                        //move
-                        else if (code == config_key_movie) {
-                            table_box.table_datas_movie = data;
-                        }
-                        that.setState({
-                            table_box: table_box,
-                        }, () => {
-                            that.forceUpdate();
-                        })
-
                     })
-                }
+
+                })
             }
         })
     }
@@ -255,11 +244,11 @@ export default class svScreenConfig extends Component {
 
             //截止时间
             let obj = Object.assign({}, item)
-            if (item.expiration) {
-                obj.expiration = moment(new Date(item.expiration));
-            } else {
-                obj.expiration = '';
-            }
+
+            if (!item.startShowTim) item.startShowTim = "";      //开始时间
+            if (!item.expiration) item.expiration = "";          //过期时间
+
+            obj.time = [moment(new Date(item.startShowTime)), moment(new Date(item.expiration))]
 
             that.formRef.current.resetFields();
             that.formRef.current.setFieldsValue(obj);
@@ -299,15 +288,17 @@ export default class svScreenConfig extends Component {
         let key_code = modal_box.key_code;
 
         let value = that.formRef.current.getFieldsValue();
-        //判断时间
-        if (value.expiration) {
-            value.expiration = value.expiration.valueOf();
+
+        let time = value.time;
+        if (time) {
+            value.startShowTime = time[0].valueOf();
+            value.expiration = time[1].valueOf();
+            delete value.time;
         } else {
-            message.error('请选择输入截止日期')
+            message.error('请选择时间范围')
             return;
         }
 
-        console.log(value);
         let id = value.indexId;
 
         (id ? updateList({ key: key_code, id: id }, value) : addList({ key: key_code }, value)).then(res => {

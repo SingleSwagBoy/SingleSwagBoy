@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-11 14:19:18
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-13 11:17:43
+ * @LastEditTime: 2021-10-13 11:22:27
  * @Description: 短视频首屏配置
  */
 import React, { Component } from 'react'
@@ -315,19 +315,6 @@ export default class svScreenConfig extends Component {
             }
 
         })
-
-
-
-
-
-
-        // updateList()
-
-
-        // let ref_tag_types = that.state.ref_tag_types;
-        // let value = that.formRef.current.getFieldsValue();
-        // let obj = Object.assign({}, value, ref_tag_types.loadData());
-        // that.submitData(obj);
     }
 }
 

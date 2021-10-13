@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-13 15:19:52
+ * @LastEditTime: 2021-10-13 16:44:14
  * @Description:
  *
  * 需求背景:
@@ -58,6 +58,8 @@ export default class offlineConfig extends Component {
                 { key: 'dsj2', value: '电视家2.0' },
                 { key: 'dsj3', value: '电视家3.0' },
                 { key: 'dsjr', value: '电视家尝鲜版' },
+                { key: 'ios', value: 'IOS' },
+                { key: 'mobile', value: '安卓' },
             ],
             //下载类型
             dict_download_type: [

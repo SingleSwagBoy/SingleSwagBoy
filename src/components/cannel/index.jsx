@@ -6,7 +6,7 @@ import { } from 'react-router-dom'
 import { } from 'react-redux'
 const CheckboxGroup = Checkbox.Group;
 
-class Market extends Component {
+class MyChannel extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -68,7 +68,7 @@ class Market extends Component {
 
                 <div style={{ position: "absolute", right: "0px", top: "-20px", color: "#1890ff", cursor: "pointer", fontSize: "20px" }}
                     onClick={() => {
-                        this.setState({ is_fold_product: is_fold_product })
+                        this.setState({ is_fold_product: !is_fold_product })
                     }}
                 >
                     {this.state.is_fold_product ? "点击展开" : "点击折叠"}
@@ -142,4 +142,4 @@ class Market extends Component {
     }
 }
 
-export default Market
+export default MyChannel

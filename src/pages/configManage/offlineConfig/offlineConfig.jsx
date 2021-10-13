@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-12 20:33:16
+ * @LastEditTime: 2021-10-13 14:59:23
  * @Description:
  *
  * 需求背景:
@@ -118,6 +118,13 @@ export default class offlineConfig extends Component {
                                 <Form.Item label="配置名称" name='name' rules={[{ required: true }]}>
                                     <Input className="base-input-wrapper" placeholder="请输入排序位置" />
                                 </Form.Item>
+                                <Form.Item label="状态" name='status' rules={[{ required: true }]}>
+                                    <Select className="base-input-wrapper" showSearch placeholder='请选择状态'>
+                                        {dict_status.map((item, index) => {
+                                            return <Option key={index} value={item.key}>{item.value}</Option>
+                                        })}
+                                    </Select>
+                                </Form.Item>
                                 <Form.Item label="菜单类型" name='menuType' rules={[{ required: true }]}>
                                     <Select className="base-input-wrapper" showSearch placeholder='请选择菜单类型' onChange={(val) => {
                                         that.formRef.current.setFieldsValue({ 'menuType': val })
@@ -128,7 +135,6 @@ export default class offlineConfig extends Component {
                                         })}
                                     </Select>
                                 </Form.Item>
-
                                 {
                                     that.formRef.current.getFieldValue('menuType') === 3 &&
                                     <Form.Item label="进入应用" name='into' rules={[{ required: true }]}>
@@ -144,27 +150,27 @@ export default class offlineConfig extends Component {
                                     <RangePicker className="base-input-wrapper" showTime />
                                 </Form.Item>
 
-                                <Form.Item label="H5地址" name='h5Url' rules={[{ required: true }]}>
-                                    <Input className="base-input-wrapper" placeholder="请填写H5地址" />
+                                <Form.Item label="H5地址" name='h5Url'>
+                                    <Input className="base-input-wrapper" placeholder="请填写H5地址" allowClear />
                                 </Form.Item>
 
-                                <Form.Item label="产品线" name='productLine' rules={[{ required: true }]}>
-                                    <Select className="base-input-wrapper" showSearch placeholder='请选择进产品线'>
+                                <Form.Item label="产品线" name='productLine' >
+                                    <Select className="base-input-wrapper" showSearch placeholder='请选择进产品线' allowClear>
                                         {dict_product_line.map((item, index) => {
                                             return <Option key={index} value={item.key}>{item.value}</Option>
                                         })}
                                     </Select>
                                 </Form.Item>
 
-                                <Form.Item label="下载类型" name='downloadType' rules={[{ required: true }]}>
-                                    <Select className="base-input-wrapper" showSearch placeholder='请选择下载类型'>
+                                <Form.Item label="下载类型" name='downloadType' >
+                                    <Select className="base-input-wrapper" showSearch placeholder='请选择下载类型' allowClear>
                                         {dict_download_type.map((item, index) => {
                                             return <Option key={index} value={item.key}>{item.value}</Option>
                                         })}
                                     </Select>
                                 </Form.Item>
-                                <Form.Item label="运营APK" name='apkId' rules={[{ required: true }]}>
-                                    <Select className="base-input-wrapper" showSearch placeholder='请选择下载类型'>
+                                <Form.Item label="运营APK" name='apkId' >
+                                    <Select className="base-input-wrapper" showSearch placeholder='请选择下载类型' allowClear>
                                         {dict_apk.map((item, index) => {
                                             return <Option key={index} value={item.id}>{item.id}-{item.name}</Option>
                                         })}
@@ -172,21 +178,15 @@ export default class offlineConfig extends Component {
                                 </Form.Item>
 
                                 {/* 地域|渠道 */}
-                                <Form.Item label="地域" name="area" rules={[{ required: true }]}>
+                                <Form.Item label="地域" name="area"  >
                                     <MyAddress defaultAddress={address} onCheckAddress={that.onCheckAddress.bind(this)} />
                                 </Form.Item>
-                                <Form.Item label="渠道" name="cp" rules={[{ required: true }]}>
+                                <Form.Item label="渠道" name="cp"  >
                                     <MyMarketChannel getMarketReturn={this.getMarketReturn.bind(this)} checkData={marketChannel} />
                                 </Form.Item>
 
 
-                                <Form.Item label="状态" name='status' rules={[{ required: true }]}>
-                                    <Select className="base-input-wrapper" showSearch placeholder='请选择状态'>
-                                        {dict_status.map((item, index) => {
-                                            return <Option key={index} value={item.key}>{item.value}</Option>
-                                        })}
-                                    </Select>
-                                </Form.Item>
+
                             </div>
                         }
                     </Form>

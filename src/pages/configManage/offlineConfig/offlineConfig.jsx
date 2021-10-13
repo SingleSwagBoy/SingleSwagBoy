@@ -2,8 +2,8 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-13 16:44:14
- * @Description:
+ * @LastEditTime: 2021-10-13 22:07:29
+ * @Description: 停服下线通知配置
  *
  * 需求背景:
  * 规避政策上的监管，部分地域渠道产品线不支持播放功能
@@ -14,10 +14,10 @@
  * 4、H5支持下载安装应用
  */
 import React, { Component } from 'react';
-import { Input, InputNumber, Form, DatePicker, Button, Table, Modal, Alert, Select, message, Switch } from 'antd';
+import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, message, Switch } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
-import { MyAddress, MyMarketChannel, MySyncBtn } from '@/components/views.js';
+import { MyAddress, MyChannel, MySyncBtn } from '@/components/views.js';
 import {
     getList,                        //获取列表数据
     addList,                        //添加列表数据
@@ -73,7 +73,6 @@ export default class offlineConfig extends Component {
             ],
 
             address: [],                //地域
-            marketChannel: [],
             table_box: {
                 table_title: [],
                 table_datas: [],
@@ -88,7 +87,7 @@ export default class offlineConfig extends Component {
 
     render() {
         let that = this;
-        let { table_box, modal_box, config_key, address, marketChannel,
+        let { table_box, modal_box, config_key, address,
             dict_apk, dict_menu_type, dict_into, dict_product_line, dict_download_type, dict_status,
 
         } = that.state;
@@ -184,11 +183,8 @@ export default class offlineConfig extends Component {
                                     <MyAddress defaultAddress={address} onCheckAddress={that.onCheckAddress.bind(this)} />
                                 </Form.Item>
                                 <Form.Item label="渠道" name="cp"  >
-                                    <MyMarketChannel getMarketReturn={this.getMarketReturn.bind(this)} checkData={marketChannel} />
+                                    <MyChannel formRef={that.formRef} />
                                 </Form.Item>
-
-
-
                             </div>
                         }
                     </Form>
@@ -319,7 +315,6 @@ export default class offlineConfig extends Component {
         that.setState({
             modal_box: modal_box,
             address: [],
-            marketChannel: [],
         }, () => {
             that.forceUpdate();
             that.formRef.current.resetFields();
@@ -367,20 +362,15 @@ export default class offlineConfig extends Component {
         value.area = area;
 
         //渠道信息
-        let marketChannel = that.state.marketChannel;
-        if (!marketChannel) {
+        let cp = value.cp;
+        if (!cp) {
             message.error('请选择渠道信息');
             return;
-        } else {
-            if (marketChannel.constructor === Array) {
-                marketChannel = marketChannel.join(',');
-            }
-            value.cp = marketChannel;
         }
-
-        // console.log(value);
-        // return;
-
+        if (cp.constructor === Array) {
+            cp = cp.join(',');
+        }
+        value.cp = cp;
 
         let id = value.indexId;
 
@@ -431,28 +421,13 @@ export default class offlineConfig extends Component {
             } else {
                 that.setState({ address: [] })
             }
-
-
             //渠道信息    
-            let cp = item.cp;
-            if (cp) {
-                if (cp.constructor === String) {
-                    cp = cp.split(',');
-                }
-                that.setState({ marketChannel: cp })
-            } else {
-                that.setState({ marketChannel: [] })
-            }
-
-
+            obj.cp = item.cp;
 
             that.formRef.current.resetFields();
             that.formRef.current.setFieldsValue(obj);
         })
 
-        // data.time = [
-        //     moment(data.startTime), moment(data.endTime)
-        // ]
     }
 
     //item删除按钮被点击
@@ -486,16 +461,4 @@ export default class offlineConfig extends Component {
             address: arr
         });
     }
-
-    //渠道
-    getMarketReturn(val) {
-        let that = this;
-        that.state.marketChannel = val
-        that.setState({
-            marketChannel: val
-        }, () => {
-            that.formRef.current.setFieldsValue({ "cp": val })
-        })
-    }
-
 }

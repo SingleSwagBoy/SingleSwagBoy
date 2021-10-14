@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 11:56:33
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-13 14:45:03
+ * @LastEditTime: 2021-10-14 14:16:19
  * @Description: 微信支付模板消息
  */
 
@@ -49,6 +49,11 @@ export default class WxPayTemplate extends Component {
                 { key: 1, value: '有效' },
                 { key: 2, value: '无效' },
             ],
+            //是否测试
+            dict_tests: [
+                { key: 1, value: '测试' },
+                { key: 2, value: '正式' },
+            ],
 
             ref_tag_types: null,
             ref_time_interval: null,
@@ -77,7 +82,7 @@ export default class WxPayTemplate extends Component {
     render() {
         let that = this;
         let { table_box, modal_box
-            , dict_mini_types, dict_status, dict_alls, dict_public_types, dict_wx_program, tmpl_type } = that.state;
+            , dict_tests, dict_mini_types, dict_status, dict_alls, dict_public_types, dict_wx_program, tmpl_type } = that.state;
         return (
             <div>
                 <Alert className="alert-box" message="微信模板消息" type="success" action={
@@ -103,6 +108,11 @@ export default class WxPayTemplate extends Component {
                                         <Input className="base-input-wrapper" disabled />
                                     </Form.Item>
                                 }
+                                {/* { title: '名称', dataIndex: 'name', key: 'name', width: 200, }, */}
+
+                                <Form.Item label="名称" name='name' rules={[{ required: true }]} >
+                                    <Input className="base-input-wrapper" />
+                                </Form.Item>
 
                                 <Form.Item label="状态" name='status' rules={[{ required: true }]} >
                                     {/* <Switch checkedChildren="有效" unCheckedChildren="无效" /> */}
@@ -111,10 +121,7 @@ export default class WxPayTemplate extends Component {
                                             return <Option key={index} value={item.key}>{item.value}</Option>
                                         })}
                                     </Select>
-
                                 </Form.Item>
-
-
 
                                 <Form.Item label="上下线时间" name='start_end_time' rules={[{ required: true }]} >
                                     <RangePicker className="base-input-wrapper" showTime format={'YYYY-MM-DD HH:mm:ss'} />
@@ -128,12 +135,27 @@ export default class WxPayTemplate extends Component {
                                     </Select>
                                 </Form.Item>
 
+                                <Form.Item label="是否测试" name='test'>
+                                    <Select className="base-input-wrapper" placeholder='请选择是否是测试数据' onChange={(val) => { that.forceUpdate() }}>
+                                        {dict_tests.map((item, index) => (
+                                            <Option value={item.key} key={index}>{item.key}-{item.value}</Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+
+                                {
+                                    that.formRef.current.getFieldValue('test') === 1 &&
+                                    <Form.Item label="测试用户" name='testUsers'>
+                                        <TextArea className="base-input-wrapper" placeholder='请填写测试用户数据模板' autoSize={{ minRows: 4, maxRows: 8 }} />
+                                    </Form.Item>
+                                }
+
                                 <Form.Item label="模板id" name='tmpl_id' >
-                                    <TextArea className="base-input-wrapper" autoSize={{ minRows: 2, maxRows: 5 }} />
+                                    <TextArea className="base-input-wrapper" placeholder='请填写模板id' autoSize={{ minRows: 2, maxRows: 5 }} />
                                 </Form.Item>
 
                                 <Form.Item label="微信公众号" name='wx_code' >
-                                    <Select className="base-input-wrapper">
+                                    <Select className="base-input-wrapper" placeholder='请选择微信公众号'>
                                         {dict_public_types.map((item, index) => (
                                             <Option value={item.code} key={index}>{item.name}</Option>
                                         ))}
@@ -152,7 +174,7 @@ export default class WxPayTemplate extends Component {
                                 <Form.Item label="跳转类型" name='mini'>
                                     <Radio.Group className="base-input-wrapper" >
                                         {dict_mini_types.map((item, index) => {
-                                            return <Radio value={item.key} key={index} onClick={(e) => that.onRadioClick(item.key)}>
+                                            return <Radio value={item.key} key={index} onClick={(e) => { that.forceUpdate() }}>
                                                 {item.value}
                                             </Radio>
                                         })}
@@ -186,7 +208,7 @@ export default class WxPayTemplate extends Component {
                                 <Form.Item label="发送人群" name='all'>
                                     <Radio.Group className="base-input-wrapper" >
                                         {dict_alls.map((item, index) => {
-                                            return <Radio value={item.key} key={index} onClick={(e) => that.onTagTypeRadioClick(item.key)}>
+                                            return <Radio value={item.key} key={index} onClick={(e) => { that.forceUpdate() }}>
                                                 {item.value}
                                             </Radio>
                                         })}
@@ -362,11 +384,25 @@ export default class WxPayTemplate extends Component {
             }
         }, () => {
             that.forceUpdate();
+
+            let obj = {};
+            obj.testUsers = "[{\n" +
+                "    \"id\": 0,\n" +
+                "    \"userId\": \"userid\",\n" +
+                "    \"wxCode\": \"dianshijiang\",\n" +
+                "    \"openid\": \"openid\",\n" +
+                "    \"tag\": \"tag\",\n" +
+                "    \"msg1\": \"\",\n" +
+                "    \"msg2\": \"\",\n" +
+                "    \"msg3\": \"\",\n" +
+                "    \"msg4\": \"\"\n" +
+                "}]";
             that.formRef.current.resetFields();
+            that.formRef.current.setFieldsValue(obj);
 
             setTimeout(() => {
                 let ref_tag_types = that.state.ref_tag_types;
-                if (ref_tag_types) ref_tag_types.pushData({});
+                if (ref_tag_types) ref_tag_types.pushData(obj);
             }, 10)
 
         })
@@ -452,6 +488,20 @@ export default class WxPayTemplate extends Component {
                 obj.appid = "";
                 obj.pagepath = "";
             }
+            if (!obj.testUsers) {
+                obj.testUsers = "[{\n" +
+                    "    \"id\": 0,\n" +
+                    "    \"userId\": \"userid\",\n" +
+                    "    \"wxCode\": \"dianshijiang\",\n" +
+                    "    \"openid\": \"openid\",\n" +
+                    "    \"tag\": \"tag\",\n" +
+                    "    \"msg1\": \"\",\n" +
+                    "    \"msg2\": \"\",\n" +
+                    "    \"msg3\": \"\",\n" +
+                    "    \"msg4\": \"\"\n" +
+                    "}]";
+            }
+
 
             that.formRef.current.resetFields();
             that.formRef.current.setFieldsValue(obj);
@@ -555,20 +605,13 @@ export default class WxPayTemplate extends Component {
                     that.refreshList();
                 })
             });
-
     }
 
-
-    //跳转类型选项被点击
-    onRadioClick() {
-        let that = this;
-        that.forceUpdate();
-    }
 
     //发送标签类型被点击
     onTagTypeRadioClick(key) {
         let that = this;
-        that.formRef.current.setFieldsValue({ all: key });
+        that.formRef.current.setFieldsValue({ 'all': key });
         that.forceUpdate();
     }
 

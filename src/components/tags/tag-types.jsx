@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-28 10:31:55
+ * @LastEditTime: 2021-10-14 15:21:41
  * @Description: 用户标签 - 投放类型 组合控件
  * 
  * 不传不显示下面对应的参数 不传时，获取数据也不会获取到对应参数
@@ -11,7 +11,7 @@
  * delivery_name:           可更改[投放类型]字段名称
  */
 import React, { Component } from 'react';
-import { Form, Select, Radio, Tooltip, message } from 'antd';
+import { Form, Select, Radio, Input, Tooltip, message } from 'antd';
 import './tag-types.css';
 import {
     getUserTag,                         //用户设备标签
@@ -48,7 +48,7 @@ export default class TagTypes extends Component {
     render() {
         let that = this;
         let { dict_union_type, dict_user_tags, dict_delivery_types } = that.state;
-        let { union_type, tag_name, delivery_name } = that.props;
+        let { union_type, tag_name, delivery_name, desc } = that.props;
 
         return (
             <div className='tag-types-wrapper'>
@@ -91,6 +91,12 @@ export default class TagTypes extends Component {
                             </Select>
                         </Form.Item>
                     }
+                    {desc &&
+                        <Form.Item label='注意' >
+                            <label style={{ color: 'red' }}>{desc}</label>
+                        </Form.Item>
+                    }
+
                 </Form>
             </div>
         )
@@ -185,7 +191,6 @@ export default class TagTypes extends Component {
                 obj[delivery_name] = delivery;
             }
         }
-
         return obj;
     }
 

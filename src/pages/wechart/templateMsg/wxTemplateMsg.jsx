@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 11:56:33
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-14 14:16:19
+ * @LastEditTime: 2021-10-14 15:22:53
  * @Description: 微信支付模板消息
  */
 
@@ -204,27 +204,20 @@ export default class WxPayTemplate extends Component {
                                         <TextArea className="base-input-wrapper" placeholder='请输入http://开头的地址' />
                                     </Form.Item>
                                 }
-
+                                {/* 
                                 <Form.Item label="发送人群" name='all'>
-                                    <Radio.Group className="base-input-wrapper" >
+                                    <Radio.Group className="base-input-wrapper" onChange={() => { that.forceUpdate() }}>
                                         {dict_alls.map((item, index) => {
-                                            return <Radio value={item.key} key={index} onClick={(e) => { that.forceUpdate() }}>
+                                            return <Radio value={item.key} key={index} >
                                                 {item.value}
                                             </Radio>
                                         })}
                                     </Radio.Group>
-                                </Form.Item>
-
+                                </Form.Item> */}
                             </div>
                         }
                     </Form>
-
-                    {/* 用户标签 - 投放类型 */}
-                    <div style={{ display: that.formRef && that.formRef.current && that.formRef.current.getFieldValue('all') === 2 ? 'block' : 'none' }} >
-                        <MyTagTypes union_type='all' tag_name='tag' delivery_name='delivery' onRef={(ref) => that.setState({ ref_tag_types: ref })} />
-                    </div>
-
-
+                    <MyTagTypes union_type='all' tag_name='tag' delivery_name='delivery' desc={'未选择标签，则针对全部用户生效'} onRef={(ref) => that.setState({ ref_tag_types: ref })} />
                 </Modal >
             </div >
 
@@ -479,9 +472,6 @@ export default class WxPayTemplate extends Component {
             let mini_config = obj.mini_config;
             if (mini_config) {
                 mini_config = JSON.parse(mini_config);
-                console.log('-------->>>');
-                console.log(mini_config);
-
                 obj.appid = mini_config.appid ? mini_config.appid : '';
                 obj.pagepath = mini_config.pagepath ? mini_config.pagepath : '';
             } else {

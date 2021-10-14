@@ -118,6 +118,7 @@ class MyLayout extends Component {
                 <Menu.Item onClick={() => {
                     this.props.history.push('/mms/transition')
                 }}>首页</Menu.Item>
+                <Menu.Item onClick={this.clearStore}>清除缓存</Menu.Item>
                 <Menu.Item onClick={this.loginOut}>退出登录</Menu.Item>
             </Menu>
         );
@@ -183,6 +184,10 @@ class MyLayout extends Component {
             </div>
         )
     }
+    clearStore=()=>{
+        
+    }
+
     loginOut = () => {
         this.props.logout();
         message.success('退出成功', 1, () => {

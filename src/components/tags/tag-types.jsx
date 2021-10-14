@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-14 15:21:41
+ * @LastEditTime: 2021-10-14 15:40:32
  * @Description: 用户标签 - 投放类型 组合控件
  * 
  * 不传不显示下面对应的参数 不传时，获取数据也不会获取到对应参数
@@ -96,7 +96,6 @@ export default class TagTypes extends Component {
                             <label style={{ color: 'red' }}>{desc}</label>
                         </Form.Item>
                     }
-
                 </Form>
             </div>
         )
@@ -167,7 +166,6 @@ export default class TagTypes extends Component {
                 message.error('请选择标签判断逻辑')
             }
         }
-
 
         //用户标签
         let tags = value[tag_name];

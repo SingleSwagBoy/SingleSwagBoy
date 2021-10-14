@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-13 22:10:58
+ * @LastEditTime: 2021-10-14 16:57:09
  * @Description: 停服下线通知配置
  *
  * 需求背景:
@@ -17,7 +17,7 @@ import React, { Component } from 'react';
 import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, message, Switch } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
-import { MyAddress, MyChannel, MySyncBtn } from '@/components/views.js';
+import { MyArea, MyAddress, MyChannel, MySyncBtn } from '@/components/views.js';
 import {
     getList,                        //获取列表数据
     addList,                        //添加列表数据
@@ -194,6 +194,7 @@ export default class offlineConfig extends Component {
                                 {/* 地域|渠道 */}
                                 <Form.Item label="地域" name="area"  >
                                     <MyAddress defaultAddress={address} onCheckAddress={that.onCheckAddress.bind(this)} />
+                                    {/* <MyArea formRef={that.formRef} /> */}
                                 </Form.Item>
                                 <Form.Item label="渠道" name="cp"  >
                                     <MyChannel formRef={that.formRef} />

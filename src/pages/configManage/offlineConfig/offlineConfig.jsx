@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-14 16:57:09
+ * @LastEditTime: 2021-10-14 20:06:08
  * @Description: 停服下线通知配置
  *
  * 需求背景:
@@ -193,9 +193,9 @@ export default class offlineConfig extends Component {
 
                                 {/* 地域|渠道 */}
                                 <Form.Item label="地域" name="area"  >
-                                    <MyAddress defaultAddress={address} onCheckAddress={that.onCheckAddress.bind(this)} />
-                                    {/* <MyArea formRef={that.formRef} /> */}
+                                    <MyArea formRef={that.formRef} />
                                 </Form.Item>
+
                                 <Form.Item label="渠道" name="cp"  >
                                     <MyChannel formRef={that.formRef} />
                                 </Form.Item>
@@ -364,14 +364,13 @@ export default class offlineConfig extends Component {
         }
 
         //地域信息
-        let area = that.state.address;
+        let area = value.area;
         if (!area) {
             message.error('请选择地域信息');
             return;
-        } else {
-            if (area.constructor === Array) {
-                area = area.join(',');
-            }
+        }
+        if (area.constructor === Array) {
+            area = area.join(',');
         }
         value.area = area;
 
@@ -424,19 +423,8 @@ export default class offlineConfig extends Component {
             //截止时间
             let obj = Object.assign({}, item)
             obj.time = [moment(new Date(item.startTime)), moment(new Date(item.endTime)),]
-
-            //地域信息
-            let area = item.area;
-            if (area) {
-                if (area.constructor === String) {
-                    area = area.split(',');
-                }
-                that.setState({ address: area })
-            } else {
-                that.setState({ address: [] })
-            }
-            //渠道信息    
-            obj.cp = item.cp;
+            obj.area = item.area;               //地域信息
+            obj.cp = item.cp;                   //渠道信息    
 
             that.formRef.current.resetFields();
             that.formRef.current.setFieldsValue(obj);
@@ -457,22 +445,5 @@ export default class offlineConfig extends Component {
                 message.error("删除失败")
             }
         })
-    }
-
-    //地域
-    onCheckAddress(val) {
-        let that = this;
-        let postAddress = val.filter(item => item !== "all")
-        let arr = []
-        postAddress.forEach(r => {
-            if (r.indexOf("-") !== -1) {
-                arr.push(r.replace("-", ""))
-            } else {
-                arr.push(r)
-            }
-        })
-        that.setState({
-            address: arr
-        });
     }
 }

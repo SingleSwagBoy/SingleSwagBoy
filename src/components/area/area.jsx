@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-14 16:58:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-14 20:35:14
+ * @LastEditTime: 2021-10-15 17:29:54
  * @Description: 快捷获取地域信息
  */
 import React, { Component } from 'react'
@@ -18,7 +18,7 @@ class Area extends Component {
         super(props)
         this.state = {
             dict_area_list: [],
-            searchValue: '',
+            search_value: '',
         }
 
     }
@@ -38,7 +38,7 @@ class Area extends Component {
     }
     render() {
         let that = this;
-        let { dict_area_list, searchValue } = that.state;
+        let { dict_area_list, search_value } = that.state;
         let { id, formRef } = that.props;
         let data = formRef.current.getFieldValue(id);   //获取外部数据
 
@@ -57,25 +57,14 @@ class Area extends Component {
 
         return (
             <div>
-                <Search className="base-input-wrapper" style={{ marginBottom: 8 }} placeholder="筛选搜索地域信息(方便勾选)" onChange={(e) => { that.onSearchInputChange(e) }} />
                 <Tree checkable
                     onCheck={(items) => that.onTreeItemClick(items)}
                     onSelect={(items) => { console.log(items) }}
                     checkedKeys={data}
-                    treeData={dict_area_list.filter((item, i, self) => {
-                        console.log(item)
-                        return searchValue ? item.name === searchValue : true
-                    })}
+                    treeData={dict_area_list}
                 />
             </div>
         )
-    }
-
-    //搜索输入框发生改变
-    onSearchInputChange(e) {
-        let { value } = e.target;
-        console.log(value);
-
     }
 
     //获取地区信息

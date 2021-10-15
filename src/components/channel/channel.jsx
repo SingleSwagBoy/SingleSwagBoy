@@ -2,12 +2,12 @@
  * @Author: HuangQS
  * @Date: 2021-10-14 11:16:44
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-14 20:18:12
+ * @LastEditTime: 2021-10-15 18:30:56
  * @Description: 快捷获取渠道信息
  */
 import React, { Component } from 'react'
 import { getDict } from "api"
-import { Checkbox, Row, Col } from 'antd';
+import { Checkbox, Row, Col, Tree } from 'antd';
 import { loadStore, saveStore, clearStore } from "@/utils/StoreManage"
 
 
@@ -21,142 +21,91 @@ class MyChannel extends Component {
             is_fold_product: false
         }
     }
+
     componentDidMount() {
         let that = this;
+        that.requestChannelDict()
 
+        //缓存如果有地址就不需要再次去请求
         let channel = loadStore('my_channel_data');
         if (channel) {
-            that.setState({ dict_product_line_list: JSON.parse(channel) })
+            that.setState({
+                dict_area_list: JSON.parse(channel)
+            })
         } else {
             that.requestChannelDict()
-
         }
 
     }
     render() {
-        // 传出的数据如[aaaa,bbbb,cccc]类型 需要在外层进一步处理数据aaaa,bbbb,cccc
-
         let that = this;
-        //被选中的列表
+        let { dict_product_line_list, search_value } = that.state;
         let { id, formRef } = that.props;
-        let { dict_product_line_list, is_fold_product, } = that.state;
-        let curr_check_data = formRef.current.getFieldValue(id);
+        let data = formRef.current.getFieldValue(id);   //获取外部数据
 
-        if (!curr_check_data) {
+        if (!data) {
             let obj = {};
-            curr_check_data = [];
-            obj[id] = curr_check_data;
+            obj[id] = data = [];
             formRef.current.setFieldsValue(obj);
-
         }
         //
-        else if (curr_check_data.constructor === String) {
-            curr_check_data = curr_check_data.split(",");
+        else if (data.constructor === String) {
+            data = data.split(",");
             let obj = {};
-            obj[id] = curr_check_data;
+            obj[id] = data;
             formRef.current.setFieldsValue(obj);
         }
-
-
-        let is_check_all = dict_product_line_list.length === curr_check_data.length;        //是否选择所有数据
 
         return (
             <div>
-                <Row >
-                    <Checkbox checked={is_check_all} key={new Date().getTime() * 6} onClick={() => { that.onAllClick(is_check_all) }}>
-                        全选
-                    </Checkbox>
-                </Row>
-                <div style={{ height: is_fold_product ? 0 : "auto", overflow: "hidden", }}>
-                    <Row>
-                        {dict_product_line_list.map((item, index) => {
-
-                            let is_check = false;
-                            for (let i = 0, len = curr_check_data.length; i < len; i++) {
-                                let temp = curr_check_data[i];
-                                if (temp === item.code) {
-                                    is_check = true;
-                                    break;
-                                }
-                            }
-                            return (<Col span={12} key={index}><Checkbox checked={is_check} onClick={(v) => { that.onCheckBoxClick(v, item) }} >{item.name}</Checkbox></Col>)
-                        })}
-                    </Row>
-                </div>
-
-                <div style={{ position: "absolute", right: "0px", top: "-20px", color: "#1890ff", cursor: "pointer", fontSize: "20px" }}
-                    onClick={() => {
-                        this.setState({ is_fold_product: !is_fold_product })
-                    }}
-                >
-                    {this.state.is_fold_product ? "点击展开" : "点击折叠"}
-                </div>
+                <Tree checkable
+                    onCheck={(items) => that.onTreeItemClick(items)}
+                    onSelect={(items) => { console.log(items) }}
+                    checkedKeys={data}
+                    treeData={dict_product_line_list}
+                />
             </div>
-
         )
     }
-    //当全选按钮被点击
-    onAllClick(is_check) {
-        let that = this;
 
-        let { id, formRef } = that.props;
-        let { dict_product_line_list, } = that.state;
 
-        let maps = [];
-        if (!is_check) {
-            for (let i = 0, len = dict_product_line_list.length; i < len; i++) {
-                let item = dict_product_line_list[i];
-                maps.push(item.code);
-            }
-        }
 
-        let obj = {};
-        obj[id] = maps;
-        formRef.current.setFieldsValue(obj);
-        that.forceUpdate();
-    }
-    //选择框被点击
-    onCheckBoxClick(v, item) {
-        let that = this;
-        let is_check = v.target.checked;
-        let { id, formRef } = that.props;
-
-        let curr_check_data = formRef.current.getFieldValue(id);
-        //选中
-        if (is_check) {
-            curr_check_data.push(item.code);
-            let obj = {};
-            obj[id] = curr_check_data;
-            formRef.current.setFieldsValue(obj);
-        }
-        //取消选中
-        else {
-            for (let i = 0, len = curr_check_data.length; i < len; i++) {
-                let temp = curr_check_data[i];
-                if (temp === item.code) {
-                    curr_check_data.splice(i, 1);
-                    let obj = {};
-                    obj[id] = curr_check_data;
-                    formRef.current.setFieldsValue(obj);
-                    break;
-                }
-            }
-
-        }
-        that.forceUpdate();
-    }
-    requestChannelDict() { //获取产品线
+    //获取渠道信息
+    requestChannelDict() {
         let that = this;
         let params = {
             page: { isPage: 9 },
             prodType: 1
         }
         getDict(params).then(res => {
+            let data = res.data.data;
+
+            let children = [];
+            data.forEach(item => {
+                children.push({ title: item.name, key: item.code })
+            })
+
+            let tree = [
+                { title: "全选", key: "all", children: children }
+            ]
             that.setState({
-                dict_product_line_list: res.data.data,
+                dict_product_line_list: tree,
+            }, () => {
+                saveStore('my_channel_data', JSON.stringify(tree))
             })
         })
     }
+
+    //树形结构Item被点击
+    onTreeItemClick(items) {
+        let that = this;
+        let { id, formRef } = that.props;
+        let obj = {};
+        obj[id] = items;
+        formRef.current.setFieldsValue(obj);
+    }
+
+
 }
 
 export default MyChannel

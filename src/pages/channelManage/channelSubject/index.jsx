@@ -57,7 +57,7 @@ export default class SportsProgram extends Component {
 
                         return (
                             <div>
-                                <RangePicker defaultValue={time} showTime format={dateFormat} disabled />
+                                <RangePicker value={time} showTime format={dateFormat} disabled />
                             </div>
                         )
                     }

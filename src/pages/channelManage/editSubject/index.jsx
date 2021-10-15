@@ -272,10 +272,12 @@ export default class SportsProgram extends Component {
         }
         //更新时间
         let time = params.time;
-        try {
+        if (time && time.length == 2) {
             params.startTime = time[0].valueOf();
             params.endTime = time[1].valueOf();
-        } catch {
+        } else {
+            delete params.startTime;
+            delete params.endTime;
         }
         delete params.time;
 
@@ -355,7 +357,7 @@ export default class SportsProgram extends Component {
                         </Form.Item>
 
                         <Form.Item label="排序" name="column" rules={[{ required: true, message: '请填写排序' }]}>
-                            <InputNumber className="base-input-wrapper" min={-1} />
+                            <InputNumber min={1} className="base-input-wrapper" />
                         </Form.Item>
 
 
@@ -367,7 +369,7 @@ export default class SportsProgram extends Component {
                             </Select>
                         </Form.Item>
 
-                        <Tooltip title='如果不选择时间，表示全部通用' placement="top" color={'blue'}>
+                        <Tooltip title='如果不选择时间，表示该专题为永久展示' placement="top" color={'blue'}>
                             <Form.Item label="有效时间" name="time" >
                                 <RangePicker className="base-input-wrapper" showTime allowClear />
                             </Form.Item>

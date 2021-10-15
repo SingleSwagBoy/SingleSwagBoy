@@ -1,9 +1,15 @@
+/*
+ * @Author: HuangQS
+ * @Date: 2021-10-14 11:16:44
+ * @LastEditors: HuangQS
+ * @LastEditTime: 2021-10-14 20:18:12
+ * @Description: 快捷获取渠道信息
+ */
 import React, { Component } from 'react'
 import { getDict } from "api"
 import { Checkbox, Row, Col } from 'antd';
-import { } from '@ant-design/icons';
-import { } from 'react-router-dom'
-import { } from 'react-redux'
+import { loadStore, saveStore, clearStore } from "@/utils/StoreManage"
+
 
 class MyChannel extends Component {
     constructor(props) {
@@ -16,7 +22,16 @@ class MyChannel extends Component {
         }
     }
     componentDidMount() {
-        this.getDict()
+        let that = this;
+
+        let channel = loadStore('my_channel_data');
+        if (channel) {
+            that.setState({ dict_product_line_list: JSON.parse(channel) })
+        } else {
+            that.requestChannelDict()
+
+        }
+
     }
     render() {
         // 传出的数据如[aaaa,bbbb,cccc]类型 需要在外层进一步处理数据aaaa,bbbb,cccc
@@ -97,7 +112,6 @@ class MyChannel extends Component {
 
         let obj = {};
         obj[id] = maps;
-        console.log(obj, obj[id])
         formRef.current.setFieldsValue(obj);
         that.forceUpdate();
     }
@@ -131,7 +145,7 @@ class MyChannel extends Component {
         }
         that.forceUpdate();
     }
-    getDict() { //获取产品线
+    requestChannelDict() { //获取产品线
         let that = this;
         let params = {
             page: { isPage: 9 },

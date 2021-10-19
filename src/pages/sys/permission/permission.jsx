@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-28 11:34:45
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-11 13:58:17
+ * @LastEditTime: 2021-10-13 18:17:24
  * @Description: 权限列表
  */
 
@@ -54,15 +54,18 @@ export default class SysPermission extends Component {
 
     render() {
         let that = this;
-        let { table_box, modal_box, 
+        let { table_box, modal_box,
             dict_sys_role, dict_sys_menu, dict_permissions, } = that.state;
 
         return (
             <div>
+                {JSON.stringify(dict_sys_role)}
+
                 <Alert className="alert-box" message={
                     <div>权限列表</div>
                 } type="success" action={
                     <div>
+                        <Input placeholder="查询筛选数据" />
                         <Button style={{ marginLeft: 3 }} onClick={() => that.showModal({})}>新增</Button>
                     </div>
                 }>
@@ -271,7 +274,7 @@ export default class SysPermission extends Component {
 
     //申请修改编辑
     requestToCreateModify() {
-console.log('snsns')
+        console.log('snsns')
     }
 
     //表格分页监听

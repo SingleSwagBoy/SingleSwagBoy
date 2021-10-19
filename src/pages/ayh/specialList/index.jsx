@@ -4,7 +4,7 @@ import {
     shortVideoSearch, addColumn, cvideos, update_column, editColumn
     , requestSvcResort, requestSvcChangeVideoSort, requestSvcChangeVideoTitle
 } from 'api'
-import { Alert, Card, Image, Button, Table, Modal, message, Input, Form, Select, InputNumber } from 'antd'
+import { Alert, Card, Image, Button, Table, Modal, message, Input, Form, Select, InputNumber, Tooltip } from 'antd'
 import { } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
 import util from 'utils'
@@ -250,9 +250,9 @@ export default class SportsProgram extends Component {
                 <Modal title="关联视频" centered visible={this.state.videoVisible} onCancel={() => { this.closeModel(2) }} footer={null} width={1000} >
 
                     <Alert className="alert-box" message="" type="success" action={
-                        <div>
-                            <Button onClick={() => { this.onSvcResortClick() }}>重新排序</Button>
-                        </div>
+                        <Tooltip title={'后端将自动将数据按照10、20、30顺序依次排列数据'} placement="top"  >
+                            <Button onClick={() => { this.onSvcResortClick() }}>自动排序</Button>
+                        </Tooltip>
                     } />
                     <Table
                         dataSource={this.state.linkVideoList}
@@ -399,8 +399,11 @@ export default class SportsProgram extends Component {
     //奥运会专题-专题下短视频重新排序
     onSvcResortClick() {
         let that = this;
-        requestSvcResort().then(res => {
-            let columnId = that.state.currentItem;
+        let columnId = that.state.currentItem;
+        let obj = {
+            columnId: columnId,
+        }
+        requestSvcResort(obj).then(res => {
             that.cvideos(columnId);
         })
     }

@@ -16,6 +16,7 @@ import {
     syncWeChat,                     //微信自动回复/wxcode/微信二维码
     syncMenuImage,                  //广告菜单栏目录配置
     syncWxTemplateMsgConfig,        //微信模板消息 同步
+    syncWhite,                      //白名单广告 同步
 } from 'api'
 
 
@@ -93,6 +94,7 @@ export default class SyncBtn extends Component {
         if (type === 5) return syncMenuImage();                                 //广告菜单栏目录配置
         if (type === 6) return syncWxTemplateMsgConfig();                       //微信模板消息 同步
         if (type === 7) return syncSynSlice(params);                            //简单接口 
+        if (type === 8) return syncWhite();                                     //白名单
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

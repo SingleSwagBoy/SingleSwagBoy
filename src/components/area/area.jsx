@@ -101,6 +101,7 @@ class Area extends Component {
         let obj = {};
         obj[id] = items;
         formRef.current.setFieldsValue(obj);
+        that.forceUpdate();
     }
 
 }

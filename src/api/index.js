@@ -235,12 +235,19 @@ export const updateDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad
 export const delDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/del`, params) };                                                                                          //删除自定义规则标签
 export const esQuery = (params) => { return request.post(`${baseUrl}/mms/ad/tag/esQuery`, params) };                                                                                        //esQuery
 
+//  转转管理------赚赚激励气泡
+export const getEarnTskList=(params)=>{ return request2.get(`${baseUrl}/mms/bubbletask/list`, { params: params }); };  // 获取转转激励任务列表
+export const addEarnTskList = (params) => { return request2.post(`${baseUrl}/mms/bubbletask/add`, params) };            // 新增转转激励任务
+export const updateEarnTskList = (params) => { return request2.post(`${baseUrl}/mms/bubbletask/update`, params) };      // 更新转转激励任务
+export const deleteEarnTskList = (params) => { return request.get(`${baseUrl}/mms/bubbletask/del`, params) };         // 删除转转激励任务
+export const syncEarnTskList = (params) => { return request2.post(`${baseUrl}/mms/bubbletask/sync`, params) };          // 同步缓存转转激励任务
 
-
-
-
-
-
+//白名单配置
+export const addWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/add`, params) };          // 新增白名单配置
+export const listWhite = (params) => { return request2.get(`${baseUrl}/mms/ad/whitelist/list`, { params: params }) };          // 获取白名单配置
+export const updateWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/update`, params) };          // 更新白名单配置
+export const deleteWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/delete`, params) };          // 删除白名单配置
+export const syncWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/sync`, params) };          // 同步
 
 
 //广告-二维码套餐类型

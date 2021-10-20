@@ -108,10 +108,10 @@ export default class AddressNews extends Component {
             <div className="list_page">
                 <Card title={
                     <>
-                        {/* <Breadcrumb>
+                        <Breadcrumb>
                             <Breadcrumb.Item>白名单配置（广告）</Breadcrumb.Item>
-                        </Breadcrumb> */}
-                        <div style={{ display: "flex" }}>
+                        </Breadcrumb>
+                        {/* <div style={{ display: "flex" }}>
                             <div className="everyBody">
                                 <div>配置:</div>
                                 <Input.Search
@@ -128,7 +128,7 @@ export default class AddressNews extends Component {
 
                                     }}
                                 />
-                            </div>
+                            </div> */}
                             {/* <div className="everyBody" style={{ marginLeft: "20px" }}>
                                 <div>类型:</div>
                                 <Select allowClear placeholder="请选择类型"
@@ -146,7 +146,7 @@ export default class AddressNews extends Component {
                                     <Option value={30} key={30}>IP</Option>
                                 </Select>
                             </div> */}
-                        </div>
+                        {/* </div> */}
 
                     </>
                 }

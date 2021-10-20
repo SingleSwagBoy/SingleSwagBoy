@@ -242,7 +242,12 @@ export const updateEarnTskList = (params) => { return request2.post(`${baseUrl}/
 export const deleteEarnTskList = (params) => { return request.get(`${baseUrl}/mms/bubbletask/del`, params) };         // 删除转转激励任务
 export const syncEarnTskList = (params) => { return request2.post(`${baseUrl}/mms/bubbletask/sync`, params) };          // 同步缓存转转激励任务
 
-
+//白名单配置
+export const addWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/add`, params) };          // 新增白名单配置
+export const listWhite = (params) => { return request2.get(`${baseUrl}/mms/ad/whitelist/list`, { params: params }) };          // 获取白名单配置
+export const updateWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/update`, params) };          // 更新白名单配置
+export const deleteWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/delete`, params) };          // 删除白名单配置
+export const syncWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/sync`, params) };          // 同步
 
 
 //广告-二维码套餐类型

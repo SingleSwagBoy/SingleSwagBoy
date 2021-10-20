@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { addWhite, listWhite, updateWhite, deleteWhite, syncWhite } from 'api'
+import { addWhite, listWhite, updateWhite, deleteWhite } from 'api'
 import { Card, Breadcrumb, Button, message, Table, Modal, Form, Input, Select, Switch } from 'antd'
+import { MySyncBtn } from '@/components/views.js';
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
 import { MyArea } from '@/components/views.js';
@@ -17,7 +18,7 @@ export default class AddressNews extends Component {
             isOpen: false,
             source: "",
             currentItem: "",
-            searchWord:"",
+            searchWord: "",
             layout: {
                 labelCol: { span: 8 },
                 wrapperCol: { span: 16 },
@@ -148,7 +149,6 @@ export default class AddressNews extends Component {
                         </div>
 
                     </>
-
                 }
                     extra={
                         <div>
@@ -159,6 +159,7 @@ export default class AddressNews extends Component {
                                     currentItem: ""
                                 })
                             }}>新建</Button>
+                            <MySyncBtn type={8} name={'同步缓存'} />
                         </div>
                     }
                 >
@@ -259,7 +260,7 @@ export default class AddressNews extends Component {
         }
     }
     listWhite() {
-        listWhite({content:this.state.searchWord}).then(res => {
+        listWhite({ content: this.state.searchWord }).then(res => {
             console.log(res)
             this.setState({
                 lists: res.data

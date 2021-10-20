@@ -9,7 +9,7 @@ import  util from 'utils'
 import "./style.css"
 const { Option } = Select;
 
-function disabledDate(current){
+const disabledDate=(current)=>{
     return  current && current < moment().subtract(1, 'day');
 }
 const normFile = (e) => {
@@ -54,6 +54,8 @@ class EarnIncentiveTask extends React.Component {
             dataSource:[],
             visible:false,
             disabled:true,
+            editStartTime:"",
+            editEndTime:"",
             columns: [
                 {
                     title: "激励任务名称",
@@ -136,12 +138,26 @@ class EarnIncentiveTask extends React.Component {
                             size="small"
                             type="primary"
                             onClick={()=>{
-                                console.log(rowValue, row);
                                 this.setState({
                                     entranceState:true,
                                     currentItem:row,
+                                    pic:row.pic,
                                     editType:2
                                   },()=>{
+                                    let _row =row;
+                                    if(row.start){
+                                        let starts=new Date(row.start).getTime();
+                                        _row.starts=moment(starts);
+                                    }else{
+                                        _row.starts=""
+                                    }
+                                    if(row.end){
+                                        let ends=new Date(row.end).getTime();
+                                        _row.ends=moment(ends);
+                                    }else{
+                                        _row.ends=""
+                                    }
+                                    console.log(rowValue, _row);
                                     this.formRef.current.setFieldsValue(row)
                                   })
                             }}
@@ -187,10 +203,12 @@ class EarnIncentiveTask extends React.Component {
                         <Button type="primary"  onClick={this.getEarnTskList.bind(this)}>刷新</Button>
                         <Button type="primary" style={{margin:"0 10px"}}
                             onClick={()=>{
-                                //this.props.history.push(`/mms/channelManage/editSubject/add`)
                                 this.setState({
                                     editType:1,
-                                    entranceState:true
+                                    entranceState:true,
+                                    pic:""
+                                },()=>{
+                                    this.formRef.current.resetFields();
                                 })
                             }}
                         >新增</Button>
@@ -222,11 +240,12 @@ class EarnIncentiveTask extends React.Component {
                             <Form.Item label="金币配置" name="coin" rules={[{ required: true, message: '请输入金币(正整数)' }]}>
                                 <InputNumber min={0} />
                             </Form.Item>
-                            <Form.Item label="定时上线" name="start" >
-                                <DatePicker showTime format={dateFormat} disabledDate={disabledDate} onChange={this.changeStart.bind(this)}></DatePicker>
+                            {/*  */}
+                            <Form.Item label="定时上线" name="starts" >
+                                <DatePicker showTime format={dateFormat}  disabledDate={disabledDate} onChange={this.changeStart.bind(this)}></DatePicker>
                             </Form.Item>
-                            <Form.Item label="定时下线" name="end" >
-                                <DatePicker showTime format={dateFormat} disabledDate={disabledDate} ></DatePicker>
+                            <Form.Item label="定时下线" name="ends" >
+                                <DatePicker showTime format={dateFormat}  disabledDate={disabledDate} ></DatePicker>
                             </Form.Item>
                             <Form.Item label="缩略图" name="pic" valuePropName="fileList" 
                                 // 如果没有下面这一句会报错
@@ -277,18 +296,18 @@ class EarnIncentiveTask extends React.Component {
     }
     submitForm(_obj){   // 提交表单
         console.log(_obj);
-        if(_obj.start==undefined){
+        if(_obj.starts==undefined){
             _obj.start=""
         }else{
-            let d=new Date(_obj.start);
+            let d=new Date(_obj.starts);
             let datetime=d.getFullYear() + '-' + computed((d.getMonth() + 1)) + '-' + computed(d.getDate()) + ' ' + computed(d.getHours()) + ':' + computed(d.getMinutes()) + ':' + computed(d.getSeconds()); 
             console.log(datetime)
             _obj.start=datetime;
         }
-        if(_obj.end==undefined){
+        if(_obj.ends==undefined){
             _obj.end=""
         }else{
-            let d=new Date(_obj.end);
+            let d=new Date(_obj.ends);
             let datetime=d.getFullYear() + '-' + computed((d.getMonth() + 1)) + '-' + computed(d.getDate()) + ' ' + computed(d.getHours()) + ':' + computed(d.getMinutes()) + ':' + computed(d.getSeconds()); 
             console.log(datetime)
             _obj.end=datetime;
@@ -296,6 +315,14 @@ class EarnIncentiveTask extends React.Component {
         if(_obj.pic==undefined){
             _obj.pic=""
         }
+        if(_obj.start.includes("NaN")){
+            _obj.start=""
+        }
+        if(_obj.end.includes("NaN")){
+            _obj.end=""
+        }
+        // delete _obj.starts
+        // delete _obj.ends
         if(this.state.editType==1){  // 新增
             let params={
                 ..._obj
@@ -303,8 +330,13 @@ class EarnIncentiveTask extends React.Component {
             console.log(params)
             addEarnTskList(params).then(res=>{
                 console.log(res);
-                this.setState({ entranceState: false })
-                this.getEarnTskList();
+                if(res.data.errCode == 0){
+                    message.success("新增成功")
+                    this.setState({ entranceState: false })
+                    this.getEarnTskList();
+                }else{
+                    message.error(res.data.msg)
+                }
             })
         }else{  // 编辑
             let params={
@@ -314,8 +346,13 @@ class EarnIncentiveTask extends React.Component {
             console.log(params)
             updateEarnTskList(params).then(res=>{
                 console.log(res);
-                this.setState({ entranceState: false })
-                this.getEarnTskList();
+                if(res.data.errCode == 0){
+                    message.success("修改成功")
+                    this.setState({ entranceState: false })
+                    this.getEarnTskList();
+                }else{
+                    message.error(res.data.msg)
+                }
             })
         }
     }

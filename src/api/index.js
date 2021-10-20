@@ -44,6 +44,10 @@ export const syn_config = (params) => { return request.get(`${baseUrl}/mms/confi
 export const syn_slice = (params) => { return request.get(`${baseUrl}/mms/config/common/syn_slice`, { params: params }) };                                                                  //查找合集短视频
 export const editColumn = (params) => { return request.post(`${baseUrl}/mms/shortVideo/column`, params) };                                                                                  //编辑专题
 
+export const requestSvcResort = (params) => { return request2.get(`${baseUrl}/mms/shortVideo/svc/resort`, { params: params }) };                                                            //奥运会专题-专题下短视频重新排序
+export const requestSvcChangeVideoSort = (params) => { return request2.post(`${baseUrl}/mms/shortVideo/svc/changeVideoSort`, params) };                                                     //奥运会专题-专题下短视频修改序号
+export const requestSvcChangeVideoTitle = (params) => { return request2.post(`${baseUrl}/mms/shortVideo/svc/changeVideoTitle`, params) };                                                   //奥运会专题-专题下短视频修改标题
+
 //同步秒杀数据
 export const hotStock = (params) => { return request.get(`${baseUrl}/mms/activity/levelMs/hotStock`, { params: params }) };                                                                 //查找合集短视频
 //等级权益
@@ -237,9 +241,9 @@ export const esQuery = (params) => { return request.post(`${baseUrl}/mms/ad/tag/
 
 //  转转管理------赚赚激励气泡
 export const getEarnTskList=(params)=>{ return request2.get(`${baseUrl}/mms/bubbletask/list`, { params: params }); };  // 获取转转激励任务列表
-export const addEarnTskList = (params) => { return request2.post(`${baseUrl}/mms/bubbletask/add`, params) };            // 新增转转激励任务
-export const updateEarnTskList = (params) => { return request2.post(`${baseUrl}/mms/bubbletask/update`, params) };      // 更新转转激励任务
-export const deleteEarnTskList = (params) => { return request.get(`${baseUrl}/mms/bubbletask/del`, params) };         // 删除转转激励任务
+export const addEarnTskList = (params) => { return request.post(`${baseUrl}/mms/bubbletask/add`, params) };            // 新增转转激励任务
+export const updateEarnTskList = (params) => { return request.post(`${baseUrl}/mms/bubbletask/update`, params) };      // 更新转转激励任务
+export const deleteEarnTskList = (params) => { return request.get(`${baseUrl}/mms/bubbletask/del`, { params: params }) };         // 删除转转激励任务
 export const syncEarnTskList = (params) => { return request2.post(`${baseUrl}/mms/bubbletask/sync`, params) };          // 同步缓存转转激励任务
 
 //白名单配置

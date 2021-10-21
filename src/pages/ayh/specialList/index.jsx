@@ -24,6 +24,7 @@ export default class SportsProgram extends Component {
       searchWords:"",
       lists: [],
       currentItem:"",//编辑行的id
+      currentVideoItem:"",  // 编辑视频 id
       newData:{},
       layout: {
         labelCol: { span: 4 },
@@ -190,15 +191,21 @@ export default class SportsProgram extends Component {
       videoVisible:false,
       videoColumns:[
         {
-          title: "名称",
-          dataIndex: "title",
-          key: "title",
+          title: "序号",
+          dataIndex: "videoSort",
+          key: "videoSort",
         },
         {
           title: "id",
           dataIndex: "pid",
           key: "pid",
         },
+        {
+          title: "名称",
+          dataIndex: "title",
+          key: "title",
+        },
+        
         {
           title: "操作",
           key: "action",
@@ -406,6 +413,7 @@ export default class SportsProgram extends Component {
   }
   cvideos(id){
     cvideos({column_id:id}).then(res=>{
+      console.log("获取的短视频列表",res)
       if(res.data.errCode === 0){
         this.setState({
           linkVideoList:res.data.data

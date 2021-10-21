@@ -171,7 +171,7 @@ export default class AddressNews extends Component {
 
                 </Card>
                 <Modal
-                    title="录入小程序"
+                    title="白名单配置"
                     centered
                     visible={this.state.isOpen}
                     onCancel={() => {

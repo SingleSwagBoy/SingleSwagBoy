@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-14 11:16:10
+ * @LastEditTime: 2021-10-22 11:16:13
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -45,6 +45,8 @@ const WxMsg = lazy(() => import('pages/weChatManage/WxMsg/index.jsx'))
 
 const EarnIncentiveTask = lazy(() => import('pages/earnManage/earnIncentiveTask/index.jsx'))
 const WhiteList = lazy(() => import('pages/configManage/whiteList/index.jsx'))
+const RiskAreaConfig = lazy(() => import('pages/configManage/riskAreaConfig/riskAreaConfig.jsx'));
+
 
 //用户权限相关
 const SysRole = lazy(() => import('pages/sys/role/role.jsx'));
@@ -104,6 +106,7 @@ const adminRoutes = [
     { name: '白名单配置', icon: UnorderedListOutlined, path: '/mms/config/whiteList', component: WhiteList, code: "configManage", sub_code: 'MiniConfig' },
     { name: '短视频首屏配置', icon: UnorderedListOutlined, path: '/mms/config/svScreenConfig', component: SvScreenConfig, code: "configManage", sub_code: 'svScreenConfig' },
     { name: '停服下线通知配置', icon: UnorderedListOutlined, path: '/mms/config/offlineConfig', component: OffineConfig, code: "configManage", sub_code: 'offlineConfig' },
+    { name: '风险地域配置', icon: UnorderedListOutlined, path: '/mms/config/riskAreaConfig', component: RiskAreaConfig, code: "configManage", sub_code: 'riskAreaConfig' },
 
 
 

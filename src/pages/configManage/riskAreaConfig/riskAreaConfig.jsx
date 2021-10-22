@@ -30,6 +30,13 @@ export default class RiskAreaConfig extends Component {
                     </div>
                 } />
                 <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef}>
+
+                    <Form.Item label="提示">
+                        <label>
+                            选中则代表是风险，地域可多选、可不选。
+                        </label>
+                    </Form.Item>
+
                     {
                         that.formRef && that.formRef.current &&
                         <div>

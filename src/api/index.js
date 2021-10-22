@@ -253,6 +253,10 @@ export const updateWhite = (params) => { return request2.post(`${baseUrl}/mms/ad
 export const deleteWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/delete`, params) };          // 删除白名单配置
 export const syncWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/sync`, params) };          // 同步
 
+// 抽奖活动 
+export const getPActivityList = (params) => { return request.post(`${baseUrl}/mms/p/activity/get`, params); };           // 获取列表
+export const updatePActivity = (params) => { return request.post(`${baseUrl}/mms/p/activity/update`, params); };         // 修改活动
+
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

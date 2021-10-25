@@ -2,12 +2,12 @@
  * @Author: HuangQS
  * @Date: 2021-09-28 11:34:45
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-13 18:17:24
+ * @LastEditTime: 2021-10-25 11:18:01
  * @Description: 权限列表
  */
 
 import React, { Component } from 'react';
-import { Menu, Input, Form, Button, Pagination, Table, Modal, DatePicker, Select, Alert, Switch, message, Divider } from 'antd';
+import { Input, Form, Button, Pagination, Table, Modal, DatePicker, Select, Alert, Radio, message, } from 'antd';
 import timeUtils from '@/utils/time.js';
 import '@/style/base.css';
 import {
@@ -40,10 +40,13 @@ export default class SysPermission extends Component {
                 table_datas: [],
                 table_pages: {
                     currentPage: 1,
-                    totalCount: 0,
                     pageSize: 100,
                 },
                 table_title: [],
+            },
+            filter_box: {
+                roleId: 'all',
+                name: '',
             },
             modal_box: {
                 is_show: false,
@@ -54,18 +57,40 @@ export default class SysPermission extends Component {
 
     render() {
         let that = this;
-        let { table_box, modal_box,
-            dict_sys_role, dict_sys_menu, dict_permissions, } = that.state;
+        let { table_box, modal_box, filter_box
+            , dict_sys_role, dict_sys_menu, dict_permissions, } = that.state;
 
         return (
             <div>
-                {JSON.stringify(dict_sys_role)}
+
+                <Radio.Group value={filter_box.roleId} onChange={(val) => {
+                    let currId = val.target.value;
+                    if (currId === 'all') {
+                        filter_box.roleId = 'all';
+                    } else {
+                        let lastId = filter_box.roleId;
+                        if (currId === lastId) return;
+
+                        filter_box.roleId = currId;
+                    }
+
+                    that.setState({
+                        filter_box: filter_box,
+                    }, () => {
+                        that.refreshList();
+                    })
+                }}>
+                    <Radio value={'all'}>全选</Radio>
+                    {dict_sys_role.map((item, index) => (
+                        <Radio value={item.id}>{item.name}</Radio>
+                    ))}
+                </Radio.Group>
+
 
                 <Alert className="alert-box" message={
                     <div>权限列表</div>
                 } type="success" action={
-                    <div>
-                        <Input placeholder="查询筛选数据" />
+                    <div className="alert-box">
                         <Button style={{ marginLeft: 3 }} onClick={() => that.showModal({})}>新增</Button>
                     </div>
                 }>
@@ -76,12 +101,14 @@ export default class SysPermission extends Component {
                     return <div>{item.name}</div>
                 })} */}
 
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} scroll={{ x: 1200 }} pagination={false} />
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} scroll={{ x: 1200, y: 800 }} pagination={false}
+                    rowKey={(record) => { return (record.id + Date.now()) }} />
 
-                <div className="pagination-box">
-                    {/* <Pagination current={table_box.table_pages.currentPage} pageSize={table_box.table_pages.pageSize} onChange={(page, pageSize) => that.onPageChange(page, pageSize)} total={table_box.table_pages.totalCount} /> */}
-                </div>
-
+                {table_box.table_pages &&
+                    <div className="pagination-box">
+                        <Pagination current={table_box.table_pages.currentPage} pageSize={table_box.table_pages.pageSize} onChange={(page, pageSize) => that.onPageChange(page, pageSize)} total={table_box.table_pages.totalCount} />
+                    </div>
+                }
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
                     footer={[
                         <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
@@ -98,21 +125,49 @@ export default class SysPermission extends Component {
                                     </Form.Item>
                                 }
                                 <Form.Item label="角色" name='roleId' rules={[{ required: true }]} >
-                                    <Select className="base-input-wrapper" placeholder="请选择用户角色">
+                                    <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择用户角色"
+                                        filterOption={(input, option) => {
+                                            if (!input) return true;
+                                            let children = option.children;
+                                            if (children) {
+                                                let key = children[2];
+                                                let isFind = false;
+                                                isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                if (!isFind) {
+                                                    let code = children[0];
+                                                    isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                }
+                                                return isFind;
+                                            }
+                                        }}>
                                         {dict_sys_role.map((item, index) => (
                                             <Option key={index} value={item.id}>{item.id}-{item.name}</Option>
                                         ))}
                                     </Select>
                                 </Form.Item>
                                 <Form.Item label="菜单目录功能" name='menuId' rules={[{ required: true }]} >
-                                    <Select className="base-input-wrapper" placeholder="请选择菜单目录" showSearch={true}>
+                                    <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择菜单目录"
+                                        filterOption={(input, option) => {
+                                            if (!input) return true;
+                                            let children = option.children;
+                                            if (children) {
+                                                let key = children[2];
+                                                let isFind = false;
+                                                isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                if (!isFind) {
+                                                    let code = children[0];
+                                                    isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                }
+                                                return isFind;
+                                            }
+                                        }}>
                                         {dict_sys_menu.map((item, index) => (
                                             <Option key={index} value={item.id}>{item.id}-{item.name}</Option>
                                         ))}
                                     </Select>
                                 </Form.Item>
                                 <Form.Item label="权限" name='permission' rules={[{ required: true }]} >
-                                    <Select className="base-input-wrapper" placeholder="请选择用户角色">
+                                    <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择用户角色目录权限" >
                                         {dict_permissions.map((item, index) => (
                                             <Option key={index} value={item.key}>{item.key}-{item.value}</Option>
                                         ))}
@@ -122,7 +177,7 @@ export default class SysPermission extends Component {
                         }
                     </Form>
                 </Modal>
-            </div>
+            </div >
         )
     }
 
@@ -177,22 +232,11 @@ export default class SysPermission extends Component {
                 title: '权限', dataIndex: 'permission', key: 'permission', width: 240,
                 render: (rowValue, row, index) => {
                     return (
-                        <Select style={{ width: '100%' }} defaultValue={rowValue} placeholder="请选择用户角色">
+                        <Select style={{ width: '100%' }} defaultValue={rowValue} placeholder="请选择用户角色" disabled>
                             {dict_permissions.map((item, index) => (
                                 <Option key={index} value={item.key}>{item.key}-{item.value}</Option>
                             ))}
                         </Select>
-                    )
-                }
-            },
-            {
-                title: '时间', dataIndex: 'time', key: 'time',
-                render: (rowValue, row, index) => {
-                    return (
-                        <div>
-                            <div>创建时间:{timeUtils.parseTime(row.createTime * 1000)}</div>
-                            <div>更新时间:{timeUtils.parseTime(row.updateTime * 1000)}</div>
-                        </div>
                     )
                 }
             },
@@ -220,20 +264,35 @@ export default class SysPermission extends Component {
     }
     refreshList() {
         let that = this;
-        let { table_box } = that.state;
+        let { table_box, filter_box } = that.state;
 
         let obj = {
-            // keywords:'服务端研发',
-            // menuId: 14,
-            page: table_box.table_pages,
+            page: {
+                currentPage: 1,
+                pageSize: 100,
+            },
         };
+
+
+        // table_pages: {
+        //     currentPage: 1,
+        //     // totalCount: 0,
+        //     pageSize: 100,
+        // },
+        if (filter_box.roleId) {
+            if (filter_box.roleId !== 'all') {
+                obj.roleId = filter_box.roleId;
+            }
+        }
+
+
         //权限列表
         requestSysUserRolePermissions(obj)
             .then(res => {
                 table_box.table_datas = res.data;
                 table_box.table_pages = res.page;
                 that.setState(
-                    { table_box: table_box }
+                    { table_box: table_box },
                 )
             })
     }
@@ -269,12 +328,37 @@ export default class SysPermission extends Component {
     //弹出框确认按钮被点击
     onModalConfirmClick() {
         let that = this;
-        that.requestToCreateModify();
-    }
+        let value = that.formRef.current.getFieldsValue();
 
-    //申请修改编辑
-    requestToCreateModify() {
-        console.log('snsns')
+        if (!value.roleId) {
+            message.error('请选择用户角色');
+            return;
+        }
+        if (!value.menuId) {
+            message.error('请选择菜单目录功能');
+            return;
+        }
+        if (!value.permission) {
+            message.error('请选择用户角色目录权限');
+            return;
+        }
+        let { modal_box } = that.state;
+
+        // modal_box: {
+        //     is_show: false,
+        //     title: '',
+        // },
+
+        let id = value.id;
+        (id ? requestSysUserRolePermissionUpdate(value) : requestSysUserRolePermissionCreate()).then(res => {
+            modal_box.is_show = false;
+            that.setState({
+                modal_box: modal_box,
+            }, () => {
+                message.success('操作成功');
+                that.refreshList();
+            })
+        })
     }
 
     //表格分页监听
@@ -291,6 +375,12 @@ export default class SysPermission extends Component {
 
     //删除角色权限信息
     onItemDeleteClick(item) {
+        let that = this;
+        let obj = { id: item.id };
+        requestSysUserRolePermissionDelete(obj).then(res => {
+            message.success('删除成功')
+            that.refreshList();
+        })
 
     }
 

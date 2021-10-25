@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-17 18:27:45
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-30 17:26:47
+ * @LastEditTime: 2021-10-22 18:33:15
  * @Description: 基础样式
  */
 
@@ -18,4 +18,9 @@
     justify-content: flex-end;
     align-items: center;
     padding: 10px;
+}
+
+.alert-box {
+    display: flex;
+    flex-direction: row;
 }

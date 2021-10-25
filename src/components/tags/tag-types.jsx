@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-14 15:40:32
+ * @LastEditTime: 2021-10-22 15:23:12
  * @Description: 用户标签 - 投放类型 组合控件
  * 
  * 不传不显示下面对应的参数 不传时，获取数据也不会获取到对应参数
@@ -84,7 +84,22 @@ export default class TagTypes extends Component {
 
                     {tag_name &&
                         <Form.Item label='用户标签' name={tag_name} >
-                            <Select className="base-input-wrapper" mode="multiple" showSearch placeholder="请选择用户设备标签">
+                            <Select className="base-input-wrapper" mode="multiple" showSearch placeholder="请选择用户设备标签"
+                                filterOption={(input, option) => {
+                                    if (!input) return true;
+                                    let children = option.children;
+                                    if (children) {
+                                        let key = children[2];
+                                        let isFind = false;
+                                        isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                        if(!isFind){
+                                            let code = children[0];
+                                            isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                        }
+
+                                        return isFind;
+                                    }
+                                }}>
                                 {dict_user_tags.map((item, index) => (
                                     <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
                                 ))}

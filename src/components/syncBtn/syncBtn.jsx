@@ -17,6 +17,7 @@ import {
     syncMenuImage,                  //广告菜单栏目录配置
     syncWxTemplateMsgConfig,        //微信模板消息 同步
     syncWhite,                      //白名单广告 同步
+    syncProgramAppConfig,                      //电视节目单 同步
 } from 'api'
 
 
@@ -95,6 +96,7 @@ export default class SyncBtn extends Component {
         if (type === 6) return syncWxTemplateMsgConfig();                       //微信模板消息 同步
         if (type === 7) return syncSynSlice(params);                            //简单接口 
         if (type === 8) return syncWhite();                                     //白名单
+        if (type === 9) return syncProgramAppConfig();                                     //电视节目单配置
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

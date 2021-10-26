@@ -46,6 +46,7 @@ const WxMsg = lazy(() => import('pages/weChatManage/WxMsg/index.jsx'))
 const EarnIncentiveTask = lazy(() => import('pages/earnManage/earnIncentiveTask/index.jsx'))
 const WhiteList = lazy(() => import('pages/configManage/whiteList/index.jsx'))
 const RiskAreaConfig = lazy(() => import('pages/configManage/riskAreaConfig/riskAreaConfig.jsx'));
+const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
 
 
 //用户权限相关
@@ -118,6 +119,9 @@ const adminRoutes = [
     //  赚赚管理
     { name: '赚赚激励任务', icon: UnorderedListOutlined, path: '/mms/earnManage/earnIncentiveTask', component: EarnIncentiveTask, code: "earnManage", sub_code: 'earnIncentiveTask' },
 
+
+    //电视节目单配置
+    { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },
     //其他
     { name: '没有权限', icon: UnorderedListOutlined, path: '/mms/noPermission', component: NoPermission, meta: { isNav: false, roles: '*' } }
 

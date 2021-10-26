@@ -252,6 +252,10 @@ export const listWhite = (params) => { return request2.get(`${baseUrl}/mms/ad/wh
 export const updateWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/update`, params) };          // 更新白名单配置
 export const deleteWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/delete`, params) };          // 删除白名单配置
 export const syncWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/sync`, params) };          // 同步
+//电视节目单配置
+export const getProgramAppConfig = (params) => { return request2.get(`${baseUrl}/mms/programApp/programAppConfig/get`, { params: params }) };          // 获取电视节目单配置列表
+export const updateProgramAppConfig = (params) => { return request2.post(`${baseUrl}/mms/programApp/programAppConfig/update`, params) };          // 更新电视节目单列表
+export const syncProgramAppConfig = (params) => { return request2.get(`${baseUrl}/mms/sync/programAppConfig`, { params: params }) };          // 更新电视节目单列表
 
 
 //广告-二维码套餐类型

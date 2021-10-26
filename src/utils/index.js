@@ -261,6 +261,13 @@ function randomWord(randomFlag, min, max) {
 function getValueFromEvent(e) { //去掉输入框里面的空格
   return e.target.value.replace(/(^\s*)|(\s*$)/g, '');
 }
+function isNumber(val) { //判断是否是数字类型
+  　　if (parseFloat(val).toString() == "NaN") {
+  　　　　return false;
+  　　} else {
+  　　　　return true;
+  　　}
+  }
 let objFun = {
   splitStr,
   GetUrlParam,
@@ -272,7 +279,8 @@ let objFun = {
   setCursorPosition,
   operator,
   randomWord,
-  getValueFromEvent
+  getValueFromEvent,
+  isNumber
 }
 
 export default objFun

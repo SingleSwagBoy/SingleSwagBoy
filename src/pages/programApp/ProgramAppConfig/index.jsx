@@ -173,7 +173,7 @@ export default class AddressNews extends Component {
                                     <Form.Item
                                         label="地域版本code是否发送下载信息"
                                         name="isFilter"
-                                        rules={[{ required: true, message: '请填写地域版本code是否发送下载信息' }]}
+                                        // rules={[{ required: true, message: '请填写地域版本code是否发送下载信息' }]}
                                         valuePropName="checked"
                                     >
                                         <Switch checkedChildren="发送" unCheckedChildren="不发送" ></Switch>

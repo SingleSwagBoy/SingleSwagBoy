@@ -1,0 +1,15 @@
+.from-flex{
+    display: flex;
+    flex-flow: row nowrap;
+}
+.input-wrapper-from {
+    margin-right: 5px;
+    padding-right: 5px;
+    width: 130px !important;
+}
+.input-wrapper-from-1{
+    width: 160px !important;
+}
+.form-item-custom .ant-col-20{
+    margin-left: 60px;
+}

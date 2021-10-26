@@ -256,6 +256,9 @@ export const syncWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/w
 // 抽奖活动 
 export const getPActivityList = (params) => { return request.post(`${baseUrl}/mms/p/activity/get`, params); };           // 获取列表
 export const updatePActivity = (params) => { return request.post(`${baseUrl}/mms/p/activity/update`, params); };         // 修改活动
+export const addPActivity = (params) => { return request.post(`${baseUrl}/mms/p/activity/add`, params); };               // 新增
+export const removePActivity = (params) => { return request.post(`${baseUrl}/mms/p/activity/del`, params); };            // 删除
+export const getPProductList = (params) => { return request.post(`${baseUrl}/mms/p/product/get`, params); };             // 商品列表
 
 
 //广告-二维码套餐类型

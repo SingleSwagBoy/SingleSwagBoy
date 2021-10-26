@@ -195,7 +195,7 @@ export default class AddressNews extends Component {
                                     <Form.Item
                                         label="安装时间间隔"
                                         name="interval"
-                                        rules={[{ required: true, message: '请填写安装时间间隔' }]}
+                                        // rules={[{ required: true, message: '请填写安装时间间隔' }]}
                                     >
                                         <InputNumber placeholder="请填写安装时间间隔" min={0} />
                                     </Form.Item>
@@ -216,35 +216,35 @@ export default class AddressNews extends Component {
                                     <Form.Item
                                         label="风险设备"
                                         name="badMan"
-                                        rules={[{ required: true, message: '请填写风险设备' }]}
+                                        // rules={[{ required: true, message: '请填写风险设备' }]}
                                     >
                                         <Input placeholder="请填写风险设备" />
                                     </Form.Item>
                                     <Form.Item
                                         label="风险路由"
                                         name="badRouter"
-                                        rules={[{ required: true, message: '请填写风险路由' }]}
+                                        // rules={[{ required: true, message: '请填写风险路由' }]}
                                     >
                                         <Input placeholder="请填写风险路由" />
                                     </Form.Item>
                                     <Form.Item
                                         label="非风险地区二维码"
                                         name="inviteImg"
-                                        rules={[{ required: true, message: '请填写非风险地区二维码' }]}
+                                        // rules={[{ required: true, message: '请填写非风险地区二维码' }]}
                                     >
                                         <Input placeholder="请填写非风险地区二维码" />
                                     </Form.Item>
                                     <Form.Item
                                         label="风险地区二维码"
                                         name="inviteImg2"
-                                        rules={[{ required: true, message: '请填写风险地区二维码' }]}
+                                        // rules={[{ required: true, message: '请填写风险地区二维码' }]}
                                     >
                                         <Input placeholder="请填写风险地区二维码" />
                                     </Form.Item>
                                     <Form.Item
                                         label="地域"
                                         name="cityCode"
-                                        rules={[{ required: true, message: '请填写风险地域' }]}
+                                        // rules={[{ required: true, message: '请填写风险地域' }]}
                                     >
                                         <MyArea formRef={this.formRef} />
                                     </Form.Item>

@@ -130,6 +130,9 @@ export default class AddressNews extends Component {
                     <Table
                         dataSource={this.state.lists}
                         // rowKey={i}
+                        pagination={{
+                            pageSize: 1000,
+                        }}
                         loading={this.state.loading}
                         columns={this.state.columns} />
 
@@ -287,7 +290,7 @@ export default class AddressNews extends Component {
         val.cityCode = Array.isArray(val.cityCode) ? val.cityCode.join(",") : val.cityCode
         val.isFilter = util.isNumber(val.isFilter)?val.isFilter:val.isFilter?1:2
         let list = this.state.lists
-        if (index) {
+        if (index >= 0) {
             list.splice(index, 1)
         } else {
             if(this.state.source === "add"){

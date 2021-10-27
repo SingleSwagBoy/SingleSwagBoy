@@ -254,11 +254,19 @@ export const deleteWhite = (params) => { return request2.post(`${baseUrl}/mms/ad
 export const syncWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/sync`, params) };          // 同步
 
 // 抽奖活动 
-export const getPActivityList = (params) => { return request.post(`${baseUrl}/mms/p/activity/get`, params); };           // 获取列表
-export const updatePActivity = (params) => { return request.post(`${baseUrl}/mms/p/activity/update`, params); };         // 修改活动
-export const addPActivity = (params) => { return request.post(`${baseUrl}/mms/p/activity/add`, params); };               // 新增
-export const removePActivity = (params) => { return request.post(`${baseUrl}/mms/p/activity/del`, params); };            // 删除
-export const getPProductList = (params) => { return request.post(`${baseUrl}/mms/p/product/get`, params); };             // 商品列表
+export const getPActivityList = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/list`, { params: params }); };        // 获取列表
+export const updatePActivity = (params) => { return request.post(`${baseUrl}/mms/activity/truntable/update`, params); };                  // 修改活动
+export const updatePActivityStatus = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/status`, { params: params }); }; // 上下线活动
+export const addPActivity = (params) => { return request.post(`${baseUrl}/mms/activity/truntable/add`, params); };                        // 新增
+export const removePActivity = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/del`, { params: params } ); };         // 删除
+export const goodsRealStock = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/realStock`, { params: params } ); };    // 对应的商品实时库存
+export const syncPActivity = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/sync`, { params: params } ); };          // 同步缓存
+
+// 商品配置
+export const getPProductList = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/goods`, { params: params } ); };       // 商品列表
+export const delgoodsList = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/delgoods`, { params: params } ); };       // 删除商品
+export const addPActivityGoods = (params) => { return request.post(`${baseUrl}/mms/activity/truntable/addgoods`, params); };              // 新增商品
+export const updateGoods = (params) => { return request.post(`${baseUrl}/mms/activity/truntable/updategoods`, params); };                 // 编辑商品
 
 
 //广告-二维码套餐类型

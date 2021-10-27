@@ -2,6 +2,10 @@
     display: flex;
     flex-flow: row nowrap;
 }
+.from-flex-1{
+    display: flex;
+    flex-flow: row nowrap;
+}
 .input-wrapper-from {
     margin-right: 5px;
     padding-right: 5px;
@@ -12,4 +16,8 @@
 }
 .form-item-custom .ant-col-20{
     margin-left: 60px;
+}
+/* .form-item-custom */
+.from-flex-1 .ant-form-item .ant-form-item-control{
+    width: 120px !important;
 }

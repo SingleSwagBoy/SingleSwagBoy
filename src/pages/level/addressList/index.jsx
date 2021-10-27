@@ -50,9 +50,11 @@ export default class WinningNews extends Component {
         },
         {
           title: "活动类别",
-          dataIndex: "goodName",
-          key: "goodName",
-          width:"8%",
+          dataIndex: "activityType",
+          key: "activityType",
+          render:(owValue,row,index)=>{
+            return <span>{owValue==1?'抽奖活动':'秒杀活动'}</span>
+          }
         },
         {
           title: "商品名称",
@@ -317,6 +319,7 @@ export default class WinningNews extends Component {
   }
   componentDidMount(){
     this.getList() // 查询列表数据
+    this.getGoods();
     this.getRecords(1)
   }
   changeSize = (page, pageSize) => {
@@ -327,7 +330,14 @@ export default class WinningNews extends Component {
     },()=>{
       this.getRecords()
     })
-  
+  }
+  getGoods(){
+    let params={
+      rightId:1
+    }
+    // getrecordsList(params).then(res=>{
+    //   console.log("getrecordsList",res);
+    // })
   }
   getList(){
     getList({key:"USER.EQUITY"}).then(res=>{

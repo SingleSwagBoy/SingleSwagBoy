@@ -110,6 +110,7 @@ class GoodsConfig extends React.Component {
                             <Select placeholder="请选择类别" dropdownMatchSelectWidth={true} 
                             onChange={(val)=>{
                                 console.log(val);
+                                this.formRef.current.setFieldsValue({ "num": 0 })
                                 this.forceUpdate();
                             }}
                             allowClear>
@@ -273,6 +274,7 @@ class GoodsConfig extends React.Component {
                 }
             })
         }else{  // 修改
+            delete obj.days
             let params={
                 id:this.state.currentItem.id,
                 ...obj

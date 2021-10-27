@@ -89,20 +89,15 @@ class LuckyDraw extends React.Component {
             tailLayout: {
                 wrapperCol: { offset: 4, span: 20 },
             },
-            goods_list:[  // 商品列表
-                // {id:1,name:"name1"},{id:2,name:"name2"}
-            ],  
             showSkuModal:false,  // 实时库存
             goods:[
-                {id:1,name:"goods1",stock:0,prob:10},{id:2,name:"goods2",stock:0,prob:10},
-                {id:3,name:"goods3",stock:0,prob:10},{id:4,name:"goods4",stock:0,prob:10},
-                {id:5,name:"goods5",stock:0,prob:10},{id:6,name:"goods6",stock:0,prob:10},
-                {id:7,name:"goods7",stock:0,prob:10},{id:8,name:"goods8",stock:0,prob:10},
+                {id:1,name:"goods1",stock:0,prob:10},{id:2,name:"goods2",stock:0,prob:10},{id:3,name:"goods3",stock:0,prob:10},{id:4,name:"goods4",stock:0,prob:10},
+                {id:5,name:"goods5",stock:0,prob:10},{id:6,name:"goods6",stock:0,prob:10},{id:7,name:"goods7",stock:0,prob:10},{id:8,name:"goods8",stock:0,prob:10}
             ]
         }
     }
     render() { 
-        let {showEditModel,showSkuModal,skuTable,skuColumns,table_box,loading,page,pageSize,total,editType,layout,goods_list,productList,activity_type,pic,tailLayout,drawNumber,goods}=this.state;
+        let {showEditModel,showSkuModal,skuTable,skuColumns,table_box,loading,page,pageSize,total,editType,layout,productList,activity_type,pic,tailLayout,drawNumber,goods}=this.state;
         return <div>
             <Card
                 title={

@@ -59,7 +59,12 @@ export default class AddressNews extends Component {
                                 defaultChecked={rowValue === 1 ? true : false}
                                 onChange={(val) => {
                                     row.isFilter = val ? 1 : 2
-                                    this.updateProgramAppConfig(row)
+                                    this.setState({
+                                        currentIndex:index
+                                    },()=>{
+                                        this.updateProgramAppConfig(row)
+                                    })
+                                   
                                 }}
                             />
                         )
@@ -272,7 +277,6 @@ export default class AddressNews extends Component {
         this.getProgramAppConfig()
     }
     submitForm(val) {
-        console.log(this.formRef.current.getFieldsValue())
         this.setState({
             isOpen: false
         })

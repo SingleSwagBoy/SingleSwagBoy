@@ -220,7 +220,7 @@ export const requestSysUserRolePermissionDelete = params => { return request2.po
 export const syncOther = (params) => { return request2.get(`${baseUrl}/mms/sync/other`, { params: params }); };                                                                             //其他缓存 其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)
 export const syncLiveCarousel = (params) => { return request2.get(`${baseUrl}/mms/sync/liveCarousel`, { params: params }); };                                                               //直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)
 export const syncSyncConfig = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config`, { params: params }); };                                                          //查找合集短视频 /mms/config/common/syn_config?key=
-export const syncSynSlice = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_slice`, { params: params }); };                                                          //查找合集短视频 /mms/config/common/syn_config?key=
+export const syncSynSlice = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_slice`, { params: params }); };                                                             //查找合集短视频 /mms/config/common/syn_config?key=
 export const syncWeChat = (params) => { return request2.get(`${baseUrl}/mms/sync/weChat`, { params: params }); };                                                                           //微信自动回复/wxcode/微信二维码
 export const syncMenuImage = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/syncCache`, { params: params }); };                                                        //广告菜单栏目录配置
 export const syncWxTemplateMsgConfig = (params) => { return request2.get(`${baseUrl}/mms/tmpl/message/config/sync`, { params: params }); };                                                 //微信模板消息 同步
@@ -230,7 +230,7 @@ export const getMiniProList = (params) => { return request.post(`${baseUrl}/mms/
 export const addMpConfig = (params) => { return request.post(`${baseUrl}/mms/wx/msg/addMpConfig`, params) };                                                                                //增加小程序配置列表
 export const delMpConfig = (params) => { return request.post(`${baseUrl}/mms/wx/msg/delMpConfig?id=${params.id}`) };                                                                        //删除小程序配置列表
 
-//广告光立---自定义规则便签
+//广告管理---自定义规则便签
 export const getAdTagList = (params) => { return request.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                       //获取列表
 export const getAdFieldList = (params) => { return request.post(`${baseUrl}/mms/dict/tagDic/get`, params) };                                                                                //获取Field列表
 export const getDictionary = (params) => { return request.post(`${baseUrl}/mms/config/dictionary/get`, params) };                                                                           //获取数据源
@@ -239,8 +239,11 @@ export const updateDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad
 export const delDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/del`, params) };                                                                                          //删除自定义规则标签
 export const esQuery = (params) => { return request.post(`${baseUrl}/mms/ad/tag/esQuery`, params) };                                                                                        //esQuery
 
+export const requestAdRightKey = params => { return request2.get(`${baseUrl}/mms/ad/adRightKey/get`, { params: params }); };                                                                //获取广告素材 获取右下角广告
+
+
 //  转转管理------赚赚激励气泡
-export const getEarnTskList=(params)=>{ return request2.get(`${baseUrl}/mms/bubbletask/list`, { params: params }); };  // 获取转转激励任务列表
+export const getEarnTskList = (params) => { return request2.get(`${baseUrl}/mms/bubbletask/list`, { params: params }); };  // 获取转转激励任务列表
 export const addEarnTskList = (params) => { return request.post(`${baseUrl}/mms/bubbletask/add`, params) };            // 新增转转激励任务
 export const updateEarnTskList = (params) => { return request.post(`${baseUrl}/mms/bubbletask/update`, params) };      // 更新转转激励任务
 export const deleteEarnTskList = (params) => { return request.get(`${baseUrl}/mms/bubbletask/del`, { params: params }) };         // 删除转转激励任务

@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-12 11:47:32
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-14 20:06:08
+ * @LastEditTime: 2021-10-26 16:30:01
  * @Description: 停服下线通知配置
  *
  * 需求背景:
@@ -122,7 +122,7 @@ export default class offlineConfig extends Component {
                                     </Form.Item>
                                 }
                                 <Form.Item label="配置名称" name='name' rules={[{ required: true }]}>
-                                    <Input className="base-input-wrapper" placeholder="请输入排序位置" />
+                                    <Input className="base-input-wrapper" placeholder="请输入配置名称" />
                                 </Form.Item>
                                 <Form.Item label="状态" name='status' rules={[{ required: true }]}>
                                     <Select className="base-input-wrapper" showSearch placeholder='请选择状态'>

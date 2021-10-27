@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-22 15:23:12
+ * @LastEditTime: 2021-10-27 10:57:37
  * @Description: 用户标签 - 投放类型 组合控件
  * 
  * 不传不显示下面对应的参数 不传时，获取数据也不会获取到对应参数
@@ -138,7 +138,7 @@ export default class TagTypes extends Component {
      */
     pushData(item) {
         let that = this;
-        let voewFormRef = that.viewFormRef;
+        let viewFormRef = that.viewFormRef;
         let { tag_name } = that.props;
 
         let tags = item[tag_name];
@@ -158,8 +158,8 @@ export default class TagTypes extends Component {
 
         item[tag_name] = tags;
 
-        voewFormRef.current.resetFields();
-        voewFormRef.current.setFieldsValue(item);
+        viewFormRef.current.resetFields();
+        viewFormRef.current.setFieldsValue(item);
     }
 
     /**
@@ -168,8 +168,8 @@ export default class TagTypes extends Component {
     loadData() {
         let that = this;
         let { union_type, tag_name, delivery_name } = that.props;
-        let voewFormRef = that.viewFormRef;
-        let value = voewFormRef.current.getFieldsValue();
+        let viewFormRef = that.viewFormRef;
+        let value = viewFormRef.current.getFieldsValue();
         let obj = {};
 
         //标签判断逻辑
@@ -222,14 +222,14 @@ export default class TagTypes extends Component {
     //监听单选框 被选中的数据 再次被点击 将清除当前数据
     onRadioClick(target) {
         let that = this;
-        let voewFormRef = that.viewFormRef;
+        let viewFormRef = that.viewFormRef;
         let { delivery_name } = that.props;
 
-        let value = voewFormRef.current.getFieldValue(delivery_name);
+        let value = viewFormRef.current.getFieldValue(delivery_name);
         if (value === target) {
             let obj = {};
             obj[delivery_name] = '';
-            voewFormRef.current.setFieldsValue(obj);
+            viewFormRef.current.setFieldsValue(obj);
         }
     }
 

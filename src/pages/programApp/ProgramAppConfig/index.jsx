@@ -48,12 +48,12 @@ export default class AddressNews extends Component {
                     key: "mChannel",
                 },
                 {
-                    title: "低于版本code是否发送下载信息",
+                    title: "低于版本关闭后门",
                     dataIndex: "isFilter",
                     key: "isFilter",
                     render: (rowValue, row, index) => {
                         return (
-                            <Switch checkedChildren="发送" unCheckedChildren="不发送"
+                            <Switch checkedChildren="开启" unCheckedChildren="关闭"
                                 // checked={rowValue === 1?true:false}
                                 key={new Date().getTime()}
                                 defaultChecked={rowValue === 1 ? true : false}
@@ -174,12 +174,12 @@ export default class AddressNews extends Component {
                                         <Input placeholder="请填写渠道" />
                                     </Form.Item>
                                     <Form.Item
-                                        label="地域版本code是否发送下载信息"
+                                        label="低于版本关闭后门"
                                         name="isFilter"
                                         // rules={[{ required: true, message: '请填写地域版本code是否发送下载信息' }]}
                                         valuePropName="checked"
                                     >
-                                        <Switch checkedChildren="发送" unCheckedChildren="不发送" ></Switch>
+                                        <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>
                                     </Form.Item>
                                     <Form.Item
                                         label="app"
@@ -245,7 +245,7 @@ export default class AddressNews extends Component {
                                         <Input placeholder="请填写风险地区二维码" />
                                     </Form.Item>
                                     <Form.Item
-                                        label="地域"
+                                        label="地域（选风险地域）"
                                         name="cityCode"
                                         // rules={[{ required: true, message: '请填写风险地域' }]}
                                     >

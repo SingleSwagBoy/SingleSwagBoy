@@ -90,14 +90,14 @@ class LuckyDraw extends React.Component {
                 wrapperCol: { offset: 4, span: 20 },
             },
             showSkuModal:false,  // 实时库存
-            goods:[
+            goodsData:[
                 {id:1,name:"goods1",stock:0,prob:10},{id:2,name:"goods2",stock:0,prob:10},{id:3,name:"goods3",stock:0,prob:10},{id:4,name:"goods4",stock:0,prob:10},
                 {id:5,name:"goods5",stock:0,prob:10},{id:6,name:"goods6",stock:0,prob:10},{id:7,name:"goods7",stock:0,prob:10},{id:8,name:"goods8",stock:0,prob:10}
             ]
         }
     }
     render() { 
-        let {showEditModel,showSkuModal,skuTable,skuColumns,table_box,loading,page,pageSize,total,editType,layout,productList,activity_type,pic,tailLayout,drawNumber,goods}=this.state;
+        let {showEditModel,showSkuModal,skuTable,skuColumns,table_box,loading,page,pageSize,total,editType,layout,productList,activity_type,pic,tailLayout,drawNumber,goodsData}=this.state;
         return <div>
             <Card
                 title={
@@ -112,7 +112,14 @@ class LuckyDraw extends React.Component {
                         <Button type="primary"
                             onClick={() => {
                                 this.setState({ showEditModel: true,editType:1 }, () => {
+                                    console.log("新增")
                                     this.formRef.current.resetFields()
+                                    for(let i=0;i<8;i++){
+                                        let _prob="prob"+i;
+                                        console.log("_prob",_prob)
+                                        this.formRef.current.setFieldsValue({ [_prob]: 0 })
+                                    }
+                                    this.forceUpdate();
                                 })
                             }}
                         >新增</Button>
@@ -139,11 +146,11 @@ class LuckyDraw extends React.Component {
                             <Input placeholder="请输入标题"/>
                         </Form.Item>
                         <Divider orientation="left">商品配置</Divider>
-                        <Form.Item className='form-item-custom' name="goods">
+                        <Form.Item className='form-item-custom'>
                             {
-                                goods.map((item,index)=>{
+                                goodsData.map((item,index)=>{
                                     return(
-                                        <div className='from-flex' key={item.id}>
+                                        <div className='from-flex' key={index}>
                                             <Form.Item name={`names${index}`} label={`第${index+1}格`} rules={[{ required: true}]}>
                                                 <Select dropdownMatchSelectWidth={true} className="input-wrapper-from-1" onChange={(val)=>{
                                                     let _id=Number(val.split("-")[0]);
@@ -409,7 +416,7 @@ class LuckyDraw extends React.Component {
             currentItem:obj,
             editType:2,
             pic:obj.pic,
-            goods:goods
+            goodsData:goods
         },()=>{
             this.formRef.current.setFieldsValue(obj)
         })

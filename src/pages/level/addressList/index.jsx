@@ -29,15 +29,15 @@ export default class WinningNews extends Component {
       excelData:"",
       optionList:[],
       activityType:[
-        {id:1,name:"抽奖活动"},
-        {id:2,name:"秒杀活动"},
+        {id:1,name:"秒杀活动"},
+        {id:2,name:"抽奖活动"},
       ],
       screen:{}, //筛选对象
       layout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
       },
-      activityTpye:"",   // 活动类别  ==2的时候显示筛选权益名称
+      activityTpye:0,   // 活动类别  ==1的时候显示筛选权益名称
       tailLayout: {
         wrapperCol: { offset: 4, span: 20 },
       },
@@ -53,7 +53,7 @@ export default class WinningNews extends Component {
           dataIndex: "activityType",
           key: "activityType",
           render:(owValue,row,index)=>{
-            return <span>{owValue==1?'抽奖活动':'秒杀活动'}</span>
+            return <span>{owValue==1?'秒杀活动':'抽奖活动'}</span>
           }
         },
         {
@@ -190,14 +190,12 @@ export default class WinningNews extends Component {
                 onChange={(val)=>{
                   console.log(val)
                   this.setState({
-                    activityTpye:val
+                    activityTpye:val,
+                    screen:{}
+                  },()=>{
+                    this.forceUpdate();
+                    this.getRecords(1)
                   })
-                  // if(val){
-                  //   this.state.screen.rightId = Number(val)
-                  // }else{
-                  //   delete this.state.screen.rightId
-                  // }
-                  //this.getRecords(1)
                 }}
               >
                 {
@@ -210,7 +208,7 @@ export default class WinningNews extends Component {
               </Select>
             </div>
             {
-              this.state.activityTpye==2 &&
+              this.state.activityTpye==1 &&
               <div className="everyBody">
                 <div>权益名称:</div>
                 <Select allowClear  placeholder="请选择权益类型"
@@ -319,7 +317,7 @@ export default class WinningNews extends Component {
   }
   componentDidMount(){
     this.getList() // 查询列表数据
-    this.getGoods();
+    //this.getGoods();
     this.getRecords(1)
   }
   changeSize = (page, pageSize) => {
@@ -330,14 +328,6 @@ export default class WinningNews extends Component {
     },()=>{
       this.getRecords()
     })
-  }
-  getGoods(){
-    let params={
-      rightId:1
-    }
-    // getrecordsList(params).then(res=>{
-    //   console.log("getrecordsList",res);
-    // })
   }
   getList(){
     getList({key:"USER.EQUITY"}).then(res=>{
@@ -357,11 +347,14 @@ export default class WinningNews extends Component {
     }
     let params={
       ...this.state.screen,
-      "page": {
-        "currentPage": type?type:this.state.page,
-        "pageSize": this.state.pageSize,
-        // "pageSize": 10,
-      }
+      activityType:this.state.activityTpye,
+      currentPage: type?type:this.state.page,
+      pageSize: this.state.pageSize
+      // "page": {
+      //   "currentPage": type?type:this.state.page,
+      //   "pageSize": this.state.pageSize,
+      //   // "pageSize": 10,
+      // }
     }
     getRecords(params).then(res=>{
       console.log(res);

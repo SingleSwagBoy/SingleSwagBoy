@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-27 20:48:58
+ * @LastEditTime: 2021-10-28 11:03:53
  * @Description: 菜单栏图片配置页
  */
 
@@ -19,7 +19,7 @@ import {
     requestConfigMenuImageEidt,                         //菜单栏配置 编辑
     requestConfigMenuImageDelete,                       //菜单栏配置 删除
     requestConfigMenuImageChangeState,                  //菜单栏配置 修改状态
-    getUserTag,                                         //用户设备标签
+    requestAdTagList,                                   //用户设备标签
 } from 'api';
 
 let { TextArea } = Input;
@@ -167,8 +167,8 @@ export default class MenuImagePage extends Component {
     initData() {
         let that = this;
         //用户标签
-        getUserTag().then(res => {
-            let datas = res.data.data;
+        requestAdTagList().then(res => {
+            let datas = res.data;
             let tags = [];
             // tags.push({ id: -1, code: 'default', name: '默认', });
             for (let i = 0, len = datas.length; i < len; i++) {

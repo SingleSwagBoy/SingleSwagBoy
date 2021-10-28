@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { baseUrl, searchVideo, getMyProduct, updateChannelTopic, addChannelTopic, Getchannels, getUserTag, listProgramByChannelId, ChannelTopic } from 'api'
+import { baseUrl, searchVideo, getMyProduct, updateChannelTopic, addChannelTopic, Getchannels, requestAdTagList, listProgramByChannelId, ChannelTopic } from 'api'
 import { Breadcrumb, Card, DatePicker, Button, Tooltip, Modal, message, Input, Form, Select, InputNumber, Upload } from 'antd'
 import { } from 'react-router-dom'
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"
@@ -113,17 +113,14 @@ export default class SportsProgram extends Component {
         })
     }
     getInfo() {
-        getUserTag().then(res => {
-            if (res.data.errCode == 0 && res.data.data != null) {
-                //this.tagList = res.data.data
-                let _list = res.data.data.map(item => {  //  this.tagOptions 
-                    return { label: item.name, value: item.code }
-                })
-                this.setState({
-                    tagList: res.data.data,
-                    tagOptions: _list
-                })
-            }
+        requestAdTagList().then(res => {
+            let _list = res.data.map(item => {  //  this.tagOptions 
+                return { label: item.name, value: item.code }
+            })
+            this.setState({
+                tagList: res.data,
+                tagOptions: _list
+            })
         })
         Getchannels().then((res) => {
             if (res.data.errCode == 0 && res.data.data != null) {

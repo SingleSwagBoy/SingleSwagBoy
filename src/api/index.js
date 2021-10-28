@@ -85,7 +85,7 @@ export const addVoting = (params) => { return request.post(`${baseUrl}/mms/activ
 export const editVoting = (params) => { return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/edit`, params) };                                                                         //编辑投票列表
 export const getMyProduct = (params) => { return request.post(`${baseUrl}/mms/product/get`, params) };                                                                                      //产品线
 export const getDict = (params) => { return request.post(`${baseUrl}/mms/dict/cp/get`, params) };                                                                                           //字典集
-export const getUserTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                         //渠道
+// export const getUserTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                         //渠道
 export const getChannel = (params) => { return request.post(`${baseUrl}/mms/channel/get`, params) };                                                                                        //获取频道
 export const deleteVote = (params) => { return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/deleteItem`, { params: params }) };                                                        //删除
 export const changeStateVote = (params) => { return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/changeState`, { params: params }) };                                                  //修改table里面的switch
@@ -230,8 +230,8 @@ export const getMiniProList = (params) => { return request.post(`${baseUrl}/mms/
 export const addMpConfig = (params) => { return request.post(`${baseUrl}/mms/wx/msg/addMpConfig`, params) };                                                                                //增加小程序配置列表
 export const delMpConfig = (params) => { return request.post(`${baseUrl}/mms/wx/msg/delMpConfig?id=${params.id}`) };                                                                        //删除小程序配置列表
 
-//广告光立---自定义规则便签
-export const getAdTagList = (params) => { return request.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                       //获取列表
+//广告管理---自定义规则便签
+export const requestAdTagList = (params) => { return request2.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                       //获取列表
 export const getAdFieldList = (params) => { return request.post(`${baseUrl}/mms/dict/tagDic/get`, params) };                                                                                //获取Field列表
 export const getDictionary = (params) => { return request.post(`${baseUrl}/mms/config/dictionary/get`, params) };                                                                           //获取数据源
 export const addDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/add`, params) };                                                                                          //增加自定义规则标签

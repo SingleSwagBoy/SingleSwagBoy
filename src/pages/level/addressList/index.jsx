@@ -348,13 +348,13 @@ export default class WinningNews extends Component {
     let params={
       ...this.state.screen,
       activityType:this.state.activityTpye,
-      currentPage: type?type:this.state.page,
-      pageSize: this.state.pageSize
-      // "page": {
-      //   "currentPage": type?type:this.state.page,
-      //   "pageSize": this.state.pageSize,
-      //   // "pageSize": 10,
-      // }
+      // currentPage: type?type:this.state.page,
+      // pageSize: this.state.pageSize
+      "page": {
+        "currentPage": type?type:this.state.page,
+        "pageSize": this.state.pageSize,
+        // "pageSize": 10,
+      }
     }
     getRecords(params).then(res=>{
       console.log(res);

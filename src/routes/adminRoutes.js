@@ -47,6 +47,7 @@ const EarnIncentiveTask = lazy(() => import('pages/earnManage/earnIncentiveTask/
 const WhiteList = lazy(() => import('pages/configManage/whiteList/index.jsx'))
 const RiskAreaConfig = lazy(() => import('pages/configManage/riskAreaConfig/riskAreaConfig.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
+const VipCombo = lazy(() => import('pages/comboManage/vipCombo/index.jsx')); 
 
 
 //用户权限相关
@@ -118,6 +119,9 @@ const adminRoutes = [
 
     //  赚赚管理
     { name: '赚赚激励任务', icon: UnorderedListOutlined, path: '/mms/earnManage/earnIncentiveTask', component: EarnIncentiveTask, code: "earnManage", sub_code: 'earnIncentiveTask' },
+
+    //套餐管理
+    { name: 'VIP会员套餐', icon: UnorderedListOutlined, path: '/mms/comboManage/vipCombo', component: VipCombo, code: "comboManage", sub_code: 'vipCombo' },
 
 
     //电视节目单配置

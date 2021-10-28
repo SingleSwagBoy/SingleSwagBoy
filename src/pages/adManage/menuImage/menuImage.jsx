@@ -511,6 +511,16 @@ export default class MenuImagePage extends Component {
         let ref_tag_types = that.state.ref_tag_types;
         let value = that.formRef.current.getFieldsValue();
         console.log("value",value)
+        if(value.imgWidth){
+            value.imgWidth=parseInt(value.imgWidth)
+        }else{
+            delete value.imgWidth
+        }
+        if(value.imgHeight){
+            value.imgHeight=parseInt(value.imgHeight)
+        }else{
+            delete value.imgHeight
+        }
         let obj = Object.assign({}, value, ref_tag_types.loadData());
         //that.submitData(obj);
     }

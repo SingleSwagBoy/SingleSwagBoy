@@ -491,7 +491,6 @@ class LuckyDraw extends React.Component {
                     return (
                     <div>
                         <Button 
-                        style={{margin:"0 10px"}}
                         size="small"
                         type="primary"
                         onClick={()=>{
@@ -499,8 +498,8 @@ class LuckyDraw extends React.Component {
                             this.editRow(row)
                         }}
                         >编辑</Button>
-                        <Button size="small" onClick={()=>{this.syncItem(row)}}>同步</Button>
-                        <Button size="small" onClick={()=>{this.getSku(row)}}>实时库存</Button>
+                        <Button size="small" style={{margin:"0 0 0 10px"}} onClick={()=>{this.syncItem(row)}}>同步</Button>
+                        <Button size="small" style={{margin:"0 10px"}} onClick={()=>{this.getSku(row)}}>实时库存</Button>
                         <Button size="small" danger onClick={()=>{this.deleteItem(row)}}>删除</Button>
                     </div>
                     )

@@ -8,7 +8,7 @@
 
 
 import React, { Component } from 'react'
-import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message } from 'antd';
+import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message ,Divider} from 'antd';
 import { MyImageUpload, MyTagTypes, MySyncBtn } from '@/components/views.js';
 import moment from 'moment';
 import '@/style/base.css';
@@ -44,13 +44,14 @@ export default class MenuImagePage extends Component {
                 is_show: false,
                 title: '',
             },
+            positions:[{key:1,value:"左上"},{key:2,value:"左下"},{key:3,value:"中心"},{key:4,value:"右上"},{key:5,value:"右下"}]
         }
     }
 
 
     render() {
         let that = this;
-        let { table_box, modal_box } = that.state;
+        let { table_box, modal_box , positions} = that.state;
 
         return (
             <div>
@@ -152,6 +153,31 @@ export default class MenuImagePage extends Component {
                                         <TextArea className="base-input-wrapper" placeholder="请上传未选中焦点图片" onBlur={(e) => that.onInputBlurCallback("no_focus_url", e)} />
                                     </Form.Item>
                                 </Form.Item>
+                                <Divider orientation="left">续费弹窗配置</Divider>
+                                <Form.Item label="开机续费弹窗"  >
+                                    <Form.Item name='boot_renewal_url' >
+                                        <MyImageUpload
+                                            getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('boot_renewal_url', file, newItem) }}
+                                            imageUrl={that.getUploadFileImageUrlByType('boot_renewal_url')} />
+                                    </Form.Item>
+                                    <Form.Item name='boot_renewal_url' >
+                                        <TextArea className="base-input-wrapper" placeholder="请上传开机续费弹窗图片" onBlur={(e) => that.onInputBlurCallback("boot_renewal_url", e)} />
+                                    </Form.Item>
+                                </Form.Item>
+                                <Form.Item label="续费弹窗图片宽" name="imgWidth">
+                                    <Input className='base-input-wrapper' addonBefore="宽" placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                                <Form.Item label="续费弹窗图片高" name="imgHeight">
+                                    <Input className='base-input-wrapper' addonBefore="高" placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                                <Form.Item label="位置" name="imgPosition">
+                                    <Select className="base-input-wrapper" showSearch placeholder='请选择状态'>
+                                        {positions.map((item, index) => {
+                                            return <Option key={index} value={item.key}>{item.value}</Option>
+                                        })}
+                                    </Select>
+                                </Form.Item>
+                                
                             </div>
                         }
                     </Form>
@@ -484,8 +510,9 @@ export default class MenuImagePage extends Component {
         let that = this;
         let ref_tag_types = that.state.ref_tag_types;
         let value = that.formRef.current.getFieldsValue();
+        console.log("value",value)
         let obj = Object.assign({}, value, ref_tag_types.loadData());
-        that.submitData(obj);
+        //that.submitData(obj);
     }
 
 

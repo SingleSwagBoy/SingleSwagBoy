@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-28 14:56:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-29 14:48:28
+ * @LastEditTime: 2021-10-29 15:31:30
  * @Description: 标签配置页 公式组件
  */
 
@@ -92,7 +92,7 @@ export default class tagConfig extends Component {
                                                                                 layer2item.map((layer3item, layer3index) => {
                                                                                     return (
                                                                                         <div className="formula-items-line">
-                                                                                            <div className="formula-item" style={{ width: 200 }} >
+                                                                                            <div className="formula-item" style={{ width: 320 }} >
                                                                                                 <Select showSearch placeholder='版本' allowClear value={layer3item.field} onChange={(e) => { that.onFieldSelectChange(e, layer1index, layer2index, layer3index, 'field') }}
                                                                                                     filterOption={(input, option) => {
                                                                                                         if (!input) return true;
@@ -109,12 +109,12 @@ export default class tagConfig extends Component {
                                                                                                         }
                                                                                                     }}>
                                                                                                     {dict_field.map((item, index) => {
-                                                                                                        return <Option key={index} value={item.field}>{item.id}-{item.fieldName}</Option>
+                                                                                                        return <Option key={index} value={item.field}>{item.fieldName}-{item.field}</Option>
                                                                                                     })}
                                                                                                 </Select>
                                                                                             </div>
 
-                                                                                            <div className="formula-item">
+                                                                                            <div className="formula-item"style={{ width: 80 }}>
                                                                                                 <Select showSearch placeholder='运算符' allowClear value={layer3item.oper} onChange={(e) => { that.onOperatorSelectChange(e, layer1index, layer2index, layer3index, 'oper') }}>
                                                                                                     {dict_operator.map((item, index) => {
                                                                                                         return <Option key={index} value={item.value}>{item.name}</Option>

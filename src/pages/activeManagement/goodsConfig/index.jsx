@@ -103,8 +103,8 @@ class GoodsConfig extends React.Component {
             <Modal title={editType==1?"新增":"编辑"} centered visible={showEditModel} onCancel={() => { this.setState({ showEditModel: false }) }} footer={null} width={800}>
                 {
                     <Form {...layout} name="goodsForm" ref={this.formRef} onFinish={this.submitForm.bind(this)}>
-                        <Form.Item label="活动标题" name="name" rules={[{ required: true, message: '请填写商品名称' }]}>
-                            <Input placeholder="请输入标题"/>
+                        <Form.Item label="商品名称" name="name" rules={[{ required: true, message: '请填写商品名称' }]}>
+                            <Input placeholder="请输入商品名称"/>
                         </Form.Item>
                         <Form.Item label="商品类别" name="type" rules={[{ required: true}]}>
                             <Select placeholder="请选择类别" dropdownMatchSelectWidth={true} 

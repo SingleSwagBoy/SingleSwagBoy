@@ -28,11 +28,16 @@ export default class WinningNews extends Component {
       lists: [],
       excelData:"",
       optionList:[],
+      activityType:[
+        {id:1,name:"秒杀活动"},
+        {id:2,name:"抽奖活动"},
+      ],
       screen:{}, //筛选对象
       layout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
       },
+      activityTpye:0,   // 活动类别  ==1的时候显示筛选权益名称
       tailLayout: {
         wrapperCol: { offset: 4, span: 20 },
       },
@@ -42,6 +47,14 @@ export default class WinningNews extends Component {
           dataIndex: "sn",
           key: "sn",
           width:150,
+        },
+        {
+          title: "活动类别",
+          dataIndex: "activityType",
+          key: "activityType",
+          render:(owValue,row,index)=>{
+            return <span>{owValue==1?'秒杀活动':'抽奖活动'}</span>
+          }
         },
         {
           title: "商品名称",
@@ -56,7 +69,7 @@ export default class WinningNews extends Component {
           width:150,
         },
         {
-          title: "秒杀时间",
+          title: "参与时间",
           dataIndex: "createTime",
           key: "createTime",
           width:"10%",
@@ -171,27 +184,53 @@ export default class WinningNews extends Component {
       <div className="address">
         <Card title={
           <div className="cardTitle">
-            <div className="everyBody">
-              <div>权益名称:</div>
+            <div className='everyBody'>
+              <div>活动类别:</div>
               <Select allowClear  placeholder="请选择权益类型"
                 onChange={(val)=>{
-                  if(val){
-                    this.state.screen.rightId = Number(val)
-                  }else{
-                    delete this.state.screen.rightId
-                  }
-                  this.getRecords(1)
+                  console.log(val)
+                  this.setState({
+                    activityTpye:val,
+                    screen:{}
+                  },()=>{
+                    this.forceUpdate();
+                    this.getRecords(1)
+                  })
                 }}
               >
                 {
-                  this.state.optionList.map(r=>{
+                  this.state.activityType.map(r=>{
                     return(
-                      <Option value={r.indexId} key={r.indexId}>{r.name}</Option>
+                      <Option value={r.id} key={r.id}>{r.name}</Option>
                     )
                   })
                 }
               </Select>
             </div>
+            {
+              this.state.activityTpye==1 &&
+              <div className="everyBody">
+                <div>权益名称:</div>
+                <Select allowClear  placeholder="请选择权益类型"
+                  onChange={(val)=>{
+                    if(val){
+                      this.state.screen.rightId = Number(val)
+                    }else{
+                      delete this.state.screen.rightId
+                    }
+                    this.getRecords(1)
+                  }}
+                >
+                  {
+                    this.state.optionList.map(r=>{
+                      return(
+                        <Option value={r.indexId} key={r.indexId}>{r.name}</Option>
+                      )
+                    })
+                  }
+                </Select>
+              </div>
+            }
             <div className="everyBody">
               <div>秒杀时间:</div>
               <RangePicker   
@@ -278,6 +317,7 @@ export default class WinningNews extends Component {
   }
   componentDidMount(){
     this.getList() // 查询列表数据
+    //this.getGoods();
     this.getRecords(1)
   }
   changeSize = (page, pageSize) => {
@@ -288,10 +328,10 @@ export default class WinningNews extends Component {
     },()=>{
       this.getRecords()
     })
-  
   }
   getList(){
     getList({key:"USER.EQUITY"}).then(res=>{
+      console.log("获取 类型",res)
       if(res.data.errCode == 0){
        this.setState({
          optionList:res.data.data
@@ -307,6 +347,9 @@ export default class WinningNews extends Component {
     }
     let params={
       ...this.state.screen,
+      activityType:this.state.activityTpye,
+      // currentPage: type?type:this.state.page,
+      // pageSize: this.state.pageSize
       "page": {
         "currentPage": type?type:this.state.page,
         "pageSize": this.state.pageSize,
@@ -314,6 +357,7 @@ export default class WinningNews extends Component {
       }
     }
     getRecords(params).then(res=>{
+      console.log(res);
       if(res.data.errCode == 0){
        this.setState({
          lists:res.data.data.data,

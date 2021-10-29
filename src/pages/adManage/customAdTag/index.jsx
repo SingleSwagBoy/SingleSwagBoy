@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { requestAdTagList, getAdFieldList, getDictionary, delDIYTag, esQuery } from 'api'
+import { requestAdTagList, requestAdFieldList, requestDictionary, delDIYTag, esQuery } from 'api'
 import { Card, Breadcrumb, Button, message, Tabs, Table, Switch, Modal, Input, Select } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
@@ -308,21 +308,17 @@ export default class AddressNews extends Component {
         })
     }
     getAdFieldList() {
-        getAdFieldList({}).then(res => {
-            if (res.data.errCode === 0) {
+        requestAdFieldList({}).then(res => {
                 this.setState({
-                    fieldList: res.data.data
+                    fieldList: res.data,
                 })
-            }
         })
     }
     getDictionary() {
-        getDictionary({ type: "tagIndex" }).then(res => {
-            if (res.data.errCode === 0) {
+        requestDictionary({ type: "tagIndex" }).then(res => {
                 this.setState({
-                    dictionaryList: res.data.data
+                    dictionaryList: res.data,
                 })
-            }
         })
     }
     delArt(item) {

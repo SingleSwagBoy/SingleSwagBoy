@@ -44,6 +44,7 @@ class LuckyDraw extends React.Component {
             drawNumber:"次",
             productList:[],  // 商品列表
             skuTable:[], // 库存列表
+            clickDate:0,
             skuColumns:[   // 库存的表单规则
                 {
                     title: "位置",
@@ -235,6 +236,16 @@ class LuckyDraw extends React.Component {
     }
     submitForm(_obj){
         console.log(_obj);
+        let _time=new Date().getTime();
+        if((_time-this.state.clickDate)<1500){
+            this.setState({
+                clickDate:_time
+            })
+            return
+        }
+        this.setState({
+            clickDate:_time
+        })
         let arr=[];
         let _number=0;
         for(let i=0;i<8;i++){

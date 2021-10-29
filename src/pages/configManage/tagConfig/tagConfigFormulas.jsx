@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-28 14:56:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-29 15:31:30
+ * @LastEditTime: 2021-10-29 17:26:29
  * @Description: 标签配置页 公式组件
  */
 
@@ -69,7 +69,7 @@ export default class tagConfig extends Component {
             view = (
                 <div>
                     {/* {JSON.stringify(dict_field[0])} */}
-                    {/* {JSON.stringify(rules)} */}
+                    {JSON.stringify(rules)}
                     <div className="formulas-wrapper" >
                         <div className="type-wrapper">且</div>
                         <div className="formula-items">
@@ -114,7 +114,7 @@ export default class tagConfig extends Component {
                                                                                                 </Select>
                                                                                             </div>
 
-                                                                                            <div className="formula-item"style={{ width: 80 }}>
+                                                                                            <div className="formula-item" style={{ width: 100 }}>
                                                                                                 <Select showSearch placeholder='运算符' allowClear value={layer3item.oper} onChange={(e) => { that.onOperatorSelectChange(e, layer1index, layer2index, layer3index, 'oper') }}>
                                                                                                     {dict_operator.map((item, index) => {
                                                                                                         return <Option key={index} value={item.value}>{item.name}</Option>
@@ -268,32 +268,60 @@ export default class tagConfig extends Component {
 
             if (array2) {
                 if (array2.length <= 0) {
-                    rules[layer1index].splice(layer2index);
+                    rules[layer1index].splice(layer2index, 1);
                 }
             }
-            console.log('删除11', rules);
 
-            // 清除空数据
-            let datas = [];
-            for (let i = 0, len = rules.length; i < len; i++) {
-                let item = rules[i];
-                if (item.length !== 0) {
-                    datas.push(item);
+            let array1 = rules[layer1index];
+            if (array1) {
+                if (array1.length <= 0) {
+                    rules.splice(layer1index, 1);
                 }
             }
-            if (datas.length === 0) {
-                datas = [[[]]];
-            }
+
+
+            console.log('删除11', rules);
+            console.log('删除array1->', array1);
+            // console.log('删除11', rules[0]);
+            console.log('---------------')
+            // 清除空数据
+            // for (let i = 0, len = rules.length; i < len; i++) {
+            //     let item = rules[i];
+            //     console.log(i, item);
+
+            //     if (item.length !== 0) {
+            //         datas.push(item);
+            //     }
+            // }
+            // if (datas.length === 0) {
+            //     datas = [[[]]];
+            // }
+
+            // let datas = []
+            // for (let i = 0, len = rules.length; i < len; i++) {
+            //     let item = rules[i];
+            //     if (!item || item.length > 0) {
+            //         console.log(i, item);
+            //         datas.push(item);
+            //     }
+            // }
+
+            // if (datas.length == 0) {
+            //     datas = [
+            //         [
+            //            [ { 'value': '', 'type': '', 'field': '' }]
+            //         ]
+            //     ];
+            // }
 
 
 
             let obj = {};
-            obj[id] = datas;
+            obj[id] = rules;
             formRef.current.setFieldsValue(obj);
             that.forceUpdate();
 
 
-            console.log('删除22', datas);
         }
 
     }

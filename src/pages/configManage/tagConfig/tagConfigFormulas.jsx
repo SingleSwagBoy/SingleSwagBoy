@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-28 14:56:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-29 17:26:29
+ * @LastEditTime: 2021-10-29 17:42:00
  * @Description: 标签配置页 公式组件
  */
 
@@ -69,7 +69,7 @@ export default class tagConfig extends Component {
             view = (
                 <div>
                     {/* {JSON.stringify(dict_field[0])} */}
-                    {JSON.stringify(rules)}
+                    {/* {JSON.stringify(rules)} */}
                     <div className="formulas-wrapper" >
                         <div className="type-wrapper">且</div>
                         <div className="formula-items">
@@ -114,7 +114,7 @@ export default class tagConfig extends Component {
                                                                                                 </Select>
                                                                                             </div>
 
-                                                                                            <div className="formula-item" style={{ width: 100 }}>
+                                                                                            <div className="formula-item" style={{ width: 90 }}>
                                                                                                 <Select showSearch placeholder='运算符' allowClear value={layer3item.oper} onChange={(e) => { that.onOperatorSelectChange(e, layer1index, layer2index, layer3index, 'oper') }}>
                                                                                                     {dict_operator.map((item, index) => {
                                                                                                         return <Option key={index} value={item.value}>{item.name}</Option>

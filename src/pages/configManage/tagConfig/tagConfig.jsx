@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-27 18:41:39
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-29 11:50:07
+ * @LastEditTime: 2021-10-29 17:42:41
  * @Description: 
  */
 
@@ -74,7 +74,7 @@ export default class tagConfig extends Component {
                         <Button onClick={() => that.onModalConfirmClick()} >保存</Button>
                     ]}>
 
-                    <Form labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} ref={that.formRef}>
+                    <Form labelCol={{ span: 3 }} wrapperCol={{ span: 20 }} ref={that.formRef}>
                         {
                             that.formRef && that.formRef.current &&
                             <div>
@@ -187,11 +187,7 @@ export default class tagConfig extends Component {
         };
 
         requestNewAdTagList(obj).then(res => {
-            // console.log('---------------')
-
-            //             console.log(res)
             table_box.table_datas = res.data;
-
             that.setState({
                 table_box: table_box,
             });

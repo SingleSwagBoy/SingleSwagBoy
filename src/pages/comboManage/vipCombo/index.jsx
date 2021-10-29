@@ -74,8 +74,29 @@ class VipCombo extends React.Component {
                         }} />
                     </div>
                     <div className="everyBody">
-                        <div>上下线时间:</div>
+                        <div>上线时间:</div>
                         <DatePicker showTime />
+                    </div>
+                    <div className="everyBody">
+                        <div>下线时间:</div>
+                        <DatePicker showTime />
+                    </div>
+
+                    <div className="everyBody">
+                        <div>支持设备:</div>
+                        <Select allowClear placeholder="选择支持设备"
+                            onChange={(val) => {
+                                console.log(val);
+                            }}
+                        >
+                            {
+                                this.state.platform.map(r => {
+                                    return (
+                                        <Option value={r.key} key={r.key}>{r.value}</Option>
+                                    )
+                                })
+                            }
+                        </Select>
                     </div>
 
                 </div>

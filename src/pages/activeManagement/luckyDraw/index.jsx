@@ -416,7 +416,7 @@ class LuckyDraw extends React.Component {
             currentItem:obj,
             editType:2,
             pic:obj.pic,
-            goodsData:goods
+            //goodsData:goods
         },()=>{
             this.formRef.current.setFieldsValue(obj)
         })

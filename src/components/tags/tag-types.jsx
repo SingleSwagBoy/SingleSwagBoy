@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-22 15:23:12
+ * @LastEditTime: 2021-10-28 10:59:16
  * @Description: 用户标签 - 投放类型 组合控件
  * 
  * 不传不显示下面对应的参数 不传时，获取数据也不会获取到对应参数
@@ -14,7 +14,7 @@ import React, { Component } from 'react';
 import { Form, Select, Radio, Input, Tooltip, message } from 'antd';
 import './tag-types.css';
 import {
-    getUserTag,                         //用户设备标签
+    requestAdTagList,                   //用户设备标签
     requestDeliveryTypes,               //投放类型
 } from 'api';
 import '@/style/base.css';
@@ -120,10 +120,10 @@ export default class TagTypes extends Component {
     initData() {
         let that = this;
         //用户标签
-        getUserTag().then(userTagResult => {
+        requestAdTagList().then(userTagResult => {
             requestDeliveryTypes().then(deliveryTypesResult => {
                 that.setState({
-                    dict_user_tags: userTagResult.data.data,
+                    dict_user_tags: userTagResult.data,
                     dict_delivery_types: deliveryTypesResult,
                 }, () => {
                     that.forceUpdate();

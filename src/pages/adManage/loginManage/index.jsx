@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import moment from 'moment';
 import MyModal from "./myModal"
-import { getHlcList , changeStateHlcList , addHlcList , editHlcList , copyHlcList , syncHlcList , deleteHlcList , getUserTag , requestDeliveryTypes} from 'api'
+import { getHlcList , changeStateHlcList , addHlcList , editHlcList , copyHlcList , syncHlcList , deleteHlcList , requestAdTagList , requestDeliveryTypes} from 'api'
 import {Breadcrumb, Card, Image, Button, Table, Modal, message,Input, Form,Select,InputNumber,Switch,DatePicker} from 'antd'
 import {  } from 'react-router-dom'
 import {  } from "@ant-design/icons"
@@ -228,14 +228,10 @@ export default class LoginManage extends Component{
         })
     } 
     getUserTags=()=>{  //  用户设备标签   投放类型
-        getUserTag().then(res => { //用户设备标签
-            console.log(res);
-            let errCode = res.data.errCode;
-            if (errCode === 0) {
-                this.setState({
-                    user_tag: res.data.data,
-                })
-            }
+        requestAdTagList().then(res => { //用户设备标签
+            this.setState({
+                user_tag: res.data,
+            })
         })
         requestDeliveryTypes().then(res => { //投放类型
             this.setState({

@@ -272,7 +272,11 @@ class VipCombo extends React.Component {
                                 <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this)} imageUrl={pic}/>
                             </div>
                         </Form.Item>
-                        <Form.Item label="支持设备" name="plat" rules={[{ required: true, message: '请填写商品code' }]}>
+                        <Form.Item label="支持设备" name="plat" rules={[{ required: true}]} 
+                            onChange={(val)=>{
+                                console.log(val);
+                            }}
+                        >
                             <Select className="base-input-wrapper" showSearch placeholder='支持设备'>
                                 {platform.map((item, index) => {
                                     return <Option key={index} value={item.key}>{item.value}</Option>

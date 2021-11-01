@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-27 18:41:39
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-29 11:50:07
+ * @LastEditTime: 2021-11-01 10:42:44
  * @Description: 
  */
 
@@ -74,7 +74,7 @@ export default class tagConfig extends Component {
                         <Button onClick={() => that.onModalConfirmClick()} >保存</Button>
                     ]}>
 
-                    <Form labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} ref={that.formRef}>
+                    <Form labelCol={{ span: 3 }} wrapperCol={{ span: 20 }} ref={that.formRef}>
                         {
                             that.formRef && that.formRef.current &&
                             <div>
@@ -98,9 +98,16 @@ export default class tagConfig extends Component {
                                     <Input className="base-input-wrapper" placeholder="请输入标签描述" />
                                 </Form.Item>
 
-                                <Form.Item label="标签规则" name='rule' rules={[{ required: true }]} >
-                                    <TagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} />
+                                <Form.Item label="标签规则" rules={[{ required: true }]}>
+                                    <Form.Item>
+                                        且：多个规则同时满足。或：多个规则中选择其中一条符合的配置规则。
+                                    </Form.Item>
+                                    <Form.Item name='rule' >
+                                        <TagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} />
+                                    </Form.Item>
                                 </Form.Item>
+
+
                             </div>
                         }
                     </Form>
@@ -111,7 +118,7 @@ export default class tagConfig extends Component {
     componentDidMount() {
         let that = this;
         that.initData();
-    } 
+    }
     initData() {
         let that = this;
 
@@ -187,11 +194,7 @@ export default class tagConfig extends Component {
         };
 
         requestNewAdTagList(obj).then(res => {
-            // console.log('---------------')
-
-            //             console.log(res)
             table_box.table_datas = res.data;
-
             that.setState({
                 table_box: table_box,
             });

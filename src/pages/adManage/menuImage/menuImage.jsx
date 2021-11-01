@@ -155,19 +155,19 @@ export default class MenuImagePage extends Component {
                                 </Form.Item>
                                 <Divider orientation="left">续费弹窗配置</Divider>
                                 <Form.Item label="开机续费弹窗"  >
-                                    <Form.Item name='boot_renewal_url' >
+                                    <Form.Item name='powerOnRenewWindow' >
                                         <MyImageUpload
-                                            getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('boot_renewal_url', file, newItem) }}
-                                            imageUrl={that.getUploadFileImageUrlByType('boot_renewal_url')} />
+                                            getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('powerOnRenewWindow', file, newItem) }}
+                                            imageUrl={that.getUploadFileImageUrlByType('powerOnRenewWindow')} />
                                     </Form.Item>
-                                    <Form.Item name='boot_renewal_url' >
-                                        <TextArea className="base-input-wrapper" placeholder="请上传开机续费弹窗图片" onBlur={(e) => that.onInputBlurCallback("boot_renewal_url", e)} />
+                                    <Form.Item name='powerOnRenewWindow' >
+                                        <TextArea className="base-input-wrapper" placeholder="请上传开机续费弹窗图片" onBlur={(e) => that.onInputBlurCallback("powerOnRenewWindow", e)} />
                                     </Form.Item>
                                 </Form.Item>
-                                <Form.Item label="续费弹窗图片宽" name="imgWidth">
+                                <Form.Item label="续费弹窗图片宽" name="renewWindowWidth">
                                     <Input className='base-input-wrapper' addonBefore="宽" placeholder="例如:200" addonAfter="px" />
                                 </Form.Item>
-                                <Form.Item label="续费弹窗图片高" name="imgHeight">
+                                <Form.Item label="续费弹窗图片高" name="renewWindowHeight">
                                     <Input className='base-input-wrapper' addonBefore="高" placeholder="例如:200" addonAfter="px" />
                                 </Form.Item>
                                 <Form.Item label="位置" name="imgPosition">
@@ -511,15 +511,15 @@ export default class MenuImagePage extends Component {
         let ref_tag_types = that.state.ref_tag_types;
         let value = that.formRef.current.getFieldsValue();
         console.log("value",value)
-        if(value.imgWidth){
-            value.imgWidth=parseInt(value.imgWidth)
+        if(value.renewWindowWidth){
+            value.renewWindowWidth=parseInt(value.renewWindowWidth)
         }else{
-            delete value.imgWidth
+            delete value.renewWindowWidth
         }
-        if(value.imgHeight){
-            value.imgHeight=parseInt(value.imgHeight)
+        if(value.renewWindowHeight){
+            value.renewWindowHeight=parseInt(value.renewWindowHeight)
         }else{
-            delete value.imgHeight
+            delete value.renewWindowHeight
         }
         let obj = Object.assign({}, value, ref_tag_types.loadData());
         //that.submitData(obj);

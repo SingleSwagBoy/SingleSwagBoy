@@ -23,5 +23,11 @@
 .address .uploader_file .ant-upload{
     color: #fff !important;
 }
+.everyBody-1 .ant-select{
+    min-width: 150px !important;
+}
+.everyBody{
+    margin-bottom: 20px;
+}
 
 

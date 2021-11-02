@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-28 11:34:45
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-25 11:18:01
+ * @LastEditTime: 2021-10-25 11:48:37
  * @Description: 权限列表
  */
 
@@ -266,11 +266,30 @@ export default class SysPermission extends Component {
         let that = this;
         let { table_box, filter_box } = that.state;
 
-        let obj = {
-            page: {
+        let page = {};
+        let table_pages = table_box.table_pages
+        if (table_pages) {
+            if (table_pages.currentPage <= 0) {
+                page = {
+                    currentPage: 1,
+                    pageSize: 100,
+                }
+            } else {
+                page = {
+                    currentPage: table_pages.currentPage,
+                    pageSize: 100,
+                }
+            }
+        } else {
+            page = {
                 currentPage: 1,
                 pageSize: 100,
-            },
+            }
+        }
+
+
+        let obj = {
+            page: page,
         };
 
 

@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-16 19:34:36
+ * @LastEditTime: 2021-10-28 11:01:39
  */
 import React, { Component } from 'react';
 import { Menu, message, Tooltip, Modal } from 'antd';
@@ -14,7 +14,7 @@ import {
     requestWxReplyUpdate,               //编辑|更新
     requestWxReplyDelete,               //删除
     requestWxReplyCreate,               //添加
-    getUserTag,                         //用户设备标签
+    requestAdTagList,                   //用户设备标签
     requestWxProgramList,               //小程序列表
 } from 'api'
 import './wxReply.css';
@@ -134,8 +134,8 @@ export default class WxReply extends Component {
         requestWxProgramList().then(res => {
             that.setState({ dict_wx_program: res.data })
             //用户标签
-            getUserTag().then(res => {
-                let datas = res.data.data;
+            requestAdTagList().then(res => {
+                let datas = res.data;
                 let tags = [];
                 tags.push({ id: -1, code: 'default', name: '默认', });
 

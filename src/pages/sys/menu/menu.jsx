@@ -2,12 +2,13 @@
  * @Author: HuangQS
  * @Date: 2021-09-28 11:34:45
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-29 18:26:14
+ * @LastEditTime: 2021-10-26 14:00:06
  * @Description: 菜单列表
  */
 
 import React, { Component } from 'react';
-import { Breadcrumb, InputNumber, Input, Form, Button, Table, Modal, Alert, message, } from 'antd';
+import { Breadcrumb, InputNumber, Input, Form, Button, Table, Modal, Alert, message, Select, } from 'antd';
+
 import {
     requestSysMenu,
     requestSysMenuCreate,
@@ -17,7 +18,7 @@ import {
 import adminRoutes from '@/routes/adminRoutes.js'
 import '@/style/base.css';
 
-
+let { Option } = Select;
 
 export default class SysMenu extends Component {
     constructor(props) {
@@ -25,8 +26,12 @@ export default class SysMenu extends Component {
         this.formRef = React.createRef();
         this.state = {
             dict_role_lise: [],
-
+            dict_level_type: [
+                { key: 1, value: '父级组件' },
+                { key: 2, value: '子类组件' },
+            ],
             table_box: {
+                menus: [],
                 table_datas: [],
                 table_title: [],
             },
@@ -39,7 +44,7 @@ export default class SysMenu extends Component {
 
     render() {
         let that = this;
-        let { table_box, modal_box } = that.state;
+        let { table_box, modal_box, dict_level_type } = that.state;
 
 
         return (
@@ -65,8 +70,7 @@ export default class SysMenu extends Component {
                         {
                             that.formRef && that.formRef.current &&
                             <div>
-                                {
-                                    that.formRef.current.getFieldValue('id') &&
+                                {that.formRef.current.getFieldValue('id') &&
                                     <Form.Item label="id" name='id' rules={[{ required: true }]} >
                                         <Input className="base-input-wrapper" disabled />
                                     </Form.Item>
@@ -80,14 +84,41 @@ export default class SysMenu extends Component {
                                 <Form.Item label='访问路径' name='path' rules={[{ required: true }]}>
                                     <Input className="base-input-wrapper" placeholder='请输入访问路径' />
                                 </Form.Item>
-
-                                <Form.Item label='层级' name='level' rules={[{ required: true }]}>
-                                    <InputNumber className="base-input-wrapper" min={1} max={999} placeholder='请输入页面层级' />
-                                </Form.Item>
-
                                 <Form.Item label='排序' name='sortOrder' >
-                                    <InputNumber className="base-input-wrapper" min={1} max={999} placeholder='请输入排序' />
+                                    <InputNumber className="base-input-wrapper" min={0} max={999} placeholder='请输入排序' />
                                 </Form.Item>
+
+                                <Form.Item label='层级类型' name='level' rules={[{ required: true }]}>
+                                    <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择页面层级" onChange={() => { that.forceUpdate() }}>
+                                        {dict_level_type.map((item, index) => (
+                                            <Option key={index} value={item.key}>{item.key}-{item.value}</Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+
+                                {that.formRef.current.getFieldValue('level') != 1 &&
+                                    <Form.Item label='父组件ID' name='parentId' rules={[{ required: true }]}>
+                                        <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择父组件的id"
+                                            filterOption={(input, option) => {
+                                                if (!input) return true;
+                                                let children = option.children;
+                                                if (children) {
+                                                    let key = children[2];
+                                                    let isFind = false;
+                                                    isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                    if (!isFind) {
+                                                        let code = children[0];
+                                                        isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                    }
+                                                    return isFind;
+                                                }
+                                            }}>
+                                            {table_box.menus.map((item, index) => (
+                                                <Option key={index} value={item.id}>{item.id}-{item.name}</Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                }
                             </div>
                         }
                     </Form>
@@ -165,7 +196,19 @@ export default class SysMenu extends Component {
         requestSysMenu()
             .then(res => {
                 let { table_box } = that.state;
-                table_box.table_datas = res.data;
+                let data = res.data;
+                let menus = [];
+
+                //获取父级页面列表
+                for (let i = 0, len = data.length; i < len; i++) {
+                    let temp = data[i];
+                    if (temp.level === 1) {
+                        menus.push(temp);
+                    }
+                }
+                table_box.table_datas = data;
+                table_box.menus = menus;       //父级目录
+
                 that.setState({
                     table_box: table_box,
                 })
@@ -198,7 +241,6 @@ export default class SysMenu extends Component {
             let value = obj[key];
             if (!value) delete obj[key];
         }
-
         if (!obj.name) {
             message.error('请输入名称');
             return;

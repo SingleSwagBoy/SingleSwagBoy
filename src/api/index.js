@@ -85,7 +85,7 @@ export const addVoting = (params) => { return request.post(`${baseUrl}/mms/activ
 export const editVoting = (params) => { return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/edit`, params) };                                                                         //编辑投票列表
 export const getMyProduct = (params) => { return request.post(`${baseUrl}/mms/product/get`, params) };                                                                                      //产品线
 export const getDict = (params) => { return request.post(`${baseUrl}/mms/dict/cp/get`, params) };                                                                                           //字典集
-export const getUserTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                         //渠道
+// export const getUserTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                         //渠道
 export const getChannel = (params) => { return request.post(`${baseUrl}/mms/channel/get`, params) };                                                                                        //获取频道
 export const deleteVote = (params) => { return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/deleteItem`, { params: params }) };                                                        //删除
 export const changeStateVote = (params) => { return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/changeState`, { params: params }) };                                                  //修改table里面的switch
@@ -220,27 +220,45 @@ export const requestSysUserRolePermissionDelete = params => { return request2.po
 export const syncOther = (params) => { return request2.get(`${baseUrl}/mms/sync/other`, { params: params }); };                                                                             //其他缓存 其他缓存(热点频道/友盟上报/播放控制/分享码/产品线/文案/配置API/移动端banner/运营位/用户识别规则/热点节目/渠道/卡顿策略/设备权益/eslog/开机进入/定时任务/专享运营位/家庭账号配置)
 export const syncLiveCarousel = (params) => { return request2.get(`${baseUrl}/mms/sync/liveCarousel`, { params: params }); };                                                               //直播轮播缓存(直播预告/轮播推荐/观影厅频道配置)
 export const syncSyncConfig = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config`, { params: params }); };                                                          //查找合集短视频 /mms/config/common/syn_config?key=
-export const syncSynSlice = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_slice`, { params: params }); };                                                          //查找合集短视频 /mms/config/common/syn_config?key=
+export const syncSynSlice = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_slice`, { params: params }); };                                                             //查找合集短视频 /mms/config/common/syn_config?key=
 export const syncWeChat = (params) => { return request2.get(`${baseUrl}/mms/sync/weChat`, { params: params }); };                                                                           //微信自动回复/wxcode/微信二维码
 export const syncMenuImage = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/syncCache`, { params: params }); };                                                        //广告菜单栏目录配置
 export const syncWxTemplateMsgConfig = (params) => { return request2.get(`${baseUrl}/mms/tmpl/message/config/sync`, { params: params }); };                                                 //微信模板消息 同步
+export const syncAdNewTagSync = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/sync`, { params: params }); };                                                                 //广告新标签 数据同步
+
+
 
 //小程序配置
 export const getMiniProList = (params) => { return request.post(`${baseUrl}/mms/wx/msg/getMpListV2`, params) };                                                                             //获取小程序配置列表
 export const addMpConfig = (params) => { return request.post(`${baseUrl}/mms/wx/msg/addMpConfig`, params) };                                                                                //增加小程序配置列表
 export const delMpConfig = (params) => { return request.post(`${baseUrl}/mms/wx/msg/delMpConfig?id=${params.id}`) };                                                                        //删除小程序配置列表
 
-//广告光立---自定义规则便签
-export const getAdTagList = (params) => { return request.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                       //获取列表
-export const getAdFieldList = (params) => { return request.post(`${baseUrl}/mms/dict/tagDic/get`, params) };                                                                                //获取Field列表
-export const getDictionary = (params) => { return request.post(`${baseUrl}/mms/config/dictionary/get`, params) };                                                                           //获取数据源
+//广告管理---自定义规则便签
+export const requestAdRightKey = params => { return request2.get(`${baseUrl}/mms/ad/adRightKey/get`, { params: params }); };                                                                //获取广告素材 获取右下角广告
+export const requestAdTagList = (params) => { return request2.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                       //获取列表
 export const addDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/add`, params) };                                                                                          //增加自定义规则标签
 export const updateDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/update`, params) };                                                                                    //更新自定义规则标签
 export const delDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/del`, params) };                                                                                          //删除自定义规则标签
 export const esQuery = (params) => { return request.post(`${baseUrl}/mms/ad/tag/esQuery`, params) };                                                                                        //esQuery
 
+//广告组
+export const requestNewGroupCreate = (params) => { return request.post(`${baseUrl}/mms/ad/newGroup/add`, params) };                                                                         //新建广告组
+export const requestNewGroupUpdate = (params) => { return request.post(`${baseUrl}/mms/ad/newGroup/update`, params) };                                                                      //更新广告组
+export const requestNewGroupList = (params) => { return request.post(`${baseUrl}/mms/ad/newGroup/get`, params) };                                                                           //获取广告组
+export const requestNewGroupDelete = (params) => { return request.post(`${baseUrl}/mms/ad/newGroup/del`, params) };                                                                         //删除广告组
+export const requestNewGroupCopy = (params) => { return request.post(`${baseUrl}/mms/ad/newGroup/copy`, params) };                                                                          //复制广告组
+
+
+export const requestNewAdTagList = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/get`, { params: params }) };                                                                //新版 获取用户标签列表
+export const requestNewAdTagCreate = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/add`, params) };                                                                         //新版 创建用户标签数据
+export const requestNewAdTagUpdate = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/update`, params) };                                                                      //新版 更新用户标签规则
+export const requestNewAdTagDelete = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/del`, params) };                                                                         //新版 删除用户标签规则
+export const requestDictionary = (params) => { return request2.post(`${baseUrl}/mms/config/dictionary/get`, params) };                                                                      //获取 字典数据源
+export const requestAdFieldList = (params) => { return request2.post(`${baseUrl}/mms/dict/tagDic/get`, params) };                                                                           //获取Field列表
+
+
 //  转转管理------赚赚激励气泡
-export const getEarnTskList=(params)=>{ return request2.get(`${baseUrl}/mms/bubbletask/list`, { params: params }); };  // 获取转转激励任务列表
+export const getEarnTskList = (params) => { return request2.get(`${baseUrl}/mms/bubbletask/list`, { params: params }); };  // 获取转转激励任务列表
 export const addEarnTskList = (params) => { return request.post(`${baseUrl}/mms/bubbletask/add`, params) };            // 新增转转激励任务
 export const updateEarnTskList = (params) => { return request.post(`${baseUrl}/mms/bubbletask/update`, params) };      // 更新转转激励任务
 export const deleteEarnTskList = (params) => { return request.get(`${baseUrl}/mms/bubbletask/del`, { params: params }) };         // 删除转转激励任务

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { addVoting, editVoting, deleteVote, getVotingList, getMyProduct, getUserTag, getChannel, changeStateVote, voteSyncCache, requestVoteDuplicate } from 'api'
+import { addVoting, editVoting, deleteVote, getVotingList, getMyProduct, requestAdTagList, getChannel, changeStateVote, voteSyncCache, requestVoteDuplicate } from 'api'
 import { Card, Button, Table, message, DatePicker, Select, Input, InputNumber, Switch, Modal, Form, Space, Radio } from 'antd'
 import { } from 'react-router-dom'
 
@@ -588,9 +588,9 @@ export default class WinningNews extends Component {
     })
   }
   getUserTag() { //获取用户标签
-    getUserTag({}).then(res => {
+    requestAdTagList({}).then(res => {
       this.setState({
-        userTagList: res.data.data
+        userTagList: res.data
       })
     })
   }

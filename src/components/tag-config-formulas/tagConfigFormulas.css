@@ -1,0 +1,47 @@
+.formulas-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 3px 0; 
+    padding: 10px 0 ;
+}
+
+.type-wrapper {
+    /* 类型 */
+    width: 30px;
+}
+
+.formula-items {
+    width: 100%;
+    /* border-left: 3px solid #F00;
+    border-right: 3px solid #F00; */
+    padding: 15px 15px ;
+    margin: 8px 5px;
+    background: linear-gradient(to top, #306EEF, #306EEF) left top no-repeat, /*上左*/
+    linear-gradient(to right, #306EEF, #306EEF) left top no-repeat, /*左上*/
+    linear-gradient(to left, #306EEF, #306EEF) right top no-repeat, /*上右*/
+    linear-gradient(to bottom, #306EEF, #306EEF) right top no-repeat, /*上右*/
+    linear-gradient(to left, #306EEF, #306EEF) left bottom no-repeat, /*下左*/
+    linear-gradient(to bottom, #306EEF, #306EEF) left bottom no-repeat, /*左下*/
+    linear-gradient(to top, #306EEF, #306EEF) right bottom no-repeat, /*下右*/
+    linear-gradient(to left, #306EEF, #306EEF) right bottom no-repeat;
+    /*右下*/
+    background-size: 1px 1000px, 20px 1px, 1px 1000px, 20px 1px;
+}
+
+.formula-items-line {
+    display: flex;
+    flex-direction: row;
+    padding: 3px 0;
+    align-items: center;
+}
+
+.formula-item {
+    width: 150px;
+    margin-right: 3px;
+}
+
+.btn-wrapper {
+    display: flex;
+    flex-direction: column;
+}

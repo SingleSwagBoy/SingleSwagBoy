@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-27 14:10:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-13 14:46:23
+ * @LastEditTime: 2021-11-02 18:55:26
  * @Description: 模版内容行数据
  */
 
@@ -106,8 +106,8 @@ export default class WxTemplateMsgContent extends Component {
         let content_array = [];
 
         if (value) {
-            console.log('wx_msg_content');
-            console.log(JSON.parse(value));
+            value = value.replace(/\n/g, "\\n").replace(/\r/g, "\\r");
+            
             //解析数据
             try {
                 value = JSON.parse(value);

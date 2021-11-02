@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 11:56:33
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-14 15:22:53
+ * @LastEditTime: 2021-11-02 19:19:52
  * @Description: 微信支付模板消息
  */
 
@@ -217,7 +217,7 @@ export default class WxPayTemplate extends Component {
                             </div>
                         }
                     </Form>
-                    <MyTagTypes union_type='all' tag_name='tag' delivery_name='delivery' desc={'未选择标签，则针对全部用户生效'} onRef={(ref) => that.setState({ ref_tag_types: ref })} />
+                    <MyTagTypes tag_name='tag' desc={'未选择标签，则针对全部用户生效,只支持用户标签。'} onRef={(ref) => that.setState({ ref_tag_types: ref })} />
                 </Modal >
             </div >
 
@@ -547,10 +547,15 @@ export default class WxPayTemplate extends Component {
         let value = that.formRef.current.getFieldsValue();  //表格数据
         let data = Object.assign({}, value, ref_tag_types.loadData());  //用户标签-投放类型
 
+
+
+
         data.time_bucket = ref_time_interval.getData();     //播放时间段
-        data.data = ref_template_content.loadData();        //编辑内容
-
-
+        let formData = ref_template_content.loadData();        //编辑内容
+        if (formData) {
+            formData = formData.replaceAll('\\n', '');
+        }
+        data.data = formData;
 
 
         //数据状态 不存在

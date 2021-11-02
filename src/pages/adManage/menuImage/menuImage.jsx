@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:50:06
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-28 11:03:53
+ * @LastEditTime: 2021-11-02 18:52:50
  * @Description: 菜单栏图片配置页
  */
 
@@ -64,13 +64,12 @@ export default class MenuImagePage extends Component {
                 <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
 
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
-
                     footer={[
                         <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
                         <Button onClick={() => that.onModalConfirmClick()} >确定</Button>
                     ]}
                 >
-                    <MyTagTypes union_type='unionType' tag_name='tag' delivery_name='deliveryType' onRef={(ref) => that.onTagTypesRefCallback(ref)} />
+                    <MyTagTypes is_old_tag_resouce={true} union_type='unionType' tag_name='tag' delivery_name='deliveryType' onRef={(ref) => that.onTagTypesRefCallback(ref)} />
 
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
                         {

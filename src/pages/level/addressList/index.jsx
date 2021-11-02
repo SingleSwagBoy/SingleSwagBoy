@@ -232,7 +232,7 @@ export default class WinningNews extends Component {
               </div>
             }
             <div className="everyBody">
-              <div>秒杀时间:</div>
+              <div>参与时间:</div>
               <RangePicker   
               showTime
                 onChange={(val)=>{

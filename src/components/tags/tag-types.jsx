@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-28 10:59:16
+ * @LastEditTime: 2021-11-02 19:08:49
  * @Description: 用户标签 - 投放类型 组合控件
  * 
  * 不传不显示下面对应的参数 不传时，获取数据也不会获取到对应参数
@@ -15,6 +15,7 @@ import { Form, Select, Radio, Input, Tooltip, message } from 'antd';
 import './tag-types.css';
 import {
     requestAdTagList,                   //用户设备标签
+    requestNewAdTagList,                //用户设备标签[新版] 用户标签
     requestDeliveryTypes,               //投放类型
 } from 'api';
 import '@/style/base.css';
@@ -48,7 +49,8 @@ export default class TagTypes extends Component {
     render() {
         let that = this;
         let { dict_union_type, dict_user_tags, dict_delivery_types } = that.state;
-        let { union_type, tag_name, delivery_name, desc } = that.props;
+        let { union_type, tag_name, delivery_name, desc
+            , is_old_tag_resouce } = that.props;
 
         return (
             <div className='tag-types-wrapper'>
@@ -84,7 +86,7 @@ export default class TagTypes extends Component {
 
                     {tag_name &&
                         <Form.Item label='用户标签' name={tag_name} >
-                            <Select className="base-input-wrapper" mode="multiple" showSearch placeholder="请选择用户设备标签"
+                            <Select className="base-input-wrapper" mode={is_old_tag_resouce ? 'multiple' : true} showSearch placeholder="请选择用户设备标签"
                                 filterOption={(input, option) => {
                                     if (!input) return true;
                                     let children = option.children;
@@ -92,7 +94,7 @@ export default class TagTypes extends Component {
                                         let key = children[2];
                                         let isFind = false;
                                         isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
-                                        if(!isFind){
+                                        if (!isFind) {
                                             let code = children[0];
                                             isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
                                         }
@@ -101,7 +103,7 @@ export default class TagTypes extends Component {
                                     }
                                 }}>
                                 {dict_user_tags.map((item, index) => (
-                                    <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
+                                    <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>
                                 ))}
                             </Select>
                         </Form.Item>
@@ -119,17 +121,37 @@ export default class TagTypes extends Component {
 
     initData() {
         let that = this;
-        //用户标签
-        requestAdTagList().then(userTagResult => {
-            requestDeliveryTypes().then(deliveryTypesResult => {
+        let { is_old_tag_resouce } = that.props;
+
+        //用户标签 根据类型获取新旧标签
+        if (is_old_tag_resouce) {
+            requestAdTagList().then(res => {
                 that.setState({
-                    dict_user_tags: userTagResult.data,
-                    dict_delivery_types: deliveryTypesResult,
+                    dict_user_tags: res.data,
                 }, () => {
                     that.forceUpdate();
                 });
+            })
+        }
+        //
+        else {
+            requestNewAdTagList({ currentPage: 1, pageSize: 999999, }).then(res => {
+                that.setState({
+                    dict_user_tags: res.data,
+                }, () => {
+                    that.forceUpdate();
+                });
+            })
+        }
+
+        //投放类型
+        requestDeliveryTypes().then(res => {
+            that.setState({
+                dict_delivery_types: res,
+            }, () => {
+                that.forceUpdate();
             });
-        })
+        });
     }
 
     /**
@@ -138,7 +160,7 @@ export default class TagTypes extends Component {
      */
     pushData(item) {
         let that = this;
-        let voewFormRef = that.viewFormRef;
+        let viewFormRef = that.viewFormRef;
         let { tag_name } = that.props;
 
         let tags = item[tag_name];
@@ -158,8 +180,8 @@ export default class TagTypes extends Component {
 
         item[tag_name] = tags;
 
-        voewFormRef.current.resetFields();
-        voewFormRef.current.setFieldsValue(item);
+        viewFormRef.current.resetFields();
+        viewFormRef.current.setFieldsValue(item);
     }
 
     /**
@@ -168,8 +190,8 @@ export default class TagTypes extends Component {
     loadData() {
         let that = this;
         let { union_type, tag_name, delivery_name } = that.props;
-        let voewFormRef = that.viewFormRef;
-        let value = voewFormRef.current.getFieldsValue();
+        let viewFormRef = that.viewFormRef;
+        let value = viewFormRef.current.getFieldsValue();
         let obj = {};
 
         //标签判断逻辑
@@ -222,14 +244,14 @@ export default class TagTypes extends Component {
     //监听单选框 被选中的数据 再次被点击 将清除当前数据
     onRadioClick(target) {
         let that = this;
-        let voewFormRef = that.viewFormRef;
+        let viewFormRef = that.viewFormRef;
         let { delivery_name } = that.props;
 
-        let value = voewFormRef.current.getFieldValue(delivery_name);
+        let value = viewFormRef.current.getFieldValue(delivery_name);
         if (value === target) {
             let obj = {};
             obj[delivery_name] = '';
-            voewFormRef.current.setFieldsValue(obj);
+            viewFormRef.current.setFieldsValue(obj);
         }
     }
 

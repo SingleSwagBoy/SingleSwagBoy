@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-28 14:56:24
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-29 17:42:00
+ * @LastEditTime: 2021-11-02 15:15:28
  * @Description: 标签配置页 公式组件
  */
 
@@ -39,7 +39,7 @@ export default class tagConfig extends Component {
         // <BorderLeftOutlined />
         let that = this;
         let { dict_operator } = that.state;
-        let { id, formRef, dict_field } = that.props;
+        let { id, formRef, dict_field, is_show_only } = that.props;      //is_show_only:仅作展示，数据不提供修改编辑
         let rules = formRef.current.getFieldValue(id);   //获取外部数据
 
 
@@ -93,7 +93,7 @@ export default class tagConfig extends Component {
                                                                                     return (
                                                                                         <div className="formula-items-line">
                                                                                             <div className="formula-item" style={{ width: 320 }} >
-                                                                                                <Select showSearch placeholder='版本' allowClear value={layer3item.field} onChange={(e) => { that.onFieldSelectChange(e, layer1index, layer2index, layer3index, 'field') }}
+                                                                                                <Select showSearch placeholder='版本' allowClear value={layer3item.field} disabled={is_show_only} onChange={(e) => { that.onFieldSelectChange(e, layer1index, layer2index, layer3index, 'field') }}
                                                                                                     filterOption={(input, option) => {
                                                                                                         if (!input) return true;
                                                                                                         let children = option.children;
@@ -115,7 +115,7 @@ export default class tagConfig extends Component {
                                                                                             </div>
 
                                                                                             <div className="formula-item" style={{ width: 90 }}>
-                                                                                                <Select showSearch placeholder='运算符' allowClear value={layer3item.oper} onChange={(e) => { that.onOperatorSelectChange(e, layer1index, layer2index, layer3index, 'oper') }}>
+                                                                                                <Select showSearch placeholder='运算符' allowClear value={layer3item.oper} disabled={is_show_only} onChange={(e) => { that.onOperatorSelectChange(e, layer1index, layer2index, layer3index, 'oper') }}>
                                                                                                     {dict_operator.map((item, index) => {
                                                                                                         return <Option key={index} value={item.value}>{item.name}</Option>
                                                                                                     })}
@@ -123,22 +123,22 @@ export default class tagConfig extends Component {
                                                                                             </div>
 
                                                                                             <div className="formula-item" style={{ width: 300 }}>
-                                                                                                <Input value={layer3item.value} placeholder="取值" onChange={(e) => { that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'value') }} />
+                                                                                                <Input value={layer3item.value} placeholder="取值" disabled={is_show_only} onChange={(e) => { that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'value') }} />
                                                                                             </div>
 
-                                                                                            <Button onClick={() => { that.onItemDeleteClick('第三层', layer1index, layer2index, layer3index) }}>删除</Button>
+                                                                                            {!is_show_only && <Button disabled={is_show_only} onClick={() => { that.onItemDeleteClick('第三层', layer1index, layer2index, layer3index) }}>删除</Button>}
                                                                                         </div>
                                                                                     )
                                                                                 })
                                                                             }
                                                                         </div>
-                                                                        <Button size='small' icon={<PlusOutlined />} onClick={() => { that.onItemCreateClick('第三层', layer1index, layer2index) }}>维度</Button>
+                                                                        {!is_show_only && <Button size='small' icon={<PlusOutlined />} onClick={() => { that.onItemCreateClick('第三层', layer1index, layer2index) }}>维度</Button>}
                                                                     </div>
                                                                 )
                                                             })
                                                         }
                                                     </div>
-                                                    <Button size='small' icon={<PlusOutlined />} onClick={() => { that.onItemCreateClick('第二层', layer1index) }}>维度</Button>
+                                                    {!is_show_only && <Button size='small' disabled={is_show_only} icon={<PlusOutlined />} onClick={() => { that.onItemCreateClick('第二层', layer1index) }}>维度</Button>}
                                                 </div>
                                                 : <div div className="formulas-wrapper"></div>
                                         )
@@ -147,7 +147,7 @@ export default class tagConfig extends Component {
 
                             }
                         </div>
-                        <Button size='small' icon={<PlusOutlined />} onClick={() => { that.onItemCreateClick('第一层',) }}>维度</Button>
+                        {!is_show_only && <Button size='small' icon={<PlusOutlined />} disabled={is_show_only} onClick={() => { that.onItemCreateClick('第一层',) }}>维度</Button>}
                     </div>
                 </div>
             )

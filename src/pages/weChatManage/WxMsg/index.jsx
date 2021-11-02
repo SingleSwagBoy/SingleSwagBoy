@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getMsg, getMsgLog, getPublicList, getUserTag, deleteMsg } from 'api'
+import { getMsg, getMsgLog, getPublicList, requestAdTagList, deleteMsg } from 'api'
 import { Card, Breadcrumb, Button, message, Tabs, Table, Switch, Modal } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
@@ -209,7 +209,7 @@ export default class AddressNews extends Component {
                     key: "type",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{row.type ? row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" : row.type === "mini"?"小程序卡片":"图文消息（外链）" : ""}</div>
+                            <div>{row.type ? row.type === "text" ? "文字消息" : row.type === "image" ? "图片消息" : row.type === "mini" ? "小程序卡片" : "图文消息（外链）" : ""}</div>
                         )
                     }
                 },
@@ -326,7 +326,7 @@ export default class AddressNews extends Component {
         })
         this.getPublicList()
         this.getMsg()
-        this.getUserTag()
+        this.requestUserTag()
     }
     changeSize = (page, pageSize) => {
         // 分页获取
@@ -462,14 +462,11 @@ export default class AddressNews extends Component {
             }
         })
     }
-    getUserTag() {
-        getUserTag({}).then(res => {
-            console.log(res)
-            if (res.data.errCode === 0) {
-                this.setState({
-                    userTagList: res.data.data
-                })
-            }
+    requestUserTag() {
+        requestAdTagList({}).then(res => {
+            this.setState({
+                userTagList: res.data
+            })
         })
     }
     getWords(item) {

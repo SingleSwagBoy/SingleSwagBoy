@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getAdTagList, getAdFieldList, getDictionary, delDIYTag, esQuery } from 'api'
-import { Card, Breadcrumb, Button, message, Tabs, Table, Switch, Modal, Input,Select } from 'antd'
+import { requestAdTagList, requestAdFieldList, requestDictionary, delDIYTag, esQuery } from 'api'
+import { Card, Breadcrumb, Button, message, Tabs, Table, Switch, Modal, Input, Select } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
 import util from 'utils'
@@ -91,7 +91,7 @@ export default class AddressNews extends Component {
                                     defaultChecked={rowValue === 1 ? true : false}
                                     onChange={(val) => {
                                         row.status = val ? 1 : 2
-                                        this.refs.getMyModal.updateDIYTag(row,"status")
+                                        this.refs.getMyModal.updateDIYTag(row, "status")
                                     }}
                                 />
                             </div>
@@ -168,7 +168,7 @@ export default class AddressNews extends Component {
                         </div>
                         <div className="everyBody">
                             <div>标签类型:</div>
-                            <Select allowClear placeholder="请选择标签类型" style={{width:"200px"}}
+                            <Select allowClear placeholder="请选择标签类型" style={{ width: "200px" }}
                                 onChange={(val) => {
                                     this.state.searchTagType = val
                                     this.setState({
@@ -283,7 +283,7 @@ export default class AddressNews extends Component {
     }
     getAdTagList() {
         this.setState({
-            loading:true
+            loading: true
         })
         let params = {
             code: "",
@@ -293,38 +293,32 @@ export default class AddressNews extends Component {
             tagType: this.state.searchTagType ? this.state.searchTagType : "",
             page: { currentPage: this.state.page, pageSize: this.state.pageSize }
         }
-        getAdTagList(params).then(res => {
-            console.log(res)
-            if (res.data.errCode === 0) {
-                this.setState({
-                    lists: res.data.data,
-                    loading: false,
-                    total: res.data.totalCount,
-                })
-            } else {
-                this.setState({
-                    lists: [],
-                    loading: false
-                })
-            }
+
+        requestAdTagList(params).then(res => {
+            this.setState({
+                lists: res.data.data,
+                loading: false,
+                total: res.data.totalCount,
+            })
+        }).catch(res => {
+            this.setState({
+                lists: [],
+                loading: false
+            })
         })
     }
     getAdFieldList() {
-        getAdFieldList({}).then(res => {
-            if (res.data.errCode === 0) {
+        requestAdFieldList({}).then(res => {
                 this.setState({
-                    fieldList: res.data.data
+                    fieldList: res.data,
                 })
-            }
         })
     }
     getDictionary() {
-        getDictionary({ type: "tagIndex" }).then(res => {
-            if (res.data.errCode === 0) {
+        requestDictionary({ type: "tagIndex" }).then(res => {
                 this.setState({
-                    dictionaryList: res.data.data
+                    dictionaryList: res.data,
                 })
-            }
         })
     }
     delArt(item) {

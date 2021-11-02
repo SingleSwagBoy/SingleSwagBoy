@@ -32,12 +32,15 @@
     align-items: center;
 }
 
+.custom-tag-item-btn {
+    border: 1px dashed #9b709e;
+}
+
 .custom-tag-item-empty {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-left: 10px;
 }
 
 .custom-tag-pane {

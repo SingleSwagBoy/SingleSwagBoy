@@ -85,7 +85,7 @@ export const addVoting = (params) => { return request.post(`${baseUrl}/mms/activ
 export const editVoting = (params) => { return request.post(`${baseUrl}/mms/activity/tvTrying/qhd/edit`, params) };                                                                         //编辑投票列表
 export const getMyProduct = (params) => { return request.post(`${baseUrl}/mms/product/get`, params) };                                                                                      //产品线
 export const getDict = (params) => { return request.post(`${baseUrl}/mms/dict/cp/get`, params) };                                                                                           //字典集
-export const getUserTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                         //渠道
+// export const getUserTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                         //渠道
 export const getChannel = (params) => { return request.post(`${baseUrl}/mms/channel/get`, params) };                                                                                        //获取频道
 export const deleteVote = (params) => { return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/deleteItem`, { params: params }) };                                                        //删除
 export const changeStateVote = (params) => { return request.get(`${baseUrl}/mms/activity/tvTrying/qhd/changeState`, { params: params }) };                                                  //修改table里面的switch
@@ -224,6 +224,9 @@ export const syncSynSlice = (params) => { return request2.get(`${baseUrl}/mms/co
 export const syncWeChat = (params) => { return request2.get(`${baseUrl}/mms/sync/weChat`, { params: params }); };                                                                           //微信自动回复/wxcode/微信二维码
 export const syncMenuImage = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/syncCache`, { params: params }); };                                                        //广告菜单栏目录配置
 export const syncWxTemplateMsgConfig = (params) => { return request2.get(`${baseUrl}/mms/tmpl/message/config/sync`, { params: params }); };                                                 //微信模板消息 同步
+export const syncAdNewTagSync = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/sync`, { params: params }); };                                                                 //广告新标签 数据同步
+
+
 
 //小程序配置
 export const getMiniProList = (params) => { return request.post(`${baseUrl}/mms/wx/msg/getMpListV2`, params) };                                                                             //获取小程序配置列表
@@ -231,15 +234,18 @@ export const addMpConfig = (params) => { return request.post(`${baseUrl}/mms/wx/
 export const delMpConfig = (params) => { return request.post(`${baseUrl}/mms/wx/msg/delMpConfig?id=${params.id}`) };                                                                        //删除小程序配置列表
 
 //广告管理---自定义规则便签
-export const getAdTagList = (params) => { return request.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                       //获取列表
-export const getAdFieldList = (params) => { return request.post(`${baseUrl}/mms/dict/tagDic/get`, params) };                                                                                //获取Field列表
-export const getDictionary = (params) => { return request.post(`${baseUrl}/mms/config/dictionary/get`, params) };                                                                           //获取数据源
+export const requestAdTagList = (params) => { return request2.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                       //获取列表
 export const addDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/add`, params) };                                                                                          //增加自定义规则标签
 export const updateDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/update`, params) };                                                                                    //更新自定义规则标签
 export const delDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/del`, params) };                                                                                          //删除自定义规则标签
 export const esQuery = (params) => { return request.post(`${baseUrl}/mms/ad/tag/esQuery`, params) };                                                                                        //esQuery
 
-export const requestAdRightKey = params => { return request2.get(`${baseUrl}/mms/ad/adRightKey/get`, { params: params }); };                                                                //获取广告素材 获取右下角广告
+export const requestNewAdTagList = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/get`, { params: params }) };                                                                //新版 获取用户标签列表
+export const requestNewAdTagCreate = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/add`, params) };                                                                         //新版 创建用户标签数据
+export const requestNewAdTagUpdate = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/update`, params) };                                                                      //新版 更新用户标签规则
+export const requestNewAdTagDelete = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/del`, params) };                                                                         //新版 删除用户标签规则
+export const requestDictionary = (params) => { return request2.post(`${baseUrl}/mms/config/dictionary/get`, params) };                                                                      //获取 字典数据源
+export const requestAdFieldList = (params) => { return request2.post(`${baseUrl}/mms/dict/tagDic/get`, params) };                                                                           //获取Field列表
 
 
 //  转转管理------赚赚激励气泡
@@ -255,6 +261,10 @@ export const listWhite = (params) => { return request2.get(`${baseUrl}/mms/ad/wh
 export const updateWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/update`, params) };          // 更新白名单配置
 export const deleteWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/delete`, params) };          // 删除白名单配置
 export const syncWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/sync`, params) };          // 同步
+//电视节目单配置
+export const getProgramAppConfig = (params) => { return request2.get(`${baseUrl}/mms/programApp/programAppConfig/get`, { params: params }) };          // 获取电视节目单配置列表
+export const updateProgramAppConfig = (params) => { return request2.post(`${baseUrl}/mms/programApp/programAppConfig/update`, params) };          // 更新电视节目单列表
+export const syncProgramAppConfig = (params) => { return request2.get(`${baseUrl}/mms/sync/programAppConfig`, { params: params }) };          // 更新电视节目单列表
 
 
 //广告-二维码套餐类型

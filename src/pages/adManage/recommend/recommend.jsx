@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-10 14:41:09
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-09-10 14:43:09
+ * @LastEditTime: 2021-10-28 11:00:27
  * @Description: 尝鲜版配置页
  */
 
@@ -11,7 +11,7 @@ import moment from 'moment';
 import React, { Component } from 'react';
 import {
     getChannel,                         //获取频道
-    getUserTag,                         //获取用户设备标签
+    requestAdTagList,                   //获取用户设备标签
     requestQrcodeTypes,                 //二维码类型
     requestJumpTypes,                   //获取跳转类型
     requestJumpMenuTypes,               //获取跳转目录类型
@@ -352,14 +352,10 @@ export default class Teast extends Component {
         })
 
         //用户设备标签
-        getUserTag().then(res => {
-            console.log(res);
-            let errCode = res.data.errCode;
-            if (errCode === 0) {
-                that.setState({
-                    user_tag: res.data.data,
-                })
-            }
+        requestAdTagList().then(res => {
+            that.setState({
+                user_tag: res.data,
+            })
         })
 
         //查看广告节目单配置

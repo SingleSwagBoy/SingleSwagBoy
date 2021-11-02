@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-27 10:47:23
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-27 11:42:17
+ * @LastEditTime: 2021-11-01 17:31:31
  * @Description: Tag列表 多个Tag选项切换
  */
 
@@ -43,7 +43,7 @@ export default class tagSelect extends Component {
                         }
                         {/* 添加按钮 */}
                         {btns && btns.length > 0 &&
-                            <div className="custom-tag-item" key='tag-create-key'>
+                            <div className="custom-tag-item custom-tag-item-btn" key='tag-create-key'>
                                 {
                                     btns.map((item, index) => {
                                         return <Button key={`btn_${index}`} className="custom-tag-pane" onClick={() => { that.onCraeteClick(item) }} >{item}</Button>
@@ -69,8 +69,18 @@ export default class tagSelect extends Component {
                 <div className="custom-tag-wrapper">
                     <div className="custom-tag-box">
                         <div className='custom-tag-item-empty' >
-                            没有获取到Tag数据，请刷新列表。
+                            暂无配置
                         </div>
+                        {btns && btns.length > 0 &&
+                            <div className="custom-tag-item custom-tag-item-btn" key='tag-create-key'>
+                                {
+                                    btns.map((item, index) => {
+                                        return <Button key={`btn_${index}`} className="custom-tag-pane" onClick={() => { that.onCraeteClick(item) }} >{item}</Button>
+                                    })
+                                }
+                            </div>
+                        }
+
                     </div>
                 </div>
             )

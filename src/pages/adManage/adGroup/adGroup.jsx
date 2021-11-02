@@ -2,11 +2,11 @@
  * @Author: HuangQS
  * @Date: 2021-10-26 11:18:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-27 16:03:05
+ * @LastEditTime: 2021-11-01 18:09:22
  * @Description: 广告组策略
  */
 import React, { Component } from 'react';
-import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, Radio, message, Switch } from 'antd';
+import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, Radio, Divider,Image, message, Switch } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
 import { MySyncBtn, MyTagSelect } from '@/components/views.js';
@@ -94,34 +94,65 @@ export default class adGroup extends Component {
                                 <Form.Item label="广告组名称" name='name' rules={[{ required: true }]}>
                                     <Input className="base-input-wrapper" placeholder="请输入广告组名称" />
                                 </Form.Item>
-                                <Form.Item label="标签">
-                                </Form.Item>
-                                <Form.Item label="广告内容">
+                                <Form.Item label="标签" rules={[{ required: true }]}>
                                     <Form.Item>
-                                        内容个数 10个
+                                        标签配置需要到[<a onClick={() => that.onTagConfigClick()}>标签配置</a>]页中完成规则配置
                                     </Form.Item>
                                     <Form.Item>
+                                        <Input className="base-input-wrapper" placeholder="请选择广告组标签"></Input>
+                                    </Form.Item>
+                                </Form.Item>
+                                <Form.Item label="广告组时间">
+                                        <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} disabled />
+                                    </Form.Item>
+
+
+                                {/* <div style={{ border: '1px dashed #9b709e' }}> */}
+                                <div>
+                                    <Divider>广告详情</Divider>
+                                    <Form.Item label="广告类型" >
                                         <Radio.Group className="base-input-wrapper" >
                                             {dict_ad_type.map((item, index) => {
-                                                return <Radio value={item.key} key={index} onClick={(e) => { }}>
-                                                    {item.value}(5条)
-                                                </Radio>
+                                                return (
+                                                    <Radio value={item.key} key={index} onClick={(e) => { }}>
+                                                        {item.value}(5条)
+                                                    </Radio>
+                                                )
                                             })}
                                         </Radio.Group>
+                                    </Form.Item>
 
+                                    <Form.Item label="广告列表">
                                         <MyTagSelect style={{ width: '100%' }} tags={[{ id: 1, name: "广告" }, { id: 2, name: "广告" }, { id: 3, name: "广告" }, { id: 4, name: "广告" }, { id: 5, name: "广告" }]}
                                             tag_select_id={3} show_create={true} btns={["挑选素材", "手动新增"]}
                                             onTagCreateClick={(key) => that.onTagSelectClick(key)}
-                                            onSelectIdChange={(tag_select_id) => { console.log(`change--->${tag_select_id}`) }}
+                                            onSelectIdChange={(tag_select_id) => that.onTagSelectChange(tag_select_id)}
                                             onTabsDeleteClick={(index) => { console.log(`delete--->${index}`) }}
                                         />
                                     </Form.Item>
-                                </Form.Item>
+                                    <Form.Item label="广告类型">
+                                    </Form.Item>
+                                    <Form.Item label="广告名称">
+                                        <Input className="base-input-wrapper" placeholder="这里是广告名称" disabled />
+                                    </Form.Item>
+                                    <Form.Item label="广告时间">
+                                        <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} disabled />
+                                    </Form.Item>
+
+                                    <Form.Item label="缩略图">
+                                        <Image width={100} />
+                                    </Form.Item>
+                                    <Form.Item label="背景图">
+                                        <Image width={100} />
+                                    </Form.Item>
+                                </div>
                             </div>
                         }
                     </Form>
                 </Modal>
+                {/* 广告创建 */}
                 <AdCreateModal onRef={(ref) => { that.setState({ modal_create_ad_ref: ref }) }} />
+                {/* 广告选择 */}
                 <AdChooseModal onRef={(ref) => { that.setState({ modal_choose_ad_ref: ref }) }} />
 
             </div>
@@ -226,4 +257,22 @@ export default class adGroup extends Component {
         }
     }
 
+    //标签选择器 标签变更
+    onTagSelectChange(tag_select_id) {
+
+    }
+
+    //标签配置页被点击
+    onTagConfigClick() {
+        let that = this;
+        // that.forceUpdate();
+
+        Modal.confirm({
+            title: '跳转',
+            content: '你将要跳转到标签配置页，未保存的数据将不会存储到云端，是否立即跳转？',
+            onOk: () => {
+
+            }
+        })
+    }
 }

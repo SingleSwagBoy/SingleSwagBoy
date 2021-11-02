@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:07:35
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-27 10:56:21
+ * @LastEditTime: 2021-11-02 12:20:26
  * @Description: 自定义组件列表,无论组件内部叫什么名字 在此处尽量改名为以My为开头的名称，区别于ant组件库 以及网络其他组件
  */
 
@@ -16,6 +16,7 @@ export { default as MyArea } from "./area/area";                                
 export { default as MyChannel } from "./channel/channel";                           //渠道组件[黄秋实] 不用单独配置 但必须要在外层包裹Form组件，反应速度更快，示例：[停服下线通知配置|offineConfig.jsx]
 export { default as MyTagSelect } from "./tag-select/tag-select";                   //标签选项列表
 
+export { default as MyTagConfigFormulas } from "./tag-config-formulas/tagConfigFormulas";                   //标签选项列表
 
 
 

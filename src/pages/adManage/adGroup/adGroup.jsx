@@ -2,18 +2,28 @@
  * @Author: HuangQS
  * @Date: 2021-10-26 11:18:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-11-02 10:57:39
+ * @LastEditTime: 2021-11-02 18:25:54
  * @Description: 广告组策略
  */
 import React, { Component } from 'react';
 import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, Radio, Divider, Image, message, Switch } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
-import { MySyncBtn, MyTagSelect } from '@/components/views.js';
+import { MySyncBtn, MyTagSelect, MyTagConfigFormulas } from '@/components/views.js';
 import AdCreateModal from './adGroupCreateModal';
 import AdChooseModal from './adGroupChooseModal';
 
+import {
+    requestNewAdTagList,                    //获取 标签列表
+    requestAdFieldList,                     //获取 Field列表
 
+    requestNewGroupCreate,                  //新建广告组
+    requestNewGroupUpdate,                  //更新广告组
+    requestNewGroupList,                    //获取广告组
+    requestNewGroupDelete,                  //删除广告组
+    requestNewGroupCopy,                    //复制广告组
+
+} from 'api';
 
 let { RangePicker } = DatePicker;
 let { Option } = Select;
@@ -31,6 +41,10 @@ export default class adGroup extends Component {
                 { key: 1, value: '右键运营位' },
                 { key: 2, value: '屏显广告' },
             ],
+            //标签列表
+            dict_target_list: [],
+            dict_field_list: [],
+
             table_box: {
                 table_title: [],
                 table_datas: [],
@@ -45,7 +59,7 @@ export default class adGroup extends Component {
     render() {
         let that = this;
         let { table_box, modal_box
-            , dict_ad_type } = that.state;
+            , dict_ad_type, dict_target_list, dict_field_list } = that.state;
 
         return (
             <div>
@@ -57,30 +71,30 @@ export default class adGroup extends Component {
                 } />
                 <Alert type="success" action={
                     <div className="alert-box">
-                        <Input style={{ width: '200px', marginLeft: 5 }} placeholder="搜索广告组名称" />
-                        <RangePicker style={{ marginLeft: 5 }} style={{ width: '405px', marginLeft: 5 }} showTime placeholder={['上线时间', '下线时间']} />
+                        <Input style={{ width: '200px', marginLeft: 5 }} placeholder="搜索广告组名称" onBlur={(e) => that.onSearchAdGroupNameBlur(e)} />
+                        <RangePicker style={{ marginLeft: 5 }} style={{ width: '405px', marginLeft: 5 }} showTime placeholder={['上线时间', '下线时间']} onChange={(e) => that.onSearchAdGroupTimeChange(e)} />
+                        <Input style={{ width: '200px', marginLeft: 5 }} placeholder="搜索广告名称" onBlur={(e) => that.onSearchAdNameBlur(e)} />
+                        {/* <Input style={{ width: '200px', marginLeft: 5 }} placeholder="搜索标签名称" /> */}
+                        {/* <Input style={{ width: '200px', marginLeft: 5 }} placeholder="搜索广告内容" /> */}
                     </div>
                 } />
 
-                <Alert type="success" action={
+                {/* <Alert type="success" action={
                     <div className="alert-box">
-                        <Input style={{ width: '200px', marginLeft: 5 }} placeholder="搜索标签名称" />
-                        <Input style={{ width: '200px', marginLeft: 5 }} placeholder="搜索广告名称" />
-                        <Input style={{ width: '200px', marginLeft: 5 }} placeholder="搜索广告内容" />
+                     
                     </div>
-                } />
+                } /> */}
 
 
                 <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
 
-                <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
-                    width={1000}
+                <Modal visible={modal_box.is_show} title={modal_box.title} width={1500} style={{ top: 20 }} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
                     footer={[
                         <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
                         <Button onClick={() => that.onModalConfirmClick()} >保存</Button>
                     ]}>
 
-                    <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef}>
+                    <Form labelCol={{ span: 3 }} wrapperCol={{ span: 20 }} ref={that.formRef}>
                         {
                             that.formRef && that.formRef.current &&
                             <div>
@@ -94,17 +108,64 @@ export default class adGroup extends Component {
                                 <Form.Item label="广告组名称" name='name' rules={[{ required: true }]}>
                                     <Input className="base-input-wrapper" placeholder="请输入广告组名称" />
                                 </Form.Item>
+                                <Form.Item label="广告组时间" name='time' rules={[{ required: true }]}>
+                                    <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
+                                </Form.Item>
                                 <Form.Item label="标签" rules={[{ required: true }]}>
                                     <Form.Item>
-                                        标签配置需要到[<a onClick={() => that.onTagConfigClick()}>标签配置</a>]页中完成规则配置
+                                        <Select className="base-input-wrapper" showSearch placeholder="请选择标签"
+                                            onChange={(e) => {
+                                                let selectCode = e;
+                                                if (!selectCode) return;
+                                                //更新下方rule数据
+                                                for (let i = 0, len = dict_target_list.length; i < len; i++) {
+                                                    let item = dict_target_list[i];
+                                                    if (item.code === selectCode) {
+                                                        console.log('rule', item);
+                                                        that.formRef.current.setFieldsValue({ 'rule': item.rule })
+                                                        break;
+                                                    }
+                                                }
+                                                that.forceUpdate();
+                                            }}
+                                            onClear={() => {
+                                                that.formRef.current.setFieldsValue({ 'rule': [] })
+                                                that.forceUpdate();
+                                            }}
+                                            filterOption={(input, option) => {
+                                                if (!input) return true;
+                                                let children = option.children;
+                                                if (children) {
+                                                    let key = children[2];
+                                                    let isFind = false;
+                                                    isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                    if (!isFind) {
+                                                        let code = children[0];
+                                                        isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                    }
+
+                                                    return isFind;
+                                                }
+                                            }}>
+                                            {dict_target_list.map((item, index) => (
+                                                <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
+                                            ))}
+                                        </Select>
                                     </Form.Item>
                                     <Form.Item>
-                                        <Input className="base-input-wrapper" placeholder="请选择广告组标签"></Input>
+                                        如需要新增管理标签配置，请点击[<a onClick={() => that.onTagConfigClick()}>标签配置</a>]跳转到配置页中完成规则。
                                     </Form.Item>
+
+                                    {
+                                        that.formRef.current.getFieldValue('rule') &&
+                                        <Form.Item name='rule' >
+                                            <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} is_show_only={true} />
+                                        </Form.Item>
+                                    }
+
+
                                 </Form.Item>
-                                <Form.Item label="广告组时间">
-                                    <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} disabled />
-                                </Form.Item>
+
 
 
                                 {/* <div style={{ border: '1px dashed #9b709e' }}> */}
@@ -197,10 +258,54 @@ export default class adGroup extends Component {
             table_box: table_box,
         }, () => {
             that.refreshList();
+        });
+
+
+        //获取标签信息
+        requestNewAdTagList({ currentPage: 1, pageSize: 999999, }).then(res => {
+            that.setState({
+                dict_target_list: res.data,
+            });
+        })
+
+        //标签数据类型信息
+        requestAdFieldList({}).then(res => {
+            that.setState({
+                dict_field_list: res.data,
+            })
         })
     }
 
+
+    //搜索广告组名称
+    onSearchAdGroupNameBlur(item) {
+        let that = this;
+        let search_name = item.target.value;
+        console.log('名称过滤', search_name);
+        that.refreshList();
+    }
+    //搜索广告时间范围
+    onSearchAdGroupTimeChange(item) {
+        let that = this;
+        let start_time = item[0].valueOf();
+        let endt_time = item[1].valueOf();
+        console.log('时间过滤', start_time, endt_time);
+        that.refreshList();
+    }
+    //搜索广告组名称
+    onSearchAdNameBlur(item) {
+        let that = this;
+        let search_name = item.target.value;
+        console.log('名称过滤', search_name);
+        that.refreshList();
+    }
+
     refreshList() {
+
+        requestNewGroupList().then(res=>{
+            
+        })
+
     }
 
     onCreateClick() {

@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-27 18:41:39
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-11-01 10:42:44
+ * @LastEditTime: 2021-11-02 13:34:43
  * @Description: 
  */
 
@@ -11,7 +11,7 @@ import React, { Component } from 'react';
 import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, message } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
-import { MySyncBtn } from '@/components/views.js';
+import { MySyncBtn,MyTagConfigFormulas } from '@/components/views.js';
 import {
     requestNewAdTagList,                    //新版 获取用户标签列表
     requestNewAdTagCreate,                  //新版 创建用户标签数据
@@ -21,7 +21,6 @@ import {
     requestAdFieldList,                     //获取 Field列表
 
 } from 'api';
-import TagConfigFormulas from './tagConfigFormulas';
 
 let { RangePicker } = DatePicker;
 let { Option } = Select;
@@ -103,7 +102,7 @@ export default class tagConfig extends Component {
                                         且：多个规则同时满足。或：多个规则中选择其中一条符合的配置规则。
                                     </Form.Item>
                                     <Form.Item name='rule' >
-                                        <TagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} />
+                                        <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} />
                                     </Form.Item>
                                 </Form.Item>
 

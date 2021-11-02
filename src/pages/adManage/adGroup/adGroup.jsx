@@ -2,11 +2,11 @@
  * @Author: HuangQS
  * @Date: 2021-10-26 11:18:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-11-01 18:09:22
+ * @LastEditTime: 2021-11-02 10:57:39
  * @Description: 广告组策略
  */
 import React, { Component } from 'react';
-import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, Radio, Divider,Image, message, Switch } from 'antd';
+import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, Radio, Divider, Image, message, Switch } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
 import { MySyncBtn, MyTagSelect } from '@/components/views.js';
@@ -103,8 +103,8 @@ export default class adGroup extends Component {
                                     </Form.Item>
                                 </Form.Item>
                                 <Form.Item label="广告组时间">
-                                        <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} disabled />
-                                    </Form.Item>
+                                    <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} disabled />
+                                </Form.Item>
 
 
                                 {/* <div style={{ border: '1px dashed #9b709e' }}> */}

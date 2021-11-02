@@ -3,11 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
-<<<<<<< HEAD
- * @LastEditTime: 2021-10-26 11:46:31
-=======
- * @LastEditTime: 2021-10-27 18:53:28
->>>>>>> feature/hqs/fl-tagConfig
+ * @LastEditTime: 2021-11-02 10:57:36
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'

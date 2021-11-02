@@ -3,11 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
-<<<<<<< HEAD
- * @LastEditTime: 2021-10-27 10:57:37
-=======
- * @LastEditTime: 2021-10-28 10:59:16
->>>>>>> feature/hqs/fl-tagConfig
+ * @LastEditTime: 2021-11-02 10:57:43
  * @Description: 用户标签 - 投放类型 组合控件
  * 
  * 不传不显示下面对应的参数 不传时，获取数据也不会获取到对应参数

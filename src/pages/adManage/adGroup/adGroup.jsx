@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-26 11:18:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-11-03 10:57:30
+ * @LastEditTime: 2021-11-03 11:46:44
  * @Description: 广告组策略
  */
 import React, { Component } from 'react';
@@ -232,11 +232,37 @@ export default class adGroup extends Component {
         let table_title = [
             { title: '广告组名称', dataIndex: 'name', key: 'name', width: 200, },
             { title: '标签', dataIndex: 'tag', key: 'tag', width: 200, },
-            { title: '上下线时间', dataIndex: 'time', key: 'time', width: 200, },
-            { title: '下发量', dataIndex: 'xiafaliang', key: 'xiafaliang', width: 200, },
-            { title: '排序', dataIndex: 'rank', key: 'rank', width: 200, },
-            { title: '状态', dataIndex: 'status', key: 'status', width: 200, },
-            { title: '备注', dataIndex: 'aa', key: 'aa', width: 200, },
+            {
+                title: '上下线时间', dataIndex: 'time', key: 'time',
+                render: (rowValue, row, index) => {
+                    let open_time = (!row.onlineTime || row.onlineTime === 0) ? '' : row.onlineTime;
+                    let stop_time = (!row.offlineTime || row.offlineTime === 0) ? '' : row.offlineTime;
+                    let format = "YYYY-MM-DD HH:mm:ss";
+
+                    let time = '';
+
+                    if (open_time) time += moment(new Date(open_time).format(format));
+                    else time += '未配置'
+
+                    time += ' - ';
+
+                    if (stop_time) time += moment(new Date(open_time).format(format));
+                    else time += '未配置'
+                    
+                    return time;
+                }
+            },
+            { title: '下发量', dataIndex: 'dealtNum', key: 'dealtNum', width: 200, },
+            {
+                title: '状态', dataIndex: 'status', key: 'status', width: 200,
+                render: (rowValue, row, index) => {
+                    // 1、有效,2、无效
+                    if (rowValue == '1') return '有效';
+                    if (rowValue == '2') return '无效';
+                    return '';
+                }
+            },
+            { title: '备注', dataIndex: 'remark', key: 'remark', width: 200, },
             {
                 title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 210,
                 render: (rowValue, row, index) => {
@@ -304,7 +330,7 @@ export default class adGroup extends Component {
         let { table_box } = that.state;
 
         requestNewGroupList().then(res => {
-            console.log('group_list',res.data); 
+            console.log('group_list', res.data);
 
             table_box.table_datas = res.data;
             that.setState({

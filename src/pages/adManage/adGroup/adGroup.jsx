@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-26 11:18:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-11-02 18:25:54
+ * @LastEditTime: 2021-11-03 10:57:30
  * @Description: 广告组策略
  */
 import React, { Component } from 'react';
@@ -252,7 +252,6 @@ export default class adGroup extends Component {
         ];
 
         table_box.table_title = table_title;
-        table_box.table_datas = [{}];
 
         that.setState({
             table_box: table_box,
@@ -301,11 +300,17 @@ export default class adGroup extends Component {
     }
 
     refreshList() {
+        let that = this;
+        let { table_box } = that.state;
 
-        requestNewGroupList().then(res=>{
-            
+        requestNewGroupList().then(res => {
+            console.log('group_list',res.data); 
+
+            table_box.table_datas = res.data;
+            that.setState({
+                table_box: table_box,
+            });
         })
-
     }
 
     onCreateClick() {

@@ -242,11 +242,11 @@ export const delDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/ta
 export const esQuery = (params) => { return request.post(`${baseUrl}/mms/ad/tag/esQuery`, params) };                                                                                        //esQuery
 
 //广告组
-export const requestNewGroupCreate = (params) => { return request.post(`${baseUrl}/mms/ad/newGroup/add`, params) };                                                                         //新建广告组
-export const requestNewGroupUpdate = (params) => { return request.post(`${baseUrl}/mms/ad/newGroup/update`, params) };                                                                      //更新广告组
-export const requestNewGroupList = (params) => { return request.post(`${baseUrl}/mms/ad/newGroup/get`, params) };                                                                           //获取广告组
-export const requestNewGroupDelete = (params) => { return request.post(`${baseUrl}/mms/ad/newGroup/del`, params) };                                                                         //删除广告组
-export const requestNewGroupCopy = (params) => { return request.post(`${baseUrl}/mms/ad/newGroup/copy`, params) };                                                                          //复制广告组
+export const requestNewGroupCreate = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/add`, params) };                                                                         //新建广告组
+export const requestNewGroupUpdate = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/update`, params) };                                                                      //更新广告组
+export const requestNewGroupList = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/get`, params) };                                                                           //获取广告组
+export const requestNewGroupDelete = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/del`, params) };                                                                         //删除广告组
+export const requestNewGroupCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/copy`, params) };                                                                          //复制广告组
 
 
 export const requestNewAdTagList = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/get`, { params: params }) };                                                                //新版 获取用户标签列表

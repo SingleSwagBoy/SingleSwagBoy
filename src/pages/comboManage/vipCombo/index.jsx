@@ -29,6 +29,7 @@ class VipCombo extends React.Component {
             showModal: false,  // \
             editType: 1,  // 1 新增  2 编辑
             pic: "",
+            rightPic: "",
             layout: {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 20 },
@@ -152,8 +153,15 @@ class VipCombo extends React.Component {
             ]
         }
     }
+    getUploadFileUrl(type, file, newItem) {
+        let image_url = newItem.fileUrl;
+        let obj = {};
+        obj[type] = image_url;
+        this.formRef.current.setFieldsValue(obj);
+        this.forceUpdate();
+    }
     render() {
-        let { page, pageSize, total, loading, screen, showModal, editType, pic, layout, tailLayout, packageTypes, platform, tags, putTypes, lists, columns } = this.state
+        let { page, pageSize, total, loading, screen, showModal, editType, pic, rightPic, layout, tailLayout, packageTypes, platform, tags, putTypes, lists, columns } = this.state
         return <div>
             <Card title={
                 <div className="cardTitle">
@@ -269,11 +277,11 @@ class VipCombo extends React.Component {
                         </Form.Item>
                         <Form.Item label="角标图" name="pic" valuePropName="fileList" getValueFromEvent={normFile}>
                             <div className="input-wrapper-box">
-                                <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this)} imageUrl={pic}/>
+                                <ImageUpload getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl("pic", file, newItem) }} imageUrl={pic} />
                             </div>
                         </Form.Item>
-                        <Form.Item label="支持设备" name="plat" rules={[{ required: true}]} 
-                            onChange={(val)=>{
+                        <Form.Item label="支持设备" name="plat" rules={[{ required: true }]}
+                            onChange={(val) => {
                                 console.log(val);
                             }}
                         >
@@ -282,6 +290,67 @@ class VipCombo extends React.Component {
                                     return <Option key={index} value={item.key}>{item.value}</Option>
                                 })}
                             </Select>
+                        </Form.Item>
+                        {
+                            this.formRef && this.formRef.current &&
+                            <div className='custom-class'>
+                                {
+                                    (this.formRef.current.getFieldValue("plat") == 1 || this.formRef.current.getFieldValue("plat") == 5) &&
+                                    <div>
+                                        <Form.Item label="跳转文案" name="jumpText" rules={[{ required: true, message: '请填写跳转文案' }]}>
+                                            <Input placeholder="请输入跳转文案" />
+                                        </Form.Item>
+                                        <Form.Item label="跳转地址" name="jumpAddress" rules={[{ required: true, message: '请填写跳转地址' }]}>
+                                            <Input placeholder="请输入跳转地址" />
+                                        </Form.Item>
+                                        <Form.Item label="权益图" name="rightPic" valuePropName="fileList" getValueFromEvent={normFile}>
+                                            <div className="input-wrapper-box">
+                                                <ImageUpload getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl("rightPic", file, newItem) }} imageUrl={rightPic} />
+                                            </div>
+                                        </Form.Item>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        <Form.Item label="开始时间" name="startTime">
+                            <DatePicker showTime></DatePicker>
+                        </Form.Item>
+                        <Form.Item label="结束时间" name="endTime">
+                            <DatePicker showTime></DatePicker>
+                        </Form.Item>
+                        <Form.Item label="标签" name="tag">
+                            <Select className="base-input-wrapper">
+                                {tags.map((item, index) => {
+                                    return <Option key={index} value={item.key}>{item.value}</Option>
+                                })}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label="投放类型" name="deliverType">
+                            {/* <Select className="base-input-wrapper">
+                                {putTypes.map((item, index) => {
+                                    return <Option key={index} value={item.key}>{item.value}</Option>
+                                })}
+                            </Select> */}
+                            <Radio.Group
+                                onChange={(val) => {
+                                    console.log(val)
+                                }}
+                            >
+                                <Radio value={1}>定向</Radio>
+                                <Radio value={2}>非定向</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item label="VIP天数" name="vipDays" rules={[{ required: true}]}>
+                            <Input addonAfter="天" />
+                        </Form.Item>
+                        <Form.Item label="商品价格" name="goodsPrice" rules={[{ required: true}]}>
+                            <Input addonAfter="分" />
+                        </Form.Item>
+                        <Form.Item label="商品原价" name="beforePrice" rules={[{ required: true}]}>
+                            <Input addonAfter="分" />
+                        </Form.Item>
+                        <Form.Item label="最低支付金额" name="minimumPrice" rules={[{ required: true}]}>
+                            <Input addonAfter="分" />
                         </Form.Item>
                     </Form>
                 }

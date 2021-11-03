@@ -44,7 +44,7 @@ export default class MenuImagePage extends Component {
                 is_show: false,
                 title: '',
             },
-            positions:[{key:1,value:"左上"},{key:2,value:"左下"},{key:3,value:"中心"},{key:4,value:"右上"},{key:5,value:"右下"}]
+            positions:[{key:1,value:"左上"},{key:2,value:"左下"},{key:3,value:"中心"},{key:4,value:"右上"},{key:5,value:"右下"},{key:6,value:"垂直居中"},{key:7,value:"横向居中"}]
         }
     }
 
@@ -170,7 +170,7 @@ export default class MenuImagePage extends Component {
                                 <Form.Item label="续费弹窗图片高" name="renewWindowHeight">
                                     <Input className='base-input-wrapper' addonBefore="高" placeholder="例如:200" addonAfter="px" />
                                 </Form.Item>
-                                <Form.Item label="位置" name="imgPosition">
+                                <Form.Item label="位置" name="position">
                                     <Select className="base-input-wrapper" showSearch placeholder='请选择状态'>
                                         {positions.map((item, index) => {
                                             return <Option key={index} value={item.key}>{item.value}</Option>
@@ -522,7 +522,7 @@ export default class MenuImagePage extends Component {
             delete value.renewWindowHeight
         }
         let obj = Object.assign({}, value, ref_tag_types.loadData());
-        //that.submitData(obj);
+        that.submitData(obj);
     }
 
 

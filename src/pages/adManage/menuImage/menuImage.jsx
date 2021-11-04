@@ -177,6 +177,12 @@ export default class MenuImagePage extends Component {
                                         })}
                                     </Select>
                                 </Form.Item>
+                                <Form.Item label="横向偏移量" name="xOffset">
+                                    <Input className='base-input-wrapper' placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                                <Form.Item label="纵向偏移量" name="yOffset">
+                                    <Input className='base-input-wrapper' placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
                                 
                             </div>
                         }
@@ -520,6 +526,16 @@ export default class MenuImagePage extends Component {
             value.renewWindowHeight=parseInt(value.renewWindowHeight)
         }else{
             delete value.renewWindowHeight
+        }
+        if(value.xOffset){
+            value.xOffset=parseInt(value.xOffset)
+        }else{
+            delete value.xOffset
+        }
+        if(value.yOffset){
+            value.yOffset=parseInt(value.yOffset)
+        }else{
+            delete value.yOffset
         }
         let obj = Object.assign({}, value, ref_tag_types.loadData());
         that.submitData(obj);

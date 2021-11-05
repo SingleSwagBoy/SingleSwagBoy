@@ -366,7 +366,7 @@ export default class SportsProgram extends Component {
     }
     update_column(val) {
         let params = {
-            id: Number(val.pid),
+            id: Number(val.videoId),
             column_id: 0
         }
         update_column(params).then(res => {

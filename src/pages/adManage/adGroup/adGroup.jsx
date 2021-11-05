@@ -103,7 +103,7 @@ export default class adGroup extends Component {
                         <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告名称" onChange={(e) => { this.state.search.adName = e.target.value }} />
                         <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="广告内容" />
                         <Select style={{ width: '200px', marginLeft: 5 }} allowClear showSearch placeholder="请选择标签"
-                            onChange={(e) => {this.state.search.tag = e}}
+                            onChange={(e) => { this.state.search.tag = e }}
                             filterOption={(input, option) => {
                                 if (!input) return true;
                                 let children = option.children;
@@ -119,23 +119,24 @@ export default class adGroup extends Component {
                                     return isFind;
                                 }
                             }}
-                            >
+                        >
                             {this.state.dict_target_list.map((item, index) => (
                                 <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
                             ))}
                         </Select>
-                        <Select style={{ width: '200px', marginLeft: 5 }} allowClear  showSearch placeholder="广告内容"
-                            onChange={(e) => {this.state.search.adType = e}}
-                            >
+                        <Select style={{ width: '200px', marginLeft: 5 }} allowClear showSearch placeholder="广告内容"
+                            onChange={(e) => { this.state.search.adType = e }}
+                        >
                             <Option value={1} key={1}>右键运营位广告</Option>
                             <Option value={2} key={2}>屏显广告</Option>
                         </Select>
-                        <Button type="primary" onClick={()=>{this.refreshList(this.state.search)}}>查询</Button>
+                        <Button type="primary" onClick={() => { this.refreshList(this.state.search) }}>查询</Button>
                     </div>
                 } />
                 <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={1500} style={{ top: 20 }} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
                     footer={null}
+                // destroyOnClose
                 // footer={[
                 //     <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
                 //     <Button onClick={() => that.onModalConfirmClick()} >保存</Button>
@@ -228,26 +229,29 @@ export default class adGroup extends Component {
                                 {/* <div style={{ border: '1px dashed #9b709e' }}> */}
                                 <div>
                                     <Divider>广告详情</Divider>
-                                    <Form.Item label="广告类型" >
-                                        <Radio.Group className="base-input-wrapper" defaultValue={this.state.adIndex}>
+                                    <Form.Item label="广告类型" value={this.state.adIndex}>
+                                        <Radio.Group className="base-input-wrapper" defaultValue={this.state.adIndex} key={this.state.adIndex}
+                                            onChange={(e) => {
+                                                this.formRef.current.setFieldsValue({ "detailName": "", "detailTime": "", "detailPic": "", "detailIconPicUrl": "" })
+                                                let arr = this.formRef.current.getFieldValue("content") ? JSON.parse(JSON.stringify(this.formRef.current.getFieldValue("content"))) : []
+                                                let list = arr.filter(item => item.adType == e.target.value)
+                                                this.setState({
+                                                    adList: list,
+                                                    tag_select_id: list.length > 0 ? list[0].adId : 0,
+                                                    adIndex: e.target.value
+                                                })
+
+                                                if (e.target.value == 1) {
+                                                    this.requestAdRightKey(list.length > 0 ? list[0].adId : "")
+                                                } else {
+                                                    this.getScreen(list.length > 0 ? list[0].adId : "")
+                                                }
+                                                this.forceUpdate()
+                                            }}
+                                        >
                                             {dict_ad_type.map((item, index) => {
                                                 return (
-                                                    <Radio value={item.key} key={index} onClick={(e) => {
-                                                        this.formRef.current.setFieldsValue({ "detailName": "", "detailTime": "", "detailPic": "", "detailIconPicUrl": "" })
-                                                        let arr = this.formRef.current.getFieldValue("content") ? JSON.parse(JSON.stringify(this.formRef.current.getFieldValue("content"))) : []
-                                                        let list = arr.filter(item => item.adType == e.target.value)
-                                                        this.setState({
-                                                            adList: list,
-                                                            tag_select_id: list.length > 0 ? list[0].adId : 0,
-                                                            adIndex: e.target.value
-                                                        })
-
-                                                        if (e.target.value == 1) {
-                                                            this.requestAdRightKey(list.length > 0 ? list[0].adId : "")
-                                                        } else {
-                                                            this.getScreen(list.length > 0 ? list[0].adId : "")
-                                                        }
-                                                    }}>
+                                                    <Radio value={item.key} >
                                                         {item.value}(5条)
                                                     </Radio>
                                                 )
@@ -415,10 +419,10 @@ export default class adGroup extends Component {
     refreshList(val) {
         let that = this;
         let { table_box } = that.state;
-        let params={
+        let params = {
             ...val
         }
-        requestNewGroupList(val?params:{}).then(res => {
+        requestNewGroupList(val ? params : {}).then(res => {
             console.log('group_list', res.data);
 
             table_box.table_datas = res.data;
@@ -436,6 +440,7 @@ export default class adGroup extends Component {
                 title: '新增广告组',
             },
         }, () => {
+            console.log(this.state.adIndex)
             if (row) {
                 let obj = JSON.parse(JSON.stringify(row))
                 obj.time = [moment(obj.onlineTime * 1000), moment(obj.offlineTime * 1000)]
@@ -458,6 +463,7 @@ export default class adGroup extends Component {
             that.forceUpdate();
 
         })
+
     }
 
     //弹出框取消按钮被点击

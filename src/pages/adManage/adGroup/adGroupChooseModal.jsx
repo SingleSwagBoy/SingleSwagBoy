@@ -14,7 +14,8 @@ import { Input, Form, DatePicker, Button, Table, Modal, Checkbox, Select, messag
 import moment from 'moment';
 import '@/style/base.css';
 import {
-    requestAdRightKey   //获取广告素材 获取右下角广告素材
+    requestAdRightKey,   //获取广告素材 获取右下角广告素材
+    getScreen
 } from 'api';
 
 let { RangePicker } = DatePicker;
@@ -81,10 +82,20 @@ export default class adCreateModal extends Component {
     //弹出框确定按钮被点击
     onModalConfirmClick() {
         let that = this;
+        console.log(this.state.table_box.table_datas,"table_box")
+        let arr = this.state.table_box.table_datas
+        let info = arr.filter(item => item.checked)
+        this.props.onGetInfo(info[0]);
+        that.setState({
+            modal_box: {
+                is_show: false,
+                title: '',
+            }
+        })
     }
 
     //展示对话框
-    showModal(data) {
+    showModal(data,adIndex) {
         let that = this;
         let { table_box, modal_box } = that.state;
         modal_box.is_show = true;
@@ -96,6 +107,7 @@ export default class adCreateModal extends Component {
                 render: (rowValue, row, index) => {
                     return <Checkbox checked={row.checked} onChange={(e) => {
                         let check = e.target.checked;
+                        console.log(check,"check")
                         let { table_box } = that.state;
                         let datas = table_box.table_datas;
                         for (let i = 0, len = datas.length; i < len; i++) {
@@ -144,20 +156,42 @@ export default class adCreateModal extends Component {
             table_box: table_box,
         }, () => {
             that.forceUpdate();
-            that.refreshList();
+            that.refreshList(adIndex);
 
         })
 
     }
 
-    refreshList() {
+    refreshList(index) {
+        if(index == 1){
+            this.requestAdRightKey()
+        }else{
+           this.getScreen() 
+        }
+    }
+    requestAdRightKey(){
+        let that = this;
+        let { table_box } = that.state;
+        console.log(table_box,"table_box")
+        let obj = {
+            page: { currentPage: 1, pageSize: 10000 }
+        };
+        requestAdRightKey(obj).then(res => {
+
+            table_box.table_datas = res.data;
+            that.setState({
+                table_box: table_box,
+            })
+        })
+    }
+    getScreen(){
         let that = this;
         let { table_box } = that.state;
 
         let obj = {
             page: { currentPage: 1, pageSize: 10000 }
         };
-        requestAdRightKey(obj).then(res => {
+        getScreen(obj).then(res => {
 
             table_box.table_datas = res.data;
             that.setState({

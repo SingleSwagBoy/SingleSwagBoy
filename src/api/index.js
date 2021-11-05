@@ -234,7 +234,10 @@ export const addMpConfig = (params) => { return request.post(`${baseUrl}/mms/wx/
 export const delMpConfig = (params) => { return request.post(`${baseUrl}/mms/wx/msg/delMpConfig?id=${params.id}`) };                                                                        //删除小程序配置列表
 
 //广告管理---自定义规则便签
-export const requestAdRightKey = params => { return request2.get(`${baseUrl}/mms/ad/adRightKey/get`, { params: params }); };                                                                //获取广告素材 获取右下角广告
+export const requestAdRightKey = params => { return request2.post(`${baseUrl}/mms/ad/adRightKey/get`, params); };                                                                //获取广告素材 获取右下角广告
+export const addAdRightKey = params => { return request2.post(`${baseUrl}/mms/ad/adRightKey/add`, params); };                                                                //获取广告素材 获取右下角广告
+export const addScreen = params => { return request2.post(`${baseUrl}/mms/ad/screen/add`, params); };                                                                //获取广告素材 获取右下角广告
+export const getScreen = params => { return request2.post(`${baseUrl}/mms/ad/screen/get`, params); };                                                                //获取广告素材 获取右下角广告
 export const requestAdTagList = (params) => { return request2.post(`${baseUrl}/mms/ad/tag/get`, params) };                                                                                       //获取列表
 export const addDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/add`, params) };                                                                                          //增加自定义规则标签
 export const updateDIYTag = (params) => { return request.post(`${baseUrl}/mms/ad/tag/update`, params) };                                                                                    //更新自定义规则标签
@@ -255,6 +258,7 @@ export const requestNewAdTagUpdate = (params) => { return request2.post(`${baseU
 export const requestNewAdTagDelete = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/del`, params) };                                                                         //新版 删除用户标签规则
 export const requestDictionary = (params) => { return request2.post(`${baseUrl}/mms/config/dictionary/get`, params) };                                                                      //获取 字典数据源
 export const requestAdFieldList = (params) => { return request2.post(`${baseUrl}/mms/dict/tagDic/get`, params) };                                                                           //获取Field列表
+export const adListSync = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/sync`, params) };                                                                           //获取Field列表
 
 
 //  转转管理------赚赚激励气泡

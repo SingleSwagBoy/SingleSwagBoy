@@ -36,10 +36,10 @@ export default class adCreateModal extends Component {
                 is_show: false,
                 title: '',
             },
-            adIndex:1,
-            searchWords:"",
-            tagList:[], //父组件传过来的已经被选择的素材
-            checkedList:[]
+            adIndex: 1,
+            searchWords: "",
+            tagList: [], //父组件传过来的已经被选择的素材
+            checkedList: []
         }
     }
     render() {
@@ -55,20 +55,20 @@ export default class adCreateModal extends Component {
                             <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
                             <Button onClick={() => that.onModalConfirmClick()}>选择</Button>
                         ]}>
-                            <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center',marginBottom:"20px" }}>
-                                <div style={{width:"100px"}}>广告名称:</div>
-                                <Input.Search key={this.state.searchWords} allowClear placeholder="请输入广告名称" style={{width:"400px"}} defaultValue={this.state.searchWords}
-                                    onSearch={(val) => {
-                                        this.setState({
-                                            page: 1,
-                                            searchWords: val
-                                        }, () => {
-                                            this.refreshList(this.state.adIndex,this.state.checkedList)
-                                        })
+                        <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center', marginBottom: "20px" }}>
+                            <div style={{ width: "100px" }}>广告名称:</div>
+                            <Input.Search key={this.state.searchWords} allowClear placeholder="请输入广告名称" style={{ width: "400px" }} defaultValue={this.state.searchWords}
+                                onSearch={(val) => {
+                                    this.setState({
+                                        page: 1,
+                                        searchWords: val
+                                    }, () => {
+                                        this.refreshList(this.state.adIndex, this.state.checkedList)
+                                    })
 
-                                    }}
-                                />
-                            </div>
+                                }}
+                            />
+                        </div>
                         <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '70vh' }} />
 
                     </Modal>
@@ -110,7 +110,7 @@ export default class adCreateModal extends Component {
     }
 
     //展示对话框
-    showModal(data,adIndex,tagList) {
+    showModal(data, adIndex, tagList) {
         let that = this;
         let { table_box, modal_box } = that.state;
         modal_box.is_show = true;
@@ -123,23 +123,38 @@ export default class adCreateModal extends Component {
                     return <Checkbox checked={row.checked} onChange={(e) => {
                         let check = e.target.checked;
                         let arr = this.state.checkedList
-                        if(check){
+                        if (check) {
                             this.setState({
-                                checkedList:[...arr,row]
+                                checkedList: [...arr, row]
                             })
-                        }else{
+                        } else {
                             this.setState({
-                                checkedList:arr.filter(r=>r.id != row.id && r.adId != row.id)
+                                checkedList: arr.filter(r => r.id != row.id && r.adId != row.id)
                             })
                         }
-                        console.log(this.state.checkedList,"checkedList")
+                        console.log(this.state.checkedList, "checkedList")
                         row.checked = check;
                         // that.forceUpdate();
                     }} />
                 }
             },
             { title: '素材名称', dataIndex: 'name', key: 'name', width: 300, },
-            { title: '类型', dataIndex: 'type', key: 'type', width: 100, },
+            {
+                title: '类型', dataIndex: 'type', key: 'type', width: 200,
+                render: (rowValue, row, index) => {
+                    return (
+                        <div>
+                        {
+                            adIndex == 1 
+                            ?  
+                            <div>{rowValue == 0 ? "通用" : rowValue == 1 ? "家庭号" : rowValue == 2 ? "公众号登陆" : rowValue == 3 ? "小程序登陆" : "未知"}</div>
+                            :
+                            <div>{rowValue == 1 ? "普通级别" : rowValue == 2 ? "宣传内容" : "未知"}</div>
+                        }
+                        </div>
+                    )
+                }
+            },
             {
                 title: '缩略图', dataIndex: 'iconPicUrl', key: 'iconPicUrl', width: 150,
                 render: (rowValue, row, index) => {
@@ -171,38 +186,38 @@ export default class adCreateModal extends Component {
         that.setState({
             modal_box: modal_box,
             table_box: table_box,
-            adIndex:adIndex,
-            tagList:tagList,
-            checkedList:tagList,
-            searchWords:"",
+            adIndex: adIndex,
+            tagList: tagList,
+            checkedList: tagList,
+            searchWords: "",
         }, () => {
             that.forceUpdate();
-            that.refreshList(adIndex,tagList);
+            that.refreshList(adIndex, tagList);
         })
 
     }
 
-    refreshList(index,tagList) {
-        if(index == 1){
+    refreshList(index, tagList) {
+        if (index == 1) {
             this.requestAdRightKey(tagList)
-        }else{
-           this.getScreen(tagList) 
+        } else {
+            this.getScreen(tagList)
         }
     }
-    requestAdRightKey(tagList){
+    requestAdRightKey(tagList) {
         let that = this;
         let { table_box } = that.state;
-        console.log(tagList,"tagList")
+        console.log(tagList, "tagList")
         let obj = {
             page: { currentPage: 1, pageSize: 10000 },
-            name:this.state.searchWords
+            name: this.state.searchWords
         };
         requestAdRightKey(obj).then(res => {
-            table_box.table_datas = res.data.filter(r=>r.status == 1);
-            if(tagList.length>0){
-                table_box.table_datas.forEach(r=>{
-                    tagList.forEach(l=>{
-                        if(l.adId == r.id || l.id == r.id){
+            table_box.table_datas = res.data.filter(r => r.status == 1);
+            if (tagList.length > 0) {
+                table_box.table_datas.forEach(r => {
+                    tagList.forEach(l => {
+                        if (l.adId == r.id || l.id == r.id) {
                             r.checked = true
                         }
                     })
@@ -211,25 +226,25 @@ export default class adCreateModal extends Component {
             that.setState({
                 table_box: table_box,
             })
-           
+
             this.forceUpdate()
         })
     }
-    getScreen(tagList){
+    getScreen(tagList) {
         let that = this;
         let { table_box } = that.state;
 
         let obj = {
             page: { currentPage: 1, pageSize: 10000 },
-            name:this.state.searchWords
+            name: this.state.searchWords
         };
         getScreen(obj).then(res => {
 
-            table_box.table_datas = res.data.filter(r=>r.status == 1);
-            if(tagList.length>0){
-                table_box.table_datas.forEach(r=>{
-                    tagList.forEach(l=>{
-                        if(l.adId == r.id){
+            table_box.table_datas = res.data.filter(r => r.status == 1);
+            if (tagList.length > 0) {
+                table_box.table_datas.forEach(r => {
+                    tagList.forEach(l => {
+                        if (l.adId == r.id) {
                             r.checked = true
                         }
                     })

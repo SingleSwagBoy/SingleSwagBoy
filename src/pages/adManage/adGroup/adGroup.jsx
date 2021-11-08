@@ -592,7 +592,7 @@ export default class adGroup extends Component {
     }
     getInfo(arr) {
         console.log(arr, "选择回来的素材")
-        let allList = this.formRef.current.getFieldValue("content")
+        let allList = this.formRef.current.getFieldValue("content") || []
         let list = []
         if(!Array.isArray(arr)){
             arr = [{...arr}]

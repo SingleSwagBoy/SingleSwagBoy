@@ -49,10 +49,6 @@ export default class adCreateModal extends Component {
                     <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" maskClosable={false}
                         onCancel={() => that.onModalCancelClick()} 
                         footer={null}
-                    // footer={[
-                    //     <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
-                    //     <Button onClick={() => that.onModalConfirmClick()}>上传</Button>
-                    // ]}
                     >
                         <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef} onFinish={this.onModalConfirmClick.bind(this)}>
                             {
@@ -131,7 +127,7 @@ export default class adCreateModal extends Component {
                                                     getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('iconPicUrl', file, newItem) }}
                                                     imageUrl={that.getUploadFileImageUrlByType('iconPicUrl')} />
                                             </Form.Item>
-                                            <Form.Item label="类型" name="type" rules={[{ required: true }]}>
+                                            <Form.Item label="类型" name="adType" rules={[{ required: true }]}>
                                                 <Select placeholder="类型">
                                                     <Option value={1} key={1}>普通级别</Option>
                                                     <Option value={2} key={2}>宣传内容</Option>

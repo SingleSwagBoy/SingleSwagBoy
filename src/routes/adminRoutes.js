@@ -28,6 +28,7 @@ const Recommend = lazy(() => import('pages/adManage/recommend/recommend.jsx'));
 const MenuImage = lazy(() => import('pages/adManage/menuImage/menuImage.jsx'));
 const CustomAdTag = lazy(() => import('pages/adManage/customAdTag/index.jsx'));
 const AdGroup = lazy(() => import('pages/adManage/adGroup/adGroup.jsx'));
+const MaterialLibrary = lazy(() => import('pages/adManage/materialLibrary/index.jsx'));
 const Voting = lazy(() => import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(() => import('pages/channelManage/channelLock/index.jsx'))
 const LivePreview = lazy(() => import('pages/channelManage/livePreview/index.jsx'))
@@ -99,6 +100,7 @@ const adminRoutes = [
     { name: '菜单栏图片配置', component: MenuImage, path: '/mms/adManage/menuImage', icon: UnorderedListOutlined, code: "adManage", sub_code: 'menuImage' },
     { name: '自定义规则标签', component: CustomAdTag, path: '/mms/ad/customAdTag', icon: UnorderedListOutlined, code: "adManage", sub_code: 'customAdTag' },
     { name: '广告组', component: AdGroup, path: '/mms/adManage/adGroup', icon: UnorderedListOutlined, code: "adManage", sub_code: 'adGroup' },
+    { name: '素材库', component: MaterialLibrary, path: '/mms/adManage/materialLibrary', icon: UnorderedListOutlined, code: "adManage", sub_code: 'adGroup' },
 
     //用户权限相关
     { name: '角色列表', icon: UnorderedListOutlined, path: '/mms/sys/role', component: SysRole, code: "sessionManage", sub_code: 'sysRole' },

@@ -258,7 +258,14 @@ export const requestNewAdTagUpdate = (params) => { return request2.post(`${baseU
 export const requestNewAdTagDelete = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/del`, params) };                                                                         //新版 删除用户标签规则
 export const requestDictionary = (params) => { return request2.post(`${baseUrl}/mms/config/dictionary/get`, params) };                                                                      //获取 字典数据源
 export const requestAdFieldList = (params) => { return request2.post(`${baseUrl}/mms/dict/tagDic/get`, params) };                                                                           //获取Field列表
-export const adListSync = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/sync`, params) };                                                                           //获取Field列表
+export const adListSync = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/sync`, params) };                                                                                  //获取Field列表
+export const adRightKeyUpdate = (params) => { return request2.post(`${baseUrl}/mms/ad/adRightKey/update`, params) };                                                                        //更新右键运营为
+export const screenUpdate = (params) => { return request2.post(`${baseUrl}/mms/ad/screen/update`, params) };                                                                                //更新屏显素材
+export const screenDel = (params) => { return request2.post(`${baseUrl}/mms/ad/screen/del`, params) };                                                                                      //删除屏显素材
+export const adRightKeyDel = (params) => { return request2.delete(`${baseUrl}/mms/ad/adRightKey/del`,  { params: params }) };                                                               //删除屏显素材
+export const adRightKeySync = (params) => { return request2.post(`${baseUrl}/mms/ad/adRightKey/sync`,  params) };                                                             //素材混村
+export const screenCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/screen/copy`,  params) };                                                             //素材混村
+export const adRightKeyCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/adRightKey/copy`,  params) };                                                             //素材混村
 
 
 //  转转管理------赚赚激励气泡

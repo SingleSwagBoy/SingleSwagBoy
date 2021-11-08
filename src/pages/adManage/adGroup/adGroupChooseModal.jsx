@@ -178,7 +178,7 @@ export default class adCreateModal extends Component {
         };
         requestAdRightKey(obj).then(res => {
 
-            table_box.table_datas = res.data;
+            table_box.table_datas = res.data.filter(r=>r.status == 1);
             that.setState({
                 table_box: table_box,
             })
@@ -193,7 +193,7 @@ export default class adCreateModal extends Component {
         };
         getScreen(obj).then(res => {
 
-            table_box.table_datas = res.data;
+            table_box.table_datas = res.data.filter(r=>r.status == 1);
             that.setState({
                 table_box: table_box,
             })

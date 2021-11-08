@@ -122,11 +122,11 @@ export default class adCreateModal extends Component {
                                                     getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
                                                     imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
                                             </Form.Item>
-                                            <Form.Item label="缩略图" name="iconPicUrl" rules={[{ required: true }]}>
+                                            {/* <Form.Item label="缩略图" name="iconPicUrl" rules={[{ required: true }]}>
                                                 <MyImageUpload
                                                     getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('iconPicUrl', file, newItem) }}
                                                     imageUrl={that.getUploadFileImageUrlByType('iconPicUrl')} />
-                                            </Form.Item>
+                                            </Form.Item> */}
                                             <Form.Item label="类型" name="adType" rules={[{ required: true }]}>
                                                 <Select placeholder="类型">
                                                     <Option value={1} key={1}>普通级别</Option>

@@ -97,8 +97,8 @@ export default class adGroup extends Component {
                     <div className="alert-box">
                         <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告组名称" onChange={(e) => { this.state.search.groupName = e.target.value }} />
                         <RangePicker style={{ marginLeft: 5 }} style={{ width: '405px', marginLeft: 5 }} showTime placeholder={['上线时间', '下线时间']} onChange={(e) => {
-                            this.state.search.onlineTime = e[0].valueOf()
-                            this.state.search.offlineTime = e[1].valueOf()
+                            this.state.search.onlineTime = e?parseInt(e[0].valueOf() / 1000):""
+                            this.state.search.offlineTime = e?parseInt(e[1].valueOf() / 1000):""
                         }} />
                         <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告名称" onChange={(e) => { this.state.search.adName = e.target.value }} />
                         <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="广告内容" />
@@ -216,12 +216,12 @@ export default class adGroup extends Component {
                                     如需要新增管理标签配置，请点击[<a onClick={() => that.onTagConfigClick()}>标签配置</a>]跳转到配置页中完成规则。
                                 </Form.Item>
 
-                                {
+                                {/* {
                                     that.formRef.current.getFieldValue('rule') &&
                                     <Form.Item name='rule' >
                                         <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} is_show_only={true} />
                                     </Form.Item>
-                                }
+                                } */}
 
 
 
@@ -539,7 +539,7 @@ export default class adGroup extends Component {
             title: '跳转',
             content: '你将要跳转到标签配置页，未保存的数据将不会存储到云端，是否立即跳转？',
             onOk: () => {
-
+                this.props.history.push("/mms/config/tagConfig")
             }
         })
     }

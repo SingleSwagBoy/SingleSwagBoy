@@ -37,7 +37,7 @@ export default class adCreateModal extends Component {
             materialShow: false,
             page: 1,
             pageSize: 10,
-            total: 0,
+            total: 10,
             lists: [],
             adIndex: 1,
             typeList: [
@@ -164,9 +164,11 @@ export default class adCreateModal extends Component {
                                 <div>类型:</div>
                                 <Select allowClear placeholder="请选择类型" defaultValue={1}
                                     onChange={(val) => {
-                                        this.refreshList(val)
                                         this.setState({
                                             adIndex: val,
+                                            page:1
+                                        },()=>{
+                                            this.refreshList(val)
                                         })
                                     }}
                                 >
@@ -380,8 +382,9 @@ export default class adCreateModal extends Component {
         requestAdRightKey(obj).then(res => {
             that.setState({
                 lists: res.data,
-                total: res.totalCount
+                total: res.page.totalCount
             })
+            this.forceUpdate()
         })
     }
     getScreen() {
@@ -393,8 +396,9 @@ export default class adCreateModal extends Component {
         getScreen(obj).then(res => {
             that.setState({
                 lists: res.data,
-                total: res.totalCount
+                total: res.page.totalCount
             })
+            this.forceUpdate()
         })
     }
     //获取上传文件

@@ -97,8 +97,8 @@ export default class adGroup extends Component {
                     <div className="alert-box">
                         <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告组名称" onChange={(e) => { this.state.search.groupName = e.target.value }} />
                         <RangePicker style={{ marginLeft: 5 }} style={{ width: '405px', marginLeft: 5 }} showTime placeholder={['上线时间', '下线时间']} onChange={(e) => {
-                            this.state.search.onlineTime = e?parseInt(e[0].valueOf() / 1000):""
-                            this.state.search.offlineTime = e?parseInt(e[1].valueOf() / 1000):""
+                            this.state.search.onlineTime = e ? parseInt(e[0].valueOf() / 1000) : ""
+                            this.state.search.offlineTime = e ? parseInt(e[1].valueOf() / 1000) : ""
                         }} />
                         <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告名称" onChange={(e) => { this.state.search.adName = e.target.value }} />
                         <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="广告内容" />
@@ -392,30 +392,6 @@ export default class adGroup extends Component {
         })
     }
 
-
-    // //搜索广告组名称
-    // onSearchAdGroupNameBlur(item) {
-    //     let that = this;
-    //     let search_name = item.target.value;
-    //     console.log('名称过滤', search_name);
-    //     that.refreshList(search_name);
-    // }
-    // //搜索广告时间范围
-    // onSearchAdGroupTimeChange(item) {
-    //     let that = this;
-    //     let start_time = item[0].valueOf();
-    //     let endt_time = item[1].valueOf();
-    //     console.log('时间过滤', start_time, endt_time);
-    //     that.refreshList();
-    // }
-    // //搜索广告组名称
-    // onSearchAdNameBlur(item) {
-    //     let that = this;
-    //     let search_name = item.target.value;
-    //     console.log('名称过滤', search_name);
-    //     that.refreshList();
-    // }
-
     refreshList(val) {
         let that = this;
         let { table_box } = that.state;
@@ -503,7 +479,7 @@ export default class adGroup extends Component {
             let obj = {
                 title: key,
             }
-            modal_choose_ad_ref.showModal(obj, this.state.adIndex);
+            modal_choose_ad_ref.showModal(obj, this.state.adIndex, this.state.adList);
 
         }
         //
@@ -594,7 +570,7 @@ export default class adGroup extends Component {
             console.log('group_list', res.data);
             if (res.data && res.data.length > 0) {
                 let arr = res.data[0]
-                this.formRef.current.setFieldsValue({ "detailName": arr.name, "detailTime": [moment(arr.startTime), moment(arr.endTime)], "detailPic": arr.picUrl })
+                this.formRef.current.setFieldsValue({ "detailName": arr.name, "detailTime": [moment(arr.startTime), moment(arr.endTime)], "detailPic": arr.picUrl ,"detailIconPicUrl": arr.iconPicUrl})
                 this.forceUpdate()
 
             }
@@ -614,20 +590,34 @@ export default class adGroup extends Component {
             }
         })
     }
-    getInfo(val) {
-        let arr = val
-        console.log(val, "选择回来的素材")
-        let list = this.formRef.current.getFieldValue("content") || []
-        if(list.findIndex(r=>r.adId == val.id) !== -1){
-            return message.error("已经存在相同素材")
+    getInfo(arr) {
+        console.log(arr, "选择回来的素材")
+        let allList = this.formRef.current.getFieldValue("content")
+        let list = []
+        if(!Array.isArray(arr)){
+            arr = [{...arr}]
+            list = allList
+        }else{
+            list = allList.filter(r => r.adType != this.state.adIndex)
         }
-        list.push({ adId: val.id, adName: val.name, adType: Number(this.state.adIndex) })
+        if (arr.length > 0) {
+            arr.forEach(r => {
+                list.push({ adId: r.id||r.adId, adName: r.name||r.adName, adType: Number(this.state.adIndex) })
+            })
+            this.formRef.current.setFieldsValue({ "detailName": arr[0].name || arr[0].adName, "detailTime": [moment(arr[0].startTime), moment(arr[0].endTime)], "detailPic": arr[0].picUrl, "detailIconPicUrl": arr[0].iconPicUrl })
+        }
         this.formRef.current.setFieldsValue({ "content": list })
         this.setState({
-            adList: list.filter(r => r.adType == this.state.adIndex),
-            tag_select_id: arr.id
+            adList: list.filter(r=>r.adType == this.state.adIndex),
+            tag_select_id: arr.length>0?arr[0].id || arr[0].adId:""
+        },()=>{
+            if (this.state.adIndex == 1) {
+                this.requestAdRightKey(this.state.tag_select_id)
+            } else {
+                this.getScreen(this.state.tag_select_id)
+            }
         })
-        this.formRef.current.setFieldsValue({ "detailName": arr.name, "detailTime": [moment(arr.startTime), moment(arr.endTime)], "detailPic": arr.picUrl, "detailIconPicUrl": arr.iconPicUrl })
+       
         this.forceUpdate()
     }
     deleteTabChange(index, id) {

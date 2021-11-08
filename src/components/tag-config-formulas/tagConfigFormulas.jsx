@@ -47,7 +47,9 @@ export default class tagConfig extends Component {
             rules = [[[]]];
             let obj = {};
             obj[id] = rules;
+            console.log(obj)
             formRef.current.setFieldsValue(obj);
+            that.onItemCreateClick('第三层', 0, 0) //默认添加一项
         }
         //
         else if (rules.constructor === String) {
@@ -65,7 +67,6 @@ export default class tagConfig extends Component {
         //第一层
         if (rules && rules.length > 0) {
             // let layer1Item = rules;  //第一层数据
-
             view = (
                 <div>
                     {/* {JSON.stringify(dict_field[0])} */}
@@ -73,8 +74,10 @@ export default class tagConfig extends Component {
                     <div className="formulas-wrapper" >
                         <div className="type-wrapper">且</div>
                         <div className="formula-items">
+                       
                             {
                                 rules && rules.length > 0 ?
+                                
                                     rules.map((layer1item, layer1index) => {
                                         return (
                                             layer1item && layer1item.length > 0 ?
@@ -228,7 +231,7 @@ export default class tagConfig extends Component {
     onItemCreateClick(key, layer1index, layer2index,) {
         let that = this;
         let { id, formRef } = that.props;
-        let rules = formRef.current.getFieldValue(id);
+        let rules = formRef.current.getFieldValue(id)|| [];
 
         let newData = {
             // "field": '',
@@ -246,6 +249,7 @@ export default class tagConfig extends Component {
         }
         //
         else if (key === '第三层') {
+            console.log(key, layer1index, layer2index,"key, layer1index, layer2index,")
             rules[layer1index][layer2index].push(newData);
         }
 
@@ -259,8 +263,13 @@ export default class tagConfig extends Component {
         let that = this;
         let { id, formRef } = that.props;
         let rules = formRef.current.getFieldValue(id);
-
-
+        console.log(key, layer1index, layer2index, layer3index,rules,"key, layer1index, layer2index, layer3index")
+        if(layer3index == 0 && rules[layer1index][layer2index].length==1){ //阻止删除最后一项
+            rules[layer1index][layer2index][layer3index] ={}
+            formRef.current.setFieldsValue(rules[layer1index][layer2index][layer3index]);
+            that.forceUpdate();
+            return
+        } 
         if (key === '第三层') {
 
             rules[layer1index][layer2index].splice(layer3index, 1);

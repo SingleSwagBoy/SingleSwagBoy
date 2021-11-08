@@ -618,6 +618,9 @@ export default class adGroup extends Component {
         let arr = val
         console.log(val, "选择回来的素材")
         let list = this.formRef.current.getFieldValue("content") || []
+        if(list.findIndex(r=>r.adId == val.id) !== -1){
+            return message.error("已经存在相同素材")
+        }
         list.push({ adId: val.id, adName: val.name, adType: Number(this.state.adIndex) })
         this.formRef.current.setFieldsValue({ "content": list })
         this.setState({

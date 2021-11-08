@@ -11,7 +11,7 @@ import moment from 'moment';
 import React, { Component } from 'react';
 import {
     getChannel,                         //获取频道
-    requestAdTagList,                   //获取用户设备标签
+    requestNewAdTagList,                   //获取用户设备标签
     requestQrcodeTypes,                 //二维码类型
     requestJumpTypes,                   //获取跳转类型
     requestJumpMenuTypes,               //获取跳转目录类型
@@ -352,7 +352,7 @@ export default class Teast extends Component {
         })
 
         //用户设备标签
-        requestAdTagList().then(res => {
+        requestNewAdTagList().then(res => {
             that.setState({
                 user_tag: res.data,
             })

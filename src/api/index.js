@@ -275,6 +275,15 @@ export const updateEarnTskList = (params) => { return request.post(`${baseUrl}/m
 export const deleteEarnTskList = (params) => { return request.get(`${baseUrl}/mms/bubbletask/del`, { params: params }) };         // 删除转转激励任务
 export const syncEarnTskList = (params) => { return request2.post(`${baseUrl}/mms/bubbletask/sync`, params) };          // 同步缓存转转激励任务
 
+//赚赚管理---体现商品列表 
+export const getZzItemList = (params) => { return request2.post(`${baseUrl}/mms/zzItem/list`, params) };          // 获取体现商品列表
+export const editZzItemList = (params) => { return request2.post(`${baseUrl}/mms/zzItem/edit`, params) };          // 编辑体现商品列表
+export const addZzItemList = (params) => { return request2.post(`${baseUrl}/mms/zzItem/create`, params) };          // 编辑体现商品列表
+export const deleteZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/deleteItem`, { params: params }) };          // 编辑体现商品列表
+export const changeZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/changeState`, { params: params }) };          // 编辑体现商品列表
+export const syncZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/syncCache`, { params: params }) };          // 编辑体现商品列表
+
+
 //白名单配置
 export const addWhite = (params) => { return request2.post(`${baseUrl}/mms/ad/whitelist/add`, params) };          // 新增白名单配置
 export const listWhite = (params) => { return request2.get(`${baseUrl}/mms/ad/whitelist/list`, { params: params }) };          // 获取白名单配置

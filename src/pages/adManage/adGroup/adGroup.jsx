@@ -337,7 +337,7 @@ export default class adGroup extends Component {
                     return time;
                 }
             },
-            { title: '下发量', dataIndex: 'dealtNum', key: 'dealtNum', width: 200, },
+            { title: '下发量', dataIndex: 'dealtNum', key: 'dealtNum', },
             {
                 title: '状态', dataIndex: 'status', key: 'status', width: 200,
                 render: (rowValue, row, index) => {

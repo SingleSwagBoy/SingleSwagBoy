@@ -224,7 +224,7 @@ export default class adCreateModal extends Component {
             ...val
         }
         addAdRightKey(param).then(res => {
-            this.props.onGetInfo(val);
+            this.props.onGetInfo(res.data);
             this.onModalCancelClick()
         })
     }
@@ -233,7 +233,7 @@ export default class adCreateModal extends Component {
             ...val
         }
         addScreen(param).then(res => {
-            this.props.onGetInfo(val);
+            this.props.onGetInfo(res.data);
             this.onModalCancelClick()
         })
     }

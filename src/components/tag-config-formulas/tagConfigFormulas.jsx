@@ -271,7 +271,7 @@ export default class tagConfig extends Component {
         let { id, formRef } = that.props;
         let rules = formRef.current.getFieldValue(id);
         console.log(key, layer1index, layer2index, layer3index,rules,"key, layer1index, layer2index, layer3index")
-        if(layer3index == 0 && rules[layer1index][layer2index].length==1){ //阻止删除最后一项
+        if(layer1index ==0 && layer2index == 0 && layer3index == 0 && rules[layer1index][layer2index].length==1){ //阻止删除最后一项
             rules[layer1index][layer2index][layer3index] ={}
             formRef.current.setFieldsValue(rules[layer1index][layer2index][layer3index]);
             that.forceUpdate();

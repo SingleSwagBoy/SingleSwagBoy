@@ -12,7 +12,7 @@ import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, message }
 import '@/style/base.css';
 import './tagConfigFormulas.css'
 import { PlusOutlined } from '@ant-design/icons';
-
+import { MyAddress } from '@/components/views.js';
 
 let { Option } = Select;
 
@@ -126,7 +126,13 @@ export default class tagConfig extends Component {
                                                                                             </div>
 
                                                                                             <div className="formula-item" style={{ width: 300 }}>
-                                                                                                <Input value={layer3item.value} placeholder="取值" disabled={is_show_only} onChange={(e) => { that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'value') }} />
+                                                                                                {
+                                                                                                    layer3item.field == "region"
+                                                                                                    ?
+                                                                                                    <MyAddress onCheckAddress={(e)=>this.onCheckAddress(e, layer1index, layer2index, layer3index, 'value')} defaultAddress={layer3item.value} />
+                                                                                                    :
+                                                                                                    <Input value={layer3item.value} placeholder="取值" disabled={is_show_only} onChange={(e) => { that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'value') }} />
+                                                                                                }
                                                                                             </div>
 
                                                                                             {!is_show_only && <Button disabled={is_show_only} onClick={() => { that.onItemDeleteClick('第三层', layer1index, layer2index, layer3index) }}>删除</Button>}
@@ -185,6 +191,7 @@ export default class tagConfig extends Component {
 
     //Field控件被选择
     onFieldSelectChange(e, layer1index, layer2index, layer3index, targetKey) {
+        console.log(e, layer1index, layer2index, layer3index, targetKey,"e, layer1index, layer2index, layer3index, targetKey")
         let that = this;
         let { id, formRef, dict_field } = that.props;
         let rules = formRef.current.getFieldValue(id);
@@ -339,5 +346,30 @@ export default class tagConfig extends Component {
     onInitRulesClick() {
 
     }
+    onCheckAddress(value, layer1index, layer2index, layer3index, targetKey) {
+        console.log(value, layer1index, layer2index, layer3index, targetKey)
+        let postAddress = value.filter(item => item !== "all")
+        let arr = []
+        postAddress.forEach(r => {
+            if (r.indexOf("-") !== -1) {
+                arr.push(r.replace("-", ""))
+            } else {
+                arr.push(r)
+            }
+        })
+        console.log(arr,"arr")
+        let that = this;
+        let { id, formRef } = that.props;
+        let rules = formRef.current.getFieldValue(id);
+        //更新参数
+        rules[layer1index][layer2index][layer3index][targetKey] = value ? value : "";
 
+        let obj = {};
+        obj[id] = rules;
+        formRef.current.setFieldsValue(obj);
+        that.forceUpdate();
+        // this.setState({
+        //     address: arr
+        // })
+    }
 }

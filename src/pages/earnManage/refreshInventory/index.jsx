@@ -329,8 +329,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
         addRefresh(params).then(res => {
             this.getRefresh()
-            message.success("新增成功")
-            this.getRefresh()
+            message.success("成功")
         })
     }
     // editZzItemList(val) {

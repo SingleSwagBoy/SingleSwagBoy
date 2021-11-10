@@ -516,8 +516,8 @@ export default class adGroup extends Component {
             ...this.state.currentItem,
             ...val,
             status: val.status ? 1 : 2,
-            offlineTime: (val.time && val.time[1])?val.time[1].toDate().getTime() / 1000:"",
-            onlineTime: (val.time && val.time[0])?val.time[0].toDate().getTime() / 1000:"",
+            offlineTime: (val.time && val.time[1])?parseInt(val.time[1].toDate().getTime() / 1000):"",
+            onlineTime: (val.time && val.time[0])?parseInt(val.time[0].toDate().getTime() / 1000):"",
             content: this.formRef.current.getFieldValue("content")
         }
         delete params.time

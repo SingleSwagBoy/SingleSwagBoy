@@ -157,7 +157,7 @@ export default class adGroup extends Component {
                                 <Form.Item label="广告组名称" name='name' rules={[{ required: true }]}>
                                     <Input className="base-input-wrapper" placeholder="请输入广告组名称" />
                                 </Form.Item>
-                                <Form.Item label="上线时间-下线时间" name='time' rules={[{ required: true }]}>
+                                <Form.Item label="上线时间-下线时间" name='time'>
                                     <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
                                 </Form.Item>
                                 <Form.Item label="最大下发量" name="dealtMaxNum">
@@ -172,8 +172,8 @@ export default class adGroup extends Component {
                                 <Form.Item label="状态" name="status" valuePropName="checked">
                                     <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                                 </Form.Item>
-                                <Form.Item name="tag" label="标签" rules={[{ required: true }]}>
-                                    <Select className="base-input-wrapper" showSearch placeholder="请选择标签"
+                                <Form.Item name="tag" label="标签" >
+                                    <Select className="base-input-wrapper" showSearch placeholder="请选择标签" allowClear
                                         onChange={(e) => {
                                             let selectCode = e;
                                             if (!selectCode) return;
@@ -419,7 +419,7 @@ export default class adGroup extends Component {
             console.log(this.state.adIndex)
             if (row) {
                 let obj = JSON.parse(JSON.stringify(row))
-                obj.time = [moment(obj.onlineTime * 1000), moment(obj.offlineTime * 1000)]
+                obj.time = [obj.onlineTime?moment(obj.onlineTime * 1000):"", obj.offlineTime?moment(obj.offlineTime * 1000):""]
                 obj.status = obj.status == 1 ? true : false
                 let list = obj.content ? obj.content.filter(item => item.adType == 1) : []
                 this.setState({
@@ -528,8 +528,8 @@ export default class adGroup extends Component {
             ...this.state.currentItem,
             ...val,
             status: val.status ? 1 : 2,
-            offlineTime: val.time[0].toDate().getTime() / 1000,
-            onlineTime: val.time[1].toDate().getTime() / 1000,
+            offlineTime: val.time?val.time[0].toDate().getTime() / 1000:"",
+            onlineTime: val.time?val.time[1].toDate().getTime() / 1000:"",
             content: this.formRef.current.getFieldValue("content")
         }
         delete params.time
@@ -548,8 +548,8 @@ export default class adGroup extends Component {
         let params = {
             ...val,
             status: val.status ? 1 : 2,
-            offlineTime: parseInt(val.time[0].toDate().getTime() / 1000),
-            onlineTime: parseInt(val.time[1].toDate().getTime() / 1000),
+            offlineTime: val.time?parseInt(val.time[0].toDate().getTime() / 1000):"",
+            onlineTime: val.time?parseInt(val.time[1].toDate().getTime() / 1000):"",
             content: this.formRef.current.getFieldValue("content")
         }
         delete params.time

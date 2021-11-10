@@ -511,13 +511,13 @@ export default class adGroup extends Component {
         delete val.detailName
         delete val.detailPic
         delete val.detailTime
-        console.log(this.formRef.current.getFieldValue("content"), "val")
+        console.log(this.formRef.current.getFieldValue("content"),val, "val")
         let params = {
             ...this.state.currentItem,
             ...val,
             status: val.status ? 1 : 2,
-            offlineTime: val.time?val.time[0].toDate().getTime() / 1000:"",
-            onlineTime: val.time?val.time[1].toDate().getTime() / 1000:"",
+            offlineTime: (val.time && val.time[1])?val.time[1].toDate().getTime() / 1000:"",
+            onlineTime: (val.time && val.time[0])?val.time[0].toDate().getTime() / 1000:"",
             content: this.formRef.current.getFieldValue("content")
         }
         delete params.time

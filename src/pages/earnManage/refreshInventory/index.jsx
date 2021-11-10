@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getRefresh, getZzItemList } from 'api'
+import { getRefresh, getZzItemList ,addRefresh} from 'api'
 import { Breadcrumb, Card, TimePicker, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -287,9 +287,9 @@ export default class EarnIncentiveTask extends React.Component {
     submitForm(val) {   // 提交表单
         console.log(val, "val")
         if (this.state.source == "edit") {
-            this.editZzItemList(val)
+            this.addRefresh(val)
         } else {
-            this.addZzItemList(val)
+            this.addRefresh(val)
         }
         this.closeModal()
     }
@@ -313,19 +313,26 @@ export default class EarnIncentiveTask extends React.Component {
             entranceState: false
         })
     }
-    // addZzItemList(val) {
-    //     let params = {
-    //         ...val,
-    //         startAt: val.time[0].valueOf(),
-    //         endAt: val.time[1].valueOf(),
-    //         state: val.state ? 1 : 0,
-    //         setting: JSON.stringify(val.setting)
-    //     }
-    //     addZzItemList(params).then(res => {
-    //         this.getRefresh()
-    //         message.success("新增成功")
-    //     })
-    // }
+    addRefresh(val) {
+        let setting = []
+        if(val.setting){
+            val.setting.forEach(r=>{
+                setting.push(moment(r.num).format(format))
+            })
+        }
+        let params = {
+            ...val,
+            startAt: val.time[0].valueOf(),
+            endAt: val.time[1].valueOf(),
+            state: val.state ? 1 : 0,
+            setting: setting.join(",")
+        }
+        addRefresh(params).then(res => {
+            this.getRefresh()
+            message.success("新增成功")
+            this.getRefresh()
+        })
+    }
     // editZzItemList(val) {
     //     let params = {
     //         ...this.state.currentItem,

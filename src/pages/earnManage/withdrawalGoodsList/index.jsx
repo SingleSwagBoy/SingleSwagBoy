@@ -97,10 +97,18 @@ export default class EarnIncentiveTask extends React.Component {
                 {
                     title: "操作",
                     key: "action",
-                    fixed: 'right', width: 210,
+                    fixed: 'right', width: 300,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
+                                <Button
+                                    size="small"
+                                    type="primary"
+                                    onClick={() => {
+                                        row.manualCode = util.randomWord(false, 10)
+                                        this.addZzItemList(row)
+                                    }}
+                                >复制</Button>
                                 <Button
                                     style={{ margin: "0 10px" }}
                                     size="small"
@@ -504,10 +512,10 @@ export default class EarnIncentiveTask extends React.Component {
     addZzItemList(val) {
         let params = {
             ...val,
-            startAt: val.time[0].valueOf(),
-            endAt: val.time[1].valueOf(),
+            startAt: val.time?val.time[0].valueOf():val.startAt,
+            endAt: val.time?val.time[1].valueOf():val.startAt,
             state: val.state ? 1 : 0,
-            setting: JSON.stringify(val.setting)
+            setting: Array.isArray(val.setting)?JSON.stringify(val.setting):val.setting
         }
         addZzItemList(params).then(res => {
             this.getZzItemList()

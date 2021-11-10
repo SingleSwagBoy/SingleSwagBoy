@@ -542,7 +542,7 @@ export default class EarnIncentiveTask extends React.Component {
             title: `确认删除该条数据吗？`,
             // content: '确认删除？',
             onOk: () => {
-                this.deleteZzItemList(_obj.manualCode)
+                this.deleteZzItemList(_obj.code)
             },
             onCancel: () => {
             }
@@ -559,7 +559,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     changeZzItemList(val) {
         let params = {
-            codes: val.manualCode
+            codes: val.code
         }
         changeZzItemList(params).then(res => {
             // message.success("成功")

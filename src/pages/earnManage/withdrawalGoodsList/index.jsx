@@ -39,8 +39,8 @@ export default class EarnIncentiveTask extends React.Component {
                 },
                 {
                     title: "商品code",
-                    dataIndex: "code",
-                    key: "code",
+                    dataIndex: "manualCode",
+                    key: "manualCode",
                 },
                 {
                     title: "类型",
@@ -192,7 +192,7 @@ export default class EarnIncentiveTask extends React.Component {
                             <Form.Item label="提现商品名称" name="name" rules={[{ required: true, message: '请填写任务名称' }]}>
                                 <Input placeholder="请输入商品名称" />
                             </Form.Item>
-                            <Form.Item label="商品code" name="code" rules={[{ required: true, message: '请输入code' }]}>
+                            <Form.Item label="商品code" name="manualCode" rules={[{ required: true, message: '请输入code' }]}>
                                 <Input placeholder="请输入商品code" />
                             </Form.Item>
                             {/*  */}
@@ -542,7 +542,7 @@ export default class EarnIncentiveTask extends React.Component {
             title: `确认删除该条数据吗？`,
             // content: '确认删除？',
             onOk: () => {
-                this.deleteZzItemList(_obj.code)
+                this.deleteZzItemList(_obj.manualCode)
             },
             onCancel: () => {
             }
@@ -559,7 +559,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     changeZzItemList(val) {
         let params = {
-            codes: val.code
+            codes: val.manualCode
         }
         changeZzItemList(params).then(res => {
             // message.success("成功")

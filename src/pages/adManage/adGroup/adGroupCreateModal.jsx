@@ -10,10 +10,10 @@
 
 import React, { Component } from 'react';
 
-import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, message, InputNumber } from 'antd';
+import { Input, Form, DatePicker, Button, Table, Modal, Switch, Select, message, InputNumber } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
-import { addAdRightKey,addScreen } from "api"
+import { addAdRightKey, addScreen } from "api"
 import { MyImageUpload } from '@/components/views.js';
 let { RangePicker } = DatePicker;
 let { Option } = Select;
@@ -31,11 +31,11 @@ export default class adCreateModal extends Component {
             tailLayout: {
                 wrapperCol: { offset: 16, span: 8 },
             },
-            typeList:[
-                {key:0,name:"通用"},
-                {key:1,name:"家庭号"},
-                {key:2,name:"公众号登陆"},
-                {key:3,name:"小程序登陆"},
+            typeList: [
+                { key: 0, name: "通用" },
+                { key: 1, name: "家庭号" },
+                { key: 2, name: "公众号登陆" },
+                { key: 3, name: "小程序登陆" },
             ]
         }
     }
@@ -47,7 +47,7 @@ export default class adCreateModal extends Component {
             <div>
                 {modal_box &&
                     <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" maskClosable={false}
-                        onCancel={() => that.onModalCancelClick()} 
+                        onCancel={() => that.onModalCancelClick()}
                         footer={null}
                     >
                         <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef} onFinish={this.onModalConfirmClick.bind(this)}>
@@ -74,14 +74,17 @@ export default class adCreateModal extends Component {
                                                     })}
                                                 </Select>
                                             </Form.Item>
-                                            <Form.Item label='倒计时结束时间' name="djsEndTime"  rules={[{ required: true }]}>
-                                                <DatePicker showTime  />
+                                            <Form.Item label='倒计时结束时间' name="djsEndTime">
+                                                <DatePicker showTime />
                                             </Form.Item>
-                                            <Form.Item label='是否显示距离今日结束时间' name='jljr' rules={[{ required: true }]}>
+                                            <Form.Item label='是否显示距离今日结束时间' name='jljr'>
                                                 <Select placeholder="是否显示距离今日结束时间">
                                                     <Option value={1} key={1}> 是</Option>
                                                     <Option value={0} key={0}> 否</Option>
                                                 </Select>
+                                            </Form.Item>
+                                            <Form.Item label="状态" name="status" valuePropName="checked">
+                                                <Switch checkedChildren="有效" unCheckedChildren="无效"></Switch>
                                             </Form.Item>
                                             <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
                                                 <MyImageUpload
@@ -116,6 +119,9 @@ export default class adCreateModal extends Component {
                                             </Form.Item>
                                             <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
                                                 <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
+                                            </Form.Item>
+                                            <Form.Item label="状态" name="status" valuePropName="checked">
+                                                <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                                             </Form.Item>
                                             <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
                                                 <MyImageUpload
@@ -179,13 +185,13 @@ export default class adCreateModal extends Component {
         // let value = that.formRef.current.getFieldsValue();
         val.startTime = val.time[0].toDate().getTime()
         val.endTime = val.time[1].toDate().getTime()
-        if(this.props.adIndex == 1){
+        if (this.props.adIndex == 1) {
             val.djsEndTime = val.djsEndTime.toDate().getTime()
             this.addAdRightKey(val)
-        }else{
+        } else {
             this.addScreen(val)
         }
-        
+
     }
 
     //展示对话框
@@ -194,9 +200,10 @@ export default class adCreateModal extends Component {
         let { modal_box } = that.state;
         modal_box.is_show = true;
         modal_box.title = data.title;
-
+       
 
         that.setState({ modal_box: modal_box }, () => {
+            that.formRef.current.setFieldsValue({"status":true});
             that.forceUpdate()
         })
 
@@ -221,7 +228,8 @@ export default class adCreateModal extends Component {
     }
     addAdRightKey(val) {
         let param = {
-            ...val
+            ...val,
+            status:val.status ? 1 : 2
         }
         addAdRightKey(param).then(res => {
             this.props.onGetInfo(res.data);
@@ -230,7 +238,8 @@ export default class adCreateModal extends Component {
     }
     addScreen(val) {
         let param = {
-            ...val
+            ...val,
+            status:val.status ? 1 : 2
         }
         addScreen(param).then(res => {
             this.props.onGetInfo(res.data);

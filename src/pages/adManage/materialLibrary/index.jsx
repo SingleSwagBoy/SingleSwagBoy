@@ -129,6 +129,7 @@ export default class adCreateModal extends Component {
                                         let obj = JSON.parse(JSON.stringify(row))
                                         obj.time = [moment(obj.startTime), moment(obj.endTime)]
                                         obj.djsEndTime = moment(obj.djsEndTime)
+                                        obj.status = obj.status == 1 ?true : false
                                         this.formRef.current.setFieldsValue(obj)
                                         this.forceUpdate()
                                     })
@@ -245,14 +246,17 @@ export default class adCreateModal extends Component {
                                                 })}
                                             </Select>
                                         </Form.Item>
-                                        <Form.Item label='倒计时结束时间' name="djsEndTime" rules={[{ required: true }]}>
+                                        <Form.Item label='倒计时结束时间' name="djsEndTime">
                                             <DatePicker showTime />
                                         </Form.Item>
-                                        <Form.Item label='是否显示距离今日结束时间' name='jljr' rules={[{ required: true }]}>
+                                        <Form.Item label='是否显示距离今日结束时间' name='jljr'>
                                             <Select placeholder="是否显示距离今日结束时间">
                                                 <Option value={1} key={1}> 是</Option>
                                                 <Option value={0} key={0}> 否</Option>
                                             </Select>
+                                        </Form.Item>
+                                        <Form.Item label='状态' name='status' valuePropName="checked">
+                                            <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                                         </Form.Item>
                                         <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
                                             <MyImageUpload
@@ -281,6 +285,9 @@ export default class adCreateModal extends Component {
                                         </Form.Item>
                                         <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
                                             <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
+                                        </Form.Item>
+                                        <Form.Item label='状态' name='status' valuePropName="checked">
+                                            <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                                         </Form.Item>
                                         <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
                                             <MyImageUpload
@@ -442,6 +449,7 @@ export default class adCreateModal extends Component {
             startTime: val.time?val.time[0].valueOf():val.startTime,
             endTime: val.time?val.time[1].valueOf():val.endTime,
             djsEndTime: val.djsEndTime.valueOf(),
+            status:val.status ? 1 : 2
         }
         delete params.time
         adRightKeyUpdate(params).then(res => {
@@ -455,6 +463,7 @@ export default class adCreateModal extends Component {
             ...val,
             startTime: val.time?val.time[0].valueOf():val.startTime,
             endTime: val.time?val.time[1].valueOf():val.endTime,
+            status:val.status ? 1 : 2
         }
         delete params.time
         screenUpdate(params).then(res => {
@@ -484,7 +493,16 @@ export default class adCreateModal extends Component {
             onOk: () => {
                 adRightKeyDel({ id: id }).then(res => {
                     message.success("删除成功")
-                    this.refreshList(1)
+                    if(this.state.lists.length == 1 && this.state.page > 1){
+                        this.setState({
+                            page:this.state.page - 1
+                        },()=>{
+                            this.refreshList(1)
+                        })
+                    }else{
+                        this.refreshList(1)
+                    }
+                   
                 })
             },
             onCancel: () => {
@@ -498,6 +516,7 @@ export default class adCreateModal extends Component {
             startTime: val.time[0].valueOf(),
             endTime: val.time[1].valueOf(),
             djsEndTime: val.djsEndTime.valueOf(),
+            status:val.status ? 1 : 2
         }
         addAdRightKey(param).then(res => {
             message.success("新增成功")
@@ -509,6 +528,7 @@ export default class adCreateModal extends Component {
             ...val,
             startTime: val.time[0].valueOf(),
             endTime: val.time[1].valueOf(),
+            status:val.status ? 1 : 2
         }
         addScreen(param).then(res => {
             message.success("新增成功")

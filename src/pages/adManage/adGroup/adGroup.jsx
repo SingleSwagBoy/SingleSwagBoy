@@ -176,7 +176,7 @@ export default class adGroup extends Component {
                                     <Select className="base-input-wrapper" showSearch placeholder="请选择标签" allowClear
                                         onChange={(e) => {
                                             let selectCode = e;
-                                            if (!selectCode) return;
+                                            if (!selectCode) return that.formRef.current.setFieldsValue({ 'tag': "" });
                                             //更新下方rule数据
                                             for (let i = 0, len = dict_target_list.length; i < len; i++) {
                                                 let item = dict_target_list[i];
@@ -320,21 +320,9 @@ export default class adGroup extends Component {
             {
                 title: '上下线时间', dataIndex: 'time', key: 'time',
                 render: (rowValue, row, index) => {
-                    let open_time = (!row.onlineTime || row.onlineTime === 0) ? '' : row.onlineTime;
-                    let stop_time = (!row.offlineTime || row.offlineTime === 0) ? '' : row.offlineTime;
-                    let format = "YYYY-MM-DD HH:mm:ss";
-
-                    let time = '';
-
-                    if (open_time) time += util.formatTime(open_time, "");
-                    else time += '未配置'
-
-                    time += ' - ';
-
-                    if (stop_time) time += util.formatTime(stop_time, "")
-                    else time += '未配置'
-
-                    return time;
+                    return(
+                        <div>{row.onlineTime?util.formatTime(row.onlineTime, ""):"未配置"} - {row.offlineTime?util.formatTime(row.offlineTime, ""):"未配置"}</div>
+                    )
                 }
             },
             { title: '下发量', dataIndex: 'dealtNum', key: 'dealtNum', },

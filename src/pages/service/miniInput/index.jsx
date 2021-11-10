@@ -570,8 +570,8 @@ export default class SportsProgram extends Component {
   }
   editMini(item){
     let params={
-      ...item,
       ...this.state.newData,
+      ...item,
       categories:item.categories.join(","),
       tags:item.tags.join(",")
     }

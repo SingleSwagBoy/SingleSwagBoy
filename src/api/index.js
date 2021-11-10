@@ -287,7 +287,9 @@ export const getRefresh = (params) => { return request2.post(`${baseUrl}/mms/zzI
 export const addRefresh = (params) => { return request2.post(`${baseUrl}/mms/zzItemTicker/store`, params) };          // 编辑和新增库存列表
 export const changeRefresh = (params) => { return request2.get(`${baseUrl}/mms/zzItemTicker/changeState`, { params: params }) };          // 编辑和新增库存列表
 export const delRefresh = (params) => { return request2.get(`${baseUrl}/mms/zzItemTicker/deleteItem`, { params: params }) };          // 编辑和新增库存列表
-
+//赚赚管理 ---随机提现配置 
+export const getZZShow = (params) => { return request2.get(`${baseUrl}/mms/zz/show`, { params: params }) }; 
+export const saveZZShow = (params,header) => { return request2.post(`${baseUrl}/mms/zz/store?key=${header.key}`, params) }; 
 
 
 //白名单配置

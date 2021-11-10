@@ -97,18 +97,10 @@ export default class EarnIncentiveTask extends React.Component {
                 {
                     title: "操作",
                     key: "action",
-                    fixed: 'right', width: 300,
+                    fixed: 'right', width: 210,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                                <Button
-                                    size="small"
-                                    type="primary"
-                                    onClick={() => {
-                                        row.manualCode = util.randomWord(false, 10)
-                                        this.addZzItemList(row)
-                                    }}
-                                >复制</Button>
                                 <Button
                                     style={{ margin: "0 10px" }}
                                     size="small"
@@ -313,7 +305,7 @@ export default class EarnIncentiveTask extends React.Component {
 
                                                     <Form.Item>
                                                         <Button type="dashed" onClick={() => {
-                                                            if (this.formRef.current.getFieldValue("setting").length >= 4) return
+                                                            if (this.formRef.current.getFieldValue("setting") && this.formRef.current.getFieldValue("setting").length >= 4) return
                                                             add()
                                                         }} block icon={<PlusOutlined />}>
                                                             新建配置
@@ -367,7 +359,7 @@ export default class EarnIncentiveTask extends React.Component {
 
                                                         <Form.Item>
                                                             <Button type="dashed" onClick={() => {
-                                                                if (this.formRef.current.getFieldValue("setting").length >= 4) return
+                                                                if (this.formRef.current.getFieldValue("setting") && this.formRef.current.getFieldValue("setting").length >= 4) return
                                                                 add()
                                                             }} block icon={<PlusOutlined />}>
                                                                 新建配置
@@ -417,7 +409,7 @@ export default class EarnIncentiveTask extends React.Component {
 
                                                         <Form.Item>
                                                             <Button type="dashed" onClick={() => {
-                                                                if (!this.formRef.current.getFieldValue("type") || this.formRef.current.getFieldValue("setting").length >= 4) return
+                                                                if (!this.formRef.current.getFieldValue("type") || (this.formRef.current.getFieldValue("setting") &&  this.formRef.current.getFieldValue("setting").length >= 4)) return
                                                                 add()
                                                             }} block icon={<PlusOutlined />}>
                                                                 新建配置
@@ -512,10 +504,10 @@ export default class EarnIncentiveTask extends React.Component {
     addZzItemList(val) {
         let params = {
             ...val,
-            startAt: val.time?val.time[0].valueOf():val.startAt,
-            endAt: val.time?val.time[1].valueOf():val.startAt,
+            startAt: val.time[0].valueOf(),
+            endAt: val.time[1].valueOf(),
             state: val.state ? 1 : 0,
-            setting: Array.isArray(val.setting)?JSON.stringify(val.setting):val.setting
+            setting: JSON.stringify(val.setting)
         }
         addZzItemList(params).then(res => {
             this.getZzItemList()

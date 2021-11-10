@@ -57,7 +57,7 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "上线时间-下线时间",
                     dataIndex: "startAt",
                     key: "startAt",
-                    width: 200,
+                    width: 400,
                     render: (rowValue, row, index) => {
                         return (
                             <div>{util.formatTime(row.startAt, "")} - {util.formatTime(row.endAt, "")}</div>

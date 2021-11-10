@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getRefresh, getZzItemList ,addRefresh} from 'api'
+import { getRefresh, getZzItemList ,addRefresh,changeRefresh,delRefresh} from 'api'
 import { Breadcrumb, Card, TimePicker, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -56,7 +56,7 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "上线时间-下线时间",
                     dataIndex: "startAt",
                     key: "startAt",
-                    width: 200,
+                    width: 400,
                     render: (rowValue, row, index) => {
                         return (
                             <div>{util.formatTime(row.startAt, "")} - {util.formatTime(row.endAt, "")}</div>
@@ -79,8 +79,8 @@ export default class EarnIncentiveTask extends React.Component {
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" key={new Date().getTime()}
                                     defaultChecked={rowValue == 1 ? true : false}
                                     onChange={(val) => {
-                                        console.log(val)
-                                        this.changeZzItemList(row)
+                                        console.log(val,row)
+                                        this.changeRefresh(row)
                                     }}
                                 />
                             </div>
@@ -287,7 +287,11 @@ export default class EarnIncentiveTask extends React.Component {
     submitForm(val) {   // 提交表单
         console.log(val, "val")
         if (this.state.source == "edit") {
-            this.addRefresh(val)
+            let item ={
+                ...this.state.currentItem,
+                ...val,
+            }
+            this.addRefresh(item)
         } else {
             this.addRefresh(val)
         }
@@ -332,58 +336,37 @@ export default class EarnIncentiveTask extends React.Component {
             message.success("成功")
         })
     }
-    // editZzItemList(val) {
-    //     let params = {
-    //         ...this.state.currentItem,
-    //         ...val,
-    //         startAt: val.time[0].valueOf(),
-    //         endAt: val.time[1].valueOf(),
-    //         state: val.state ? 1 : 0,
-    //         setting: JSON.stringify(val.setting)
-    //     }
-    //     editZzItemList(params).then(res => {
-    //         this.getRefresh()
-    //         message.success("更新成功")
-    //     })
-    // }
-    // getUploadFileUrl(index, file) {   // 图片上传的方法
-    //     console.log(file, index, "获取上传的图片路径")
-    //     let arr = this.formRef.current.getFieldValue("setting")
-    //     console.log(arr, "arr")
-    //     arr[index].conner = file
-    //     this.formRef.current.setFieldsValue({ "setting": arr })
-    // }
 
-    // deleteItem(_obj) {  // 删除数据
-    //     console.log(_obj)
-    //     Modal.confirm({
-    //         title: `确认删除该条数据吗？`,
-    //         // content: '确认删除？',
-    //         onOk: () => {
-    //             this.deleteZzItemList(_obj.code)
-    //         },
-    //         onCancel: () => {
-    //         }
-    //     })
-    // }
-    // deleteZzItemList(code) {
-    //     let params = {
-    //         codes: code
-    //     }
-    //     deleteZzItemList(params).then(res => {
-    //         message.success("删除成功")
-    //         this.getRefresh()
-    //     })
-    // }
-    // changeZzItemList(val) {
-    //     let params = {
-    //         codes: val.code
-    //     }
-    //     changeZzItemList(params).then(res => {
-    //         // message.success("成功")
-    //         // this.getRefresh()
-    //     }).catch((err) => {
 
-    //     })
-    // }
+    deleteItem(_obj) {  // 删除数据
+        console.log(_obj)
+        Modal.confirm({
+            title: `确认删除该条数据吗？`,
+            // content: '确认删除？',
+            onOk: () => {
+                this.delRefresh(_obj.zzItemCode)
+            },
+            onCancel: () => {
+            }
+        })
+    }
+    delRefresh(code) {
+        let params = {
+            zzItemCodes: code
+        }
+        delRefresh(params).then(res => {
+            message.success("删除成功")
+            this.getRefresh()
+        })
+    }
+    changeRefresh(val) {
+        let params = {
+            zzItemCodes: val.zzItemCode
+        }
+        changeRefresh(params).then(res => {
+           
+        }).catch((err) => {
+
+        })
+    }
 }

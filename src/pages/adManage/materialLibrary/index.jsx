@@ -515,7 +515,7 @@ export default class adCreateModal extends Component {
             ...val,
             startTime: val.time[0].valueOf(),
             endTime: val.time[1].valueOf(),
-            djsEndTime: val.djsEndTime.valueOf(),
+            djsEndTime: val.djsEndTime?val.djsEndTime.valueOf():"",
             status:val.status ? 1 : 2
         }
         addAdRightKey(param).then(res => {

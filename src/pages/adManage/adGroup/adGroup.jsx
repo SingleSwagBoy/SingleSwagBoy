@@ -164,7 +164,7 @@ export default class adGroup extends Component {
                                     <Input className="base-input-wrapper" placeholder="这里是最大下发量" />
                                 </Form.Item>
                                 <Form.Item label="排序" name="sortOrder">
-                                    <InputNumber min={0} />
+                                    <InputNumber />
                                 </Form.Item>
                                 <Form.Item label="备注" name="remark">
                                     <Input className="base-input-wrapper" placeholder="这里是备注" />
@@ -548,8 +548,8 @@ export default class adGroup extends Component {
         let params = {
             ...val,
             status: val.status ? 1 : 2,
-            offlineTime: val.time?parseInt(val.time[0].toDate().getTime() / 1000):"",
-            onlineTime: val.time?parseInt(val.time[1].toDate().getTime() / 1000):"",
+            offlineTime: val.time?parseInt(val.time[1].toDate().getTime() / 1000):"",
+            onlineTime: val.time?parseInt(val.time[0].toDate().getTime() / 1000):"",
             content: this.formRef.current.getFieldValue("content")
         }
         delete params.time

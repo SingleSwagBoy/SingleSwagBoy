@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getProgramlist, getProgramsList ,addRefresh,changeRefresh,delRefresh} from 'api'
+import { getProgramlist, getDetailProgram, getShortList, addProgramList, getProgramInfo, uploadProgramList, delProgramList } from 'api'
 import { Breadcrumb, Card, TimePicker, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -10,6 +10,9 @@ import "./style.css"
 const { Option } = Select;
 let { RangePicker } = DatePicker;
 const format = 'HH:mm';
+let privateData = {
+    inputTimeOutVal: null
+};
 export default class EarnIncentiveTask extends React.Component {
     formRef = React.createRef();
     constructor(props) {
@@ -28,6 +31,7 @@ export default class EarnIncentiveTask extends React.Component {
             },
             lists: [],
             productLists: [],
+            shortList: [],
             visible: false,
             tagList: [],
             currentItem: "",
@@ -51,23 +55,27 @@ export default class EarnIncentiveTask extends React.Component {
                 {
                     title: "操作",
                     key: "action",
-                    fixed: 'right', width: 210,
+                    fixed: 'right', width: 300,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
+                                <MySyncBtn type={15} name='同步缓存' params={{id:row.id}}  size="small" />
                                 <Button
                                     style={{ margin: "0 10px" }}
                                     size="small"
                                     type="primary"
                                     onClick={() => {
                                         console.log(row)
+
                                         this.setState({
                                             entranceState: true,
                                             currentItem: row,
                                             source: "edit"
                                         }, () => {
-                                            let arr = JSON.parse(JSON.stringify(row))
-                                            this.formRef.current.setFieldsValue(arr)
+                                            // let arr = JSON.parse(JSON.stringify(row))
+                                            // this.formRef.current.setFieldsValue(arr)
+                                            this.getProgramInfo(row.id)
+                                            this.getDetailProgram(row.programTitle)
                                             this.forceUpdate()
                                         })
                                     }}
@@ -85,7 +93,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     render() {
-        let { productLists, lists, layout, loading, columns, entranceState, } = this.state;
+        let { productLists, lists, layout, loading, columns, entranceState, shortList } = this.state;
         return (
             <div>
                 <Card title={
@@ -107,7 +115,6 @@ export default class EarnIncentiveTask extends React.Component {
                                     })
                                 }}
                             >新增</Button>
-                            <MySyncBtn type={13} name='同步缓存' />
                         </div>
                     }
                 >
@@ -131,13 +138,25 @@ export default class EarnIncentiveTask extends React.Component {
                             name="taskForm"
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
-                            <Form.Item label="节目单名称" name="zzItemCode" rules={[{ required: true, message: '请选择节目单名称' }]}>
-                                <Select allowClear placeholder="请选择节目单名称" showSearch onSearch={(e)=>{
-                                    this.getProgramsList(e)
-                                }}>
+                            <Form.Item label="节目单名称" name="programId" rules={[{ required: true, message: '请选择节目单名称' }]}>
+                                <Select
+                                    allowClear
+                                    placeholder="请选择节目单名称"
+                                    showSearch
+                                    optionFilterProp={"children"}
+                                    onSearch={(e) => {
+                                        if (privateData.inputTimeOutVal) {
+                                            clearTimeout(privateData.inputTimeOutVal);
+                                            privateData.inputTimeOutVal = null;
+                                        }
+                                        privateData.inputTimeOutVal = setTimeout(() => {
+                                            if (!privateData.inputTimeOutVal) return;
+                                            this.getDetailProgram(e)
+                                        }, 1000)
+                                    }}>
                                     {
                                         productLists.map((r, i) => {
-                                            return <Option value={r.code} key={r.code}>{r.name}</Option>
+                                            return <Option value={r.programId} key={r.feedId}>{r.name}</Option>
                                         })
                                     }
 
@@ -145,23 +164,23 @@ export default class EarnIncentiveTask extends React.Component {
                             </Form.Item>
                             <Form.Item
                                 label="视频集关联"
-                                // name="voters"
+                                name="collections"
                                 rules={[{ required: true, message: '视频集关联' }]}
                             >
-                                <Form.List name="setting" rules={[{ required: true, message: '视频集关联' }]}>
+                                <Form.List name="collections">
                                     {(fields, { add, remove }) => (
                                         <>
                                             {fields.map((field, index) => (
                                                 <Space key={field.key} align="baseline" style={{ width: "100%" }}>
-                                                    <Form.Item {...field} label="" name={[field.name, "num"]} fieldKey={[field.fieldKey, "num"]}>
-                                                    <Select allowClear placeholder="请选择视频集">
-                                                        {
-                                                            productLists.map((r, i) => {
-                                                                return <Option value={r.code} key={r.code}>{r.name}</Option>
-                                                            })
-                                                        }
+                                                    <Form.Item {...field} label="" name={[field.name]} fieldKey={[field.fieldKey, "num"]}>
+                                                        <Select allowClear placeholder="请选择视频集" style={{width:"200px"}}>
+                                                            {
+                                                                shortList.map((r, i) => {
+                                                                    return <Option value={r.id} key={r.id}>{r.title}</Option>
+                                                                })
+                                                            }
 
-                                                    </Select>
+                                                        </Select>
                                                     </Form.Item>
 
                                                     <MinusCircleOutlined onClick={() => { remove(field.name) }} />
@@ -192,7 +211,7 @@ export default class EarnIncentiveTask extends React.Component {
         )
     }
     componentDidMount() {
-        // this.getZzItemList()
+        this.getShortList()
         this.getProgramlist();
     }
     changeSize = (page, pageSize) => {   // 分页
@@ -204,39 +223,57 @@ export default class EarnIncentiveTask extends React.Component {
             this.getProgramlist()
         })
     }
-    getProgramsList(keyword) {
+    getDetailProgram(keyword) {
+        if (!keyword) return
         let params = {
-            channelId:4,
-            keyword:keyword,
+            name: keyword,
         }
-        getProgramsList(params).then(res => {
-            console.log(res.data.data)
-            if(res.data.data && Array.isArray(res.data.data)){
+        getDetailProgram(params).then(res => {
+            if (res.data.errCode === 0) {
                 this.setState({
                     productLists: res.data.data,
                 })
+                // this.forceUpdate()
             }
-            
+
         })
     }
     submitForm(val) {   // 提交表单
-        console.log(val, "val")
-        if (this.state.source == "edit") {
-            let item ={
-                ...this.state.currentItem,
-                ...val,
+        console.log(val)
+        if(val.collections){
+            let arr = val.collections.filter(r=>!!r)
+            if(arr.length == 0){
+                return message.error("请关联一个视频合集")
             }
-            this.addRefresh(item)
+        }
+        if (this.state.source == "edit") {
+            this.uploadProgramList(val)
         } else {
-            this.addRefresh(val)
+            this.addProgramList(val)
         }
         this.closeModal()
     }
-
+    getProgramInfo(id) { //节目单详情
+        let params = {
+            id: id
+        }
+        getProgramInfo(params).then(res => {
+            console.log(res)
+            let arr = res.data.data
+            let list = []
+            if (Array.isArray(arr.collections) && arr.collections.length > 0) {
+                arr.collections.forEach(r => {
+                    list.push(r.id)
+                })
+            }
+            arr.collections = list
+            this.formRef.current.setFieldsValue(arr)
+        })
+    }
     getProgramlist() {
         let params = {
-            currentPage: this.state.page, // (int)页码
-            pageSize: this.state.pageSize // (int)每页数量
+            currentPage: 1, // (int)页码
+            pageSize: 9999 // (int)每页数量
         }
         getProgramlist(params).then(res => {
             this.setState({
@@ -245,31 +282,45 @@ export default class EarnIncentiveTask extends React.Component {
             })
         })
     }
+    getShortList() {
+        let params = {
+            currentPage: 1, // (int)页码
+            pageSize: 9999 // (int)每页数量
+        }
+        getShortList(params).then(res => {
+            this.setState({
+                shortList: res.data.data
+            })
+        })
+    }
     closeModal() {
         this.setState({
             entranceState: false
         })
     }
-    // addRefresh(val) {
-    //     let setting = []
-    //     if(val.setting){
-    //         val.setting.forEach(r=>{
-    //             setting.push(moment(r.num).format(format))
-    //         })
-    //     }
-    //     let params = {
-    //         ...val,
-    //         startAt: val.time[0].valueOf(),
-    //         endAt: val.time[1].valueOf(),
-    //         state: val.state ? 1 : 0,
-    //         setting: setting.join(",")
-    //     }
-    //     addRefresh(params).then(res => {
-    //         this.getProgramlist()
-    //         message.success("成功")
-    //     })
-    // }
-
+    addProgramList(val) {
+        let arr = this.state.productLists.filter(r => r.programId == val.programId)
+        let params = {
+            ...val,
+            programTitle: arr.length > 0 ? arr[0].name : ""
+        }
+        addProgramList(params).then(res => {
+            this.getProgramlist()
+            message.success("成功")
+        })
+    }
+    uploadProgramList(val){
+        let arr = this.state.productLists.filter(r => r.programId == val.programId)
+        let params = {
+            ...this.state.currentItem,
+            ...val,
+            programTitle: arr.length > 0 ? arr[0].name : ""
+        }
+        uploadProgramList(params).then(res => {
+            this.getProgramlist()
+            message.success("成功")
+        })
+    }
 
     deleteItem(_obj) {  // 删除数据
         console.log(_obj)
@@ -277,29 +328,19 @@ export default class EarnIncentiveTask extends React.Component {
             title: `确认删除该条数据吗？`,
             // content: '确认删除？',
             onOk: () => {
-                this.delRefresh(_obj.zzItemCode)
+                this.delProgramList(_obj.id)
             },
             onCancel: () => {
             }
         })
     }
-    // delRefresh(code) {
-    //     let params = {
-    //         zzItemCodes: code
-    //     }
-    //     delRefresh(params).then(res => {
-    //         message.success("删除成功")
-    //         this.getProgramlist()
-    //     })
-    // }
-    // changeRefresh(val) {
-    //     let params = {
-    //         zzItemCodes: val.zzItemCode
-    //     }
-    //     changeRefresh(params).then(res => {
-           
-    //     }).catch((err) => {
-
-    //     })
-    // }
+    delProgramList(id) {
+        let params = {
+            id: id
+        }
+        delProgramList(params).then(res => {
+            message.success("删除成功")
+            this.getProgramlist()
+        })
+    }
 }

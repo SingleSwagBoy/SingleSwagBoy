@@ -1,19 +1,12 @@
 import React, { Component } from 'react'
-import { getProgramlist, searchShortList, getShortList, addShortList, getProgramInfo, updateShortList, delProgramList } from 'api'
+import {  searchShortList, getShortList, addShortList, updateShortList, delShortList } from 'api'
 import { Breadcrumb, Card, TimePicker, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
-import moment from 'moment';
 import { MySyncBtn } from "@/components/views.js"
 import util from 'utils'
 import "./style.css"
-const { Option } = Select;
-let { RangePicker } = DatePicker;
-const format = 'HH:mm';
-let privateData = {
-    inputTimeOutVal: null
-};
-export default class EarnIncentiveTask extends React.Component {
+const { Option } = Select;export default class EarnIncentiveTask extends React.Component {
     formRef = React.createRef();
     constructor(props) {
         super(props);
@@ -54,7 +47,7 @@ export default class EarnIncentiveTask extends React.Component {
                 {
                     title: "操作",
                     key: "action",
-                    fixed: 'right', width: 300,
+                    fixed: 'right', width: 200,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
@@ -216,7 +209,7 @@ export default class EarnIncentiveTask extends React.Component {
                     str_id:obj.id,
                     cover:obj.cover,
                     source:obj.source,
-                    sort:obj.sort || 0,
+                    sort:arr[index].sort || 0,
                     uploader:obj.uploader,
                     likeCount:obj.likeCount,
                     title:obj.title
@@ -230,10 +223,10 @@ export default class EarnIncentiveTask extends React.Component {
     }
     submitForm(val) {   // 提交表单
         console.log(val)
-        if (val.collections) {
-            let arr = val.collections.filter(r => !!r)
-            if (arr.length == 0) {
-                return message.error("请关联一个视频合集")
+        if (val.videos) {
+            let arr = val.videos.filter(r => !r.title || !r.str_id)
+            if (arr.length > 0) {
+                return message.error("请填写完整的信息")
             }
         }
         if (this.state.source == "edit") {
@@ -243,35 +236,6 @@ export default class EarnIncentiveTask extends React.Component {
         }
         this.closeModal()
     }
-    // getProgramInfo(id) { //节目单详情
-    //     let params = {
-    //         id: id
-    //     }
-    //     getProgramInfo(params).then(res => {
-    //         console.log(res)
-    //         let arr = res.data.data
-    //         let list = []
-    //         if (Array.isArray(arr.collections) && arr.collections.length > 0) {
-    //             arr.collections.forEach(r => {
-    //                 list.push(r.id)
-    //             })
-    //         }
-    //         arr.collections = list
-    //         this.formRef.current.setFieldsValue(arr)
-    //     })
-    // }
-    // getProgramlist() {
-    //     let params = {
-    //         currentPage: 1, // (int)页码
-    //         pageSize: 9999 // (int)每页数量
-    //     }
-    //     getProgramlist(params).then(res => {
-    //         this.setState({
-    //             lists: res.data.data,
-    //             total: res.data.totalCount
-    //         })
-    //     })
-    // }
     getShortList() {
         let params = {
             currentPage: this.state.page, // (int)页码
@@ -295,7 +259,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
         addShortList(params).then(res => {
             this.getShortList()
-            message.success("成功")
+            message.success("新增成功")
         })
     }
     updateShortList(val){
@@ -305,29 +269,29 @@ export default class EarnIncentiveTask extends React.Component {
         }
         updateShortList(params).then(res => {
             this.getShortList()
-            message.success("成功")
+            message.success("更新成功")
         })
     }
 
-    // deleteItem(_obj) {  // 删除数据
-    //     console.log(_obj)
-    //     Modal.confirm({
-    //         title: `确认删除该条数据吗？`,
-    //         // content: '确认删除？',
-    //         onOk: () => {
-    //             this.delProgramList(_obj.id)
-    //         },
-    //         onCancel: () => {
-    //         }
-    //     })
-    // }
-    // delProgramList(id) {
-    //     let params = {
-    //         id: id
-    //     }
-    //     delProgramList(params).then(res => {
-    //         message.success("删除成功")
-    //         this.getProgramlist()
-    //     })
-    // }
+    deleteItem(_obj) {  // 删除数据
+        console.log(_obj)
+        Modal.confirm({
+            title: `确认删除该条数据吗？`,
+            // content: '确认删除？',
+            onOk: () => {
+                this.delShortList(_obj.id)
+            },
+            onCancel: () => {
+            }
+        })
+    }
+    delShortList(id) {
+        let params = {
+            id: id
+        }
+        delShortList(params).then(res => {
+            message.success("删除成功")
+            this.getShortList()
+        })
+    }
 }

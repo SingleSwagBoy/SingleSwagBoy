@@ -331,6 +331,9 @@ export const getDetailProgram = (params) => { return request.get(`${baseUrl}/mms
 export const getProgramInfo = (params) => { return request.get(`${baseUrl}/mms/channel/svcollection/programinfo`, { params: params }); };                 // 节目单视频集详情
 export const delProgramList = (params) => { return request.get(`${baseUrl}/mms/channel/svcollection/programdel`, { params: params }); };                 // 删除节目单
 export const syncProgramList = (params) => { return request.get(`${baseUrl}/mms/channel/svcollection/programsync`, { params: params }); };                 // 同步
+export const addShortList = (params) => { return request.post(`${baseUrl}/mms/channel/svcollection/add`, params); };                 // 同步
+export const searchShortList = (params) => { return request.get(`${baseUrl}/mms/shortVideo/searchbyid`, { params: params }); };                 // 同步
+export const updateShortList = (params) => { return request.post(`${baseUrl}/mms/channel/svcollection/update`,params); };                 // 同步
 
 
 

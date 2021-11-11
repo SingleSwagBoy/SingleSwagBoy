@@ -161,10 +161,10 @@ export default class adGroup extends Component {
                                     <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
                                 </Form.Item>
                                 <Form.Item label="最大下发量" name="dealtMaxNum">
-                                    <Input className="base-input-wrapper" placeholder="这里是最大下发量" />
+                                    <InputNumber className="base-input-wrapper" placeholder="这里是最大下发量" min={0} />
                                 </Form.Item>
                                 <Form.Item label="排序" name="sortOrder">
-                                    <InputNumber />
+                                    <InputNumber className="base-input-wrapper" />
                                 </Form.Item>
                                 <Form.Item label="备注" name="remark">
                                     <Input className="base-input-wrapper" placeholder="这里是备注" />

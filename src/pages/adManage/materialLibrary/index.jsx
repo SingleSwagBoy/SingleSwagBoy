@@ -128,7 +128,7 @@ export default class adCreateModal extends Component {
                                     }, () => {
                                         let obj = JSON.parse(JSON.stringify(row))
                                         obj.time = [moment(obj.startTime), moment(obj.endTime)]
-                                        obj.djsEndTime = moment(obj.djsEndTime)
+                                        obj.djsEndTime = obj.djsEndTime?moment(obj.djsEndTime):""
                                         obj.status = obj.status == 1 ?true : false
                                         this.formRef.current.setFieldsValue(obj)
                                         this.forceUpdate()

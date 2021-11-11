@@ -224,9 +224,8 @@ export default class SportsProgram extends Component {
             onClick={()=>{
               this.setState({visible:true,source:1,currentItem:{}},()=>{
                 this.formRef.current.resetFields()
+                this.forceUpdate()
               })
-              // this.getSelector("category")
-              // this.getSelector("tag")
             }}
             >新增小程序</Button>
            <Button type="primary"
@@ -465,7 +464,10 @@ export default class SportsProgram extends Component {
   addMini(item){
     let params={
       ...item,
+      categories:item.categories.join(","),
+      tags:item.tags?item.tags.join(","):""
     }
+    // return console.log(params,"params")
     addMini(params).then(res=>{
       if(res.data.errCode === 0){
         message.success("新增成功")

@@ -186,7 +186,7 @@ export default class adCreateModal extends Component {
         val.startTime = val.time[0].toDate().getTime()
         val.endTime = val.time[1].toDate().getTime()
         if (this.props.adIndex == 1) {
-            val.djsEndTime = val.djsEndTime.toDate().getTime()
+            val.djsEndTime = val.djsEndTime?val.djsEndTime.toDate().getTime():""
             this.addAdRightKey(val)
         } else {
             this.addScreen(val)

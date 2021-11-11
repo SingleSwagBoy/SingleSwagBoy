@@ -320,6 +320,13 @@ export const addPActivityGoods = (params) => { return request.post(`${baseUrl}/m
 export const updateGoods = (params) => { return request.post(`${baseUrl}/mms/activity/truntable/updategoods`, params); };                 // 编辑商品
 
 
+
+
+//节目单视频集配置
+export const getProgramlist = (params) => { return request.get(`${baseUrl}/mms/channel/svcollection/programlist`, { params: params }); };                 // 节目单视频集列表
+
+
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

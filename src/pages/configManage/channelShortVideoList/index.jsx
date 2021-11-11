@@ -241,9 +241,9 @@ export default class EarnIncentiveTask extends React.Component {
     submitForm(val) {   // 提交表单
         console.log(val)
         if(val.collections){
-            let arr = val.collections.filter(r=>!!r)
-            if(arr.length == 0){
-                return message.error("请关联一个视频合集")
+            let arr = val.collections.filter(r=>!r)
+            if(arr.length > 0){
+                return message.error("请填写完整的信息")
             }
         }
         if (this.state.source == "edit") {

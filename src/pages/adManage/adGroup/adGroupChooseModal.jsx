@@ -140,14 +140,14 @@ export default class adCreateModal extends Component {
             },
             { title: '素材名称', dataIndex: 'name', key: 'name', width: 300, },
             {
-                title: '类型', dataIndex: 'type', key: 'type', width: 200,
+                title: '类型', dataIndex: 'adType', key: 'adType', width: 200,
                 render: (rowValue, row, index) => {
                     return (
                         <div>
                         {
                             adIndex == 1 
                             ?  
-                            <div>{rowValue == 0 ? "通用" : rowValue == 1 ? "家庭号" : rowValue == 2 ? "公众号登陆" : rowValue == 3 ? "小程序登陆" : "未知"}</div>
+                            <div>{row.type == 0 ? "通用" : row.type == 1 ? "家庭号" : row.type == 2 ? "公众号登陆" : row.type == 3 ? "小程序登陆" : "未知"}</div>
                             :
                             <div>{rowValue == 1 ? "普通级别" : rowValue == 2 ? "宣传内容" : "未知"}</div>
                         }

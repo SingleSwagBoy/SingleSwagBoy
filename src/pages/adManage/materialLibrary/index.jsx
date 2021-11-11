@@ -56,7 +56,10 @@ export default class adCreateModal extends Component {
                     title: '类型', dataIndex: 'type', key: 'type', width: 200,
                     render: (rowValue, row, index) => {
                         return (
+                            this.state.adIndex == 1?
                             <div>{rowValue == 0 ? "通用" : rowValue == 1 ? "家庭号" : rowValue == 2 ? "公众号登陆" : rowValue == 3 ? "小程序登陆" : "未知"}</div>
+                            :
+                            <div>{row.adType == 1 ? "普通级别" : row.adType == 2 ? "宣传内容" : "未知"}</div>
                         )
                     }
                 },

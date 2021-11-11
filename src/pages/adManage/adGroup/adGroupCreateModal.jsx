@@ -203,6 +203,7 @@ export default class adCreateModal extends Component {
        
 
         that.setState({ modal_box: modal_box }, () => {
+            that.formRef.current.resetFields()
             that.formRef.current.setFieldsValue({"status":true});
             that.forceUpdate()
         })

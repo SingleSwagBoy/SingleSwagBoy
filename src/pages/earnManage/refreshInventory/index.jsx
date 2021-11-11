@@ -142,7 +142,7 @@ export default class EarnIncentiveTask extends React.Component {
                 <Card title={
                     <div>
                         <Breadcrumb>
-                            <Breadcrumb.Item>提现商品列表</Breadcrumb.Item>
+                            <Breadcrumb.Item>刷新库存列表</Breadcrumb.Item>
                         </Breadcrumb>
                     </div>
                 }

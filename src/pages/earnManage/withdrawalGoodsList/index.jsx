@@ -102,6 +102,10 @@ export default class EarnIncentiveTask extends React.Component {
                         return (
                             <div>
                                 <Button
+                                    size="small"
+                                    onClick={() => this.addZzItemList(row, "copy")}
+                                >复制</Button>
+                                <Button
                                     style={{ margin: "0 10px" }}
                                     size="small"
                                     type="primary"
@@ -409,7 +413,7 @@ export default class EarnIncentiveTask extends React.Component {
 
                                                         <Form.Item>
                                                             <Button type="dashed" onClick={() => {
-                                                                if (!this.formRef.current.getFieldValue("type") || (this.formRef.current.getFieldValue("setting") &&  this.formRef.current.getFieldValue("setting").length >= 4)) return
+                                                                if (!this.formRef.current.getFieldValue("type") || (this.formRef.current.getFieldValue("setting") && this.formRef.current.getFieldValue("setting").length >= 4)) return
                                                                 add()
                                                             }} block icon={<PlusOutlined />}>
                                                                 新建配置
@@ -501,14 +505,23 @@ export default class EarnIncentiveTask extends React.Component {
             entranceState: false
         })
     }
-    addZzItemList(val) {
-        let params = {
-            ...val,
-            startAt: val.time[0].valueOf(),
-            endAt: val.time[1].valueOf(),
-            state: val.state ? 1 : 0,
-            setting: JSON.stringify(val.setting)
+    addZzItemList(val, type) {
+        let params
+        if (type == "copy") {
+            params = {
+                ...val,
+                manualCode:util.randomWord(false,10)
+            }
+        } else {
+            params = {
+                ...val,
+                startAt: val.time[0].valueOf(),
+                endAt: val.time[1].valueOf(),
+                state: val.state ? 1 : 0,
+                setting: JSON.stringify(val.setting)
+            }
         }
+
         addZzItemList(params).then(res => {
             this.getZzItemList()
             message.success("新增成功")

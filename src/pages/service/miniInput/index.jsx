@@ -212,9 +212,11 @@ export default class SportsProgram extends Component {
               placeholder="请输入小程序名称"
               onSearch={(val)=>{
                 this.setState({
-                  searchWords:val
+                  searchWords:val,
+                  page: 1,
+                },()=>{
+                  this.miniList(val)
                 })
-                this.miniList(val)
               }} />
           </div>
         }
@@ -239,6 +241,7 @@ export default class SportsProgram extends Component {
         >
           <Table
             pagination={{
+              current:this.state.page,
               pageSize: this.state.pageSize,
               total: this.state.total,
               onChange: this.changeSize
@@ -406,7 +409,7 @@ export default class SportsProgram extends Component {
       page,
       pageSize
     },()=>{
-      
+      this.miniList(this.state.searchWords)
     })
    
   }
@@ -421,7 +424,8 @@ export default class SportsProgram extends Component {
     miniList(params).then(res=>{
       if(res.data.errCode === 0){
         this.setState({
-          dataSource:res.data.data.data
+          dataSource:res.data.data.data,
+          total:res.data.data.page.totalCount
         })
       }
     })

@@ -22,6 +22,7 @@ import {
     adListSync,                     // 广告组数据同步
     adRightKeySync,                 // 素材数据同步
     syncZzItemList,                 // 赚赚提现商品同步
+    syncZZShow,                     //公告和随机金额配置同步
 } from 'api'
 
 
@@ -53,8 +54,9 @@ export default class SyncBtn extends Component {
         if (type === 9) return syncProgramAppConfig();                          //电视节目单配置
         if (type === 10) return syncAdNewTagSync();                             //广告新标签
         if (type === 11) return adListSync();                                   //广告组
-        if (type === 12) return adRightKeySync();                                   //素材
-        if (type === 13) return syncZzItemList();                                   //提现商品列表
+        if (type === 12) return adRightKeySync();                               //素材
+        if (type === 13) return syncZzItemList();                               //提现商品列表
+        if (type === 14) return syncZZShow(params);                             //公告和随机金额配置
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

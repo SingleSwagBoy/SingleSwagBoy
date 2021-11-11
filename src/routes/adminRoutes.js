@@ -49,6 +49,7 @@ const EarnIncentiveTask = lazy(() => import('pages/earnManage/earnIncentiveTask/
 const WithdrawalGoodsList = lazy(() => import('pages/earnManage/withdrawalGoodsList/index.jsx'))
 const RefreshInventory = lazy(() => import('pages/earnManage/refreshInventory/index.jsx'))
 const WithdrawalConfig = lazy(() => import('pages/earnManage/withdrawalConfig/index.jsx'))
+const Notice = lazy(() => import('pages/earnManage/notice/index.jsx'))
 const WhiteList = lazy(() => import('pages/configManage/whiteList/index.jsx'))
 const RiskAreaConfig = lazy(() => import('pages/configManage/riskAreaConfig/riskAreaConfig.jsx'));
 const TagConfig = lazy(() => import('pages/configManage/tagConfig/tagConfig.jsx'));
@@ -133,6 +134,7 @@ const adminRoutes = [
     { name: '提现商品列表', icon: UnorderedListOutlined, path: '/mms/earnManage/withdrawalGoodsList', component: WithdrawalGoodsList, code: "earnManage", sub_code: 'withdrawalGoodsList' },
     { name: '刷新库存', icon: UnorderedListOutlined, path: '/mms/earnManage/refreshInventory', component: RefreshInventory, code: "earnManage", sub_code: 'refreshInventory' },
     { name: '随机提现配置', icon: UnorderedListOutlined, path: '/mms/earnManage/withdrawalConfig', component: WithdrawalConfig, code: "earnManage", sub_code: 'withdrawalConfig' },
+    { name: '公告', icon: UnorderedListOutlined, path: '/mms/earnManage/notice', component: Notice, code: "earnManage", sub_code: 'notice' },
 
     //电视节目单配置
     { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },

@@ -6,6 +6,7 @@ import { sortableContainer, sortableElement, sortableHandle } from 'react-sortab
 import {  } from 'react-router-dom'
 import { MenuOutlined,LoadingOutlined,PlusOutlined  } from "@ant-design/icons"
 import arrayMove from 'array-move';
+import ImageUpload from "../../../components/ImageUpload/index" //图片组件
 import  util from 'utils'
 import "./style.css"
 import moment from 'moment';
@@ -31,7 +32,6 @@ export default class SportsProgram extends Component {
       total: 0,
       data: [],
       loading:false,
-      newData:{},
       searchWords:"",
       categoriesList:[],
       tagsList:[],
@@ -105,11 +105,13 @@ export default class SportsProgram extends Component {
                   size="small"
                   type="primary"
                   onClick={()=>{
+                    console.log(row,"row")
                     this.getMiniInfo(row)
                     this.setState({visible:true,currentItem:row,source:2},()=>{
                       this.state.currentItem.categories = Array.isArray(this.state.currentItem.categories)?this.state.currentItem.categories:this.state.currentItem.categories.split(",")
                       this.state.currentItem.tags = Array.isArray(this.state.currentItem.tags)?this.state.currentItem.tags:this.state.currentItem.tags.split(",")
                       this.formRef.current.setFieldsValue(row)
+                      this.forceUpdate()
                     })
                   }}
                   >编辑</Button>
@@ -183,22 +185,22 @@ export default class SportsProgram extends Component {
         <div style={{ marginTop: 8 }}>Upload</div>
       </div>
     );
-    const checkIcon = (rule,value) => {
-      console.log(rule,value,"自定义校验")
-      if (this.state.newData.icon) {
-        return Promise.resolve();
-      }
+    // const checkIcon = (rule,value) => {
+    //   console.log(rule,value,"自定义校验")
+    //   if (this.state.newData.icon) {
+    //     return Promise.resolve();
+    //   }
   
-      return Promise.reject('请上传小程序图标');
-    }
-    const checkQrCode = (rule,value) => {
-      console.log(rule,value,"自定义校验")
-      if (this.state.newData.qrcode) {
-        return Promise.resolve();
-      }
+    //   return Promise.reject('请上传小程序图标');
+    // }
+    // const checkQrCode = (rule,value) => {
+    //   console.log(rule,value,"自定义校验")
+    //   if (this.state.newData.qrcode) {
+    //     return Promise.resolve();
+    //   }
   
-      return Promise.reject('请上传小程序码截图');
-    }
+    //   return Promise.reject('请上传小程序码截图');
+    // }
     return (
       <div>
         <Card title={
@@ -220,11 +222,11 @@ export default class SportsProgram extends Component {
           <div>
            <Button type="primary"
             onClick={()=>{
-              this.setState({visible:true,source:1,newData:{},currentItem:{}},()=>{
+              this.setState({visible:true,source:1,currentItem:{}},()=>{
                 this.formRef.current.resetFields()
               })
-              this.getSelector("category")
-              this.getSelector("tag")
+              // this.getSelector("category")
+              // this.getSelector("tag")
             }}
             >新增小程序</Button>
            <Button type="primary"
@@ -280,68 +282,22 @@ export default class SportsProgram extends Component {
                 <Form.Item
                     label="小程序图标"
                     name="icon"
-                    // rules={[{ required: true, message: '请上传小程序图标' }]}
-                    rules={[{ validator: checkIcon, }]}
-                    valuePropName="fileList" 
-                      // 如果没有下面这一句会报错
-                      getValueFromEvent={normFile} 
+                    rules={[{ required: true, message: '请上传小程序图标' }]}
+                    // rules={[{ validator: checkIcon, }]}
                   >
-                    {/* 上传文件的控件 */}
-                    <Upload {...this.state.updateProps}
-                     onChange = {(info)=>{
-                       // 监控上传状态的回调
-                          if (info.file.status !== 'uploading') {
-                            this.setState({ loading: true });
-                          }
-                          if (info.file.status === 'done') {
-                            this.state.newData.icon = info.file.response.data.fileUrl
-                            this.setState({
-                              newData:this.state.newData,
-                              loading: false
-                            })
-                            message.success(`上传成功`);
-                          } else if (info.file.status === 'error') {
-                            message.error(`${info.file.name} 上传失败.`);
-                          }
-                        }
-                     } 
-                    >
-                      {this.state.newData.icon?<img src={this.state.newData.icon} alt="avatar" style={{ width: '100%',height:"100%" }} />:this.state.currentItem ? <img src={this.state.currentItem.icon} alt="avatar" style={{ width: '100%',height:"100%"}} /> : uploadButton}
-                    </Upload>
-                    <Image />
+                    <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this,"icon")}
+                                imageUrl={this.formRef.current && this.formRef.current.getFieldValue("icon")}
+                            />
                   </Form.Item>
                 <Form.Item
                     label="小程序码截图"
                     name="qrcode"
-                    // rules={[{ required: true, message: '请上传小程序码截图' }]}
-                    rules={[{ validator: checkQrCode, }]}
-                    valuePropName="fileList" 
-                      // 如果没有下面这一句会报错
-                      getValueFromEvent={normFile} 
+                    rules={[{ required: true, message: '请上传小程序码截图' }]}
+                    // rules={[{ validator: checkQrCode, }]}
                   >
-                    {/* 上传文件的控件 */}
-                    <Upload {...this.state.updateProps}
-                     onChange = {(info)=>{
-                       // 监控上传状态的回调
-                          if (info.file.status !== 'uploading') {
-                            this.setState({ loading: true });
-                          }
-                          if (info.file.status === 'done') {
-                            this.state.newData.qrcode = info.file.response.data.fileUrl
-                            this.setState({
-                              // newData:this.state.newData,
-                              loading: false
-                            })
-                            message.success(`上传成功`);
-                          } else if (info.file.status === 'error') {
-                            message.error(`${info.file.name} 上传失败.`);
-                          }
-                        }
-                     } 
-                    >
-                      {this.state.newData.qrcode?<img src={this.state.newData.qrcode} alt="avatar" style={{ width: '100%',height:"100%" }} />:this.state.currentItem ? <img src={this.state.currentItem.qrcode} alt="avatar" style={{ width: '100%',height:"100%"}} /> : uploadButton}
-                    </Upload>
-                    <Image />
+                      <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this,"qrcode")}
+                                imageUrl={this.formRef.current && this.formRef.current.getFieldValue("qrcode")}
+                            />
                   </Form.Item>
                   <Form.Item
                     label="所属分类"
@@ -351,14 +307,9 @@ export default class SportsProgram extends Component {
                   <Select
                         placeholder="请选择所属分类"
                         mode="multiple"
-                        // onDropdownVisibleChange={()=>{
-                        //   this.getSelector("category")
-                        // }}
-                        onChange={(val)=>{
-                          console.log(val)
-                          this.state.newData.categories = val.join(",")
+                        onDropdownVisibleChange={()=>{
+                          this.getSelector("category")
                         }}
-                        defaultValue={this.state.newData.categories||[]}
                         {...this.state.selectProps}
                         allowClear
                       >
@@ -379,14 +330,9 @@ export default class SportsProgram extends Component {
                   <Select
                         placeholder="请选择所属类别"
                         mode="multiple"
-                        onChange={(val)=>{
-                          console.log(val)
-                          this.state.newData.tags = val.join(",")
-                        }}
                         onDropdownVisibleChange={()=>{
                           this.getSelector("tag")
                         }}
-                        defaultValue={this.state.newData.tags}
                         {...this.state.selectProps}
                         allowClear
                       >
@@ -483,8 +429,8 @@ export default class SportsProgram extends Component {
   }
   getSelector(type){
     let ids={}
-    if(type==="tag"&&this.state.newData.categories){
-      let b = Array.isArray(this.state.newData.categories)?this.state.newData.categories:[this.state.newData.categories]
+    if(type==="tag" && this.formRef.current.getFieldValue("categories")){
+      let b = Array.isArray(this.formRef.current.getFieldValue("categories"))?this.formRef.current.getFieldValue("categories"):[this.formRef.current.getFieldValue("categories")]
       console.log(b,"b")
       ids=b?b.includes(",")?b:b.join(","):""
     }
@@ -519,7 +465,6 @@ export default class SportsProgram extends Component {
   addMini(item){
     let params={
       ...item,
-      ...this.state.newData
     }
     addMini(params).then(res=>{
       if(res.data.errCode === 0){
@@ -542,14 +487,10 @@ export default class SportsProgram extends Component {
         if(!res.data.data.tags){
           res.data.data.tags =[]
         }
-       this.setState({
-         newData:res.data.data
-       },()=>{
-        this.getSelector("category")
-        this.getSelector("tag")
-       })
        this.formRef.current.setFieldsValue(res.data.data)
-       
+       this.getSelector("category")
+       this.getSelector("tag")
+       this.forceUpdate()
       }
     })
   }
@@ -570,7 +511,7 @@ export default class SportsProgram extends Component {
   }
   editMini(item){
     let params={
-      ...this.state.newData,
+      ...this.state.currentItem,
       ...item,
       categories:item.categories.join(","),
       tags:item.tags.join(",")
@@ -608,4 +549,9 @@ export default class SportsProgram extends Component {
       }
     })
   }
+  getUploadFileUrl(name, file) {   // 图片上传的方法
+    console.log(name,file, "获取上传的图片路径")
+    this.formRef.current.setFieldsValue({ [name]: file })
+    this.forceUpdate()
+}
 }

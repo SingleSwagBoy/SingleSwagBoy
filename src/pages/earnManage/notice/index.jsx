@@ -39,7 +39,7 @@ export default class EarnIncentiveTask extends React.Component {
                 }
                 extra={
                     <div>
-                        <MySyncBtn type={14} name='同步缓存' params={{"key":"randText"}} />
+                        <MySyncBtn type={14} name='同步缓存' params={{"key":"notice"}} />
                     </div>
                 }
                 >
@@ -47,31 +47,15 @@ export default class EarnIncentiveTask extends React.Component {
                         name="taskForm"
                         ref={this.formRef}
                         onFinish={this.submitForm.bind(this)}>
-                        <Form.Item label="随机提现开关" name="switch" valuePropName="checked">
-                            <Switch checkedChildren="开" unCheckedChildren="关" ></Switch>
+                        <Form.Item label="公告内容" name="content" rules={[{ required: true, message: '请填写公告内容' }]}>
+                            <Input.TextArea placeholder="请输入公告内容" maxLength={150} />
                         </Form.Item>
-                        <Form.Item label="提现图片" name="backgroundUrl" rules={[{ required: true, message: '请上传提现图片' }]}>
-                            <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this,"backgroundUrl")}
-                                imageUrl={this.formRef.current && this.formRef.current.getFieldValue("backgroundUrl")}
-                            />
+                        <Form.Item label="开始时间-结束时间" name="time" rules={[{ required: true, message: '请选择开始时间-结束时间' }]}>
+                            <RangePicker placeholder={['上线时间', '下线时间']} showTime ></RangePicker>
                         </Form.Item>
-                        <Form.Item label="弹窗图片" name="popPicture" rules={[{ required: true, message: '请上传弹窗图片' }]}>
-                            <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this,"popPicture")}
-                                imageUrl={this.formRef.current && this.formRef.current.getFieldValue("popPicture")}
-                            />
+                        <Form.Item label="状态" name="state" valuePropName="checked">
+                            <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                         </Form.Item>
-                        <Form.Item label="弹窗提示" name="popNotice" rules={[{ required: true, message: '请填写弹窗提示' }]}>
-                            <Input placeholder="请输入弹窗提示" />
-                        </Form.Item>
-
-                        <Form.Item label="开始时间" name="startAt" >
-                            <TimePicker format={format} />
-                        </Form.Item>
-                        <Form.Item label="结束时间" name="endAt" >
-                            <TimePicker format={format} />
-                        </Form.Item>
-
-
                         <Form.Item {...this.state.tailLayout}>
                             {/* <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button> */}
                             <Button htmlType="submit" type="primary" style={{ margin: "0 20px" ,width:"200px"}}>
@@ -99,27 +83,26 @@ export default class EarnIncentiveTask extends React.Component {
     }
     getZZShow() {
         let params = {
-            key: "randText"
+            key: "notice"
         }
         getZZShow(params).then(res => {
             let val = res.data
-            val.startAt = val.startAt?moment(val.startAt,format):""
-            val.endAt = val.endAt?moment(val.endAt,format):""
-            val.switch = val.switch == "open"? true :false
+            val.time = [moment(val.startAt),moment(val.endAt)]
+            val.state = val.state == 1 ? true : false
             this.formRef.current.setFieldsValue(val)
-            this.forceUpdate()
         })
     }
     saveZZShow(val){
         let params = {
             ...val,
-            switch:val.switch ? "open" : "close",
-            startAt:moment(val.startAt).format(format),
-            endAt:moment(val.endAt).format(format)
+            state:val.state ? 1 : 0,
+            startAt:val.time[0].valueOf(),
+            endAt:val.time[1].valueOf()
         }
         let header={
-            key: "randText"
+            key: "notice"
         }
+        // return console.log(params)
         saveZZShow(params,header).then(res => {
             message.success("保存成功")
         })

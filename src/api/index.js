@@ -290,6 +290,7 @@ export const delRefresh = (params) => { return request2.get(`${baseUrl}/mms/zzIt
 //赚赚管理 ---随机提现配置 
 export const getZZShow = (params) => { return request2.get(`${baseUrl}/mms/zz/show`, { params: params }) }; 
 export const saveZZShow = (params,header) => { return request2.post(`${baseUrl}/mms/zz/store?key=${header.key}`, params) }; 
+export const syncZZShow = (params) => { return request2.get(`${baseUrl}/mms/zz/syncCache`, { params: params }) }; 
 
 
 //白名单配置

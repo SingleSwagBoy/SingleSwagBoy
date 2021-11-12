@@ -55,6 +55,7 @@ const RiskAreaConfig = lazy(() => import('pages/configManage/riskAreaConfig/risk
 const TagConfig = lazy(() => import('pages/configManage/tagConfig/tagConfig.jsx'));
 const ChannelShortVideoList = lazy(() => import('pages/configManage/channelShortVideoList/index.jsx'));
 const ShortListConfig = lazy(() => import('pages/configManage/shortListConfig/index.jsx'));
+const RecommendConfig = lazy(() => import('pages/configManage/recommendConfig/index.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
 const LuckyDraw=lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
 const GoodsConfig=lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
@@ -125,6 +126,7 @@ const adminRoutes = [
     { name: '标签配置', icon: UnorderedListOutlined, path: '/mms/config/tagConfig', component: TagConfig, code: "configManage", sub_code: 'tagConfig' },
     { name: '节目单视频集配置', icon: UnorderedListOutlined, path: '/mms/config/channelShortVideoList', component: ChannelShortVideoList, code: "configManage", sub_code: 'channelShortVideoList' },
     { name: '短视频集配置', icon: UnorderedListOutlined, path: '/mms/config/shortListConfig', component: ShortListConfig, code: "configManage", sub_code: 'shortListConfig' },
+    { name: '首页为你推荐配置', icon: UnorderedListOutlined, path: '/mms/config/recommendConfig', component: RecommendConfig, code: "configManage", sub_code: 'recommendConfig' },
 
 
 

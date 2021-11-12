@@ -335,6 +335,9 @@ export const addShortList = (params) => { return request.post(`${baseUrl}/mms/ch
 export const searchShortList = (params) => { return request.get(`${baseUrl}/mms/shortVideo/searchbyid`, { params: params }); };                 // 同步
 export const updateShortList = (params) => { return request.post(`${baseUrl}/mms/channel/svcollection/update`,params); };                 // 同步
 export const delShortList = (params) => { return request.get(`${baseUrl}/mms/channel/svcollection/del`,{ params: params }); };                 // 同步
+export const getSuggest = (params) => { return request.get(`${baseUrl}/mms/channel/home/suggest/list`,{ params: params }); };                 // 首页为你推荐列表
+export const addSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/add`,params); };                 // 首页为你推荐列表
+export const updateSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/update`,params); };                 // 首页为你推荐列表
 
 
 

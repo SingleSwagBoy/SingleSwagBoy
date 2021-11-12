@@ -6,7 +6,7 @@
  * @Description: 广告组策略
  */
 import React, { Component } from 'react';
-import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, Radio, Divider, Image, message, Switch, InputNumber } from 'antd';
+import { Input, Card, Breadcrumb, Form, DatePicker, Button, Table, Modal, Alert, Select, Radio, Divider, Image, message, Switch, InputNumber } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
 import util from 'utils'
@@ -25,7 +25,7 @@ import {
     requestNewGroupCopy,                    //复制广告组
     requestAdRightKey,                      ///右键运营位
     getScreen,//获取屏显广告
-
+    baseUrl
 } from 'api';
 
 // import { util } from 'echarts';
@@ -87,53 +87,64 @@ export default class adGroup extends Component {
 
         return (
             <div>
-                <Alert message="配置列表" type="success" action={
-                    <div className="alert-box">
-                        <Button style={{ marginLeft: 5 }} onClick={() => that.onCreateClick()} >新增广告组</Button>
-                        <MySyncBtn type={11} name='同步缓存' />
+                <Card title={
+                    <div>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>广告组</Breadcrumb.Item>
+                        </Breadcrumb>
                     </div>
-                } />
-                <Alert type="success" action={
-                    <div className="alert-box">
-                        <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告组名称" onChange={(e) => { this.state.search.groupName = e.target.value }} />
-                        <RangePicker style={{ marginLeft: 5 }} style={{ width: '405px', marginLeft: 5 }} showTime placeholder={['上线时间', '下线时间']} onChange={(e) => {
-                            this.state.search.onlineTime = e ? parseInt(e[0].valueOf() / 1000) : ""
-                            this.state.search.offlineTime = e ? parseInt(e[1].valueOf() / 1000) : ""
-                        }} />
-                        <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告名称" onChange={(e) => { this.state.search.adName = e.target.value }} />
-                        <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="广告内容" />
-                        <Select style={{ width: '200px', marginLeft: 5 }} allowClear showSearch placeholder="请选择标签"
-                            onChange={(e) => { this.state.search.tag = e }}
-                            filterOption={(input, option) => {
-                                if (!input) return true;
-                                let children = option.children;
-                                if (children) {
-                                    let key = children[2];
-                                    let isFind = false;
-                                    isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
-                                    if (!isFind) {
-                                        let code = children[0];
-                                        isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
-                                    }
+                }
+                    extra={
+                        <div>
+                            <Button style={{ marginLeft: 5 }} onClick={() => that.onCreateClick()} >新增广告组</Button>
+                            <MySyncBtn type={11} name='同步缓存' />
+                        </div>
+                    }
+                >
+                    <div>
+                        <div className="alert-box" style={{ width: "100%", display: "flex", flexWrap: "wrap", marginBottom: "20px" }}>
+                            <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告组名称" onChange={(e) => { this.state.search.groupName = e.target.value }} />
+                            <RangePicker style={{ marginLeft: 5 }} style={{ width: '405px', marginLeft: 5 }} showTime placeholder={['上线时间', '下线时间']} onChange={(e) => {
+                                this.state.search.onlineTime = e ? parseInt(e[0].valueOf() / 1000) : ""
+                                this.state.search.offlineTime = e ? parseInt(e[1].valueOf() / 1000) : ""
+                            }} />
+                            <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告名称" onChange={(e) => { this.state.search.adName = e.target.value }} />
+                            <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="广告内容" />
+                            <Select style={{ width: '200px', marginLeft: 5 }} allowClear showSearch placeholder="请选择标签"
+                                onChange={(e) => { this.state.search.tag = e }}
+                                filterOption={(input, option) => {
+                                    if (!input) return true;
+                                    let children = option.children;
+                                    if (children) {
+                                        let key = children[2];
+                                        let isFind = false;
+                                        isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                        if (!isFind) {
+                                            let code = children[0];
+                                            isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                        }
 
-                                    return isFind;
-                                }
-                            }}
-                        >
-                            {this.state.dict_target_list.map((item, index) => (
-                                <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
-                            ))}
-                        </Select>
-                        <Select style={{ width: '200px', marginLeft: 5 }} allowClear showSearch placeholder="广告内容"
-                            onChange={(e) => { this.state.search.adType = e }}
-                        >
-                            <Option value={1} key={1}>右键运营位广告</Option>
-                            <Option value={2} key={2}>屏显广告</Option>
-                        </Select>
-                        <Button type="primary" onClick={() => { this.refreshList(this.state.search) }}>查询</Button>
+                                        return isFind;
+                                    }
+                                }}
+                            >
+                                {this.state.dict_target_list.map((item, index) => (
+                                    <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
+                                ))}
+                            </Select>
+                            <Select style={{ width: '200px', margin: "0 5px" }} allowClear showSearch placeholder="广告内容"
+                                onChange={(e) => { this.state.search.adType = e }}
+                            >
+                                <Option value={1} key={1}>右键运营位广告</Option>
+                                <Option value={2} key={2}>屏显广告</Option>
+                            </Select>
+                            <Button type="primary" onClick={() => { this.refreshList(this.state.search) }}>查询</Button>
+                        </div>
                     </div>
-                } />
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
+                    <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
+                </Card>
+
+
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={1500} style={{ top: 20 }} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
                     footer={null}
                 // destroyOnClose
@@ -320,8 +331,8 @@ export default class adGroup extends Component {
             {
                 title: '上下线时间', dataIndex: 'time', key: 'time',
                 render: (rowValue, row, index) => {
-                    return(
-                        <div>{row.onlineTime?util.formatTime(row.onlineTime, ""):"未配置"} - {row.offlineTime?util.formatTime(row.offlineTime, ""):"未配置"}</div>
+                    return (
+                        <div>{row.onlineTime ? util.formatTime(row.onlineTime, "") : "未配置"} - {row.offlineTime ? util.formatTime(row.offlineTime, "") : "未配置"}</div>
                     )
                 }
             },
@@ -330,9 +341,22 @@ export default class adGroup extends Component {
                 title: '状态', dataIndex: 'status', key: 'status', width: 200,
                 render: (rowValue, row, index) => {
                     // 1、有效,2、无效
-                    if (rowValue == '1') return '有效';
-                    if (rowValue == '2') return '无效';
-                    return '';
+                    return (
+                        <Switch checkedChildren="有效" unCheckedChildren="无效" key={new Date().getTime()}
+                            defaultChecked={rowValue == 1 ? true : false}
+                            onChange={(val) => {
+                                let obj = JSON.parse(JSON.stringify(row))
+                                obj.status =  val ? 1 : 2
+                                this.setState({
+                                    currentItem:row
+                                },()=>{
+                                    this.requestNewGroupChange(obj)
+                                })
+                              
+                            }}
+                        />
+                    )
+
                 }
             },
             { title: '备注', dataIndex: 'remark', key: 'remark', width: 200, },
@@ -407,7 +431,7 @@ export default class adGroup extends Component {
             console.log(this.state.adIndex)
             if (row) {
                 let obj = JSON.parse(JSON.stringify(row))
-                obj.time = [obj.onlineTime?moment(obj.onlineTime * 1000):"", obj.offlineTime?moment(obj.offlineTime * 1000):""]
+                obj.time = [obj.onlineTime ? moment(obj.onlineTime * 1000) : "", obj.offlineTime ? moment(obj.offlineTime * 1000) : ""]
                 obj.status = obj.status == 1 ? true : false
                 let list = obj.content ? obj.content.filter(item => item.adType == 1) : []
                 this.setState({
@@ -503,21 +527,33 @@ export default class adGroup extends Component {
             title: '跳转',
             content: '你将要跳转到标签配置页，未保存的数据将不会存储到云端，是否立即跳转？',
             onOk: () => {
-                this.props.history.push("/mms/config/tagConfig")
+                // this.props.history.push("/mms/config/tagConfig")
+                const w = window.open('about:blank');
+                w.location.href = baseUrl + '/new-mms/#/mms/config/tagConfig'
             }
+        })
+    }
+    requestNewGroupChange(val) { //更新
+        let params = {
+            ...this.state.currentItem,
+            ...val
+        }
+        requestNewGroupUpdate(params).then(res => {
+            this.refreshList()
+            // this.onModalCancelClick()
         })
     }
     requestNewGroupUpdate(val) { //更新
         delete val.detailName
         delete val.detailPic
         delete val.detailTime
-        console.log(this.formRef.current.getFieldValue("content"),val, "val")
+        console.log(this.formRef.current.getFieldValue("content"), val, "val")
         let params = {
             ...this.state.currentItem,
             ...val,
             status: val.status ? 1 : 2,
-            offlineTime: (val.time && val.time[1])?parseInt(val.time[1].toDate().getTime() / 1000):"",
-            onlineTime: (val.time && val.time[0])?parseInt(val.time[0].toDate().getTime() / 1000):"",
+            offlineTime: (val.time && val.time[1]) ? parseInt(val.time[1].toDate().getTime() / 1000) : "",
+            onlineTime: (val.time && val.time[0]) ? parseInt(val.time[0].toDate().getTime() / 1000) : "",
             content: this.formRef.current.getFieldValue("content")
         }
         delete params.time
@@ -536,8 +572,8 @@ export default class adGroup extends Component {
         let params = {
             ...val,
             status: val.status ? 1 : 2,
-            offlineTime: val.time?parseInt(val.time[1].toDate().getTime() / 1000):"",
-            onlineTime: val.time?parseInt(val.time[0].toDate().getTime() / 1000):"",
+            offlineTime: val.time ? parseInt(val.time[1].toDate().getTime() / 1000) : "",
+            onlineTime: val.time ? parseInt(val.time[0].toDate().getTime() / 1000) : "",
             content: this.formRef.current.getFieldValue("content")
         }
         delete params.time
@@ -558,7 +594,7 @@ export default class adGroup extends Component {
             console.log('group_list', res.data);
             if (res.data && res.data.length > 0) {
                 let arr = res.data[0]
-                this.formRef.current.setFieldsValue({ "detailName": arr.name, "detailTime": [moment(arr.startTime), moment(arr.endTime)], "detailPic": arr.picUrl ,"detailIconPicUrl": arr.iconPicUrl})
+                this.formRef.current.setFieldsValue({ "detailName": arr.name, "detailTime": [moment(arr.startTime), moment(arr.endTime)], "detailPic": arr.picUrl, "detailIconPicUrl": arr.iconPicUrl })
                 this.forceUpdate()
 
             }
@@ -582,30 +618,30 @@ export default class adGroup extends Component {
         console.log(arr, "选择回来的素材")
         let allList = this.formRef.current.getFieldValue("content") || []
         let list = []
-        if(!Array.isArray(arr)){
-            arr = [{...arr}]
+        if (!Array.isArray(arr)) {
+            arr = [{ ...arr }]
             list = allList
-        }else{
+        } else {
             list = allList.filter(r => r.adType != this.state.adIndex)
         }
         if (arr.length > 0) {
             arr.forEach(r => {
-                list.push({ adId: r.id||r.adId, adName: r.name||r.adName, adType: Number(this.state.adIndex) })
+                list.push({ adId: r.id || r.adId, adName: r.name || r.adName, adType: Number(this.state.adIndex) })
             })
             this.formRef.current.setFieldsValue({ "detailName": arr[0].name || arr[0].adName, "detailTime": [moment(arr[0].startTime), moment(arr[0].endTime)], "detailPic": arr[0].picUrl, "detailIconPicUrl": arr[0].iconPicUrl })
         }
         this.formRef.current.setFieldsValue({ "content": list })
         this.setState({
-            adList: list.filter(r=>r.adType == this.state.adIndex),
-            tag_select_id: arr.length>0?arr[0].id || arr[0].adId:""
-        },()=>{
+            adList: list.filter(r => r.adType == this.state.adIndex),
+            tag_select_id: arr.length > 0 ? arr[0].id || arr[0].adId : ""
+        }, () => {
             if (this.state.adIndex == 1) {
                 this.requestAdRightKey(this.state.tag_select_id)
             } else {
                 this.getScreen(this.state.tag_select_id)
             }
         })
-       
+
         this.forceUpdate()
     }
     deleteTabChange(index, id) {

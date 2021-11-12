@@ -53,6 +53,7 @@ export default class recommendModal extends Component {
     }
     //等待页面加载完成 对数据进行渲染处理 
     renderPageWhenPageChange(data) {
+        console.log(data,"编辑")
         let that = this;
         that.formRef.current.resetFields();
         //编辑信息
@@ -69,17 +70,21 @@ export default class recommendModal extends Component {
                 moment(data.startTime), moment(data.endTime)
             ]
             //设备标签
-            if (data.tags && data.tags.length > 0) {
-                if (data.tags.constructor === String) {
-                    data.tags = data.tags.split(',');
+            // if (data.tags) {
+                // if (data.tags.constructor === String) {
+                //     data.tags = data.tags.split(',');
+                // }
+
+                // data.tags = data.tags.map((item, index) => {
+                //     return parseInt(item);
+                // })
+            // }
+            // else 
+            if(data.tags){
+                if(!Array.isArray(data.tags)){
+                    data.tags = data.tags.split(',')
                 }
-
-                data.tags = data.tags.map((item, index) => {
-                    return parseInt(item);
-                })
-            }
-            else data.tags = [];
-
+            }else data.tags = [];
             //频道列表
             if (data.jumpChannelCode && data.jumpChannelCode.length > 0) {
                 if (data.jumpChannelCode.constructor === String) {
@@ -297,10 +302,26 @@ export default class recommendModal extends Component {
                         </Form.Item>
 
                         <Form.Item label='用户设备标签' name='tags'>
-                            <Select className="input-wrapper-from" mode="multiple" placeholder='请选择用户设备标签(可多选)'>
+                            <Select className="input-wrapper-from" mode="multiple" placeholder='请选择用户设备标签(可多选)'
+                            filterOption={(input, option) => {
+                                if (!input) return true;
+                                let children = option.children;
+                                if (children) {
+                                    let key = children[2];
+                                    let isFind = false;
+                                    isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                    if (!isFind) {
+                                        let code = children[0];
+                                        isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                    }
+
+                                    return isFind;
+                                }
+                            }}
+                            >
                                 {user_tag.map((item, index) => {
-                                    return <Option value={item.id} key={item.id}>
-                                        <div>{item.id}-{item.name}</div>
+                                    return <Option value={item.code.toString()} key={index}>
+                                        <div>{item.code}-{item.name}</div>
                                     </Option>
                                 })}
                             </Select>

@@ -39,6 +39,9 @@ export default class tagConfig extends Component {
                 title: '',
                 key_code: '',
             },
+            tailLayout: {
+                wrapperCol: { offset: 20, span: 4 },
+            },
             //标签类型
             dict_tag_types: [
                 { key: 1, value: '设备标签' },
@@ -67,13 +70,14 @@ export default class tagConfig extends Component {
                 } />
                 <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={1500} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
-                    style={{ top: 20 }}
-                    footer={[
-                        <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
-                        <Button onClick={() => that.onModalConfirmClick()} >保存</Button>
-                    ]}>
+                    style={{ top: 20 }} footer={null}
+                    // footer={[
+                    //     <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
+                    //     <Button onClick={() => that.onModalConfirmClick()} >保存</Button>
+                    // ]}
+                    >
 
-                    <Form labelCol={{ span: 3 }} wrapperCol={{ span: 20 }} ref={that.formRef}>
+                    <Form labelCol={{ span: 3 }} wrapperCol={{ span: 20 }} ref={that.formRef} onFinish={this.onModalConfirmClick.bind(this)}>
                         {
                             that.formRef && that.formRef.current &&
                             <div>
@@ -105,6 +109,12 @@ export default class tagConfig extends Component {
                                         <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} />
                                     </Form.Item>
                                 </Form.Item>
+                                <Form.Item {...this.state.tailLayout}>
+                                        <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
+                                        <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                                            确定
+                                        </Button>
+                                </Form.Item>
 
 
                             </div>
@@ -128,9 +138,9 @@ export default class tagConfig extends Component {
 
         let table_title = [
             { title: 'id', dataIndex: 'id', key: 'id', width: 80, },
-            { title: '名称', dataIndex: 'name', key: 'name', },
+            { title: '名称', dataIndex: 'name', key: 'name',  width: 200,},
 
-            { title: '描述', dataIndex: 'description', key: 'description', width: 200, },
+            { title: '描述', dataIndex: 'description', key: 'description',  },
             {
                 title: '状态', dataIndex: 'status', key: 'status', width: 100,
                 render: (rowValue, row, indes) => {
@@ -175,7 +185,7 @@ export default class tagConfig extends Component {
         //field集合
         requestAdFieldList({}).then(res => {
             that.setState({
-                dict_field_list: res.data,
+                dict_field_list: res.data.filter(r=>r.type == 3 || r.type == 1),
             }, () => {
                 that.forceUpdate();
             })
@@ -269,9 +279,10 @@ export default class tagConfig extends Component {
     }
 
     //弹出框确定按钮被点击
-    onModalConfirmClick() {
+    onModalConfirmClick(val) {
         let that = this;
-        let value = that.formRef.current.getFieldsValue();
+        // let value = that.formRef.current.getFieldsValue();
+        let value = val
 
 
         let obj = Object.assign({}, value);

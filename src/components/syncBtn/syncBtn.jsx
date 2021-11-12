@@ -19,7 +19,11 @@ import {
     syncWhite,                      //白名单广告 同步
     syncProgramAppConfig,           //电视节目单 同步
     syncAdNewTagSync,               //广告新标签 数据同步
-
+    adListSync,                     // 广告组数据同步
+    adRightKeySync,                 // 素材数据同步
+    syncZzItemList,                 // 赚赚提现商品同步
+    syncZZShow,                     //公告和随机金额配置同步
+    syncProgramList,                //节目单视频集配置
 } from 'api'
 
 
@@ -50,6 +54,11 @@ export default class SyncBtn extends Component {
         if (type === 8) return syncWhite();                                     //白名单
         if (type === 9) return syncProgramAppConfig();                          //电视节目单配置
         if (type === 10) return syncAdNewTagSync();                             //广告新标签
+        if (type === 11) return adListSync();                                   //广告组
+        if (type === 12) return adRightKeySync();                               //素材
+        if (type === 13) return syncZzItemList();                               //提现商品列表
+        if (type === 14) return syncZZShow(params);                             //公告和随机金额配置
+        if (type === 15) return syncProgramList(params);                              //节目单视频集配置
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }
@@ -58,11 +67,11 @@ export default class SyncBtn extends Component {
     render() {
         let that = this;
         let { sync_status } = that.state;
-        let { name, desc } = that.props;
+        let { name, desc,size } = that.props;
 
         return (
             <Tooltip title={`${desc ? desc : '你懂的，点一下，同步数据'}`} placement="top"  >
-                <Button type="primary" onClick={() => that.onSyncBtnClick()} style={{ 'marginLeft': '10px' }} disabled={sync_status === 2}
+                <Button type="primary" size={size} onClick={() => that.onSyncBtnClick()} style={{ 'marginLeft': '10px' }} disabled={sync_status === 2}
                     onMouseLeave={(e) => that.onSyncBtnBlur(e)}  >
                     {
                         sync_status === 0 ? `${name}` :

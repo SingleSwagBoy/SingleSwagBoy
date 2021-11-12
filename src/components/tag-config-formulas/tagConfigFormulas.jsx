@@ -12,7 +12,7 @@ import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, message }
 import '@/style/base.css';
 import './tagConfigFormulas.css'
 import { PlusOutlined } from '@ant-design/icons';
-
+import { MyAddress } from '@/components/views.js';
 
 let { Option } = Select;
 
@@ -47,7 +47,9 @@ export default class tagConfig extends Component {
             rules = [[[]]];
             let obj = {};
             obj[id] = rules;
+            console.log(obj)
             formRef.current.setFieldsValue(obj);
+            that.onItemCreateClick('第三层', 0, 0) //默认添加一项
         }
         //
         else if (rules.constructor === String) {
@@ -65,7 +67,6 @@ export default class tagConfig extends Component {
         //第一层
         if (rules && rules.length > 0) {
             // let layer1Item = rules;  //第一层数据
-
             view = (
                 <div>
                     {/* {JSON.stringify(dict_field[0])} */}
@@ -73,8 +74,10 @@ export default class tagConfig extends Component {
                     <div className="formulas-wrapper" >
                         <div className="type-wrapper">且</div>
                         <div className="formula-items">
+                       
                             {
                                 rules && rules.length > 0 ?
+                                
                                     rules.map((layer1item, layer1index) => {
                                         return (
                                             layer1item && layer1item.length > 0 ?
@@ -123,7 +126,13 @@ export default class tagConfig extends Component {
                                                                                             </div>
 
                                                                                             <div className="formula-item" style={{ width: 300 }}>
-                                                                                                <Input value={layer3item.value} placeholder="取值" disabled={is_show_only} onChange={(e) => { that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'value') }} />
+                                                                                                {
+                                                                                                    layer3item.field == "region"
+                                                                                                    ?
+                                                                                                    <MyAddress onCheckAddress={(e)=>this.onCheckAddress(e, layer1index, layer2index, layer3index, 'value')} defaultAddress={layer3item.value} />
+                                                                                                    :
+                                                                                                    <Input value={layer3item.value} placeholder="取值" disabled={is_show_only} onChange={(e) => { that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'value') }} />
+                                                                                                }
                                                                                             </div>
 
                                                                                             {!is_show_only && <Button disabled={is_show_only} onClick={() => { that.onItemDeleteClick('第三层', layer1index, layer2index, layer3index) }}>删除</Button>}
@@ -182,6 +191,7 @@ export default class tagConfig extends Component {
 
     //Field控件被选择
     onFieldSelectChange(e, layer1index, layer2index, layer3index, targetKey) {
+        console.log(e, layer1index, layer2index, layer3index, targetKey,"e, layer1index, layer2index, layer3index, targetKey")
         let that = this;
         let { id, formRef, dict_field } = that.props;
         let rules = formRef.current.getFieldValue(id);
@@ -228,7 +238,7 @@ export default class tagConfig extends Component {
     onItemCreateClick(key, layer1index, layer2index,) {
         let that = this;
         let { id, formRef } = that.props;
-        let rules = formRef.current.getFieldValue(id);
+        let rules = formRef.current.getFieldValue(id)|| [];
 
         let newData = {
             // "field": '',
@@ -246,6 +256,7 @@ export default class tagConfig extends Component {
         }
         //
         else if (key === '第三层') {
+            console.log(key, layer1index, layer2index,"key, layer1index, layer2index,")
             rules[layer1index][layer2index].push(newData);
         }
 
@@ -259,8 +270,13 @@ export default class tagConfig extends Component {
         let that = this;
         let { id, formRef } = that.props;
         let rules = formRef.current.getFieldValue(id);
-
-
+        console.log(key, layer1index, layer2index, layer3index,rules,"key, layer1index, layer2index, layer3index")
+        if(layer1index ==0 && layer2index == 0 && layer3index == 0 && rules[layer1index][layer2index].length==1){ //阻止删除最后一项
+            rules[layer1index][layer2index][layer3index] ={}
+            formRef.current.setFieldsValue(rules[layer1index][layer2index][layer3index]);
+            that.forceUpdate();
+            return
+        } 
         if (key === '第三层') {
 
             rules[layer1index][layer2index].splice(layer3index, 1);
@@ -330,5 +346,30 @@ export default class tagConfig extends Component {
     onInitRulesClick() {
 
     }
+    onCheckAddress(value, layer1index, layer2index, layer3index, targetKey) {
+        console.log(value, layer1index, layer2index, layer3index, targetKey)
+        let postAddress = value.filter(item => item !== "all")
+        let arr = []
+        postAddress.forEach(r => {
+            if (r.indexOf("-") !== -1) {
+                arr.push(r.replace("-", ""))
+            } else {
+                arr.push(r)
+            }
+        })
+        console.log(arr,"arr")
+        let that = this;
+        let { id, formRef } = that.props;
+        let rules = formRef.current.getFieldValue(id);
+        //更新参数
+        rules[layer1index][layer2index][layer3index][targetKey] = value ? value : "";
 
+        let obj = {};
+        obj[id] = rules;
+        formRef.current.setFieldsValue(obj);
+        that.forceUpdate();
+        // this.setState({
+        //     address: arr
+        // })
+    }
 }

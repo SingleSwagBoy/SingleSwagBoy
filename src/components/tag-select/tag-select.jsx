@@ -17,13 +17,13 @@ export default class tagSelect extends Component {
         this.formRef = React.createRef();
         this.state = {
             is_open_tags: false,
+            currentId:""
         }
     }
     render() {
         let that = this;
-        let { is_open_tags } = that.state;
+        let { is_open_tags,currentId } = that.state;
         let { tags, tag_select_id, show_extemd_box, btns } = that.props;
-
         let view = '';
         if (tags && tags.length > 0) {
             view = (
@@ -33,9 +33,9 @@ export default class tagSelect extends Component {
                             tags.map((item, index) => {
                                 return (
                                     <div className="custom-tag-item" key={index}>
-                                        <Tag className="custom-tag-pane" color={tag_select_id === index ? 'volcano' : ''} closable
-                                            onClick={() => that.onTagClick(index)} onClose={(e) => { that.onTagDeleteClick(e, index) }}>
-                                            {index + 1}-{item.name}
+                                        <Tag className="custom-tag-pane" color={item.adId === tag_select_id ? 'volcano' : ''} closable
+                                            onClick={() => that.onTagClick(index,item.adId)} onClose={(e) => { that.onTagDeleteClick(e, index,item.adId) }}>
+                                            {index + 1}-{item.adName}
                                         </Tag>
                                     </div>
                                 )
@@ -95,16 +95,19 @@ export default class tagSelect extends Component {
     }
 
     //tag标签被选择
-    onTagClick(index) {
+    onTagClick(index,id) {
         let that = this;
-        that.props.onSelectIdChange(index);
+        that.props.onSelectIdChange(index,id);
+        this.setState({
+            currentId:id
+        })
     }
 
     //删除Tag按钮被点击
-    onTagDeleteClick(e, index) {
+    onTagDeleteClick(e, index,id) {
         e.preventDefault();
         let that = this;
-        that.props.onTabsDeleteClick(index);
+        that.props.onTabsDeleteClick(index,id);
     }
 
     //展开关闭按钮被点击

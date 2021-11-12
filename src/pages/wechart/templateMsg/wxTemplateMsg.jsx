@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-30 11:56:33
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-11-02 19:19:52
+ * @LastEditTime: 2021-11-03 11:52:22
  * @Description: 微信支付模板消息
  */
 
@@ -93,7 +93,7 @@ export default class WxPayTemplate extends Component {
                 } />
 
                 <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1000, y: '75vh' }} />
-                <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
+                <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
                     footer={[
                         <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
                         <Button onClick={() => that.onModalConfirmClick()} >确定</Button>
@@ -575,7 +575,6 @@ export default class WxPayTemplate extends Component {
 
             data.start_time = start_end_time[0].valueOf();
             data.end_time = start_end_time[1].valueOf();
-
         }
 
         //小程序配置
@@ -584,6 +583,16 @@ export default class WxPayTemplate extends Component {
             pagepath: data.pagepath,
         };
         data.mini_config = JSON.stringify(mini_config);
+
+        let tag = data.tag;
+        if (!tag) tag = '';
+        //
+        else if (tag.constructor === Array) {
+            if (tag.length > 0) tag = tag.join(',');
+            else tag = '';
+        }
+        data.tag = tag;
+
 
         let id = data.id;
 

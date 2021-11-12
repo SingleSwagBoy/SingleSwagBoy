@@ -28,6 +28,7 @@ const Recommend = lazy(() => import('pages/adManage/recommend/recommend.jsx'));
 const MenuImage = lazy(() => import('pages/adManage/menuImage/menuImage.jsx'));
 const CustomAdTag = lazy(() => import('pages/adManage/customAdTag/index.jsx'));
 const AdGroup = lazy(() => import('pages/adManage/adGroup/adGroup.jsx'));
+const MaterialLibrary = lazy(() => import('pages/adManage/materialLibrary/index.jsx'));
 const Voting = lazy(() => import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(() => import('pages/channelManage/channelLock/index.jsx'))
 const LivePreview = lazy(() => import('pages/channelManage/livePreview/index.jsx'))
@@ -45,9 +46,16 @@ const OffineConfig = lazy(() => import('pages/configManage/offlineConfig/offline
 const WxMsg = lazy(() => import('pages/weChatManage/WxMsg/index.jsx'))
 
 const EarnIncentiveTask = lazy(() => import('pages/earnManage/earnIncentiveTask/index.jsx'))
+const WithdrawalGoodsList = lazy(() => import('pages/earnManage/withdrawalGoodsList/index.jsx'))
+const RefreshInventory = lazy(() => import('pages/earnManage/refreshInventory/index.jsx'))
+const WithdrawalConfig = lazy(() => import('pages/earnManage/withdrawalConfig/index.jsx'))
+const Notice = lazy(() => import('pages/earnManage/notice/index.jsx'))
 const WhiteList = lazy(() => import('pages/configManage/whiteList/index.jsx'))
 const RiskAreaConfig = lazy(() => import('pages/configManage/riskAreaConfig/riskAreaConfig.jsx'));
 const TagConfig = lazy(() => import('pages/configManage/tagConfig/tagConfig.jsx'));
+const ChannelShortVideoList = lazy(() => import('pages/configManage/channelShortVideoList/index.jsx'));
+const ShortListConfig = lazy(() => import('pages/configManage/shortListConfig/index.jsx'));
+const RecommendConfig = lazy(() => import('pages/configManage/recommendConfig/index.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
 const LuckyDraw=lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
 const GoodsConfig=lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
@@ -99,6 +107,7 @@ const adminRoutes = [
     { name: '菜单栏图片配置', component: MenuImage, path: '/mms/adManage/menuImage', icon: UnorderedListOutlined, code: "adManage", sub_code: 'menuImage' },
     { name: '自定义规则标签', component: CustomAdTag, path: '/mms/ad/customAdTag', icon: UnorderedListOutlined, code: "adManage", sub_code: 'customAdTag' },
     { name: '广告组', component: AdGroup, path: '/mms/adManage/adGroup', icon: UnorderedListOutlined, code: "adManage", sub_code: 'adGroup' },
+    { name: '素材库', component: MaterialLibrary, path: '/mms/adManage/materialLibrary', icon: UnorderedListOutlined, code: "adManage", sub_code: 'adGroup' },
 
     //用户权限相关
     { name: '角色列表', icon: UnorderedListOutlined, path: '/mms/sys/role', component: SysRole, code: "sessionManage", sub_code: 'sysRole' },
@@ -115,6 +124,9 @@ const adminRoutes = [
     { name: '停服下线通知配置', icon: UnorderedListOutlined, path: '/mms/config/offlineConfig', component: OffineConfig, code: "configManage", sub_code: 'offlineConfig' },
     { name: '风险地域配置', icon: UnorderedListOutlined, path: '/mms/config/riskAreaConfig', component: RiskAreaConfig, code: "configManage", sub_code: 'riskAreaConfig' },
     { name: '标签配置', icon: UnorderedListOutlined, path: '/mms/config/tagConfig', component: TagConfig, code: "configManage", sub_code: 'tagConfig' },
+    { name: '节目单视频集配置', icon: UnorderedListOutlined, path: '/mms/config/channelShortVideoList', component: ChannelShortVideoList, code: "configManage", sub_code: 'channelShortVideoList' },
+    { name: '短视频集配置', icon: UnorderedListOutlined, path: '/mms/config/shortListConfig', component: ShortListConfig, code: "configManage", sub_code: 'shortListConfig' },
+    { name: '首页为你推荐配置', icon: UnorderedListOutlined, path: '/mms/config/recommendConfig', component: RecommendConfig, code: "configManage", sub_code: 'recommendConfig' },
 
 
 
@@ -125,7 +137,10 @@ const adminRoutes = [
 
     //  赚赚管理
     { name: '赚赚激励任务', icon: UnorderedListOutlined, path: '/mms/earnManage/earnIncentiveTask', component: EarnIncentiveTask, code: "earnManage", sub_code: 'earnIncentiveTask' },
-
+    { name: '提现商品列表', icon: UnorderedListOutlined, path: '/mms/earnManage/withdrawalGoodsList', component: WithdrawalGoodsList, code: "earnManage", sub_code: 'withdrawalGoodsList' },
+    { name: '刷新库存', icon: UnorderedListOutlined, path: '/mms/earnManage/refreshInventory', component: RefreshInventory, code: "earnManage", sub_code: 'refreshInventory' },
+    { name: '随机提现配置', icon: UnorderedListOutlined, path: '/mms/earnManage/withdrawalConfig', component: WithdrawalConfig, code: "earnManage", sub_code: 'withdrawalConfig' },
+    { name: '公告', icon: UnorderedListOutlined, path: '/mms/earnManage/notice', component: Notice, code: "earnManage", sub_code: 'notice' },
 
     //电视节目单配置
     { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },

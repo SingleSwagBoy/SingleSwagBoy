@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-16 14:01:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-11-02 19:08:49
+ * @LastEditTime: 2021-11-03 11:50:08
  * @Description: 用户标签 - 投放类型 组合控件
  * 
  * 不传不显示下面对应的参数 不传时，获取数据也不会获取到对应参数
@@ -86,7 +86,7 @@ export default class TagTypes extends Component {
 
                     {tag_name &&
                         <Form.Item label='用户标签' name={tag_name} >
-                            <Select className="base-input-wrapper" mode={is_old_tag_resouce ? 'multiple' : true} showSearch placeholder="请选择用户设备标签"
+                            <Select className="base-input-wrapper" mode={is_old_tag_resouce ? 'multiple' : true} allowClear showSearch placeholder="请选择用户设备标签"
                                 filterOption={(input, option) => {
                                     if (!input) return true;
                                     let children = option.children;

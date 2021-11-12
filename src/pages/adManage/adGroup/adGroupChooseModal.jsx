@@ -14,7 +14,8 @@ import { Input, Form, DatePicker, Button, Table, Modal, Checkbox, Select, messag
 import moment from 'moment';
 import '@/style/base.css';
 import {
-    requestAdRightKey   //获取广告素材 获取右下角广告素材
+    requestAdRightKey,   //获取广告素材 获取右下角广告素材
+    getScreen
 } from 'api';
 
 let { RangePicker } = DatePicker;
@@ -35,7 +36,10 @@ export default class adCreateModal extends Component {
                 is_show: false,
                 title: '',
             },
-
+            adIndex: 1,
+            searchWords: "",
+            tagList: [], //父组件传过来的已经被选择的素材
+            checkedList: []
         }
     }
     render() {
@@ -51,7 +55,20 @@ export default class adCreateModal extends Component {
                             <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
                             <Button onClick={() => that.onModalConfirmClick()}>选择</Button>
                         ]}>
+                        <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center', marginBottom: "20px" }}>
+                            <div style={{ width: "100px" }}>广告名称:</div>
+                            <Input.Search key={this.state.searchWords} allowClear placeholder="请输入广告名称" style={{ width: "400px" }} defaultValue={this.state.searchWords}
+                                onSearch={(val) => {
+                                    this.setState({
+                                        page: 1,
+                                        searchWords: val
+                                    }, () => {
+                                        this.refreshList(this.state.adIndex, this.state.checkedList)
+                                    })
 
+                                }}
+                            />
+                        </div>
                         <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '70vh' }} />
 
                     </Modal>
@@ -81,10 +98,19 @@ export default class adCreateModal extends Component {
     //弹出框确定按钮被点击
     onModalConfirmClick() {
         let that = this;
+        // let arr = this.state.table_box.table_datas
+        // let info = arr.filter(item => item.checked)
+        this.props.onGetInfo(this.state.checkedList);
+        that.setState({
+            modal_box: {
+                is_show: false,
+                title: '',
+            }
+        })
     }
 
     //展示对话框
-    showModal(data) {
+    showModal(data, adIndex, tagList) {
         let that = this;
         let { table_box, modal_box } = that.state;
         modal_box.is_show = true;
@@ -96,20 +122,39 @@ export default class adCreateModal extends Component {
                 render: (rowValue, row, index) => {
                     return <Checkbox checked={row.checked} onChange={(e) => {
                         let check = e.target.checked;
-                        let { table_box } = that.state;
-                        let datas = table_box.table_datas;
-                        for (let i = 0, len = datas.length; i < len; i++) {
-                            let item = datas[i];
-                            item.checked = false;
+                        let arr = this.state.checkedList
+                        if (check) {
+                            this.setState({
+                                checkedList: [...arr, row]
+                            })
+                        } else {
+                            this.setState({
+                                checkedList: arr.filter(r => r.id != row.id && r.adId != row.id)
+                            })
                         }
-
+                        console.log(this.state.checkedList, "checkedList")
                         row.checked = check;
-                        that.forceUpdate();
+                        // that.forceUpdate();
                     }} />
                 }
             },
             { title: '素材名称', dataIndex: 'name', key: 'name', width: 300, },
-            { title: '类型', dataIndex: 'type', key: 'type', width: 100, },
+            {
+                title: '类型', dataIndex: 'adType', key: 'adType', width: 200,
+                render: (rowValue, row, index) => {
+                    return (
+                        <div>
+                        {
+                            adIndex == 1 
+                            ?  
+                            <div>{row.type == 0 ? "通用" : row.type == 1 ? "家庭号" : row.type == 2 ? "公众号登陆" : row.type == 3 ? "小程序登陆" : "未知"}</div>
+                            :
+                            <div>{rowValue == 1 ? "普通级别" : rowValue == 2 ? "宣传内容" : "未知"}</div>
+                        }
+                        </div>
+                    )
+                }
+            },
             {
                 title: '缩略图', dataIndex: 'iconPicUrl', key: 'iconPicUrl', width: 150,
                 render: (rowValue, row, index) => {
@@ -138,28 +183,73 @@ export default class adCreateModal extends Component {
         ];
 
         table_box.table_title = table_title;
-
         that.setState({
             modal_box: modal_box,
             table_box: table_box,
+            adIndex: adIndex,
+            tagList: tagList,
+            checkedList: tagList,
+            searchWords: "",
         }, () => {
             that.forceUpdate();
-            that.refreshList();
-
+            that.refreshList(adIndex, tagList);
         })
 
     }
 
-    refreshList() {
+    refreshList(index, tagList) {
+        if (index == 1) {
+            this.requestAdRightKey(tagList)
+        } else {
+            this.getScreen(tagList)
+        }
+    }
+    requestAdRightKey(tagList) {
+        let that = this;
+        let { table_box } = that.state;
+        console.log(tagList, "tagList")
+        let obj = {
+            page: { currentPage: 1, pageSize: 10000 },
+            name: this.state.searchWords
+        };
+        requestAdRightKey(obj).then(res => {
+            table_box.table_datas = res.data.filter(r => r.status == 1);
+            if (tagList.length > 0) {
+                table_box.table_datas.forEach(r => {
+                    tagList.forEach(l => {
+                        if (l.adId == r.id || l.id == r.id) {
+                            r.checked = true
+                        }
+                    })
+                })
+            }
+            that.setState({
+                table_box: table_box,
+            })
+
+            this.forceUpdate()
+        })
+    }
+    getScreen(tagList) {
         let that = this;
         let { table_box } = that.state;
 
         let obj = {
-            page: { currentPage: 1, pageSize: 10000 }
+            page: { currentPage: 1, pageSize: 10000 },
+            name: this.state.searchWords
         };
-        requestAdRightKey(obj).then(res => {
+        getScreen(obj).then(res => {
 
-            table_box.table_datas = res.data;
+            table_box.table_datas = res.data.filter(r => r.status == 1);
+            if (tagList.length > 0) {
+                table_box.table_datas.forEach(r => {
+                    tagList.forEach(l => {
+                        if (l.adId == r.id) {
+                            r.checked = true
+                        }
+                    })
+                })
+            }
             that.setState({
                 table_box: table_box,
             })

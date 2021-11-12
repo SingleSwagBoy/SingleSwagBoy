@@ -20,14 +20,16 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen,screenCopy,adRightKeyCopy
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
 let { RangePicker } = DatePicker;
 let { Option } = Select;
 
-
+let privateData = {
+    inputTimeOutVal: null
+};
 export default class adCreateModal extends Component {
 
     constructor(props) {
@@ -56,10 +58,10 @@ export default class adCreateModal extends Component {
                     title: '类型', dataIndex: 'type', key: 'type', width: 200,
                     render: (rowValue, row, index) => {
                         return (
-                            this.state.adIndex == 1?
-                            <div>{rowValue == 0 ? "通用" : rowValue == 1 ? "家庭号" : rowValue == 2 ? "公众号登陆" : rowValue == 3 ? "小程序登陆" : "未知"}</div>
-                            :
-                            <div>{row.adType == 1 ? "普通级别" : row.adType == 2 ? "宣传内容" : "未知"}</div>
+                            this.state.adIndex == 1 ?
+                                <div>{rowValue == 0 ? "通用" : rowValue == 1 ? "家庭号" : rowValue == 2 ? "公众号登陆" : rowValue == 3 ? "小程序登陆" : "未知"}</div>
+                                :
+                                <div>{row.adType == 1 ? "普通级别" : row.adType == 2 ? "宣传内容" : "未知"}</div>
                         )
                     }
                 },
@@ -98,9 +100,9 @@ export default class adCreateModal extends Component {
                                 onChange={(val) => {
                                     if (val) row.status = 1
                                     else row.status = 2
-                                    if(this.state.adIndex == 1){
+                                    if (this.state.adIndex == 1) {
                                         this.adRightKeyUpdateState(row)
-                                    }else{
+                                    } else {
                                         this.screenUpdateState(row)
                                     }
                                 }}
@@ -113,7 +115,7 @@ export default class adCreateModal extends Component {
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                                 <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
+                                <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
                                     if (this.state.adIndex == 1) {
                                         this.adRightKeyCopy(row)
                                     } else {
@@ -131,8 +133,8 @@ export default class adCreateModal extends Component {
                                     }, () => {
                                         let obj = JSON.parse(JSON.stringify(row))
                                         obj.time = [moment(obj.startTime), moment(obj.endTime)]
-                                        obj.djsEndTime = obj.djsEndTime?moment(obj.djsEndTime):""
-                                        obj.status = obj.status == 1 ?true : false
+                                        obj.djsEndTime = obj.djsEndTime ? moment(obj.djsEndTime) : ""
+                                        obj.status = obj.status == 1 ? true : false
                                         this.formRef.current.setFieldsValue(obj)
                                         this.forceUpdate()
                                     })
@@ -170,8 +172,8 @@ export default class adCreateModal extends Component {
                                     onChange={(val) => {
                                         this.setState({
                                             adIndex: val,
-                                            page:1
-                                        },()=>{
+                                            page: 1
+                                        }, () => {
                                             this.refreshList(val)
                                         })
                                     }}
@@ -262,14 +264,27 @@ export default class adCreateModal extends Component {
                                             <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                                         </Form.Item>
                                         <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
-                                            <MyImageUpload
-                                                getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
-                                                imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
+                                            <div>
+                                                <MyImageUpload
+                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
+                                                    imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
+                                                <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('picUrl')} key={that.getUploadFileImageUrlByType('picUrl') || ""}
+                                                    onChange={(e) => {
+                                                        this.getNewUrl("picUrl", e.target.value)
+                                                    }} />
+                                            </div>
                                         </Form.Item>
                                         <Form.Item label="缩略图" name="iconPicUrl" rules={[{ required: true }]}>
-                                            <MyImageUpload
-                                                getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('iconPicUrl', file, newItem) }}
-                                                imageUrl={that.getUploadFileImageUrlByType('iconPicUrl')} />
+                                            <div>
+                                                <MyImageUpload
+                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('iconPicUrl', file, newItem) }}
+                                                    imageUrl={that.getUploadFileImageUrlByType('iconPicUrl')} />
+                                                <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('iconPicUrl')} key={that.getUploadFileImageUrlByType('iconPicUrl') || ""}
+                                                    onChange={(e) => {
+                                                        this.getNewUrl("iconPicUrl", e.target.value)
+                                                    }}
+                                                />
+                                            </div>
                                         </Form.Item>
                                         <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
                                             <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
@@ -293,9 +308,17 @@ export default class adCreateModal extends Component {
                                             <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                                         </Form.Item>
                                         <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
-                                            <MyImageUpload
-                                                getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
-                                                imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
+
+                                            <div>
+                                                <MyImageUpload
+                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
+                                                    imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
+                                                <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('picUrl')} key={that.getUploadFileImageUrlByType('picUrl')}
+                                                    onChange={(e) => {
+                                                        this.getNewUrl("picUrl", e.target.value)
+                                                    }}
+                                                />
+                                            </div>
                                         </Form.Item>
                                         {/* <Form.Item label="缩略图" name="iconPicUrl" rules={[{ required: true }]}>
                                                 <MyImageUpload
@@ -331,6 +354,17 @@ export default class adCreateModal extends Component {
     componentDidMount() {
         let that = this;
         that.refreshList(1);
+    }
+    getNewUrl(name, val) {
+        if (privateData.inputTimeOutVal) {
+            clearTimeout(privateData.inputTimeOutVal);
+            privateData.inputTimeOutVal = null;
+        }
+        privateData.inputTimeOutVal = setTimeout(() => {
+            if (!privateData.inputTimeOutVal) return;
+            this.formRef.current.setFieldsValue({[name]: val })
+            this.forceUpdate()
+        }, 1000)
     }
     changeSize = (page, pageSize) => {
         // 分页获取
@@ -413,14 +447,12 @@ export default class adCreateModal extends Component {
     }
     //获取上传文件
     getUploadFileUrl(type, file, newItem) {
+        // console.log(type, file,newItem,"newItem")
         let that = this;
-
-
-        let image_url = newItem.fileUrl;
-        let obj = {};
-        obj[type] = image_url;
-
-        that.formRef.current.setFieldsValue(obj);
+        let image_url = file;
+        // let obj = {};
+        // obj[type] = image_url;
+        that.formRef.current.setFieldsValue({[type]:image_url});
         that.forceUpdate();
     }
     //获取上传文件图片地址 
@@ -429,30 +461,30 @@ export default class adCreateModal extends Component {
         let image_url = that.formRef.current.getFieldValue(type);
         return image_url ? image_url : '';
     }
-    adRightKeyUpdateState(val){
+    adRightKeyUpdateState(val) {
         let params = {
             ...val,
         }
         adRightKeyUpdate(params).then(res => {
-            
+
         })
     }
-    screenUpdateState(val){
+    screenUpdateState(val) {
         let params = {
             ...val,
         }
         screenUpdate(params).then(res => {
-           
+
         })
     }
     adRightKeyUpdate(val) {
         let params = {
             ...this.state.currentItem,
             ...val,
-            startTime: val.time?val.time[0].valueOf():val.startTime,
-            endTime: val.time?val.time[1].valueOf():val.endTime,
+            startTime: val.time ? val.time[0].valueOf() : val.startTime,
+            endTime: val.time ? val.time[1].valueOf() : val.endTime,
             djsEndTime: val.djsEndTime.valueOf(),
-            status:val.status ? 1 : 2
+            status: val.status ? 1 : 2
         }
         delete params.time
         adRightKeyUpdate(params).then(res => {
@@ -464,9 +496,9 @@ export default class adCreateModal extends Component {
         let params = {
             ...this.state.currentItem,
             ...val,
-            startTime: val.time?val.time[0].valueOf():val.startTime,
-            endTime: val.time?val.time[1].valueOf():val.endTime,
-            status:val.status ? 1 : 2
+            startTime: val.time ? val.time[0].valueOf() : val.startTime,
+            endTime: val.time ? val.time[1].valueOf() : val.endTime,
+            status: val.status ? 1 : 2
         }
         delete params.time
         screenUpdate(params).then(res => {
@@ -496,16 +528,16 @@ export default class adCreateModal extends Component {
             onOk: () => {
                 adRightKeyDel({ id: id }).then(res => {
                     message.success("删除成功")
-                    if(this.state.lists.length == 1 && this.state.page > 1){
+                    if (this.state.lists.length == 1 && this.state.page > 1) {
                         this.setState({
-                            page:this.state.page - 1
-                        },()=>{
+                            page: this.state.page - 1
+                        }, () => {
                             this.refreshList(1)
                         })
-                    }else{
+                    } else {
                         this.refreshList(1)
                     }
-                   
+
                 })
             },
             onCancel: () => {
@@ -518,8 +550,8 @@ export default class adCreateModal extends Component {
             ...val,
             startTime: val.time[0].valueOf(),
             endTime: val.time[1].valueOf(),
-            djsEndTime: val.djsEndTime?val.djsEndTime.valueOf():"",
-            status:val.status ? 1 : 2
+            djsEndTime: val.djsEndTime ? val.djsEndTime.valueOf() : "",
+            status: val.status ? 1 : 2
         }
         addAdRightKey(param).then(res => {
             message.success("新增成功")
@@ -531,14 +563,14 @@ export default class adCreateModal extends Component {
             ...val,
             startTime: val.time[0].valueOf(),
             endTime: val.time[1].valueOf(),
-            status:val.status ? 1 : 2
+            status: val.status ? 1 : 2
         }
         addScreen(param).then(res => {
             message.success("新增成功")
             this.refreshList(2)
         })
     }
-    adRightKeyCopy(val){
+    adRightKeyCopy(val) {
         let param = {
             ...val,
         }
@@ -547,7 +579,7 @@ export default class adCreateModal extends Component {
             this.refreshList(1)
         })
     }
-    screenCopy(val){
+    screenCopy(val) {
         let param = {
             ...val,
         }

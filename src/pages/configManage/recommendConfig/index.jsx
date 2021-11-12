@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import {  searchShortList, getSuggest, addSuggest, updateSuggest, delShortList } from 'api'
-import { Breadcrumb, Card, TimePicker, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
+import { searchShortList, getSuggest, addSuggest, updateSuggest, getChannel } from 'api'
+import { Breadcrumb, Card, TimePicker, Button, message, Table, Modal, DatePicker, Form, Select, Checkbox } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import { MySyncBtn } from "@/components/views.js"
@@ -9,7 +9,10 @@ import util from 'utils'
 import "./style.css"
 let { RangePicker } = DatePicker;
 let format = "YYYY-MM-DD HH:mm:ss"
-const { Option } = Select;export default class EarnIncentiveTask extends React.Component {
+let privateData = {
+    inputTimeOutVal: null
+};
+const { Option } = Select; export default class EarnIncentiveTask extends React.Component {
     formRef = React.createRef();
     constructor(props) {
         super(props);
@@ -31,6 +34,16 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
             tagList: [],
             currentItem: "",
             source: "",
+            channel_list: [],
+            selectProps: {
+                optionFilterProp: "children",
+                filterOption(input, option) {
+                    return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                },
+                showSearch() {
+                    console.log('onSearch')
+                }
+            },
             columns: [
                 {
                     title: "位置",
@@ -46,10 +59,14 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
                     title: "替换时间",
                     dataIndex: "start",
                     key: "start",
-                    width:400,
+                    width: 400,
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{row.start} - {row.end}</div>
+                            rowValue ?
+                                <div>{row.start} - {row.end}</div>
+                                :
+                                <div>长期</div>
+
                         )
                     }
                 },
@@ -66,14 +83,15 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
                                     size="small"
                                     type="primary"
                                     onClick={() => {
-                                        console.log(row)
                                         this.setState({
                                             entranceState: true,
                                             currentItem: row,
                                             source: "edit"
                                         }, () => {
                                             let arr = JSON.parse(JSON.stringify(row))
-                                            arr.time = [moment(arr.start),moment(arr.end)]
+                                            arr.time = [arr.start ? moment(arr.start) : "", arr.end ? moment(arr.end) : ""]
+                                            arr.checked = arr.start ? false : true
+                                            console.log(arr)
                                             this.formRef.current.setFieldsValue(arr)
                                             this.forceUpdate()
                                         })
@@ -92,13 +110,13 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
         }
     }
     render() {
-        let {  lists, layout, loading, columns, entranceState, shortList } = this.state;
+        let { lists, layout, loading, columns, entranceState, channel_list } = this.state;
         return (
             <div>
                 <Card title={
                     <div>
                         <Breadcrumb>
-                            <Breadcrumb.Item>节目单视频集配置</Breadcrumb.Item>
+                            <Breadcrumb.Item>首页为你推荐配置</Breadcrumb.Item>
                         </Breadcrumb>
                     </div>
                 }
@@ -114,6 +132,7 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
                                     })
                                 }}
                             >新增</Button>
+                            <MySyncBtn type={16} name='同步缓存' />
                         </div>
                     }
                 >
@@ -138,11 +157,61 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
                             <Form.Item label="展示频道" name="channelId" rules={[{ required: true, message: '请选择视频集名称' }]}>
-                                <Input placeholder="请选择视频集名称" />
+                                {/* <Input placeholder="请选择视频集名称" /> */}
+                                <Select
+                                    placeholder="请选择频道配置"
+                                    // mode="multiple"
+                                    allowClear
+                                    {...this.state.selectProps}
+                                    onSearch={(val) => {
+                                        console.log(val)
+                                        if (privateData.inputTimeOutVal) {
+                                            clearTimeout(privateData.inputTimeOutVal);
+                                            privateData.inputTimeOutVal = null;
+                                        }
+                                        privateData.inputTimeOutVal = setTimeout(() => {
+                                            if (!privateData.inputTimeOutVal) return;
+                                            this.getChannel(val)
+                                        }, 1000)
+                                    }}
+                                >
+                                    {
+                                        channel_list.map((r, i) => {
+                                            return <Option value={r.code} key={r.id}>{r.name + "----" + r.code}</Option>
+                                        })
+                                    }
+
+                                </Select>
                             </Form.Item>
-                            <Form.Item label="展示时间段" name="time" rules={[{ required: true, message: '请选择视频集名称' }]}>
-                                <RangePicker placeholder={['上线时间', '下线时间']} showTime ></RangePicker>
+                            <Form.Item label="展示时间段" style={{ display: "flex" }}>
+                                <Form.Item name="time" >
+                                    <RangePicker placeholder={['上线时间', '下线时间']} showTime onChange={(e) => {
+                                        console.log(e)
+                                        if (e && e[1]) {
+                                            this.formRef.current.setFieldsValue({ "checked": false })
+                                        } else {
+                                            this.formRef.current.setFieldsValue({ "checked": true })
+
+                                        }
+                                        this.forceUpdate()
+                                    }} ></RangePicker>
+                                </Form.Item>
+                                <Form.Item name="checked">
+                                    <Checkbox valuePropName="checked" checked={(this.formRef.current && this.formRef.current.getFieldValue("checked"))} onChange={val => {
+                                        console.log(val.target.checked)
+                                        if (val.target.checked) {
+                                            this.formRef.current.setFieldsValue({ "star": "", "end": "", time: ["", ""]})
+                                        }else{
+                                            this.formRef.current.setFieldsValue({ time: ""})
+                                        }
+                                        this.formRef.current.setFieldsValue({checked: val.target.checked })
+                                        this.forceUpdate()
+                                    }}>
+                                        长期
+                                    </Checkbox>
+                                </Form.Item>
                             </Form.Item>
+
                             <Form.Item {...this.state.tailLayout}>
                                 <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
                                 <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
@@ -166,6 +235,20 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
             pageSize: pageSize
         }, () => {
             this.getProgramlist()
+        })
+    }
+    getChannel(val) {
+        let params = {
+            keywords: val,
+        }
+        //获取频道组
+        getChannel(params).then(res => {
+            let errCode = res.data.errCode;
+            if (errCode === 0) {
+                this.setState({
+                    channel_list: res.data.data,
+                })
+            }
         })
     }
     // searchShortList(keyword,index) {
@@ -197,7 +280,9 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
     // }
     submitForm(val) {   // 提交表单
         console.log(val)
-       
+        if (!val.time && !val.checked) {
+            return message.error("请选择时间段")
+        }
         if (this.state.source == "edit") {
             this.updateSuggest(val)
         } else {
@@ -224,19 +309,21 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
     }
     addSuggest(val) {
         let params = {
-            ...val
+            ...val,
+            start: (val.time && val.time[0])?moment(val.time[0]).format(format):"",
+            end: (val.time && val.time[1])?moment(val.time[1]).format(format):""
         }
         addSuggest(params).then(res => {
             this.getSuggest()
             message.success("新增成功")
         })
     }
-    updateSuggest(val){
+    updateSuggest(val) {
         let params = {
             ...this.state.currentItem,
             ...val,
-            start: moment(val.time[0]).format(format),
-            end: moment(val.time[1]).format(format)
+            start: (val.time && val.time[0])?moment(val.time[0]).format(format):"",
+            end: (val.time && val.time[1])?moment(val.time[1]).format(format):""
         }
         updateSuggest(params).then(res => {
             this.getSuggest()

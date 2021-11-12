@@ -24,6 +24,7 @@ import {
     syncZzItemList,                 // 赚赚提现商品同步
     syncZZShow,                     //公告和随机金额配置同步
     syncProgramList,                //节目单视频集配置
+    syncSuggest,                    //首页为你推荐
 } from 'api'
 
 
@@ -59,6 +60,7 @@ export default class SyncBtn extends Component {
         if (type === 13) return syncZzItemList();                               //提现商品列表
         if (type === 14) return syncZZShow(params);                             //公告和随机金额配置
         if (type === 15) return syncProgramList(params);                              //节目单视频集配置
+        if (type === 16) return syncSuggest();                                 //首页为你推荐
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

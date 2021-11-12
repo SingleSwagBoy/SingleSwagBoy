@@ -338,6 +338,7 @@ export const delShortList = (params) => { return request.get(`${baseUrl}/mms/cha
 export const getSuggest = (params) => { return request.get(`${baseUrl}/mms/channel/home/suggest/list`,{ params: params }); };                 // 首页为你推荐列表
 export const addSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/add`,params); };                 // 首页为你推荐列表
 export const updateSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/update`,params); };                 // 首页为你推荐列表
+export const syncSuggest = (params) => { return request.get(`${baseUrl}/mms/channel/home/suggest/sync`,{ params: params }); };                 // 首页为你推荐列表同步
 
 
 

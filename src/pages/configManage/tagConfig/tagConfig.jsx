@@ -154,13 +154,13 @@ export default class tagConfig extends Component {
                 }
             },
             {
-                title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 160,
+                title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 260,
                 render: (rowValue, row, index) => {
                     return (
                         <div>
+                            <Button size='small' onClick={() => that.onItemCopyClick(row)} style={{ marginLeft: 3 }}>复制</Button>
                             <Button size='small' onClick={() => that.onItemEditClick(row)} style={{ marginLeft: 3 }}>编辑</Button>
                             <Button size='small' onClick={() => that.onItemDeleteClick(row)} style={{ marginLeft: 3 }}>删除</Button>
-                            {/* <Button size='small' onClick={() => that.onItemQueryClick(row)} style={{ marginLeft: 3 }}>EsQuery</Button> */}
                         </div>
                     );
                 }
@@ -258,8 +258,17 @@ export default class tagConfig extends Component {
         })
 
     }
-    //item EsQuery 被点击
-    onItemQueryClick() { }
+    //item 复制 被点击
+    onItemCopyClick(val) {
+        let params={
+            ...val
+        }
+        delete params.id
+        delete params.code
+        requestNewAdTagCreate(params).then(res => {
+            this.refreshList();
+        })
+    }
 
     //弹出框取消按钮被点击
     onModalCancelClick() {

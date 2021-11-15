@@ -200,9 +200,10 @@ export default class TagTypes extends Component {
             if (union) {
                 obj[union_type] = union;
             } else {
-                if(!value[tag_name]){
+                if(!value[tag_name] || value[tag_name].length ==0){
                     return
                 }
+                console.log(value[tag_name])
                 message.error('请选择标签判断逻辑')
             }
         }

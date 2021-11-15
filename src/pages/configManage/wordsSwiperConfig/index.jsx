@@ -65,6 +65,7 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "轮播内容",
                     dataIndex: "content",
                     key: "content",
+                    ellipsis: true,
                 },
                 {
                     title: "上线时间",
@@ -90,6 +91,11 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "跳转类型",  // //1:android,2:ios,3:全端
                     dataIndex: "jumpType",
                     key: "jumpType",
+                    render: (rowValue, row, index) => {
+                        return (
+                            <div>{rowValue == 0 ? "无" :rowValue == 1 ? "短视频":rowValue == 2 ? "频道":rowValue == 3 ? "节目单详情页":""}</div>
+                        )
+                    }
                 },
                 {
                     title: "状态",  //上下线状态(1上线2下线)

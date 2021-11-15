@@ -359,7 +359,7 @@ export default class adGroup extends Component {
 
                 }
             },
-            { title: '备注', dataIndex: 'remark', key: 'remark', width: 200, },
+            { title: '备注', dataIndex: 'remark', key: 'remark', width: 200,ellipsis: true, },
             {
                 title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 210,
                 render: (rowValue, row, index) => {

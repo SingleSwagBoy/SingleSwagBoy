@@ -350,6 +350,14 @@ export const setImageWordsConfig = (params) => { return request.get(`${baseUrl}/
 export const syncWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/sync`,{ params: params }); };                 // 首页文字轮播配置列表
 
 
+//首页直播配置
+export const getHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/list`,{ params: params }); };                 // 首页直播配置列表
+export const uploadHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/update`,{ params: params }); };                 // 首页直播配置列表
+export const getStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/status`,{ params: params }); };                 // 首页直播配置列表
+export const setStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/setstatus`,{ params: params }); };                 // 首页直播配置列表
+export const syncHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/sync`,{ params: params }); };                 // 首页直播配置列表
+
+
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

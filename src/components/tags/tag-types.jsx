@@ -193,13 +193,16 @@ export default class TagTypes extends Component {
         let viewFormRef = that.viewFormRef;
         let value = viewFormRef.current.getFieldsValue();
         let obj = {};
-
+        console.log(union_type,value,"union_type")
         //标签判断逻辑
         if (union_type) {
             let union = value[union_type];
             if (union) {
                 obj[union_type] = union;
             } else {
+                if(!value[tag_name]){
+                    return
+                }
                 message.error('请选择标签判断逻辑')
             }
         }

@@ -340,6 +340,15 @@ export const addSuggest = (params) => { return request.post(`${baseUrl}/mms/chan
 export const updateSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/update`,params); };                 // 首页为你推荐列表
 export const syncSuggest = (params) => { return request.get(`${baseUrl}/mms/channel/home/suggest/sync`,{ params: params }); };                 // 首页为你推荐列表同步
 
+//首页文字轮播配置
+export const getWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/list`,{ params: params }); };                 // 首页文字轮播配置列表
+export const uploadWordsConfig = (params) => { return request.post(`${baseUrl}/mms/channel/home/text/update`,params); };                 // 首页文字轮播配置列表
+export const addWordsConfig = (params) => { return request.post(`${baseUrl}/mms/channel/home/text/add`,params); };                 // 首页文字轮播配置列表
+export const delWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/del`,{ params: params }); };                 // 首页文字轮播配置列表
+export const getImageWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/image`,{ params: params }); };                 // 首页文字轮播配置列表
+export const setImageWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/uploadimage`,{ params: params }); };                 // 首页文字轮播配置列表
+export const syncWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/sync`,{ params: params }); };                 // 首页文字轮播配置列表
+
 
 
 //广告-二维码套餐类型

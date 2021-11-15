@@ -56,6 +56,7 @@ const TagConfig = lazy(() => import('pages/configManage/tagConfig/tagConfig.jsx'
 const ChannelShortVideoList = lazy(() => import('pages/configManage/channelShortVideoList/index.jsx'));
 const ShortListConfig = lazy(() => import('pages/configManage/shortListConfig/index.jsx'));
 const RecommendConfig = lazy(() => import('pages/configManage/recommendConfig/index.jsx'));
+const WordsSwiperConfig = lazy(() => import('pages/configManage/wordsSwiperConfig/index.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
 const LuckyDraw=lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
 const GoodsConfig=lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
@@ -127,6 +128,7 @@ const adminRoutes = [
     { name: '节目单视频集配置', icon: UnorderedListOutlined, path: '/mms/config/channelShortVideoList', component: ChannelShortVideoList, code: "configManage", sub_code: 'channelShortVideoList' },
     { name: '短视频集配置', icon: UnorderedListOutlined, path: '/mms/config/shortListConfig', component: ShortListConfig, code: "configManage", sub_code: 'shortListConfig' },
     { name: '首页为你推荐配置', icon: UnorderedListOutlined, path: '/mms/config/recommendConfig', component: RecommendConfig, code: "configManage", sub_code: 'recommendConfig' },
+    { name: '文字轮播配置', icon: UnorderedListOutlined, path: '/mms/config/wordsSwiperConfig', component: WordsSwiperConfig, code: "configManage", sub_code: 'wordsSwiperConfig' },
 
 
 

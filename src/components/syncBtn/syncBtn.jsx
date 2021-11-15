@@ -25,6 +25,7 @@ import {
     syncZZShow,                     //公告和随机金额配置同步
     syncProgramList,                //节目单视频集配置
     syncSuggest,                    //首页为你推荐
+    syncWordsConfig,                //首页文字轮播同步缓存
 } from 'api'
 
 
@@ -61,6 +62,7 @@ export default class SyncBtn extends Component {
         if (type === 14) return syncZZShow(params);                             //公告和随机金额配置
         if (type === 15) return syncProgramList(params);                              //节目单视频集配置
         if (type === 16) return syncSuggest();                                 //首页为你推荐
+        if (type === 17) return syncWordsConfig();                                 //首页文字轮播同步缓存
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

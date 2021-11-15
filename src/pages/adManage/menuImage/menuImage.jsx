@@ -44,6 +44,9 @@ export default class MenuImagePage extends Component {
                 is_show: false,
                 title: '',
             },
+            page:1,
+            pageSize:50,
+            total:0
         }
     }
 
@@ -61,7 +64,14 @@ export default class MenuImagePage extends Component {
                     </div>
                 } />
 
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }}
+                pagination={{
+                    current: this.state.page,
+                    pageSize: this.state.pageSize,
+                    total: this.state.total,
+                    onChange: this.changeSize,
+                }}
+                />
 
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
                     footer={[
@@ -166,7 +176,13 @@ export default class MenuImagePage extends Component {
     initData() {
         let that = this;
         //用户标签
-        requestAdTagList().then(res => {
+        let params={
+            page:{
+                pageSize:9999,
+                currentPage:1
+            }
+        }
+        requestAdTagList(params).then(res => {
             let datas = res.data;
             let tags = [];
             // tags.push({ id: -1, code: 'default', name: '默认', });
@@ -188,7 +204,7 @@ export default class MenuImagePage extends Component {
 
         let table_title = [
             { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
-            { title: '名字', dataIndex: 'title', key: 'title', width: 200, },
+            { title: '名字', dataIndex: 'title', key: 'title', width: 200,ellipsis: true, },
             // { title: '数据上报key', dataIndex: 'name', key: 'name', width: 200, },
             {
                 title: '标签', dataIndex: 'tag', key: 'tag', width: 300,
@@ -276,7 +292,12 @@ export default class MenuImagePage extends Component {
         that.setState({
             table_box: table_box,
         }, () => {
-            let obj = {};
+            let obj = {
+                page:{
+                    currentPage:this.state.page,
+                    pageSize:this.state.pageSize
+                }
+            };
             requestConfigMenuImageList(obj)
                 .then(res => {
                     console.log(res);
@@ -294,6 +315,7 @@ export default class MenuImagePage extends Component {
                     table_box.table_datas = datas;
                     that.setState({
                         table_box: table_box,
+                        total:res.data.page.totalCount
                     })
                 })
         })
@@ -580,7 +602,16 @@ export default class MenuImagePage extends Component {
                     if (that.formRef && that.formRef.current) {
                         that.formRef.current.resetFields();
                     }
-                    that.refreshList();
+                    if(!id){
+                        this.setState({
+                            page:1
+                        },()=>{
+                            that.refreshList();
+                        })
+                    }else{
+                        that.refreshList();
+                    }
+                   
                 })
             })
             .catch(res => {
@@ -596,5 +627,14 @@ export default class MenuImagePage extends Component {
         })
     }
 
+    changeSize = (page, pageSize) => {
+        // 分页获取
+        this.setState({
+            page,
+            pageSize
+        }, () => {
+            this.refreshList()
+        })
 
+    }
 }

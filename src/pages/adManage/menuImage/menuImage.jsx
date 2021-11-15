@@ -45,7 +45,7 @@ export default class MenuImagePage extends Component {
                 title: '',
             },
             page:1,
-            pageSize:10,
+            pageSize:50,
             total:0
         }
     }

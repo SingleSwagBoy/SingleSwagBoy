@@ -129,7 +129,8 @@ export default class tagConfig extends Component {
                                                                                                 {
                                                                                                     layer3item.field == "region"
                                                                                                     ?
-                                                                                                    <MyAddress onCheckAddress={(e)=>this.onCheckAddress(e, layer1index, layer2index, layer3index, 'value')} defaultAddress={layer3item.value} />
+                                                                                                    <MyAddress onCheckAddress={(e)=>this.onCheckAddress(e, layer1index, layer2index, layer3index, 'value')} defaultAddress={(layer3item.value && !Array.isArray(layer3item.value))?layer3item.value.split(","):layer3item.value} />
+                                                                                                    // <MyAddress onCheckAddress={(e)=>this.onCheckAddress(e, layer1index, layer2index, layer3index, 'value')} defaultAddress={layer3item.value} />
                                                                                                     :
                                                                                                     <Input value={layer3item.value} placeholder="取值" disabled={is_show_only} onChange={(e) => { that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'value') }} />
                                                                                                 }

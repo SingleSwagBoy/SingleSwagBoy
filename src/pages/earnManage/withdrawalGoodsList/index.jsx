@@ -190,9 +190,12 @@ export default class EarnIncentiveTask extends React.Component {
                             name="taskForm"
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
-                            <Form.Item label="价格" name="price" rules={[{ required: true, message: '请填写价格' }]}>
-                                <InputNumber placeholder="请输入商品价格" min={0} style={{ width: "200px" }} />
-                            </Form.Item>
+                            {
+                                this.formRef.current && this.formRef.current.getFieldValue("type") == 1 ?
+                                    <Form.Item label="价格" name="price" rules={[{ required: true, message: '请填写价格' }]}>
+                                        <InputNumber placeholder="请输入商品价格" min={0} style={{ width: "200px" }} />
+                                    </Form.Item> : ""
+                            }
                             <Form.Item label="提现商品名称" name="name" rules={[{ required: true, message: '请填写任务名称' }]}>
                                 <Input placeholder="请输入商品名称" />
                             </Form.Item>
@@ -214,22 +217,8 @@ export default class EarnIncentiveTask extends React.Component {
                             <Form.Item label="上线时间-下线时间" name="time" rules={[{ required: true, message: '请选择上下线时间' }]}>
                                 <RangePicker placeholder={['上线时间', '下线时间']} showTime ></RangePicker>
                             </Form.Item>
-                            {/* {
-                                this.formRef.current && this.formRef.current.getFieldValue("type") == 1
-                                    ?
-                                    <div>
-                                        <Form.Item label="初始库存" name="stock" rules={[{ required: true, message: '请填写初始库存' }]}>
-                                            <InputNumber min={0} />
-                                        </Form.Item>
-                                        <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请填写排序' }]}>
-                                            <InputNumber min={0} />
-                                        </Form.Item>
-                                    </div>
-                                    :
-                                    ""
-                            } */}
                             <div>
-                                <Form.Item label="初始库存" name="stock" rules={[{ required: true, message: '请填写初始库存' }]}>
+                                <Form.Item label="实时库存" name="stock" rules={[{ required: true, message: '请填写实时库存' }]}>
                                     <InputNumber min={0} />
                                 </Form.Item>
                                 <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请填写排序' }]}>
@@ -510,7 +499,7 @@ export default class EarnIncentiveTask extends React.Component {
         if (type == "copy") {
             params = {
                 ...val,
-                manualCode:util.randomWord(false,10)
+                manualCode: util.randomWord(false, 10)
             }
         } else {
             params = {

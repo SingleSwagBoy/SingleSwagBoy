@@ -61,6 +61,8 @@ const HomeBroadcast = lazy(() => import('pages/configManage/homeBroadcast/index.
 const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
 const LuckyDraw=lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
 const GoodsConfig=lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
+// const VipCombo = lazy(() => import('pages/comboManage/vipCombo/index.jsx')); 
+
 
 //用户权限相关
 const SysRole = lazy(() => import('pages/sys/role/role.jsx'));
@@ -145,6 +147,10 @@ const adminRoutes = [
     { name: '刷新库存', icon: UnorderedListOutlined, path: '/mms/earnManage/refreshInventory', component: RefreshInventory, code: "earnManage", sub_code: 'refreshInventory' },
     { name: '随机提现配置', icon: UnorderedListOutlined, path: '/mms/earnManage/withdrawalConfig', component: WithdrawalConfig, code: "earnManage", sub_code: 'withdrawalConfig' },
     { name: '公告', icon: UnorderedListOutlined, path: '/mms/earnManage/notice', component: Notice, code: "earnManage", sub_code: 'notice' },
+
+    //套餐管理
+    // { name: 'VIP会员套餐', icon: UnorderedListOutlined, path: '/mms/comboManage/vipCombo', component: VipCombo, code: "comboManage", sub_code: 'vipCombo' },
+
 
     //电视节目单配置
     { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },

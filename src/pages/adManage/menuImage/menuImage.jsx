@@ -8,7 +8,7 @@
 
 
 import React, { Component } from 'react'
-import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message } from 'antd';
+import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message ,Divider} from 'antd';
 import { MyImageUpload, MyTagTypes, MySyncBtn } from '@/components/views.js';
 import moment from 'moment';
 import '@/style/base.css';
@@ -46,14 +46,15 @@ export default class MenuImagePage extends Component {
             },
             page:1,
             pageSize:50,
-            total:0
+            total:0,
+            positions:[{key:1,value:"左上"},{key:2,value:"左下"},{key:3,value:"中心"},{key:4,value:"右上"},{key:5,value:"右下"},{key:6,value:"垂直居中"},{key:7,value:"横向居中"}]
         }
     }
 
 
     render() {
         let that = this;
-        let { table_box, modal_box } = that.state;
+        let { table_box, modal_box , positions} = that.state;
 
         return (
             <div>
@@ -161,6 +162,37 @@ export default class MenuImagePage extends Component {
                                         <TextArea className="base-input-wrapper" placeholder="请上传未选中焦点图片" onBlur={(e) => that.onInputBlurCallback("no_focus_url", e)} />
                                     </Form.Item>
                                 </Form.Item>
+                                <Divider orientation="left">续费弹窗配置</Divider>
+                                <Form.Item label="开机续费弹窗"  >
+                                    <Form.Item name='powerOnRenewWindow' >
+                                        <MyImageUpload
+                                            getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('powerOnRenewWindow', file, newItem) }}
+                                            imageUrl={that.getUploadFileImageUrlByType('powerOnRenewWindow')} />
+                                    </Form.Item>
+                                    <Form.Item name='powerOnRenewWindow' >
+                                        <TextArea className="base-input-wrapper" placeholder="请上传开机续费弹窗图片" onBlur={(e) => that.onInputBlurCallback("powerOnRenewWindow", e)} />
+                                    </Form.Item>
+                                </Form.Item>
+                                <Form.Item label="续费弹窗图片宽" name="renewWindowWidth">
+                                    <Input className='base-input-wrapper' addonBefore="宽" placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                                <Form.Item label="续费弹窗图片高" name="renewWindowHeight">
+                                    <Input className='base-input-wrapper' addonBefore="高" placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                                <Form.Item label="位置" name="position">
+                                    <Select className="base-input-wrapper" showSearch placeholder='请选择状态'>
+                                        {positions.map((item, index) => {
+                                            return <Option key={index} value={item.key}>{item.value}</Option>
+                                        })}
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item label="横向偏移量" name="xOffset">
+                                    <Input className='base-input-wrapper' placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                                <Form.Item label="纵向偏移量" name="yOffset">
+                                    <Input className='base-input-wrapper' placeholder="例如:200" addonAfter="px" />
+                                </Form.Item>
+                                
                             </div>
                         }
                     </Form>
@@ -505,6 +537,27 @@ export default class MenuImagePage extends Component {
         let that = this;
         let ref_tag_types = that.state.ref_tag_types;
         let value = that.formRef.current.getFieldsValue();
+        console.log("value",value)
+        if(value.renewWindowWidth){
+            value.renewWindowWidth=parseInt(value.renewWindowWidth)
+        }else{
+            delete value.renewWindowWidth
+        }
+        if(value.renewWindowHeight){
+            value.renewWindowHeight=parseInt(value.renewWindowHeight)
+        }else{
+            delete value.renewWindowHeight
+        }
+        if(value.xOffset){
+            value.xOffset=parseInt(value.xOffset)
+        }else{
+            delete value.xOffset
+        }
+        if(value.yOffset){
+            value.yOffset=parseInt(value.yOffset)
+        }else{
+            delete value.yOffset
+        }
         let obj = Object.assign({}, value, ref_tag_types.loadData());
         that.submitData(obj);
     }

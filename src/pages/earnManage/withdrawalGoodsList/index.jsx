@@ -99,6 +99,7 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "备注",
                     dataIndex: "note",
                     key: "note",
+                    ellipsis: true,
                 },
                 {
                     title: "操作",
@@ -243,8 +244,8 @@ export default class EarnIncentiveTask extends React.Component {
                                     // 固定商品
                                     <Form.Item
                                         label="配置"
-                                        // name="voters"
-                                        rules={[{ required: true, message: '配置' }]}
+                                        name="setting"
+                                        rules={[{ required: true, message: '请增加配置' }]}
                                     >
                                         <Form.List name="setting" rules={[{ required: true, message: '配置' }]}>
                                             {(fields, { add, remove }) => (
@@ -280,7 +281,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                     console.log(total, "现有总数比列")
                                                                     if (total > 100) {
                                                                         arr[index].ratio = e - (total - 100)
-                                                                        arr[index].num = arr[index].ratio * this.formRef.current.getFieldValue("stock") / 100
+                                                                        arr[index].num = Math.floor(arr[index].ratio * this.formRef.current.getFieldValue("stock") / 100)
                                                                         this.formRef.current.setFieldsValue({ "setting": arr })
                                                                         this.forceUpdate()
                                                                         return
@@ -318,8 +319,8 @@ export default class EarnIncentiveTask extends React.Component {
                                         // 固定人群
                                         <Form.Item
                                             label="配置"
-                                            // name="voters"
-                                            rules={[{ required: true, message: '配置' }]}
+                                            name="setting"
+                                            rules={[{ required: true, message: '请增加配置' }]}
                                         >
                                             <Form.List name="setting">
                                                 {(fields, { add, remove }) => (
@@ -327,7 +328,8 @@ export default class EarnIncentiveTask extends React.Component {
                                                         {fields.map((field, index) => (
                                                             <Space key={field.key} align="baseline">
                                                                 <Form.Item {...field} label="用户标签" name={[field.name, 'tagCode']} fieldKey={[field.fieldKey, 'tagCode']}>
-                                                                    <Select style={{ width: "200px" }} disabled={this.formRef.current.getFieldValue("setting")[index] && this.formRef.current.getFieldValue("setting")[index].tagCode == "none"}
+                                                                    <Select style={{ width: "200px" }} 
+                                                                    disabled={this.formRef.current.getFieldValue("setting")[index] && this.formRef.current.getFieldValue("setting")[index].tagCode == "none"}
                                                                         onChange={(e) => {
                                                                             let arr = this.formRef.current.getFieldValue("setting")
                                                                             arr[index].tagCode = e
@@ -378,8 +380,8 @@ export default class EarnIncentiveTask extends React.Component {
                                         // 随机商品
                                         <Form.Item
                                             label="配置"
-                                            // name="voters"
-                                            rules={[{ required: true, message: '配置' }]}
+                                            name="setting"
+                                            rules={[{ required: true, message: '请增加配置' }]}
                                         >
                                             <Form.List name="setting">
                                                 {(fields, { add, remove }) => (
@@ -486,6 +488,17 @@ export default class EarnIncentiveTask extends React.Component {
     }
     submitForm(val) {   // 提交表单
         console.log(val, "val")
+        if(val.setting){
+            let arr=[]
+            if(val.type == 1){
+                arr = val.setting.filter(r=>!r.level)
+            }else{
+                arr = val.setting.filter(r=>!r.tagCode)
+            }
+            if(arr.length > 0){
+                return message.error("请填写完整的配置信息")
+            }
+        }
         if (this.state.source == "edit") {
             this.editZzItemList(val)
         } else {
@@ -496,10 +509,10 @@ export default class EarnIncentiveTask extends React.Component {
 
     getZzItemList() {
         let params = {
-            "page": {
-                "currentPage": this.state.page, // (int)页码
-                "pageSize": this.state.pageSize // (int)每页数量
-            }
+           page:{
+            "currentPage": this.state.page, // (int)页码
+            "pageSize": this.state.pageSize // (int)每页数量
+           }
         }
         getZzItemList(params).then(res => {
             this.setState({

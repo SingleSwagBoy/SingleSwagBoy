@@ -208,7 +208,7 @@ export default class adCreateModal extends Component {
                                     materialShow: true,
                                     source: "add",
                                 }, () => {
-                                    this.formRef.current.setFieldsValue({})
+                                    this.formRef.current.resetFields()
                                     this.forceUpdate()
                                 })
                             }}>新建</Button>

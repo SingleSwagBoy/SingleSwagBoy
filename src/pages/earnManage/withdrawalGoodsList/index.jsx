@@ -231,17 +231,6 @@ export default class EarnIncentiveTask extends React.Component {
                             <Form.Item label="备注" name="note" >
                                 <Input placeholder="请输入备注" />
                             </Form.Item>
-                            {/* <Form.Item label="缩略图" name="pic" valuePropName="fileList"
-                            // 如果没有下面这一句会报错
-                            // getValueFromEvent={normFile} 
-                            >
-                                <div className="input-wrapper-box">
-                                    <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this)}
-                                        imageUrl={this.state.pic}
-                                    // this.formRef.current ? this.formRef.current.getFieldValue("backImage") : ""
-                                    />
-                                </div>
-                            </Form.Item> */}
                             {
                                 this.formRef.current && this.formRef.current.getFieldValue("type") == 1
                                     ?
@@ -323,7 +312,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                         {fields.map((field, index) => (
                                                             <Space key={field.key} align="baseline">
                                                                 <Form.Item {...field} label="用户标签" name={[field.name, 'tagCode']} fieldKey={[field.fieldKey, 'tagCode']}>
-                                                                    <Select style={{ width: "200px" }}>
+                                                                    <Select style={{ width: "200px" }} disabled={this.formRef.current.getFieldValue("setting")[index].tagCode == "none"}>
                                                                         {
                                                                             tagList.map((r, i) => {
                                                                                 return <Option value={r.code} key={i}>{r.name}</Option>
@@ -375,7 +364,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                         {fields.map((field, index) => (
                                                             <Space key={field.key} align="baseline">
                                                                 <Form.Item {...field} label="用户标签" name={[field.name, 'tagCode']} fieldKey={[field.fieldKey, 'tagCode']}>
-                                                                    <Select style={{ width: "200px" }}>
+                                                                    <Select style={{ width: "200px" }} disabled={this.formRef.current.getFieldValue("setting")[index].tagCode == "none"}>
                                                                         {
                                                                             tagList.map((r, i) => {
                                                                                 return <Option value={r.code} key={i}>{r.name}</Option>

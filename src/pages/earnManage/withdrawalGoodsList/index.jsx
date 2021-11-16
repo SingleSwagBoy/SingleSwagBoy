@@ -315,7 +315,9 @@ export default class EarnIncentiveTask extends React.Component {
                                                                     <Select style={{ width: "200px" }} disabled={this.formRef.current.getFieldValue("setting")[index].tagCode == "none"}>
                                                                         {
                                                                             tagList.map((r, i) => {
-                                                                                return <Option value={r.code} key={i}>{r.name}</Option>
+                                                                                return <Option value={r.code} key={i}
+                                                                                disabled={this.getDisable(r)}
+                                                                                >{r.name}</Option>
                                                                             })
                                                                         }
 
@@ -432,6 +434,18 @@ export default class EarnIncentiveTask extends React.Component {
         // if (arr.length > 0) return true
         return false
 
+    }
+    getDisable(val){
+        if(val && this.formRef.current.getFieldValue("setting") && this.formRef.current.getFieldValue("setting").length>0){
+            let arr = this.formRef.current.getFieldValue("setting").filter(r=>r.tagCode == val.code)
+            if(arr.length>0){
+                return true
+            }else{
+                return false
+            }
+        }else{
+            return false
+        }
     }
     //获取标签信息
     requestNewAdTagList() {

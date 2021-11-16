@@ -261,13 +261,25 @@ function randomWord(randomFlag, min, max) {
 function getValueFromEvent(e) { //去掉输入框里面的空格
   return e.target.value.replace(/(^\s*)|(\s*$)/g, '');
 }
+
 function isNumber(val) { //判断是否是数字类型
-  　　if (parseFloat(val).toString() == "NaN") {
-  　　　　return false;
-  　　} else {
-  　　　　return true;
-  　　}
+  if (parseFloat(val).toString() == "NaN") {
+    return false;
+  } else {
+    return true;
   }
+}
+/* 限制数字输入框只能输入整数 */
+ /* 限制数字输入框只能输入整数 */
+const limitNumber = value => {
+  if (typeof value === 'string') {
+    return !isNaN(Number(value)) ? value.replace(/^(0+)|[^\d]/g, '') : ''
+  } else if (typeof value === 'number') {
+    return !isNaN(value) ? String(value).replace(/^(0+)|[^\d]/g, '') : ''
+  } else {
+    return ''
+  }
+}
 let objFun = {
   splitStr,
   GetUrlParam,
@@ -280,7 +292,8 @@ let objFun = {
   operator,
   randomWord,
   getValueFromEvent,
-  isNumber
+  isNumber,
+  limitNumber
 }
 
 export default objFun

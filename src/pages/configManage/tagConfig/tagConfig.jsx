@@ -297,10 +297,20 @@ export default class tagConfig extends Component {
         let obj = Object.assign({}, value);
 
         let rule = obj.rule;
+        console.log(rule,"rule")
         if (!rule) {
             message.error('请填写规则后提交。')
             return;
         }
+        rule.forEach(r=>{
+            r.forEach(h=>{
+                h.forEach(l=>{
+                    if(l.value && Array.isArray(l.value)){
+                        l.value = l.value.join(",")
+                    }
+                })
+            })
+        })
         obj.rule = JSON.stringify(rule);
 
         // let id = obj.id;

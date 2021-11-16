@@ -200,7 +200,7 @@ export default class EarnIncentiveTask extends React.Component {
                                 <RangePicker placeholder={['上线时间', '下线时间']} showTime ></RangePicker>
                             </Form.Item>
                             <Form.Item label="库存" name="zzItemStock" rules={[{ required: true, message: '请填写初始库存' }]}>
-                                <InputNumber min={0} />
+                                <InputNumber min={0} formatter={util.limitNumber} />
                             </Form.Item>
                             <Form.Item label="状态" name="state" valuePropName="checked" rules={[{ required: true}]}>
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>

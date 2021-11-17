@@ -51,7 +51,7 @@ export default class WxPayTemplate extends Component {
             ],
             //是否测试
             dict_tests: [
-                { key: 1, value: '测试' },
+                // { key: 1, value: '测试' },
                 { key: 2, value: '正式' },
             ],
 

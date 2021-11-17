@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getZzItemList, requestNewAdTagList, editZzItemList, addZzItemList, deleteZzItemList, changeZzItemList } from 'api'
+import { getZzItemList, requestNewAdTagList, editZzItemList, addZzItemList, deleteZzItemList, changeZzItemList,rsZzItemList } from 'api'
 import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -133,6 +133,7 @@ export default class EarnIncentiveTask extends React.Component {
                                             arr.time = [moment(arr.startAt), moment(arr.endAt)]
                                             arr.state = arr.state == 0 ? false : true
                                             this.formRef.current.setFieldsValue(arr)
+                                            this.rsZzItemList(row)
                                             this.forceUpdate()
                                         })
                                     }}
@@ -608,6 +609,15 @@ export default class EarnIncentiveTask extends React.Component {
             // this.getZzItemList()
         }).catch((err) => {
 
+        })
+    }
+    rsZzItemList(val) {
+        let params = {
+            codes: val.code
+        }
+        rsZzItemList(params).then(res => {
+            console.log(res.data)
+            this.formRef.current.setFieldsValue({"stock":res.data[val.code]})
         })
     }
 }

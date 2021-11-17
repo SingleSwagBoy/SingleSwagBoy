@@ -282,6 +282,7 @@ export const addZzItemList = (params) => { return request2.post(`${baseUrl}/mms/
 export const deleteZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/deleteItem`, { params: params }) };          // 编辑体现商品列表
 export const changeZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/changeState`, { params: params }) };          // 编辑体现商品列表
 export const syncZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/syncCache`, { params: params }) };          // 编辑体现商品列表
+export const rsZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/rs`, { params: params }) };          // 刷新库存
 //赚赚管理---刷新库存
 export const getRefresh = (params) => { return request2.post(`${baseUrl}/mms/zzItemTicker/list`, params) };          // 获取库存列表
 export const addRefresh = (params) => { return request2.post(`${baseUrl}/mms/zzItemTicker/store`, params) };          // 编辑和新增库存列表

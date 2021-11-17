@@ -17,8 +17,8 @@ export default class EarnIncentiveTask extends React.Component {
         this.state = {
             loading: false,
             layout: {
-                labelCol: { span: 4 },
-                wrapperCol: { span: 20 },
+                labelCol: { span: 2 },
+                wrapperCol: { span: 22 },
             },
             tailLayout: {
                 wrapperCol: { offset: 16, span: 8 },
@@ -126,8 +126,8 @@ export default class EarnIncentiveTask extends React.Component {
                                                             // 文字
                                                             this.formRef.current.getFieldValue("type") == 1
                                                                 ?
-                                                                <Form.Item {...field} label="文字" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                    <Input />
+                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                    <Input placeholder="文字"  />
                                                                 </Form.Item>
                                                                 :
                                                                 // 图片

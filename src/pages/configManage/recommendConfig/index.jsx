@@ -157,7 +157,7 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
                             <Form.Item label="位置" name="position" rules={[{ required: true, message: '请输入位置' }]}>
-                                <InputNumber placeholder="请输入位置" min={0} />
+                                <InputNumber placeholder="请输入位置" min={0} style={{width:"200px"}} />
                             </Form.Item>
                             <Form.Item label="展示频道" name="channelId" rules={[{ required: true, message: '请选择视频集名称' }]}>
                                 {/* <Input placeholder="请选择视频集名称" /> */}
@@ -306,6 +306,7 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
         })
     }
     closeModal() {
+        this.formRef.current.resetFields();
         this.setState({
             entranceState: false
         })

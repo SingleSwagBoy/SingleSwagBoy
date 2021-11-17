@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { searchShortList, getSuggest, addSuggest, updateSuggest, getChannel } from 'api'
-import { Breadcrumb, Card, TimePicker, Button, message, Table, Modal, DatePicker, Form, Select, Checkbox } from 'antd'
+import { Breadcrumb, Card, TimePicker, Button, message, Table, Modal, DatePicker, Form, Select, Checkbox, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import { MySyncBtn } from "@/components/views.js"
@@ -47,8 +47,8 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
             columns: [
                 {
                     title: "位置",
-                    dataIndex: "id",
-                    key: "id",
+                    dataIndex: "position",
+                    key: "position",
                 },
                 {
                     title: "展示频道",
@@ -156,6 +156,9 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                             name="taskForm"
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
+                            <Form.Item label="位置" name="position" rules={[{ required: true, message: '请输入位置' }]}>
+                                <InputNumber placeholder="请输入位置" min={0} />
+                            </Form.Item>
                             <Form.Item label="展示频道" name="channelId" rules={[{ required: true, message: '请选择视频集名称' }]}>
                                 {/* <Input placeholder="请选择视频集名称" /> */}
                                 <Select
@@ -200,11 +203,11 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                                     <Checkbox valuePropName="checked" checked={(this.formRef.current && this.formRef.current.getFieldValue("checked"))} onChange={val => {
                                         console.log(val.target.checked)
                                         if (val.target.checked) {
-                                            this.formRef.current.setFieldsValue({ "star": "", "end": "", time: ["", ""]})
-                                        }else{
-                                            this.formRef.current.setFieldsValue({ time: ""})
+                                            this.formRef.current.setFieldsValue({ "star": "", "end": "", time: ["", ""] })
+                                        } else {
+                                            this.formRef.current.setFieldsValue({ time: "" })
                                         }
-                                        this.formRef.current.setFieldsValue({checked: val.target.checked })
+                                        this.formRef.current.setFieldsValue({ checked: val.target.checked })
                                         this.forceUpdate()
                                     }}>
                                         长期
@@ -310,8 +313,8 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
     addSuggest(val) {
         let params = {
             ...val,
-            start: (val.time && val.time[0])?moment(val.time[0]).format(format):"",
-            end: (val.time && val.time[1])?moment(val.time[1]).format(format):""
+            start: (val.time && val.time[0]) ? moment(val.time[0]).format(format) : "",
+            end: (val.time && val.time[1]) ? moment(val.time[1]).format(format) : ""
         }
         addSuggest(params).then(res => {
             this.getSuggest()
@@ -322,8 +325,8 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
         let params = {
             ...this.state.currentItem,
             ...val,
-            start: (val.time && val.time[0])?moment(val.time[0]).format(format):"",
-            end: (val.time && val.time[1])?moment(val.time[1]).format(format):""
+            start: (val.time && val.time[0]) ? moment(val.time[0]).format(format) : "",
+            end: (val.time && val.time[1]) ? moment(val.time[1]).format(format) : ""
         }
         updateSuggest(params).then(res => {
             this.getSuggest()

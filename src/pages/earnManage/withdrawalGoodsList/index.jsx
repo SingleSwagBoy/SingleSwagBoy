@@ -213,7 +213,7 @@ export default class EarnIncentiveTask extends React.Component {
                             <Form.Item label="类型" name="type" rules={[{ required: true, message: '请选择类型' }]}>
                                 <Select allowClear placeholder="请选择类型" onChange={(e) => {
                                     console.log(e, "e")
-                                    this.formRef.current.setFieldsValue({ "type": e, "setting": [{}] })
+                                    this.formRef.current.setFieldsValue({ "type": e, "setting": [{"tagCode": "none"}] })
                                     this.forceUpdate()
                                 }}>
                                     <Option value={1} key={1}>固定金额</Option>
@@ -357,10 +357,13 @@ export default class EarnIncentiveTask extends React.Component {
                                                                 <Form.Item {...field} label="排序" name={[field.name, 'sort']} fieldKey={[field.fieldKey, 'sort']}>
                                                                     <InputNumber min={0} />
                                                                 </Form.Item>
-
-                                                                <MinusCircleOutlined onClick={() => {
-                                                                    remove(field.name)
-                                                                }} />
+                                                                {
+                                                                    index == 0 ? "":
+                                                                    <MinusCircleOutlined onClick={() => {
+                                                                        remove(field.name)
+                                                                    }} />
+                                                                }
+                                                               
                                                             </Space>
                                                         ))}
 
@@ -416,9 +419,12 @@ export default class EarnIncentiveTask extends React.Component {
                                                                     <InputNumber min={0} />
                                                                 </Form.Item>
 
-                                                                <MinusCircleOutlined onClick={() => {
-                                                                    remove(field.name)
-                                                                }} />
+                                                                {
+                                                                    index == 0 ? "":
+                                                                    <MinusCircleOutlined onClick={() => {
+                                                                        remove(field.name)
+                                                                    }} />
+                                                                }
                                                             </Space>
                                                         ))}
 
@@ -492,8 +498,10 @@ export default class EarnIncentiveTask extends React.Component {
             let arr=[]
             if(val.type == 1){
                 arr = val.setting.filter(r=>!r.level)
+            }else if(val.type == 2){
+                arr = val.setting.filter(r=>!r.value)
             }else{
-                arr = val.setting.filter(r=>!r.tagCode)
+                arr = val.setting.filter(r=>!r.max || !r.min)
             }
             if(arr.length > 0){
                 return message.error("请填写完整的配置信息")

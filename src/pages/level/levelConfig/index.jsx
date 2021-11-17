@@ -47,10 +47,10 @@ export default class WinningNews extends Component {
           dataIndex: "level",
           key: "level",
         },
-        // {
-        //   title: '等级图标', dataIndex: 'ico', key: 'ico', width: 120,
-        //   render: (rowValue, row, index) => { return <Image width={60} height={60} src={rowValue} /> }
-        // },
+        {
+          title: '等级图标', dataIndex: 'ico', key: 'ico', width: 120,
+          render: (rowValue, row, index) => { return <Image width={60} height={60} src={rowValue} /> }
+        },
         {
           title: "操作",
           key: "action",
@@ -156,11 +156,11 @@ export default class WinningNews extends Component {
                   <InputNumber />
                 </Form.Item>
               </Form.Item>
-              {/* <Form.Item label="等级图标" name="ico" rules={[{ required: true, message: '请上传等级图标' }]}>
+              <Form.Item label="等级图标" name="ico" rules={[{ required: true, message: '请上传等级图标' }]}>
                 <MyImageUpload
                   getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('ico', file, newItem) }}
                   imageUrl={this.formRef.current && this.formRef.current.getFieldValue("ico")} />
-              </Form.Item> */}
+              </Form.Item>
               <Form.Item {...this.state.tailLayout}>
                 <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
                   确定

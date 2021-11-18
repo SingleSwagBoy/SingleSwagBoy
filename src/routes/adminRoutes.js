@@ -34,6 +34,7 @@ const ChannelLock = lazy(() => import('pages/channelManage/channelLock/index.jsx
 const LivePreview = lazy(() => import('pages/channelManage/livePreview/index.jsx'))
 const AddressNews = lazy(() => import('pages/configManage/addressNews/index.jsx'))
 const ChannelSubject = lazy(() => import('pages/channelManage/channelSubject/index.jsx'))
+const MarsBootIn= lazy(() => import('pages/channelManage/marsBootIn/index.jsx'))
 const EditSubject = lazy(() => import('pages/channelManage/editSubject/index.jsx'))
 const ConfigDoc = lazy(() => import('pages/config/doc.jsx'));
 const WxReply = lazy(() => import('pages/wechart/autoReply/wxReply.jsx'));
@@ -97,10 +98,11 @@ const adminRoutes = [
     { name: '投票活动', icon: UnorderedListOutlined, path: '/mms/activeManagement/voting', component: Voting, code: "ActiveManagement", sub_code: 'Voting' },
     { name: '抽奖活动', icon: UnorderedListOutlined, path: '/mms/activeManagement/luckyDraw', component: LuckyDraw, code: "ActiveManagement", sub_code: 'LuckyDraw' },
     { name: '商品配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/goodsConfig', component: GoodsConfig, code: "ActiveManagement", sub_code: 'GoodsConfig' },
-
+    //频道管理
     { name: '专享台解锁', icon: UnorderedListOutlined, path: '/mms/channelManage/channelLock', component: ChannelLock, code: "channelManage", sub_code: 'ChannelLock' },
     { name: '直播预告', icon: UnorderedListOutlined, path: '/mms/channel/livePreview', component: LivePreview, code: "channelManage", sub_code: 'livePreview' },
     { name: '频道专题', icon: UnorderedListOutlined, path: '/mms/channelManage/channelSubject', component: ChannelSubject, code: "channelManage", sub_code: 'ChannelSubject' },
+    { name: '火星开机进入', icon: UnorderedListOutlined, path: '/mms/channelManage/marsBootIn', component: MarsBootIn, code: "channelManage", sub_code: 'marsBootIn' },
     { name: '编辑专题', icon: UnorderedListOutlined, path: '/mms/channelManage/editSubject/:id', component: EditSubject, code: "channelManage" }, //频道专题二级页面
 
     //广告管理

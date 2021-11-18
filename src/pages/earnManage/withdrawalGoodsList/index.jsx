@@ -650,9 +650,13 @@ export default class EarnIncentiveTask extends React.Component {
             if(r){
                 r.num = Math.floor(r.ratio * this.formRef.current.getFieldValue("stock") / 100)
             }
-           
         })
-        this.formRef.current.setFieldsValue({ "setting": arr ,"changeStock":true})
+        let info = this.state.currentItem
+        info.changeStock = true
+        this.setState({
+            currentItem:info
+        })
+        this.formRef.current.setFieldsValue({ "setting": arr})
         this.forceUpdate()
     }
 }

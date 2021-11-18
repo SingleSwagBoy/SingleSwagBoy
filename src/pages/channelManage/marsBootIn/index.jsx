@@ -304,7 +304,11 @@ export default class EarnIncentiveTask extends React.Component {
     }
     //获取频道信息
     getChannel(val) {
-        getChannel({ keyword: val }).then(res => {
+        let params={
+            keywords: val,
+            // page: {currentPage: 1, pageSize: 50}
+        }
+        getChannel(params).then(res => {
             this.setState({
                 channelList: res.data.data
             });

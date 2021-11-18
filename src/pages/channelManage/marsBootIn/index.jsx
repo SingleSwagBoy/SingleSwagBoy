@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getMarsList, requestNewAdTagList, uploadMarsList, addMarsList, delMarsList, changeZzItemList, rsZzItemList } from 'api'
+import { getMarsList, requestNewAdTagList, uploadMarsList, addMarsList, delMarsList, getChannel } from 'api'
 import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -32,8 +32,10 @@ export default class EarnIncentiveTask extends React.Component {
             lists: [],
             visible: false,
             tagList: [],
+            channelList: [],
             currentItem: "",
             source: "",
+            searchWord: {},
             selectProps: {
                 optionFilterProp: "children",
                 // filterOption(input, option){
@@ -46,18 +48,18 @@ export default class EarnIncentiveTask extends React.Component {
             columns: [
                 {
                     title: "频道名称",
-                    dataIndex: "name",
-                    key: "name",
+                    dataIndex: "channelName",
+                    key: "channelName",
                 },
                 {
                     title: "频道编码",
-                    dataIndex: "manualCode",
-                    key: "manualCode",
+                    dataIndex: "channelId",
+                    key: "channelId",
                 },
                 {
                     title: "标签",
-                    dataIndex: "type",
-                    key: "type",
+                    dataIndex: "tags",
+                    key: "tags",
                     // render: (rowValue, row, index) => {
                     //     return (
                     //         // 1=固定金额;2=固定人群;3=随机金额
@@ -67,19 +69,19 @@ export default class EarnIncentiveTask extends React.Component {
                 },
                 {
                     title: "上线时间-下线时间",
-                    dataIndex: "startAt",
-                    key: "startAt",
+                    dataIndex: "startTime",
+                    key: "startTime",
                     width: 400,
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{util.formatTime(row.startAt, "")} - {util.formatTime(row.endAt, "")}</div>
+                            <div>{util.formatTime(row.startTime, "")} - {util.formatTime(row.endTime, "")}</div>
                         )
                     }
                 },
                 {
                     title: "状态",  //上下线状态(1上线2下线)
-                    dataIndex: "state",
-                    key: "state",
+                    dataIndex: "status",
+                    key: "status",
                     render: (rowValue, row, index) => {
                         return (
                             <div>
@@ -114,9 +116,10 @@ export default class EarnIncentiveTask extends React.Component {
                                             source: "edit"
                                         }, () => {
                                             let arr = JSON.parse(JSON.stringify(row))
-                                            arr.time = [moment(arr.startAt), moment(arr.endAt)]
-                                            arr.state = arr.state == 0 ? false : true
+                                            arr.time = [moment(arr.startTime), moment(arr.endTime)]
+                                            arr.status = arr.status == 1 ? true : false
                                             this.formRef.current.setFieldsValue(arr)
+                                            this.getChannel(arr.channelName)
                                             this.forceUpdate()
                                         })
                                     }}
@@ -134,14 +137,47 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     render() {
-        let { levelList, lists, layout, loading, columns, entranceState, tagList } = this.state;
+        let { channelList, lists, layout, loading, columns, entranceState, tagList } = this.state;
         return (
             <div>
                 <Card title={
-                    <div>
-                        <Breadcrumb>
-                            <Breadcrumb.Item>提现商品列表</Breadcrumb.Item>
-                        </Breadcrumb>
+                    <div className="marsBox">
+                        <div className="everyBody">
+                            <div>名称:</div>
+                            <Input.Search
+                                allowClear
+                                onChange={(val) => {
+                                    this.state.searchWord.name = val.target.value
+                                }}
+                                onSearch={(val) => {
+                                    console.log(1,val)
+                                    this.state.searchWord.name = val
+                                    this.setState({
+                                        page: 1,
+                                    }, () => {
+                                        this.getMarsList()
+                                    })
+
+                                }} />
+                        </div>
+                        <div className="everyBody">
+                            <div>上下线时间:</div>
+                            <RangePicker placeholder={['上线时间', '下线时间']} showTime onChange={(e) => {
+                                let searchInfo = this.state.searchWord
+                                if(e){
+                                    searchInfo.startTime = moment(e[0]).valueOf()
+                                    searchInfo.endTime = moment(e[1]).valueOf()
+                                }else{
+                                    searchInfo.startTime =""
+                                    searchInfo.endTime = ""
+                                }
+                                this.setState({
+                                    page: 1,
+                                }, () => {
+                                    this.getMarsList()
+                                })
+                            }}></RangePicker>
+                        </div>
                     </div>
                 }
                     extra={
@@ -157,7 +193,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     })
                                 }}
                             >新增</Button>
-                            <MySyncBtn type={13} name='同步缓存' />
+                            <MySyncBtn type={3} name='同步缓存' params={{key:"ad_mars_startup"}} />
                         </div>
                     }
                 >
@@ -181,7 +217,7 @@ export default class EarnIncentiveTask extends React.Component {
                             name="taskForm"
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
-                            <Form.Item label="频道名称" name="type" rules={[{ required: true, message: '请选择频道' }]}>
+                            <Form.Item label="频道名称" name="channelName" rules={[{ required: true, message: '请选择频道' }]}>
                                 <Select
                                     placeholder="请输入频道名称"
                                     allowClear
@@ -193,37 +229,52 @@ export default class EarnIncentiveTask extends React.Component {
                                         }
                                         privateData.inputTimeOutVal = setTimeout(() => {
                                             if (!privateData.inputTimeOutVal) return;
-                                            this.getProgramsList(val)
+                                            this.getChannel(val)
                                         }, 1000)
-                                    }}>
-                                    <Option value={1} key={1}>固定金额</Option>
+                                    }}
+                                    onChange={(e) => {
+                                        console.log(e)
+                                        this.formRef.current.setFieldsValue({ "channelId": e })
+                                    }}
+                                >
+                                    {
+                                        channelList.map((r, i) => {
+                                            return <Option value={r.code} key={i}>{r.name}</Option>
+                                        })
+                                    }
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="频道编码" name="code" >
+                            <Form.Item label="频道编码" name="channelId" >
                                 <Input placeholder="频道编码" disabled />
                             </Form.Item>
-                            <Form.Item label="标签" name="type">
+                            <Form.Item label="标签" name="tags">
                                 <Select
                                     placeholder="请输入标签"
                                     allowClear
                                     {...this.state.selectProps}
-                                    onSearch={(val) => {
-                                        if (privateData.inputTimeOutVal) {
-                                            clearTimeout(privateData.inputTimeOutVal);
-                                            privateData.inputTimeOutVal = null;
-                                        }
-                                        privateData.inputTimeOutVal = setTimeout(() => {
-                                            if (!privateData.inputTimeOutVal) return;
-                                            // this.getProgramsList(val)
-                                        }, 1000)
-                                    }}>
-                                    <Option value={1} key={1}>固定金额</Option>
+                                // onSearch={(val) => {
+                                //     if (privateData.inputTimeOutVal) {
+                                //         clearTimeout(privateData.inputTimeOutVal);
+                                //         privateData.inputTimeOutVal = null;
+                                //     }
+                                //     privateData.inputTimeOutVal = setTimeout(() => {
+                                //         if (!privateData.inputTimeOutVal) return;
+                                //         this.getChannel(val)
+                                //     }, 1000)
+                                // }}
+                                >
+                                    {
+                                        tagList.map((r, i) => {
+                                            return <Option value={r.code} key={i}>{r.name}</Option>
+                                        })
+                                    }
+
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="上下线时间" name="type" rules={[{ required: true, message: '请选择类型' }]}>
+                            <Form.Item label="上下线时间" name="time" rules={[{ required: true, message: '请选择类型' }]}>
                                 <RangePicker placeholder={['上线时间', '下线时间']} showTime ></RangePicker>
                             </Form.Item>
-                            <Form.Item label="状态" name="state" valuePropName="checked">
+                            <Form.Item label="状态" name="status" valuePropName="checked">
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                             </Form.Item>
 
@@ -240,8 +291,8 @@ export default class EarnIncentiveTask extends React.Component {
         )
     }
     componentDidMount() {
-        this.requestNewAdTagList()
         this.getMarsList();
+        this.requestNewAdTagList()
     }
     //获取标签信息
     requestNewAdTagList() {
@@ -251,9 +302,13 @@ export default class EarnIncentiveTask extends React.Component {
             });
         })
     }
-
-    changeStart(e) {
-        console.log(e);
+    //获取频道信息
+    getChannel(val) {
+        getChannel({ keyword: val }).then(res => {
+            this.setState({
+                channelList: res.data.data
+            });
+        })
     }
     changeSize = (page, pageSize) => {   // 分页
         console.log(page, pageSize);
@@ -276,9 +331,9 @@ export default class EarnIncentiveTask extends React.Component {
 
     getMarsList() {
         let params = {
-            keyword: "",
-            startTime: "",
-            endTime: ""
+            keyword: this.state.searchWord.name,
+            startTime: this.state.searchWord.startTime,
+            endTime: this.state.searchWord.endTime,
         }
         getMarsList(params).then(res => {
             this.setState({
@@ -292,12 +347,13 @@ export default class EarnIncentiveTask extends React.Component {
             entranceState: false
         })
     }
-    addMarsList(val, type) {
+    addMarsList(val) {
         let params = {
             ...val,
-            startAt: val.time[0].valueOf(),
-            endAt: val.time[1].valueOf(),
-            state: val.state ? 1 : 0,
+            startTime: val.time[0].valueOf(),
+            endTime: val.time[1].valueOf(),
+            status: val.status ? 1 : 0,
+            channelName: this.state.channelList.filter(r => r.code == val.channelId)[0].name
         }
         addMarsList(params).then(res => {
             this.getMarsList()
@@ -308,9 +364,10 @@ export default class EarnIncentiveTask extends React.Component {
         let params = {
             ...this.state.currentItem,
             ...val,
-            startAt: val.time[0].valueOf(),
-            endAt: val.time[1].valueOf(),
-            state: val.state ? 1 : 0,
+            startTime: val.time[0].valueOf(),
+            endTime: val.time[1].valueOf(),
+            status: val.status ? 1 : 0,
+            channelName: this.state.channelList.filter(r => r.code == val.channelId)[0].name
         }
         uploadMarsList(params).then(res => {
             this.getMarsList()
@@ -318,13 +375,13 @@ export default class EarnIncentiveTask extends React.Component {
         })
     }
 
-    deleteItem(_obj) {  // 删除数据
-        console.log(_obj)
+    deleteItem(obj) {  // 删除数据
+        console.log(obj)
         Modal.confirm({
             title: `确认删除该条数据吗？`,
             // content: '确认删除？',
             onOk: () => {
-                this.delMarsList(_obj)
+                this.delMarsList(obj)
             },
             onCancel: () => {
             }
@@ -332,7 +389,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     delMarsList(item) {
         let params = {
-            id: item.id
+            indexId: item.indexId
         }
         delMarsList(params).then(res => {
             message.success("删除成功")

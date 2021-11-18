@@ -34,7 +34,7 @@ export default class EarnIncentiveTask extends React.Component {
         let {openModal} = this.props
         return (
             <div>
-                <Modal title="新增任务" centered visible={openModal} onCancel={() => {  }} footer={null} width={1200}>
+                <Modal title="新增任务" centered visible={openModal} onCancel={() => {this.props.onCloseModal()}} footer={null} width={1200}>
                     <Radio.Group defaultValue={radioState} style={{ marginTop: 16 }} onChange={(e) => {
                         this.setState({
                             radioState: e.target.value

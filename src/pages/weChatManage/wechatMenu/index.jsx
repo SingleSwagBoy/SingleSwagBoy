@@ -51,25 +51,20 @@ export default class EarnIncentiveTask extends React.Component {
                 {
                     title: "操作",
                     key: "action",
-                    fixed: 'right', width: 210,
+                    // fixed: 'right', width: 210,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
                                 <Button
                                     style={{ margin: "0 10px" }}
                                     size="small"
-                                    type="primary"
+                                    // type="primary"
                                     onClick={() => {
                                        this.setState({
                                            openModal:true
                                        })
                                     }}
                                 >编辑</Button>
-                                <Button
-                                    size="small"
-                                    danger
-                                    onClick={() => { this.deleteItem(row) }}
-                                >删除</Button>
                             </div>
                         )
                     }
@@ -95,13 +90,13 @@ export default class EarnIncentiveTask extends React.Component {
                 >
                     <Table
                         dataSource={lists}
-                        scroll={{ x: 1500, y: '75vh' }}
+                        // scroll={{ x: 1500, y: '75vh' }}
                         // rowKey={item=>item.indexId}
                         loading={loading}
                         columns={columns}
                     />
                 </Card>
-                <DefaultMenu  openModal={this.state.openModal}></DefaultMenu>
+                <DefaultMenu  openModal={this.state.openModal} onCloseModal={this.closeModal.bind(this)}></DefaultMenu>
             </div>
         )
     }
@@ -109,45 +104,9 @@ export default class EarnIncentiveTask extends React.Component {
         // this.getWechatMenu()
         this.getWxlist();
     }
-    onOpenChange(e) {
-        console.log(e, "onOpenChange")
-        // this.setState({
-        //     openKeys: e
-        // })
-        this.forceUpdate()
-
-    }
-    addMenu(key) {
-
-    }
-    submitForm(val) {   // 提交表单
-        console.log(val, "val")
-        this.addRefresh(val)
-        this.closeModal()
-    }
-
-    closeModal() {
+    closeModal(){
         this.setState({
-            entranceState: false
-        })
-    }
-
-    getUploadFileUrl(index, file) {   // 图片上传的方法
-        console.log(file, index, "获取上传的图片路径")
-        this.iconFormRef.current.setFieldsValue({ "pic": file })
-        this.forceUpdate()
-    }
-
-    deleteItem(_obj) {  // 删除数据
-        console.log(_obj)
-        Modal.confirm({
-            title: `确认删除该条数据吗？`,
-            // content: '确认删除？',
-            onOk: () => {
-                // this.delRefresh(_obj.zzItemCode)
-            },
-            onCancel: () => {
-            }
+            openModal:false,
         })
     }
     getWechatMenu() {

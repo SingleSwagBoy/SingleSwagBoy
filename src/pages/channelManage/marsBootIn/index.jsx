@@ -298,7 +298,7 @@ export default class EarnIncentiveTask extends React.Component {
     requestNewAdTagList() {
         requestNewAdTagList({ currentPage: 1, pageSize: 999999, }).then(res => {
             this.setState({
-                tagList: res.data,
+                tagList: res.data || [],
             });
         })
     }
@@ -310,7 +310,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
         getChannel(params).then(res => {
             this.setState({
-                channelList: res.data.data
+                channelList: res.data.data || []
             });
         })
     }

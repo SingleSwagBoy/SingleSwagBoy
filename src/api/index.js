@@ -360,8 +360,8 @@ export const syncHomeList = (params) => { return request.get(`${baseUrl}/mms/cha
 
 //火星开机进入 
 export const getMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/marsStartup/get`,{ params: params }); };                 // 获取
-export const addMarsList = (params) => { return request.post(`${baseUrl}/mms/ad/marsStartup/add`,params); };                 // 获取
-export const uploadMarsList = (params) => { return request.post(`${baseUrl}/mms/ad/marsStartup/update`,params); };                 // 获取
+export const addMarsList = (params) => { return request2.post(`${baseUrl}/mms/ad/marsStartup/add`,params); };                 // 获取
+export const uploadMarsList = (params) => { return request2.post(`${baseUrl}/mms/ad/marsStartup/update`,params); };                 // 获取
 export const delMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/marsStartup/del`,{ params: params }); };                 // 获取
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

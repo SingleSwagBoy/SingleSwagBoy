@@ -187,7 +187,7 @@ export default class EarnIncentiveTask extends React.Component {
                                 <Input placeholder="请输入名称" />
                             </Form.Item>
                             <Form.Item label="关联提现商品" name="zzItemCode" rules={[{ required: true, message: '请选择关联提现商品' }]}>
-                                <Select allowClear placeholder="请选择关联提现商品">
+                                <Select allowClear placeholder="请选择关联提现商品" disabled={this.state.source == "edit"}>
                                     {
                                         productLists.map((r, i) => {
                                             return <Option value={r.code} key={r.code}>{r.name}</Option>

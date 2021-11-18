@@ -60,12 +60,11 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "标签",
                     dataIndex: "tags",
                     key: "tags",
-                    // render: (rowValue, row, index) => {
-                    //     return (
-                    //         // 1=固定金额;2=固定人群;3=随机金额
-                    //         <div>{rowValue == 1 ? "固定金额" : rowValue == 2 ? "固定人群" : rowValue == 3 ? "随机金额" : "未知"}</div>
-                    //     )
-                    // }
+                    render: (rowValue, row, index) => {
+                        return (
+                            <div>{this.getTagsName(rowValue)}</div>
+                        )
+                    }
                 },
                 {
                     title: "上线时间-下线时间",
@@ -150,7 +149,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     this.state.searchWord.name = val.target.value
                                 }}
                                 onSearch={(val) => {
-                                    console.log(1,val)
+                                    console.log(1, val)
                                     this.state.searchWord.name = val
                                     this.setState({
                                         page: 1,
@@ -164,11 +163,11 @@ export default class EarnIncentiveTask extends React.Component {
                             <div>上下线时间:</div>
                             <RangePicker placeholder={['上线时间', '下线时间']} showTime onChange={(e) => {
                                 let searchInfo = this.state.searchWord
-                                if(e){
+                                if (e) {
                                     searchInfo.startTime = moment(e[0]).valueOf()
                                     searchInfo.endTime = moment(e[1]).valueOf()
-                                }else{
-                                    searchInfo.startTime =""
+                                } else {
+                                    searchInfo.startTime = ""
                                     searchInfo.endTime = ""
                                 }
                                 this.setState({
@@ -190,10 +189,11 @@ export default class EarnIncentiveTask extends React.Component {
                                         entranceState: true,
                                     }, () => {
                                         this.formRef.current.resetFields();
+                                        this.formRef.current.setFieldsValue({ "status": true });
                                     })
                                 }}
                             >新增</Button>
-                            <MySyncBtn type={7} name='同步缓存' params={{key:"ad_mars_startup"}} />
+                            <MySyncBtn type={7} name='同步缓存' params={{ key: "ad_mars_startup" }} />
                         </div>
                     }
                 >
@@ -304,7 +304,11 @@ export default class EarnIncentiveTask extends React.Component {
     }
     //获取频道信息
     getChannel(val) {
-        getChannel({ keyword: val }).then(res => {
+        let params = {
+            keywords: val,
+            // page: {currentPage: 1, pageSize: 50}
+        }
+        getChannel(params).then(res => {
             this.setState({
                 channelList: res.data.data
             });
@@ -395,5 +399,13 @@ export default class EarnIncentiveTask extends React.Component {
             message.success("删除成功")
             this.getMarsList()
         })
+    }
+    getTagsName(val) {
+        let arr = this.state.tagList.filter(r => r.code == val)
+        if (arr.length > 0) {
+            return arr[0].name
+        }else{
+            return ""
+        }
     }
 }

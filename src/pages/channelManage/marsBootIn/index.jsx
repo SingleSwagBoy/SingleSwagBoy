@@ -193,7 +193,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     })
                                 }}
                             >新增</Button>
-                            <MySyncBtn type={3} name='同步缓存' params={{key:"ad_mars_startup"}} />
+                            <MySyncBtn type={7} name='同步缓存' params={{key:"ad_mars_startup"}} />
                         </div>
                     }
                 >

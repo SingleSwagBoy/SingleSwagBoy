@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { getZzItemList, requestNewAdTagList, editZzItemList, addZzItemList, deleteZzItemList, changeZzItemList } from 'api'
-import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
+import { getZzItemList, requestNewAdTagList, editZzItemList, addZzItemList, deleteZzItemList, changeZzItemList, rsZzItemList } from 'api'
+import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
@@ -31,6 +31,12 @@ export default class EarnIncentiveTask extends React.Component {
             tagList: [],
             currentItem: "",
             source: "",
+            levelList: [
+                { level: 1, name: "青铜" },
+                { level: 2, name: "白银" },
+                { level: 3, name: "黄金" },
+                { level: 4, name: "钻石" },
+            ],
             columns: [
                 {
                     title: "提现商品名称",
@@ -93,6 +99,7 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "备注",
                     dataIndex: "note",
                     key: "note",
+                    ellipsis: true,
                 },
                 {
                     title: "操作",
@@ -118,14 +125,15 @@ export default class EarnIncentiveTask extends React.Component {
                                         }, () => {
                                             let arr = JSON.parse(JSON.stringify(row))
                                             arr.setting = JSON.parse(arr.setting)
-                                            if (row.type == 1) {
-                                                arr.setting.forEach(r => {
-                                                    r.num = row.stock * r.ratio / 100
-                                                })
-                                            }
+                                            // if (row.type == 1) {
+                                            //     arr.setting.forEach(r => {
+                                            //         r.num = row.stock * r.ratio / 100
+                                            //     })
+                                            // }
                                             arr.time = [moment(arr.startAt), moment(arr.endAt)]
                                             arr.state = arr.state == 0 ? false : true
                                             this.formRef.current.setFieldsValue(arr)
+                                            this.rsZzItemList(arr)
                                             this.forceUpdate()
                                         })
                                     }}
@@ -143,7 +151,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     render() {
-        let { btnLoading, lists, layout, loading, columns, entranceState, tagList } = this.state;
+        let { levelList, lists, layout, loading, columns, entranceState, tagList } = this.state;
         return (
             <div>
                 <Card title={
@@ -200,13 +208,13 @@ export default class EarnIncentiveTask extends React.Component {
                                 <Input placeholder="请输入商品名称" />
                             </Form.Item>
                             <Form.Item label="商品code" name="manualCode" rules={[{ required: true, message: '请输入code' }]}>
-                                <Input placeholder="请输入商品code" />
+                                <Input placeholder="请输入商品code" disabled={this.state.source == "edit"} />
                             </Form.Item>
                             {/*  */}
                             <Form.Item label="类型" name="type" rules={[{ required: true, message: '请选择类型' }]}>
                                 <Select allowClear placeholder="请选择类型" onChange={(e) => {
                                     console.log(e, "e")
-                                    this.formRef.current.setFieldsValue({ "type": e, "setting": [{}] })
+                                    this.formRef.current.setFieldsValue({ "type": e, "setting": [{ "tagCode": "none" }] })
                                     this.forceUpdate()
                                 }}>
                                     <Option value={1} key={1}>固定金额</Option>
@@ -217,14 +225,9 @@ export default class EarnIncentiveTask extends React.Component {
                             <Form.Item label="上线时间-下线时间" name="time" rules={[{ required: true, message: '请选择上下线时间' }]}>
                                 <RangePicker placeholder={['上线时间', '下线时间']} showTime ></RangePicker>
                             </Form.Item>
-                            <div>
-                                <Form.Item label="实时库存" name="stock" rules={[{ required: true, message: '请填写实时库存' }]}>
-                                    <InputNumber min={0} />
-                                </Form.Item>
-                                <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请填写排序' }]}>
-                                    <InputNumber min={0} />
-                                </Form.Item>
-                            </div>
+                            <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请填写排序' }]}>
+                                <InputNumber min={0} />
+                            </Form.Item>
                             <Form.Item label="状态" name="state" valuePropName="checked">
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                             </Form.Item>
@@ -232,13 +235,35 @@ export default class EarnIncentiveTask extends React.Component {
                                 <Input placeholder="请输入备注" />
                             </Form.Item>
                             {
+                                this.formRef.current && this.formRef.current.getFieldValue("type") == 1 ?
+                                    <>
+                                        <Alert
+                                            message="警告"
+                                            description="更改完实时库存和更改配置里面的库存比列，必须要点击重新计算的按钮，慎点慎点慎点!!!"
+                                            type="error"
+                                            // closable
+                                            // onClose={onClose}、
+                                            style={{ marginBottom: "20px", textAlign: "center" }}
+                                        />
+                                        <Form.Item {...this.state.tailLayout}>
+                                            <Button danger onClick={this.getNewNum.bind(this)}>重新计算</Button>
+                                        </Form.Item>
+                                    </>
+
+                                    : ""
+                            }
+
+                            <Form.Item label="实时库存" name="stock" rules={[{ required: true, message: '请填写实时库存' }]}>
+                                <InputNumber min={0} />
+                            </Form.Item>
+                            {
                                 this.formRef.current && this.formRef.current.getFieldValue("type") == 1
                                     ?
                                     // 固定商品
                                     <Form.Item
                                         label="配置"
-                                        // name="voters"
-                                        rules={[{ required: true, message: '配置' }]}
+                                        name="setting"
+                                        rules={[{ required: true, message: '请增加配置' }]}
                                     >
                                         <Form.List name="setting" rules={[{ required: true, message: '配置' }]}>
                                             {(fields, { add, remove }) => (
@@ -246,11 +271,20 @@ export default class EarnIncentiveTask extends React.Component {
                                                     {fields.map((field, index) => (
                                                         <Space key={field.key} align="baseline">
                                                             <Form.Item {...field} label="用户等级" name={[field.name, 'level']} fieldKey={[field.fieldKey, 'level']}>
-                                                                <Select allowClear style={{ width: "200px" }}>
-                                                                    <Option value={1} key={1} disabled={this.getState(field.name)}>黄铜</Option>
-                                                                    <Option value={2} key={2} disabled={this.getState(field.name)}>白银</Option>
-                                                                    <Option value={3} key={3} disabled={this.getState(field.name)}>黄金</Option>
-                                                                    <Option value={4} key={4} disabled={this.getState(field.name)}>钻石</Option>
+                                                                <Select allowClear style={{ width: "200px" }}
+                                                                    onChange={(e) => {
+                                                                        let arr = this.formRef.current.getFieldValue("setting")
+                                                                        arr[index].level = e
+                                                                        this.formRef.current.setFieldsValue({ "setting": arr })
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        levelList.map(r => {
+                                                                            return <Option value={r.level} key={r.level}
+                                                                                disabled={this.getDisable(r, "level", "level")}
+                                                                            >{r.name}</Option>
+                                                                        })
+                                                                    }
                                                                 </Select>
                                                             </Form.Item>
                                                             <Form.Item {...field} label="占库存比例（%）" name={[field.name, 'ratio']} fieldKey={[field.fieldKey, 'ratio']}>
@@ -265,12 +299,12 @@ export default class EarnIncentiveTask extends React.Component {
                                                                     console.log(total, "现有总数比列")
                                                                     if (total > 100) {
                                                                         arr[index].ratio = e - (total - 100)
-                                                                        arr[index].num = arr[index].ratio * this.formRef.current.getFieldValue("stock") / 100
+                                                                        // arr[index].num = Math.floor(arr[index].ratio * this.formRef.current.getFieldValue("stock") / 100)
                                                                         this.formRef.current.setFieldsValue({ "setting": arr })
                                                                         this.forceUpdate()
                                                                         return
                                                                     }
-                                                                    arr[index].num = e * this.formRef.current.getFieldValue("stock") / 100
+                                                                    // arr[index].num = Math.floor(e * this.formRef.current.getFieldValue("stock") / 100)
                                                                     this.formRef.current.setFieldsValue({ "setting": arr })
                                                                     this.forceUpdate()
                                                                 }} />
@@ -287,7 +321,7 @@ export default class EarnIncentiveTask extends React.Component {
 
                                                     <Form.Item>
                                                         <Button type="dashed" onClick={() => {
-                                                            if (this.formRef.current.getFieldValue("setting") && this.formRef.current.getFieldValue("setting").length >= 4) return
+                                                            if (this.formRef.current.getFieldValue("setting") && this.formRef.current.getFieldValue("setting").length >= 4) return message.error("最多四个等级")
                                                             add()
                                                         }} block icon={<PlusOutlined />}>
                                                             新建配置
@@ -303,8 +337,8 @@ export default class EarnIncentiveTask extends React.Component {
                                         // 固定人群
                                         <Form.Item
                                             label="配置"
-                                            // name="voters"
-                                            rules={[{ required: true, message: '配置' }]}
+                                            name="setting"
+                                            rules={[{ required: true, message: '请增加配置' }]}
                                         >
                                             <Form.List name="setting">
                                                 {(fields, { add, remove }) => (
@@ -312,11 +346,18 @@ export default class EarnIncentiveTask extends React.Component {
                                                         {fields.map((field, index) => (
                                                             <Space key={field.key} align="baseline">
                                                                 <Form.Item {...field} label="用户标签" name={[field.name, 'tagCode']} fieldKey={[field.fieldKey, 'tagCode']}>
-                                                                    <Select style={{ width: "200px" }} disabled={this.formRef.current.getFieldValue("setting")[index].tagCode == "none"}>
+                                                                    <Select style={{ width: "200px" }}
+                                                                        disabled={this.formRef.current.getFieldValue("setting")[index] && this.formRef.current.getFieldValue("setting")[index].tagCode == "none"}
+                                                                        onChange={(e) => {
+                                                                            let arr = this.formRef.current.getFieldValue("setting")
+                                                                            arr[index].tagCode = e
+                                                                            this.formRef.current.setFieldsValue({ "setting": arr })
+                                                                        }}
+                                                                    >
                                                                         {
                                                                             tagList.map((r, i) => {
                                                                                 return <Option value={r.code} key={i}
-                                                                                disabled={this.getDisable(r)}
+                                                                                    disabled={this.getDisable(r, "tagCode", "code")}
                                                                                 >{r.name}</Option>
                                                                             })
                                                                         }
@@ -334,16 +375,19 @@ export default class EarnIncentiveTask extends React.Component {
                                                                 <Form.Item {...field} label="排序" name={[field.name, 'sort']} fieldKey={[field.fieldKey, 'sort']}>
                                                                     <InputNumber min={0} />
                                                                 </Form.Item>
+                                                                {
+                                                                    index == 0 ? "" :
+                                                                        <MinusCircleOutlined onClick={() => {
+                                                                            remove(field.name)
+                                                                        }} />
+                                                                }
 
-                                                                <MinusCircleOutlined onClick={() => {
-                                                                    remove(field.name)
-                                                                }} />
                                                             </Space>
                                                         ))}
 
                                                         <Form.Item>
                                                             <Button type="dashed" onClick={() => {
-                                                                if (this.formRef.current.getFieldValue("setting") && this.formRef.current.getFieldValue("setting").length >= 4) return
+                                                                // if (this.formRef.current.getFieldValue("setting") && this.formRef.current.getFieldValue("setting").length >= 4) return
                                                                 add()
                                                             }} block icon={<PlusOutlined />}>
                                                                 新建配置
@@ -357,8 +401,8 @@ export default class EarnIncentiveTask extends React.Component {
                                         // 随机商品
                                         <Form.Item
                                             label="配置"
-                                            // name="voters"
-                                            rules={[{ required: true, message: '配置' }]}
+                                            name="setting"
+                                            rules={[{ required: true, message: '请增加配置' }]}
                                         >
                                             <Form.List name="setting">
                                                 {(fields, { add, remove }) => (
@@ -366,10 +410,18 @@ export default class EarnIncentiveTask extends React.Component {
                                                         {fields.map((field, index) => (
                                                             <Space key={field.key} align="baseline">
                                                                 <Form.Item {...field} label="用户标签" name={[field.name, 'tagCode']} fieldKey={[field.fieldKey, 'tagCode']}>
-                                                                    <Select style={{ width: "200px" }} disabled={this.formRef.current.getFieldValue("setting")[index].tagCode == "none"}>
+                                                                    <Select style={{ width: "200px" }} disabled={this.formRef.current.getFieldValue("setting")[index] && this.formRef.current.getFieldValue("setting")[index].tagCode == "none"}
+                                                                        onChange={(e) => {
+                                                                            let arr = this.formRef.current.getFieldValue("setting")
+                                                                            arr[index].tagCode = e
+                                                                            this.formRef.current.setFieldsValue({ "setting": arr })
+                                                                        }}
+                                                                    >
                                                                         {
                                                                             tagList.map((r, i) => {
-                                                                                return <Option value={r.code} key={i}>{r.name}</Option>
+                                                                                return <Option value={r.code} key={i} disabled={this.getDisable(r, "tagCode", "code")}>
+                                                                                    {r.name}
+                                                                                </Option>
                                                                             })
                                                                         }
 
@@ -385,9 +437,12 @@ export default class EarnIncentiveTask extends React.Component {
                                                                     <InputNumber min={0} />
                                                                 </Form.Item>
 
-                                                                <MinusCircleOutlined onClick={() => {
-                                                                    remove(field.name)
-                                                                }} />
+                                                                {
+                                                                    index == 0 ? "" :
+                                                                        <MinusCircleOutlined onClick={() => {
+                                                                            remove(field.name)
+                                                                        }} />
+                                                                }
                                                             </Space>
                                                         ))}
 
@@ -405,7 +460,6 @@ export default class EarnIncentiveTask extends React.Component {
                                         </Form.Item>
                             }
 
-
                             <Form.Item {...this.state.tailLayout}>
                                 <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
                                 <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
@@ -422,28 +476,15 @@ export default class EarnIncentiveTask extends React.Component {
         this.requestNewAdTagList()
         this.getZzItemList();
     }
-    getState(val) {
-        // console.log(this.formRef.current.getFieldValue("setting"))
-        // let arr=[]
-        // this.formRef.current.getFieldValue("setting").forEach(r=>{
-        //     if(r && r.level == val + 1){
-        //         arr.push(r)
-        //     }
-        // })
-        // console.log(arr)
-        // if (arr.length > 0) return true
-        return false
-
-    }
-    getDisable(val){
-        if(val && this.formRef.current.getFieldValue("setting") && this.formRef.current.getFieldValue("setting").length>0){
-            let arr = this.formRef.current.getFieldValue("setting").filter(r=>r.tagCode == val.code)
-            if(arr.length>0){
+    getDisable(val, tagCode, code) {
+        if (val && this.formRef.current.getFieldValue("setting") && this.formRef.current.getFieldValue("setting").length > 0) {
+            let arr = this.formRef.current.getFieldValue("setting").filter(r => r && r[tagCode] == val[code])
+            if (arr.length > 0) {
                 return true
-            }else{
+            } else {
                 return false
             }
-        }else{
+        } else {
             return false
         }
     }
@@ -470,6 +511,19 @@ export default class EarnIncentiveTask extends React.Component {
     }
     submitForm(val) {   // 提交表单
         console.log(val, "val")
+        if (val.setting) {
+            let arr = []
+            if (val.type == 1) {
+                arr = val.setting.filter(r => !r.level)
+            } else if (val.type == 2) {
+                arr = val.setting.filter(r => !r.value)
+            } else {
+                arr = val.setting.filter(r => !r.max || !r.min)
+            }
+            if (arr.length > 0) {
+                return message.error("请填写完整的配置信息")
+            }
+        }
         if (this.state.source == "edit") {
             this.editZzItemList(val)
         } else {
@@ -480,7 +534,7 @@ export default class EarnIncentiveTask extends React.Component {
 
     getZzItemList() {
         let params = {
-            "page": {
+            page: {
                 "currentPage": this.state.page, // (int)页码
                 "pageSize": this.state.pageSize // (int)每页数量
             }
@@ -572,5 +626,37 @@ export default class EarnIncentiveTask extends React.Component {
         }).catch((err) => {
 
         })
+    }
+    rsZzItemList(val) {
+        let params = {
+            codes: val.code
+        }
+        rsZzItemList(params).then(res => {
+            console.log(res.data)
+            let arr = val 
+            if(Array.isArray(arr.setting) && arr.setting.length>0 && arr.type == 1){
+                arr.setting.forEach(r=>{
+                    r.num = res.data[arr.code].setting1[`level:${r.level}`]
+                })
+            }
+            arr.stock = res.data[arr.code].stock
+            this.formRef.current.setFieldsValue(arr)
+        })
+    }
+    getNewNum() {
+        if (!this.formRef.current.getFieldValue("stock")) return message.error("请先输入库存")
+        let arr = this.formRef.current.getFieldValue("setting")
+        arr.forEach(r => {
+            if(r){
+                r.num = Math.floor(r.ratio * this.formRef.current.getFieldValue("stock") / 100)
+            }
+        })
+        let info = this.state.currentItem
+        info.changeStock = true
+        this.setState({
+            currentItem:info
+        })
+        this.formRef.current.setFieldsValue({ "setting": arr})
+        this.forceUpdate()
     }
 }

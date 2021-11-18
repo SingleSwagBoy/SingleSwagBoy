@@ -93,7 +93,7 @@ export default class EarnIncentiveTask extends React.Component {
                     key: "jumpType",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{rowValue == 0 ? "无" :rowValue == 1 ? "短视频":rowValue == 2 ? "频道":rowValue == 3 ? "节目单详情页":""}</div>
+                            <div>{rowValue == 0 ? "无" :rowValue == 29 ? "短视频":rowValue == 3 ? "频道":rowValue == 19 ? "节目单详情页":""}</div>
                         )
                     }
                 },
@@ -213,19 +213,19 @@ export default class EarnIncentiveTask extends React.Component {
                                     this.forceUpdate()
                                 }}>
                                     <Option value={0} key={0}>无</Option>
-                                    <Option value={1} key={1}>短视频</Option>
-                                    <Option value={2} key={2}>频道</Option>
-                                    <Option value={3} key={3}>节目单详情页</Option>
+                                    <Option value={29} key={29}>短视频</Option>
+                                    <Option value={3} key={3}>频道</Option>
+                                    <Option value={19} key={19}>节目单详情页</Option>
                                 </Select>
                             </Form.Item>
                             {
-                                this.formRef.current && this.formRef.current.getFieldValue("jumpType") == 1
+                                this.formRef.current && this.formRef.current.getFieldValue("jumpType") == 29
                                     ?
                                     <Form.Item label="短视频ID" name="jumpContent" rules={[{ required: true, message: '请填写短视频ID' }]}>
                                         <Input placeholder="请输入短视频ID" />
                                     </Form.Item>
                                     :
-                                    this.formRef.current && this.formRef.current.getFieldValue("jumpType") == 2
+                                    this.formRef.current && this.formRef.current.getFieldValue("jumpType") == 3
                                         ?
                                         <Form.Item label="频道" name="jumpContent" rules={[{ required: true, message: '请选择频道' }]}>
                                             <Select
@@ -253,7 +253,7 @@ export default class EarnIncentiveTask extends React.Component {
                                             </Select>
                                         </Form.Item>
                                         :
-                                        this.formRef.current && this.formRef.current.getFieldValue("jumpType") == 3
+                                        this.formRef.current && this.formRef.current.getFieldValue("jumpType") == 19
                                             ?
                                             <Form.Item label="节目单" name="jumpContent" rules={[{ required: true, message: '请选择节目单' }]}>
                                                 <Select

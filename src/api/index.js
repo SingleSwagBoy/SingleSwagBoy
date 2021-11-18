@@ -282,6 +282,7 @@ export const addZzItemList = (params) => { return request2.post(`${baseUrl}/mms/
 export const deleteZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/deleteItem`, { params: params }) };          // 编辑体现商品列表
 export const changeZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/changeState`, { params: params }) };          // 编辑体现商品列表
 export const syncZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/syncCache`, { params: params }) };          // 编辑体现商品列表
+export const rsZzItemList = (params) => { return request2.get(`${baseUrl}/mms/zzItem/rs`, { params: params }) };          // 刷新库存
 //赚赚管理---刷新库存
 export const getRefresh = (params) => { return request2.post(`${baseUrl}/mms/zzItemTicker/list`, params) };          // 获取库存列表
 export const addRefresh = (params) => { return request2.post(`${baseUrl}/mms/zzItemTicker/store`, params) };          // 编辑和新增库存列表
@@ -357,8 +358,11 @@ export const getStateHomeList = (params) => { return request.get(`${baseUrl}/mms
 export const setStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/setstatus`,{ params: params }); };                 // 首页直播配置列表
 export const syncHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/sync`,{ params: params }); };                 // 首页直播配置列表
 
-
-
+//火星开机进入 
+export const getMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/marsStartup/get`,{ params: params }); };                 // 获取
+export const addMarsList = (params) => { return request.post(`${baseUrl}/mms/ad/marsStartup/add`,params); };                 // 获取
+export const uploadMarsList = (params) => { return request.post(`${baseUrl}/mms/ad/marsStartup/update`,params); };                 // 获取
+export const delMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/marsStartup/del`,{ params: params }); };                 // 获取
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

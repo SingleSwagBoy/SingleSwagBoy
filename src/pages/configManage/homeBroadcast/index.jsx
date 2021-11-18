@@ -26,7 +26,7 @@ export default class AddressNews extends Component {
                 wrapperCol: { offset: 4, span: 20 },
             },
             addressList: [
-                "样式", "卫视"
+                "央视", "卫视"
             ],
             currentSort: 0,
             editIndex: null,
@@ -138,7 +138,7 @@ export default class AddressNews extends Component {
                                                 this.setStateHomeList(e)
                                             }}
                                         />
-                                        <MySyncBtn type={18} name='同步缓存' />
+                                        <MySyncBtn type={18} name='同步缓存' params={{"channelType":this.state.tabIndex}} />
                                     </div>
                                     <Table
                                         dataSource={this.state.lists}

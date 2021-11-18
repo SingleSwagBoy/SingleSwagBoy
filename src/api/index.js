@@ -358,6 +358,11 @@ export const setStateHomeList = (params) => { return request.get(`${baseUrl}/mms
 export const syncHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/sync`,{ params: params }); };                 // 首页直播配置列表
 
 
+//微信菜单
+export const addWechatMenu = (params) => { return request.post(`${baseUrl}/mms/wx/menu/new/add`,params); };                 // 创建菜单
+export const getWechatMenu = (params) => { return request.get(`${baseUrl}/mms/wx/menu/new/get`,{ params: params }); };                 // 获取菜单
+export const delWechatMenu = (params) => { return request.get(`${baseUrl}/mms/wx/menu/new/delete`,{ params: params }); };                 // 删除菜单
+export const uploadWechatMenu = (params) => { return request.post(`${baseUrl}/mms/wx/menu/new/update`,params); };           // 编辑菜单
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

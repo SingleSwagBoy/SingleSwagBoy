@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getRefresh, getZzItemList, addRefresh, changeRefresh, delRefresh } from 'api'
+import { getRefresh, getWechatMenu, addRefresh, changeRefresh, delRefresh } from 'api'
 import { Radio, Card, Menu, Button, message, Modal, Divider, Input, Form, Select, Space, Image } from 'antd'
 import { } from 'react-router-dom'
 import { PlusOutlined, DeleteOutlined, HighlightOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -24,11 +24,13 @@ export default class EarnIncentiveTask extends React.Component {
                 wrapperCol: { offset: 16, span: 8 },
             },
             visible: false,
-            openKeys: ["sub1"]
+            openKeys: ["sub1"],
+            menuInfo:"",
+            radioState:"default"
         }
     }
     render() {
-        let { openKeys, layout, } = this.state;
+        let { openKeys, layout,radioState } = this.state;
         return (
             <div>
                 <Card title={
@@ -55,9 +57,15 @@ export default class EarnIncentiveTask extends React.Component {
                         </div>
                     }
                 >
-                    <Radio.Group defaultValue="a" style={{ marginTop: 16 }}>
-                        <Radio.Button value="a">默认菜单</Radio.Button>
-                        <Radio.Button value="b">个性化菜单</Radio.Button>
+                    <Radio.Group defaultValue={radioState} style={{ marginTop: 16 }} onChange={(e)=>{
+                        this.setState({
+                            radioState:e.target.value
+                        },()=>{
+                            this.getWechatMenu()
+                        })
+                    }}>
+                        <Radio.Button value="default">默认菜单</Radio.Button>
+                        <Radio.Button value="personal">个性化菜单</Radio.Button>
                     </Radio.Group>
                     <div style={{ "width": "100%", display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginTop: "20px" }}>
                         {/* 菜单 */}
@@ -100,19 +108,8 @@ export default class EarnIncentiveTask extends React.Component {
                                     <Input placeholder="请输入名称" disabled />
                                 </Form.Item>
                                 <Divider dashed plain >菜单内容</Divider>
-                                <Form.Item label="消息类型" name="type">
-                                    <Radio.Group onChange={(e) => {
-                                        this.formRef.current.setFieldsValue({ "type": e.target.value })
-                                    }} defaultValue={1}>
-                                        <Radio value={1}>文字</Radio>
-                                        <Radio value={2}>图片</Radio>
-                                        <Radio value={3}>图文卡片</Radio>
-                                        <Radio value={4}>小程序卡片</Radio>
-                                        <Radio value={5}>点击跳转</Radio>
-                                    </Radio.Group>
-                                </Form.Item>
                                 <Form.Item
-                                    label="新建"
+                                    label="回复内容"
                                     // name="voters"
                                     rules={[{ required: true, message: '' }]}
                                 >
@@ -121,97 +118,119 @@ export default class EarnIncentiveTask extends React.Component {
                                             <>
                                                 {fields.map((field, index) => (
                                                     <Space key={field.key} align="baseline" style={{ width: "100%" }}>
-
-                                                        {
-                                                            // 文字
-                                                            this.formRef.current.getFieldValue("type") == 1
-                                                                ?
-                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                    <Input placeholder="文字"  />
+                                                        <div>
+                                                            <div>
+                                                                <Form.Item  {...field} label="消息类型" name={[field.name, 'type']} fieldKey={[field.fieldKey, 'type']}>
+                                                                    <Radio.Group onChange={(e) => {
+                                                                        this.formRef.current.setFieldsValue({ "type": e.target.value })
+                                                                    }} defaultValue={1}>
+                                                                        <Radio value={1}>文字</Radio>
+                                                                        <Radio value={2}>图片</Radio>
+                                                                        <Radio value={3}>图文卡片</Radio>
+                                                                        <Radio value={4}>小程序卡片</Radio>
+                                                                        <Radio value={5}>点击跳转</Radio>
+                                                                    </Radio.Group>
                                                                 </Form.Item>
-                                                                :
-                                                                // 图片
-                                                                this.formRef.current.getFieldValue("type") == 2
-                                                                    ?
-                                                                    <Form.Item {...field} label="图片" name={[field.name, 'picUrl']} fieldKey={[field.fieldKey, 'picUrl']}>
-                                                                        <MyImageUpload
-                                                                            getUploadFileUrl={(file) => { this.getUploadFileUrl('picUrl', file) }}
-                                                                        // imageUrl={this.iconFormRef.current.getFieldValue("picUrl")}
-                                                                        />
-                                                                    </Form.Item>
-                                                                    :
-                                                                    this.formRef.current.getFieldValue("type") == 3 ?
-                                                                        <>
-                                                                            <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                                <Input placeholder="卡片标题" />
-                                                                            </Form.Item>
-                                                                            <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                                <Input placeholder="卡片描述" />
-                                                                            </Form.Item>
-                                                                            <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                                <Input placeholder="跳转链接" />
-                                                                            </Form.Item>
-                                                                            <Form.Item {...field} label="卡片图" name={[field.name, 'picUrl']} fieldKey={[field.fieldKey, 'picUrl']}>
+                                                            </div>
+                                                            <div>
+                                                                {
+                                                                    // 文字
+                                                                    this.formRef.current.getFieldValue("type") == 1
+                                                                        ?
+                                                                        <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                            <Input placeholder="文字" />
+                                                                        </Form.Item>
+                                                                        :
+                                                                        // 图片
+                                                                        this.formRef.current.getFieldValue("type") == 2
+                                                                            ?
+                                                                            <Form.Item {...field} label="图片" name={[field.name, 'picUrl']} fieldKey={[field.fieldKey, 'picUrl']}>
                                                                                 <MyImageUpload
                                                                                     getUploadFileUrl={(file) => { this.getUploadFileUrl('picUrl', file) }}
                                                                                 // imageUrl={this.iconFormRef.current.getFieldValue("picUrl")}
                                                                                 />
                                                                             </Form.Item>
-                                                                        </>
+                                                                            :
+                                                                            this.formRef.current.getFieldValue("type") == 3 ?
+                                                                                <>
+                                                                                    <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                        <Input placeholder="卡片标题" />
+                                                                                    </Form.Item>
+                                                                                    <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                        <Input placeholder="卡片描述" />
+                                                                                    </Form.Item>
+                                                                                    <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                        <Input placeholder="跳转链接" />
+                                                                                    </Form.Item>
+                                                                                    <Form.Item {...field} label="卡片图" name={[field.name, 'picUrl']} fieldKey={[field.fieldKey, 'picUrl']}>
+                                                                                        <MyImageUpload
+                                                                                            getUploadFileUrl={(file) => { this.getUploadFileUrl('picUrl', file) }}
+                                                                                        // imageUrl={this.iconFormRef.current.getFieldValue("picUrl")}
+                                                                                        />
+                                                                                    </Form.Item>
+                                                                                </>
 
-                                                                        :
-                                                                        this.formRef.current.getFieldValue("type") == 4 ?
-                                                                            <>
-                                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                                    <Select
-                                                                                        placeholder="请选择微信小程序"
-                                                                                        allowClear
-                                                                                    >
-                                                                                       <Option value={1} key={1}>{1}</Option>
-                                                                                    </Select>
-                                                                                </Form.Item>
-                                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                                    <Input placeholder="小程序标题" />
-                                                                                </Form.Item>
-                                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                                    <Input placeholder="小程序跳转路径" />
-                                                                                </Form.Item>
-                                                                                <Form.Item {...field} label="封面图片" name={[field.name, 'picUrl']} fieldKey={[field.fieldKey, 'picUrl']}>
-                                                                                    <MyImageUpload
-                                                                                        getUploadFileUrl={(file) => { this.getUploadFileUrl('picUrl', file) }}
-                                                                                    // imageUrl={this.iconFormRef.current.getFieldValue("picUrl")}
-                                                                                    />
-                                                                                </Form.Item>
-                                                                            </>
-                                                                            :
-                                                                            this.formRef.current.getFieldValue("type") == 5 ?
-                                                                            <>
-                                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                                    <Select
-                                                                                        placeholder="请选择微信小程序"
-                                                                                        allowClear
-                                                                                    >
-                                                                                       <Option value={1} key={1}>{1}</Option>
-                                                                                       <Option value={2} key={2}>{2}</Option>
-                                                                                    </Select>
-                                                                                </Form.Item>
-                                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                                    <Input placeholder="小程序跳转路径" />
-                                                                                </Form.Item>
-                                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
-                                                                                    <Input placeholder="备用路径" />
-                                                                                </Form.Item>
-                                                                            </>
-                                                                            :
-                                                                            ""
-                                                        }
+                                                                                :
+                                                                                this.formRef.current.getFieldValue("type") == 4 ?
+                                                                                    <>
+                                                                                        <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                            <Select
+                                                                                                placeholder="请选择微信小程序"
+                                                                                                allowClear
+                                                                                            >
+                                                                                                <Option value={1} key={1}>{1}</Option>
+                                                                                            </Select>
+                                                                                        </Form.Item>
+                                                                                        <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                            <Input placeholder="小程序标题" />
+                                                                                        </Form.Item>
+                                                                                        <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                            <Input placeholder="小程序跳转路径" />
+                                                                                        </Form.Item>
+                                                                                        <Form.Item {...field} label="封面图片" name={[field.name, 'picUrl']} fieldKey={[field.fieldKey, 'picUrl']}>
+                                                                                            <MyImageUpload
+                                                                                                getUploadFileUrl={(file) => { this.getUploadFileUrl('picUrl', file) }}
+                                                                                            // imageUrl={this.iconFormRef.current.getFieldValue("picUrl")}
+                                                                                            />
+                                                                                        </Form.Item>
+                                                                                    </>
+                                                                                    :
+                                                                                    this.formRef.current.getFieldValue("type") == 5 ?
+                                                                                        <>
+                                                                                            <Form.Item {...field} label="" name={[field.name, 'formType']} fieldKey={[field.fieldKey, 'formType']}>
+                                                                                                <Radio.Group defaultValue="a" style={{ marginTop: 16 }}>
+                                                                                                    <Radio.Button value="a">默认菜单</Radio.Button>
+                                                                                                    <Radio.Button value="b">个性化菜单</Radio.Button>
+                                                                                                </Radio.Group>
+                                                                                            </Form.Item>
+                                                                                            <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                                <Select
+                                                                                                    placeholder="请选择微信小程序"
+                                                                                                    allowClear
+                                                                                                >
+                                                                                                    <Option value={1} key={1}>{1}</Option>
+                                                                                                    <Option value={2} key={2}>{2}</Option>
+                                                                                                </Select>
+                                                                                            </Form.Item>
+                                                                                            <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                                <Input placeholder="小程序跳转路径" />
+                                                                                            </Form.Item>
+                                                                                            <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                                <Input placeholder="备用路径" />
+                                                                                            </Form.Item>
+                                                                                        </>
+                                                                                        :
+                                                                                        ""
+                                                                }
+                                                            </div>
+                                                        </div>
                                                         <MinusCircleOutlined onClick={() => { remove(field.name) }} />
                                                     </Space>
                                                 ))}
-                                                
+
                                                 <Form.Item>
                                                     <Button type="dashed" onClick={() => { add() }} block icon={<PlusOutlined />}>
-                                                        新建一条
+                                                        新建一条回复内容
                                                     </Button>
                                                 </Form.Item>
                                             </>
@@ -234,7 +253,7 @@ export default class EarnIncentiveTask extends React.Component {
         )
     }
     componentDidMount() {
-        // this.getZzItemList()
+        this.getWechatMenu()
         // this.getRefresh();
     }
     onOpenChange(e) {
@@ -272,19 +291,20 @@ export default class EarnIncentiveTask extends React.Component {
             title: `确认删除该条数据吗？`,
             // content: '确认删除？',
             onOk: () => {
-                this.delRefresh(_obj.zzItemCode)
+                // this.delRefresh(_obj.zzItemCode)
             },
             onCancel: () => {
             }
         })
     }
-    // delRefresh(code) {
-    //     let params = {
-    //         zzItemCodes: code
-    //     }
-    //     delRefresh(params).then(res => {
-    //         message.success("删除成功")
-    //         this.getRefresh()
-    //     })
-    // }
+    getWechatMenu() {
+        let params = {
+            menuType: this.state.radioState
+        }
+        getWechatMenu(params).then(res => {
+           this.setState({
+               menuInfo:res.data
+           })
+        })
+    }
 }

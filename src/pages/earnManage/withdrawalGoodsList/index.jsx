@@ -133,7 +133,7 @@ export default class EarnIncentiveTask extends React.Component {
                                             arr.time = [moment(arr.startAt), moment(arr.endAt)]
                                             arr.state = arr.state == 0 ? false : true
                                             this.formRef.current.setFieldsValue(arr)
-                                            this.rsZzItemList(row)
+                                            this.rsZzItemList(arr)
                                             this.forceUpdate()
                                         })
                                     }}
@@ -208,7 +208,7 @@ export default class EarnIncentiveTask extends React.Component {
                                 <Input placeholder="请输入商品名称" />
                             </Form.Item>
                             <Form.Item label="商品code" name="manualCode" rules={[{ required: true, message: '请输入code' }]}>
-                                <Input placeholder="请输入商品code" />
+                                <Input placeholder="请输入商品code" disabled={this.state.source == "edit"} />
                             </Form.Item>
                             {/*  */}
                             <Form.Item label="类型" name="type" rules={[{ required: true, message: '请选择类型' }]}>
@@ -224,6 +224,9 @@ export default class EarnIncentiveTask extends React.Component {
                             </Form.Item>
                             <Form.Item label="上线时间-下线时间" name="time" rules={[{ required: true, message: '请选择上下线时间' }]}>
                                 <RangePicker placeholder={['上线时间', '下线时间']} showTime ></RangePicker>
+                            </Form.Item>
+                            <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请填写排序' }]}>
+                                <InputNumber min={0} />
                             </Form.Item>
                             <Form.Item label="状态" name="state" valuePropName="checked">
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
@@ -251,9 +254,6 @@ export default class EarnIncentiveTask extends React.Component {
                             }
 
                             <Form.Item label="实时库存" name="stock" rules={[{ required: true, message: '请填写实时库存' }]}>
-                                <InputNumber min={0} />
-                            </Form.Item>
-                            <Form.Item label="排序" name="sort" rules={[{ required: true, message: '请填写排序' }]}>
                                 <InputNumber min={0} />
                             </Form.Item>
                             {
@@ -633,7 +633,14 @@ export default class EarnIncentiveTask extends React.Component {
         }
         rsZzItemList(params).then(res => {
             console.log(res.data)
-            this.formRef.current.setFieldsValue({ "stock": res.data[val.code] })
+            let arr = val 
+            if(Array.isArray(arr.setting) && arr.setting.length>0 && arr.type == 1){
+                arr.setting.forEach(r=>{
+                    r.num = res.data[arr.code].setting1[`level:${r.level}`]
+                })
+            }
+            arr.stock = res.data[arr.code].stock
+            this.formRef.current.setFieldsValue(arr)
         })
     }
     getNewNum() {
@@ -645,7 +652,7 @@ export default class EarnIncentiveTask extends React.Component {
             }
            
         })
-        this.formRef.current.setFieldsValue({ "setting": arr })
+        this.formRef.current.setFieldsValue({ "setting": arr ,"changeStock":true})
         this.forceUpdate()
     }
 }

@@ -24,17 +24,28 @@ export default class EarnIncentiveTask extends React.Component {
                 wrapperCol: { offset: 16, span: 8 },
             },
             visible: false,
-            openKeys: ["sub1"],
+            openKeys: [],
             menuInfo: "",
             radioState: "default"
         }
     }
     render() {
-        let { openKeys, layout, radioState } = this.state;
-        let {openModal} = this.props
+        let { layout, radioState } = this.state;
+        let { openModal, menuInfo } = this.props
+        let arr = ""
+        let openKeys = []
+        if (menuInfo && openModal) {
+            arr = menuInfo.defaultMenu.button
+            if (arr && arr.length > 0) {
+                arr.forEach(r => {
+                    openKeys.push(r.name)
+                })
+            }
+        }
+        console.log(openKeys)
         return (
             <div>
-                <Modal title="新增任务" centered visible={openModal} onCancel={() => {this.props.onCloseModal()}} footer={null} width={1200}>
+                <Modal title={menuInfo.name} centered visible={openModal} onCancel={() => { this.props.onCloseModal() }} footer={null} width={1200}>
                     <Radio.Group defaultValue={radioState} style={{ marginTop: 16 }} onChange={(e) => {
                         this.setState({
                             radioState: e.target.value
@@ -48,7 +59,8 @@ export default class EarnIncentiveTask extends React.Component {
                     <div style={{ "width": "100%", display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginTop: "20px" }}>
                         {/* 菜单 */}
                         <div style={{ "width": "20%", border: "1px solid #000" }}>
-                            <Menu mode="inline" openKeys={openKeys}
+                            <Menu mode="inline"
+                                openKeys={openKeys}
                                 // defaultOpenKeys={["sub1"]}
                                 expandIcon={
                                     <></>
@@ -56,24 +68,50 @@ export default class EarnIncentiveTask extends React.Component {
                                 onSelect={(e) => {
                                     console.log(e)
                                 }}
-                                onOpenChange={this.onOpenChange.bind(this)} style={{ width: 256 }}>
-                                <SubMenu key="sub1"
-                                    title={
-                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                            <div>菜单</div>
-                                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                <div onClick={this.addMenu("sub1")}><PlusOutlined /></div>
-                                                <div style={{ margin: "0 10px" }}><DeleteOutlined /></div>
-                                                <div><HighlightOutlined /></div>
-                                            </div>
-                                        </div>
-                                    }
-                                    onTitleClick={(e) => { console.log(e) }}>
-                                    <Menu.Item key="1" >Option 1</Menu.Item>
-                                    <Menu.Item key="2">Option 2</Menu.Item>
-                                    <Menu.Item key="3">Option 3</Menu.Item>
-                                    <Menu.Item key="4">Option 4</Menu.Item>
-                                </SubMenu>
+                                onOpenChange={this.onOpenChange.bind(this)} style={{ width: 256 }}
+                            >
+                                {
+                                    menuInfo.defaultMenu && menuInfo.defaultMenu.button.map(r => {
+                                        return (
+                                            <SubMenu key={r.name}
+                                                title={
+                                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                        <div>{r.name}</div>
+                                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                            <div onClick={this.addMenu("sub1")}><PlusOutlined /></div>
+                                                            <div style={{ margin: "0 10px" }}><DeleteOutlined /></div>
+                                                            <div><HighlightOutlined /></div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                onTitleClick={(e) => { console.log(e) }}>
+                                                {
+                                                    r.sub_button
+                                                        ?
+                                                        <>
+                                                            {
+                                                                r.sub_button.map(l => {
+                                                                    return <Menu.Item key={l.key} >
+                                                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                                            <div>{l.name}</div>
+                                                                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                                                <div onClick={this.addMenu("sub1")}><PlusOutlined /></div>
+                                                                                <div style={{ margin: "0 10px" }}><DeleteOutlined /></div>
+                                                                                <div><HighlightOutlined /></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </Menu.Item>
+                                                                })
+                                                            }
+                                                        </>
+                                                        : ""
+                                                }
+
+                                            </SubMenu>
+                                        )
+                                    })
+                                }
+
                             </Menu>
                         </div>
                         <div style={{ "width": "78%", border: "1px solid #000" }}>

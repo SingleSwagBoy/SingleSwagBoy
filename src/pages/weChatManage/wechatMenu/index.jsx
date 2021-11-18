@@ -25,6 +25,7 @@ export default class EarnIncentiveTask extends React.Component {
                 wrapperCol: { offset: 16, span: 8 },
             },
             visible: false,
+            currentItem: "",
             columns: [
                 {
                     title: "公众号名称",
@@ -37,7 +38,7 @@ export default class EarnIncentiveTask extends React.Component {
                     key: "defaultMenu",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{rowValue?"已配置":"未配置"}</div>
+                            <div>{rowValue ? "已配置" : "未配置"}</div>
                         )
                     }
                 },
@@ -60,9 +61,11 @@ export default class EarnIncentiveTask extends React.Component {
                                     size="small"
                                     // type="primary"
                                     onClick={() => {
-                                       this.setState({
-                                           openModal:true
-                                       })
+                                        console.log(row, "row")
+                                        this.setState({
+                                            openModal: true,
+                                            currentItem: row
+                                        })
                                     }}
                                 >编辑</Button>
                             </div>
@@ -96,7 +99,11 @@ export default class EarnIncentiveTask extends React.Component {
                         columns={columns}
                     />
                 </Card>
-                <DefaultMenu  openModal={this.state.openModal} onCloseModal={this.closeModal.bind(this)}></DefaultMenu>
+                <DefaultMenu
+                    openModal={this.state.openModal}
+                    onCloseModal={this.closeModal.bind(this)}
+                    menuInfo={this.state.currentItem}
+                ></DefaultMenu>
             </div>
         )
     }
@@ -104,9 +111,9 @@ export default class EarnIncentiveTask extends React.Component {
         // this.getWechatMenu()
         this.getWxlist();
     }
-    closeModal(){
+    closeModal() {
         this.setState({
-            openModal:false,
+            openModal: false,
         })
     }
     getWechatMenu() {

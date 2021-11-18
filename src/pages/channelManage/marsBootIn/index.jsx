@@ -89,7 +89,14 @@ export default class EarnIncentiveTask extends React.Component {
                                     defaultChecked={rowValue == 1 ? true : false}
                                     onChange={(val) => {
                                         console.log(val)
-                                        // this.changeZzItemList(row)
+                                        let obj = JSON.parse(JSON.stringify(row))
+                                        obj.status = val ? 1 : 0
+                                        this.setState({
+                                            currentItem:"",
+                                        },()=>{
+                                            this.uploadMarsList(obj,"change")
+                                        })
+                                      
                                     }}
                                 />
                             </div>
@@ -364,14 +371,21 @@ export default class EarnIncentiveTask extends React.Component {
             message.success("新增成功")
         })
     }
-    uploadMarsList(val) {
-        let params = {
-            ...this.state.currentItem,
-            ...val,
-            startTime: val.time[0].valueOf(),
-            endTime: val.time[1].valueOf(),
-            status: val.status ? 1 : 0,
-            channelName: this.state.channelList.filter(r => r.code == val.channelId)[0].name
+    uploadMarsList(val,type) {
+        let params=""
+        if(type == "change"){
+            params = {
+                ...val
+            }
+        }else{
+            params = {
+                ...this.state.currentItem,
+                ...val,
+                startTime: val.time[0].valueOf(),
+                endTime: val.time[1].valueOf(),
+                status: val.status ? 1 : 0,
+                channelName: this.state.channelList.filter(r => r.code == val.channelId)[0].name
+            }
         }
         uploadMarsList(params).then(res => {
             this.getMarsList()

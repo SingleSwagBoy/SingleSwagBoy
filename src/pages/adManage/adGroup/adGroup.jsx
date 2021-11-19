@@ -337,6 +337,7 @@ export default class adGroup extends Component {
                 }
             },
             { title: '下发量', dataIndex: 'dealtNum', key: 'dealtNum', },
+            { title: '排序', dataIndex: 'sortOrder', key: 'sortOrder', },
             {
                 title: '状态', dataIndex: 'status', key: 'status', width: 200,
                 render: (rowValue, row, index) => {
@@ -408,9 +409,16 @@ export default class adGroup extends Component {
         let that = this;
         let { table_box } = that.state;
         let params = {
-            ...val
+            ...val,
+            groupName:this.state.search.groupName,
+            onlineTime:this.state.search.onlineTime,
+            offlineTime:this.state.search.offlineTime,
+            adName:this.state.search.adName,
+            tag:this.state.search.tag,
+            adType:this.state.search.adType,
+            
         }
-        requestNewGroupList(val ? params : {}).then(res => {
+        requestNewGroupList(params).then(res => {
             console.log('group_list', res.data);
 
             table_box.table_datas = res.data;

@@ -229,7 +229,7 @@ export default class EarnIncentiveTask extends React.Component {
             name: keyword,
         }
         getDetailProgram(params).then(res => {
-            if (res.data.errCode === 0) {
+            if (res.data.errCode === 0 && res.data.data) {
                 this.setState({
                     productLists: res.data.data,
                 })

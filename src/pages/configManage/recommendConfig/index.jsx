@@ -247,9 +247,13 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
         //获取频道组
         getChannel(params).then(res => {
             let errCode = res.data.errCode;
-            if (errCode === 0) {
+            if (errCode === 0 && res.data.data) {
                 this.setState({
                     channel_list: res.data.data,
+                })
+            }else{
+                this.setState({
+                    channel_list: [],
                 })
             }
         })

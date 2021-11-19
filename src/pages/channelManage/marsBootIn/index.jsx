@@ -239,7 +239,7 @@ export default class EarnIncentiveTask extends React.Component {
                                 >
                                     {
                                         channelList.map((r, i) => {
-                                            return <Option value={r.code} key={i}>{r.name}</Option>
+                                            return <Option value={r.code} key={i}>{r.name}------{r.code}</Option>
                                         })
                                     }
                                 </Select>
@@ -309,9 +309,11 @@ export default class EarnIncentiveTask extends React.Component {
             // page: {currentPage: 1, pageSize: 50}
         }
         getChannel(params).then(res => {
-            this.setState({
-                channelList: res.data.data
-            });
+            if(res.data.errCode == 0  && res.data.data){
+                this.setState({
+                    channelList: res.data.data
+                });
+            }
         })
     }
     changeSize = (page, pageSize) => {   // 分页

@@ -149,7 +149,8 @@ export default class EarnIncentiveTask extends React.Component {
                                                                 <Form.Item  {...field} label="消息类型" name={[field.name, 'msg_type']} fieldKey={[field.fieldKey, 'msg_type']}>
                                                                     <Radio.Group onChange={(e) => {
                                                                         let arr = this.formRef.current.getFieldValue("reply_info")
-                                                                        arr[index].msg_type = e
+                                                                        arr[index].msg_type = e.target.value
+                                                                        console.log(arr)
                                                                         this.formRef.current.setFieldsValue({ "reply_info": arr })
                                                                     }} defaultValue={1}>
                                                                         <Radio value={"text"}>文字</Radio>

@@ -326,7 +326,7 @@ export default class WxPayTemplate extends Component {
                     return (
                         <div>
                             <Button size='small' style={{ marginLeft: 3 }} onClick={() => that.onItemCopyClick(row)}>复制</Button>
-                            <Button size='small' style={{ marginLeft: 3 }} onClick={() => that.onItemSendClick(row)}>发送</Button>
+                            {/* <Button size='small' style={{ marginLeft: 3 }} onClick={() => that.onItemSendClick(row)}>发送</Button> */}
                             <Button size='small' style={{ marginLeft: 3 }} onClick={() => that.onItemEditClick(row)}>编辑</Button>
                             <Button size='small' style={{ marginLeft: 3 }} onClick={() => that.onItemDlelteClick(row)}>删除</Button>
                         </div>

@@ -405,24 +405,23 @@ export default class EarnIncentiveTask extends React.Component {
             ...val
         }
         let info = JSON.parse(JSON.stringify(this.props.menuInfo))
-        console.log(info,editInfo)
         if(info.defaultMenu.button){
             info.defaultMenu.button.forEach(l=>{
                 if(l.sub_button){
                     l.sub_button.forEach(h=>{
                         if(h.key == editInfo.key){
-                             console.log(h,editInfo,"11111")
                             h = editInfo
+                            console.log(h)
                         }
                     })
                 }
             })
         }
-        // console.log(editInfo,"editInfo")
+        console.log(info,"info")
         let params={
             ...info
         }
-        return console.log(params)
+        return
         uploadWechatMenu(params).then(res=>{
             message.success("更新成功")
         })

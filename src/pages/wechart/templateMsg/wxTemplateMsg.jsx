@@ -8,7 +8,7 @@
 
 
 import React, { Component } from 'react';
-import { Button, Table, Switch, Input, Modal, Radio, message, Select, Alert, Form, DatePicker } from 'antd';
+import { Button, Table, Switch, Input, Modal, Radio, message, Select, Alert, Form, DatePicker, InputNumber } from 'antd';
 import { MyTagTypes, MySyncBtn, MyTimeInterval } from '@/components/views.js';
 import '@/style/base.css';
 import myTimeUtils from '@/utils/time.js';
@@ -125,6 +125,9 @@ export default class WxPayTemplate extends Component {
 
                                 <Form.Item label="上下线时间" name='start_end_time' rules={[{ required: true }]} >
                                     <RangePicker className="base-input-wrapper" showTime format={'YYYY-MM-DD HH:mm:ss'} />
+                                </Form.Item>
+                                <Form.Item label="排序" name='sort' rules={[{ required: true }]} >
+                                    <InputNumber min={0} />
                                 </Form.Item>
 
                                 <Form.Item label="模板类型" name='tmpl_type' >
@@ -260,6 +263,7 @@ export default class WxPayTemplate extends Component {
         let table_title = [
             { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
             { title: '名称', dataIndex: 'name', key: 'name', width: 200, },
+            { title: '排序', dataIndex: 'sort', key: 'sort', width: 80,},
             // { title: 'Title', dataIndex: 'Title', key: 'Title', width: 80, },
             {
                 title: '微信公众号', dataIndex: 'wx_code', key: 'wx_code', width: 120,
@@ -278,7 +282,7 @@ export default class WxPayTemplate extends Component {
             // { title: '模板Id', dataIndex: 'TmplId', key: 'TmplId', width: 80, },
             // { title: '跳转地址', dataIndex: 'Jump', key: 'Jump', width: 80, },
             {
-                title: '上下线时间', dataIndex: 'time', key: 'time',
+                title: '上下线时间', dataIndex: 'time', key: 'time',width: 400,
                 render: (rowValue, row, index) => {
 
                     let open_time = row.start_time ? row.start_time : "";

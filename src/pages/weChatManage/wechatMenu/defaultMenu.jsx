@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getRefresh, getWechatMenu, addRefresh, changeRefresh, delRefresh } from 'api'
+import { uploadWechatMenu, getWechatMenu, addRefresh, changeRefresh, delRefresh } from 'api'
 import { Radio, Card, Menu, Button, message, Modal, Divider, Input, Form, Select, Space, Image } from 'antd'
 import { } from 'react-router-dom'
 import { PlusOutlined, DeleteOutlined, HighlightOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -177,17 +177,18 @@ export default class EarnIncentiveTask extends React.Component {
                                                                             ?
                                                                             <Form.Item {...field} label="图片" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
                                                                                 <MyImageUpload
-                                                                                    getUploadFileUrl={(file) => { this.getUploadFileUrl('url', file) }}
+                                                                                    getUploadFileUrl={(file,list) => { this.getUploadFileUrl('url', file,list,index) }}
                                                                                     // imageUrl={this.iconFormRef.current.getFieldValue("picUrl")}
                                                                                     postUrl={"/mms/wxReply/addMedia"} //上传地址
-                                                                                    params={
-                                                                                        this.state.currentMenu.reply_info &&
-                                                                                        this.state.currentMenu.reply_info[index] &&
-                                                                                        this.state.currentMenu.reply_info[index].imgs[0].wx_code} //另外的参数
+                                                                                    params={this.props.menuInfo.wxCode} //另外的参数
                                                                                     imageUrl={
-                                                                                        this.state.currentMenu.reply_info &&
-                                                                                        this.state.currentMenu.reply_info[index] &&
-                                                                                        this.state.currentMenu.reply_info[index].imgs[0].url}
+                                                                                        // this.state.currentMenu.reply_info &&
+                                                                                        // this.state.currentMenu.reply_info[index] &&
+                                                                                        // this.state.currentMenu.reply_info[index].imgs[0].url
+                                                                                        this.formRef.current.getFieldValue("reply_info") &&
+                                                                                        this.formRef.current.getFieldValue("reply_info")[index].imgs &&
+                                                                                        this.formRef.current.getFieldValue("reply_info")[index].imgs[0].url
+                                                                                    }
                                                                                 />
                                                                             </Form.Item>
                                                                             :
@@ -202,18 +203,21 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                     <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
                                                                                         <Input placeholder="跳转链接" />
                                                                                     </Form.Item>
-                                                                                    <Form.Item {...field} label="卡片图" name={[field.name, 'picUrl']} fieldKey={[field.fieldKey, 'picUrl']}>
+                                                                                    <Form.Item {...field} label="卡片图" name={[field.name, 'imgs']} fieldKey={[field.fieldKey, 'imgs']}>
                                                                                         <MyImageUpload
-                                                                                            getUploadFileUrl={(file) => { this.getUploadFileUrl('picUrl', file) }}
+                                                                                            getUploadFileUrl={(file) => { this.getUploadFileUrl('imgs', file) }}
                                                                                             postUrl={"/mms/wxReply/addMedia"} //上传地址
                                                                                             params={
-                                                                                                this.state.currentMenu.reply_info &&
-                                                                                                this.state.currentMenu.reply_info[index] &&
-                                                                                                this.state.currentMenu.reply_info[index].imgs[0].wx_code} //另外的参数
+                                                                                                this.props.menuInfo.wxCode
+                                                                                            } //另外的参数
                                                                                             imageUrl={
-                                                                                                this.state.currentMenu.reply_info &&
-                                                                                                this.state.currentMenu.reply_info[index] &&
-                                                                                                this.state.currentMenu.reply_info[index].imgs[0].url}
+                                                                                                // this.state.currentMenu.reply_info &&
+                                                                                                // this.state.currentMenu.reply_info[index] &&
+                                                                                                // this.state.currentMenu.reply_info[index].imgs[0].url
+                                                                                                this.formRef.current.getFieldValue("reply_info") &&
+                                                                                                this.formRef.current.getFieldValue("reply_info")[index].imgs &&
+                                                                                                this.formRef.current.getFieldValue("reply_info")[index].imgs[0].url
+                                                                                            }
                                                                                         />
                                                                                     </Form.Item>
                                                                                 </>
@@ -237,16 +241,19 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                         </Form.Item>
                                                                                         <Form.Item {...field} label="封面图片" name={[field.name, 'picUrl']} fieldKey={[field.fieldKey, 'picUrl']}>
                                                                                             <MyImageUpload
-                                                                                                getUploadFileUrl={(file) => { this.getUploadFileUrl('url', file) }}
+                                                                                                getUploadFileUrl={(file,list) => { this.getUploadFileUrl('url', file,list) }}
                                                                                                 postUrl={"/mms/wxReply/addMedia"} //上传地址
                                                                                                 params={
-                                                                                                    this.state.currentMenu.reply_info &&
-                                                                                                    this.state.currentMenu.reply_info[index] &&
-                                                                                                    this.state.currentMenu.reply_info[index].imgs[0].wx_code} //另外的参数
+                                                                                                    this.props.menuInfo.wxCode
+                                                                                                } //另外的参数
                                                                                                 imageUrl={
-                                                                                                    this.state.currentMenu.reply_info &&
-                                                                                                    this.state.currentMenu.reply_info[index] &&
-                                                                                                    this.state.currentMenu.reply_info[index].imgs[0].url}
+                                                                                                    // this.state.currentMenu.reply_info &&
+                                                                                                    // this.state.currentMenu.reply_info[index] &&
+                                                                                                    // this.state.currentMenu.reply_info[index].imgs[0].url
+                                                                                                    this.formRef.current.getFieldValue("reply_info") &&
+                                                                                                    this.formRef.current.getFieldValue("reply_info")[index].imgs &&
+                                                                                                    this.formRef.current.getFieldValue("reply_info")[index].imgs[0].url
+                                                                                                }
                                                                                             />
                                                                                         </Form.Item>
                                                                                     </>
@@ -350,19 +357,23 @@ export default class EarnIncentiveTask extends React.Component {
     }
     submitForm(val) {   // 提交表单
         console.log(val, "val")
-        this.addRefresh(val)
+        this.uploadWechatMenu(val)
         this.closeModal()
     }
 
     closeModal() {
-        this.setState({
-            entranceState: false
-        })
+        this.props.onCloseModal()
     }
 
-    getUploadFileUrl(index, file) {   // 图片上传的方法
-        console.log(file, index, "获取上传的图片路径")
-        this.iconFormRef.current.setFieldsValue({ "pic": file })
+    getUploadFileUrl(type,file,list,i) {   // 图片上传的方法
+        console.log(type,file,list, "获取上传的图片路径")
+        let reply_info = this.formRef.current.getFieldValue("reply_info")
+        reply_info[i].imgs = [{}]
+        reply_info[i].imgs[0][type] = list.url
+        reply_info[i].imgs[0].media_id = list.mediaID
+        reply_info[i].imgs[0].wx_code = this.props.menuInfo.wxCode
+        console.log(reply_info)
+        this.formRef.current.setFieldsValue({ "reply_info": reply_info })
         this.forceUpdate()
     }
 
@@ -386,6 +397,34 @@ export default class EarnIncentiveTask extends React.Component {
             this.setState({
                 menuInfo: res.data
             })
+        })
+    }
+    uploadWechatMenu(val){
+        let editInfo = {
+            ...this.state.currentMenu,
+            ...val
+        }
+        let info = JSON.parse(JSON.stringify(this.props.menuInfo))
+        console.log(info,editInfo)
+        if(info.defaultMenu.button){
+            info.defaultMenu.button.forEach(l=>{
+                if(l.sub_button){
+                    l.sub_button.forEach(h=>{
+                        if(h.key == editInfo.key){
+                             console.log(h,editInfo,"11111")
+                            h = editInfo
+                        }
+                    })
+                }
+            })
+        }
+        // console.log(editInfo,"editInfo")
+        let params={
+            ...info
+        }
+        return console.log(params)
+        uploadWechatMenu(params).then(res=>{
+            message.success("更新成功")
         })
     }
 }

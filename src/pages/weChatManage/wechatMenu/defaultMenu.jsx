@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { uploadWechatMenu, getWechatMenu, addRefresh, changeRefresh, delRefresh } from 'api'
+import { uploadWechatMenu, getWechatMenu, addRefresh, requestWxProgramList, delRefresh } from 'api'
 import { Radio, Card, Menu, Button, message, Modal, Divider, Input, Form, Select, Space, Image } from 'antd'
 import { } from 'react-router-dom'
 import { PlusOutlined, DeleteOutlined, HighlightOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -28,6 +28,7 @@ export default class EarnIncentiveTask extends React.Component {
             menuInfo: "",
             radioState: "default",
             currentMenu: "",//当前点击的菜单
+            mpList: [],
         }
     }
     render() {
@@ -36,16 +37,21 @@ export default class EarnIncentiveTask extends React.Component {
         let arr = ""
         let openKeys = []
         if (menuInfo && openModal) {
-            arr = menuInfo.defaultMenu.button
-            if (arr && arr.length > 0) {
-                arr.forEach(r => {
-                    openKeys.push(r.name)
-                })
+            if (menuInfo.defaultMenu) {
+                arr = menuInfo.defaultMenu.button
+                if (arr && arr.length > 0) {
+                    arr.forEach(r => {
+                        openKeys.push(r.name)
+                    })
+                }
+            } else {
+                arr = ""
             }
+
         }
         return (
             <div>
-                <Modal title={menuInfo.name} centered visible={openModal} onCancel={() => { this.props.onCloseModal() }} footer={null} width={1200}>
+                <Modal title={menuInfo.name} centered visible={openModal} onCancel={() => { this.props.onCloseModal() }} footer={null} width={1200} key={openModal}>
                     <Radio.Group defaultValue={radioState} style={{ marginTop: 16 }} onChange={(e) => {
                         this.setState({
                             radioState: e.target.value
@@ -175,16 +181,13 @@ export default class EarnIncentiveTask extends React.Component {
                                                                         // 图片
                                                                         this.formRef.current.getFieldValue("reply_info")[index] && this.formRef.current.getFieldValue("reply_info")[index].msg_type == "image"
                                                                             ?
-                                                                            <Form.Item {...field} label="图片" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                            <Form.Item {...field} label="图片" name={[field.name, 'imgs']} fieldKey={[field.fieldKey, 'imgs']}>
                                                                                 <MyImageUpload
-                                                                                    getUploadFileUrl={(file,list) => { this.getUploadFileUrl('url', file,list,index) }}
+                                                                                    getUploadFileUrl={(file, list) => { this.getUploadFileUrl('url', file, list, index) }}
                                                                                     // imageUrl={this.iconFormRef.current.getFieldValue("picUrl")}
                                                                                     postUrl={"/mms/wxReply/addMedia"} //上传地址
                                                                                     params={this.props.menuInfo.wxCode} //另外的参数
                                                                                     imageUrl={
-                                                                                        // this.state.currentMenu.reply_info &&
-                                                                                        // this.state.currentMenu.reply_info[index] &&
-                                                                                        // this.state.currentMenu.reply_info[index].imgs[0].url
                                                                                         this.formRef.current.getFieldValue("reply_info") &&
                                                                                         this.formRef.current.getFieldValue("reply_info")[index].imgs &&
                                                                                         this.formRef.current.getFieldValue("reply_info")[index].imgs[0].url
@@ -194,26 +197,23 @@ export default class EarnIncentiveTask extends React.Component {
                                                                             :
                                                                             this.formRef.current.getFieldValue("reply_info")[index] && this.formRef.current.getFieldValue("reply_info")[index].msg_type == "news" ?
                                                                                 <>
-                                                                                    <Form.Item {...field} label="" name={[field.name, 'title']} fieldKey={[field.fieldKey, 'title']}>
+                                                                                    <Form.Item {...field} label="" name={[field.name, 'title']} fieldKey={[field.fieldKey, 'title']} key={field.fieldKey}>
                                                                                         <Input placeholder="卡片标题" />
                                                                                     </Form.Item>
-                                                                                    <Form.Item {...field} label="" name={[field.name, 'description']} fieldKey={[field.fieldKey, 'description']}>
+                                                                                    <Form.Item {...field} label="" name={[field.name, 'description']} fieldKey={[field.fieldKey, 'description']} key={field.fieldKey + 1}>
                                                                                         <Input placeholder="卡片描述" />
                                                                                     </Form.Item>
-                                                                                    <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                    <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']} key={field.fieldKey + 2}>
                                                                                         <Input placeholder="跳转链接" />
                                                                                     </Form.Item>
-                                                                                    <Form.Item {...field} label="卡片图" name={[field.name, 'imgs']} fieldKey={[field.fieldKey, 'imgs']}>
+                                                                                    <Form.Item {...field} label="卡片图" name={[field.name, 'imgs']} fieldKey={[field.fieldKey, 'imgs']} key={field.fieldKey + 3}>
                                                                                         <MyImageUpload
-                                                                                            getUploadFileUrl={(file) => { this.getUploadFileUrl('imgs', file) }}
+                                                                                            getUploadFileUrl={(file,list) => { this.getUploadFileUrl('url', file, list, index) }}
                                                                                             postUrl={"/mms/wxReply/addMedia"} //上传地址
                                                                                             params={
                                                                                                 this.props.menuInfo.wxCode
                                                                                             } //另外的参数
                                                                                             imageUrl={
-                                                                                                // this.state.currentMenu.reply_info &&
-                                                                                                // this.state.currentMenu.reply_info[index] &&
-                                                                                                // this.state.currentMenu.reply_info[index].imgs[0].url
                                                                                                 this.formRef.current.getFieldValue("reply_info") &&
                                                                                                 this.formRef.current.getFieldValue("reply_info")[index].imgs &&
                                                                                                 this.formRef.current.getFieldValue("reply_info")[index].imgs[0].url
@@ -225,31 +225,33 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                 :
                                                                                 this.formRef.current.getFieldValue("reply_info")[index] && this.formRef.current.getFieldValue("reply_info")[index].msg_type == "mini" ?
                                                                                     <>
-                                                                                        <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                        <Form.Item {...field} label="" name={[field.name, 'appid']} fieldKey={[field.fieldKey, 'appid']} key={field.fieldKey}>
                                                                                             <Select
                                                                                                 placeholder="请选择微信小程序"
                                                                                                 allowClear
                                                                                             >
-                                                                                                <Option value={1} key={1}>{1}</Option>
+
+                                                                                                {
+                                                                                                    this.state.mpList.map(r => {
+                                                                                                        return <Option value={r.appid} key={r.appid}>{r.appName}</Option>
+                                                                                                    })
+                                                                                                }
                                                                                             </Select>
                                                                                         </Form.Item>
-                                                                                        <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                        <Form.Item {...field} label="" name={[field.name, 'title']} fieldKey={[field.fieldKey, 'title']} key={field.fieldKey + 1}>
                                                                                             <Input placeholder="小程序标题" />
                                                                                         </Form.Item>
-                                                                                        <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                        <Form.Item {...field} label="" name={[field.name, 'path']} fieldKey={[field.fieldKey, 'path']} key={field.fieldKey + 2}>
                                                                                             <Input placeholder="小程序跳转路径" />
                                                                                         </Form.Item>
-                                                                                        <Form.Item {...field} label="封面图片" name={[field.name, 'picUrl']} fieldKey={[field.fieldKey, 'picUrl']}>
+                                                                                        <Form.Item {...field} label="封面图片" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']} key={field.fieldKey + 3}>
                                                                                             <MyImageUpload
-                                                                                                getUploadFileUrl={(file,list) => { this.getUploadFileUrl('url', file,list) }}
+                                                                                                getUploadFileUrl={(file, list) => { this.getUploadFileUrl('url', file,list, index) }}
                                                                                                 postUrl={"/mms/wxReply/addMedia"} //上传地址
                                                                                                 params={
                                                                                                     this.props.menuInfo.wxCode
                                                                                                 } //另外的参数
                                                                                                 imageUrl={
-                                                                                                    // this.state.currentMenu.reply_info &&
-                                                                                                    // this.state.currentMenu.reply_info[index] &&
-                                                                                                    // this.state.currentMenu.reply_info[index].imgs[0].url
                                                                                                     this.formRef.current.getFieldValue("reply_info") &&
                                                                                                     this.formRef.current.getFieldValue("reply_info")[index].imgs &&
                                                                                                     this.formRef.current.getFieldValue("reply_info")[index].imgs[0].url
@@ -259,49 +261,51 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                     </>
                                                                                     :
                                                                                     <>
-                                                                                        <Form.Item {...field} label="" name={[field.name, 'type']} fieldKey={[field.fieldKey, 'type']}>
+                                                                                        <Form.Item {...field} label="" name={[field.name, 'type']} fieldKey={[field.fieldKey, 'type']} key={field.fieldKey + 1}>
                                                                                             <Radio.Group defaultValue={
                                                                                                 this.state.currentMenu &&
                                                                                                 this.state.currentMenu.type
                                                                                             } style={{ marginTop: 16 }}
                                                                                                 onChange={(e) => {
                                                                                                     let arr = this.state.currentMenu
-                                                                                                    arr.view = e.target.value
+                                                                                                    arr.type = e.target.value
                                                                                                     this.setState({
                                                                                                         currentMenu: arr
-                                                                                                    },()=>{
+                                                                                                    }, () => {
                                                                                                         this.forceUpdate()
                                                                                                         console.log(arr)
                                                                                                     })
-                                                                                                    
+
                                                                                                 }}
                                                                                             >
-                                                                                                <Radio.Button value="view" key={1}>点击跳转链接</Radio.Button>
-                                                                                                <Radio.Button value="miniprogram" key={2}>点击跳转小程序</Radio.Button>
+                                                                                                <Radio.Button value={"view"} key={1}>点击跳转链接</Radio.Button>
+                                                                                                <Radio.Button value={"miniprogram"} key={2}>点击跳转小程序</Radio.Button>
                                                                                             </Radio.Group>
                                                                                         </Form.Item>
                                                                                         {
-                                                                                            this.state.currentMenu &&
-                                                                                                this.state.currentMenu.type == "view" 
+                                                                                            this.formRef.current.getFieldValue("reply_info")[index] && this.formRef.current.getFieldValue("reply_info")[index].type == "view"
                                                                                                 ?
-                                                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']} key={field.fieldKey}>
                                                                                                     <Input placeholder="跳转路径" />
                                                                                                 </Form.Item>
                                                                                                 :
                                                                                                 <>
-                                                                                                    <Form.Item {...field} label="" name={[field.name, 'appid']} fieldKey={[field.fieldKey, 'appid']}>
+                                                                                                    <Form.Item {...field} label="" name={[field.name, 'appid']} fieldKey={[field.fieldKey, 'appid']} key={field.fieldKey}>
                                                                                                         <Select
                                                                                                             placeholder="请选择微信小程序"
                                                                                                             allowClear
                                                                                                         >
-                                                                                                            <Option value={1} key={1}>{1}</Option>
-                                                                                                            <Option value={2} key={2}>{2}</Option>
+                                                                                                            {
+                                                                                                                this.state.mpList.map(r => {
+                                                                                                                    return <Option value={r.appid} key={r.appid}>{r.appName}</Option>
+                                                                                                                })
+                                                                                                            }
                                                                                                         </Select>
                                                                                                     </Form.Item>
-                                                                                                    <Form.Item {...field} label="" name={[field.name, 'pagepath']} fieldKey={[field.fieldKey, 'pagepath']}>
+                                                                                                    <Form.Item {...field} label="" name={[field.name, 'pagepath']} fieldKey={[field.fieldKey, 'pagepath']} key={field.fieldKey + 1}>
                                                                                                         <Input placeholder="小程序跳转路径" />
                                                                                                     </Form.Item>
-                                                                                                    <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']}>
+                                                                                                    <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']} key={field.fieldKey + 2}>
                                                                                                         <Input placeholder="备用路径" />
                                                                                                     </Form.Item>
                                                                                                 </>
@@ -342,7 +346,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     componentDidMount() {
         this.getWechatMenu()
-        // this.getRefresh();
+        this.requestWxProgramList();
     }
     onOpenChange(e) {
         // console.log(e, "onOpenChange")
@@ -365,8 +369,8 @@ export default class EarnIncentiveTask extends React.Component {
         this.props.onCloseModal()
     }
 
-    getUploadFileUrl(type,file,list,i) {   // 图片上传的方法
-        console.log(type,file,list, "获取上传的图片路径")
+    getUploadFileUrl(type, file, list, i) {   // 图片上传的方法
+        console.log(type, file, list, "获取上传的图片路径")
         let reply_info = this.formRef.current.getFieldValue("reply_info")
         reply_info[i].imgs = [{}]
         reply_info[i].imgs[0][type] = list.url
@@ -391,7 +395,8 @@ export default class EarnIncentiveTask extends React.Component {
     }
     getWechatMenu() {
         let params = {
-            menuType: this.state.radioState
+            menuType: this.state.radioState,
+            wxCode: this.props.menuInfo.wxCode
         }
         getWechatMenu(params).then(res => {
             this.setState({
@@ -399,31 +404,57 @@ export default class EarnIncentiveTask extends React.Component {
             })
         })
     }
-    uploadWechatMenu(val){
+    uploadWechatMenu(val) {
         let editInfo = {
             ...this.state.currentMenu,
             ...val
         }
-        let info = JSON.parse(JSON.stringify(this.props.menuInfo))
-        if(info.defaultMenu.button){
-            info.defaultMenu.button.forEach(l=>{
-                if(l.sub_button){
-                    l.sub_button.forEach(h=>{
-                        if(h.key == editInfo.key){
-                            h = editInfo
-                            console.log(h)
+        let info = this.props.menuInfo
+        if (info.defaultMenu.button) {
+            info.defaultMenu.button.forEach(l => {
+                if (l.sub_button) {
+                    l.sub_button.forEach(h => {
+                        if(h.type == "view"){
+                            h={}
+                            h.type = editInfo.reply_info[0].type
+                            h.name = editInfo.reply_info[0].name
+                            h.url = editInfo.reply_info[0].url
+                            delete h.reply_info
+                            // console.log("view",h)
+                        }else if(h.type == "miniprogram"){
+                            // h={}
+                            h.type = editInfo.reply_info[0].type
+                            h.name = editInfo.reply_info[0].name
+                            h.url = editInfo.reply_info[0].url
+                            h.appid = editInfo.reply_info[0].appid
+                            h.pagepath = editInfo.reply_info[0].pagepath
+                            console.log("miniprogram",h)
+                            delete h.reply_info
+                        }else if(h.type == "click"){
+                            if (h.key == editInfo.key) {
+                                h.reply_info = editInfo.reply_info
+                                console.log(h, editInfo)
+                            } 
                         }
                     })
                 }
             })
         }
-        console.log(info,"info")
-        let params={
-            ...info
+
+        let params = {
+            ...info.defaultMenu
         }
-        return
-        uploadWechatMenu(params).then(res=>{
+        // return console.log(params)
+        uploadWechatMenu(params).then(res => {
             message.success("更新成功")
+            this.props.onRefresh()
+        })
+    }
+    requestWxProgramList() {
+        requestWxProgramList().then(res => {
+            this.setState({
+                mpList: res.data
+            })
         })
     }
 }

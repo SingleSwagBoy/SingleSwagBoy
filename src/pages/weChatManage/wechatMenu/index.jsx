@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getWxlist, getWechatMenu, addRefresh, changeRefresh, delRefresh } from 'api'
+import { getWxlist, addRefresh, changeRefresh, delRefresh } from 'api'
 import { Radio, Breadcrumb, Card, Menu, Button, message, Modal, Table, Input, Form, Select, Space, Image } from 'antd'
 import { } from 'react-router-dom'
 import { PlusOutlined, DeleteOutlined, HighlightOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -103,27 +103,17 @@ export default class EarnIncentiveTask extends React.Component {
                     openModal={this.state.openModal}
                     onCloseModal={this.closeModal.bind(this)}
                     menuInfo={this.state.currentItem}
+                    onRefresh={this.getWxlist.bind(this)}
                 ></DefaultMenu>
             </div>
         )
     }
     componentDidMount() {
-        // this.getWechatMenu()
         this.getWxlist();
     }
     closeModal() {
         this.setState({
             openModal: false,
-        })
-    }
-    getWechatMenu() {
-        let params = {
-            menuType: this.state.radioState
-        }
-        getWechatMenu(params).then(res => {
-            this.setState({
-                menuInfo: res.data
-            })
         })
     }
     getWxlist() {

@@ -398,7 +398,7 @@ export default class adGroup extends Component {
         })
 
         //标签数据类型信息
-        requestAdFieldList({}).then(res => {
+        requestAdFieldList({page:{pageSize:9999}}).then(res => {
             that.setState({
                 dict_field_list: res.data,
             })

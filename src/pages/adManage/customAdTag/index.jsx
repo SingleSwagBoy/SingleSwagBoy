@@ -308,7 +308,7 @@ export default class AddressNews extends Component {
         })
     }
     getAdFieldList() {
-        requestAdFieldList({}).then(res => {
+        requestAdFieldList({page:{pageSize:9999}}).then(res => {
                 this.setState({
                     fieldList: res.data,
                 })

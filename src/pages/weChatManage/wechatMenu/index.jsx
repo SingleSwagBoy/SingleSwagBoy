@@ -64,7 +64,9 @@ export default class EarnIncentiveTask extends React.Component {
                                         console.log(row, "row")
                                         this.setState({
                                             openModal: true,
-                                            currentItem: row
+                                            currentItem: JSON.parse(JSON.stringify(row))
+                                        },()=>{
+                                            this.child.openBox(this.state.currentItem)
                                         })
                                     }}
                                 >编辑</Button>
@@ -104,6 +106,7 @@ export default class EarnIncentiveTask extends React.Component {
                     onCloseModal={this.closeModal.bind(this)}
                     menuInfo={this.state.currentItem}
                     onRefresh={this.getWxlist.bind(this)}
+                    onRef={this.onRef.bind(this)}
                 ></DefaultMenu>
             </div>
         )
@@ -122,5 +125,8 @@ export default class EarnIncentiveTask extends React.Component {
                 lists: res.data
             })
         })
+    }
+    onRef = (ref) => {
+        this.child = ref
     }
 }

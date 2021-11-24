@@ -183,7 +183,7 @@ export default class tagConfig extends Component {
         })
 
         //field集合
-        requestAdFieldList({}).then(res => {
+        requestAdFieldList({page:{pageSize:9999}}).then(res => {
             that.setState({
                 dict_field_list: res.data.filter(r=>r.type == 3 || r.type == 1),
             }, () => {

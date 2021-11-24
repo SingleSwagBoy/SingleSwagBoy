@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { uploadWechatMenu, getWechatMenu, addRefresh, requestWxProgramList, delRefresh } from 'api'
+import { uploadWechatMenu, getWechatMenu, addWechatMenu, requestWxProgramList, delRefresh } from 'api'
 import { Radio, Card, Menu, Button, message, Modal, Divider, Input, Form, Select, Space, Image } from 'antd'
 import { } from 'react-router-dom'
 import { PlusOutlined, DeleteOutlined, HighlightOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -29,29 +29,19 @@ export default class EarnIncentiveTask extends React.Component {
             radioState: "default",
             currentMenu: "",//当前点击的菜单
             mpList: [],
+            formData: "",
+            defaultSelectedKeys: []
         }
     }
     render() {
-        let { layout, radioState } = this.state;
-        let { openModal, menuInfo } = this.props
-        let arr = ""
-        let openKeys = []
-        if (menuInfo && openModal) {
-            if (menuInfo.defaultMenu) {
-                arr = menuInfo.defaultMenu.button
-                if (arr && arr.length > 0) {
-                    arr.forEach(r => {
-                        openKeys.push(r.name)
-                    })
-                }
-            } else {
-                arr = ""
-            }
+        let { layout, radioState, defaultSelectedKeys, menuInfo, openKeys } = this.state;
+        let { openModal } = this.props
 
-        }
+
+        // let menuInfo = JSON.parse(JSON.stringify(this.props.menuInfo))
         return (
             <div>
-                <Modal title={menuInfo.name} centered visible={openModal} onCancel={() => { this.props.onCloseModal() }} footer={null} width={1200} key={openModal}>
+                <Modal title={menuInfo.name} centered visible={openModal} onCancel={this.closeModal.bind(this)} footer={null} width={1200} key={openModal}>
                     <Radio.Group defaultValue={radioState} style={{ marginTop: 16 }} onChange={(e) => {
                         this.setState({
                             radioState: e.target.value
@@ -62,76 +52,194 @@ export default class EarnIncentiveTask extends React.Component {
                         <Radio.Button value="default">默认菜单</Radio.Button>
                         <Radio.Button value="personal">个性化菜单</Radio.Button>
                     </Radio.Group>
-                    <div style={{ "width": "100%", display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginTop: "20px" }}>
+                    <div style={{ "width": "100%", display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginTop: "20px", flexWrap: "wrap" }}>
                         {/* 菜单 */}
                         <div style={{ "width": "20%", border: "1px solid #000" }}>
                             <Menu mode="inline"
+                                className="menu_inline"
                                 openKeys={openKeys}
                                 // defaultOpenKeys={["sub1"]}
+                                selectedKeys={defaultSelectedKeys}
+                                // defaultSelectedKeys={defaultSelectedKeys}
+                                onClick={(e) => {
+                                    this.setState({
+                                        defaultSelectedKeys: [e.key]
+                                    })
+                                }}
                                 expandIcon={<></>}
                                 onSelect={(e) => { }}
                                 onOpenChange={this.onOpenChange.bind(this)} style={{ width: 256 }}
                             >
                                 {
-                                    menuInfo.defaultMenu && menuInfo.defaultMenu.button.map(r => {
+                                    menuInfo.defaultMenu && menuInfo.defaultMenu.button.map((r, menuIndex) => {
                                         return (
-                                            <SubMenu key={r.name}
-                                                title={
-                                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                        <div>{r.name}</div>
+                                            r.sub_button
+                                                ?
+                                                <SubMenu key={r.name}
+                                                    title={
                                                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                            <div onClick={this.addMenu("sub1")}><PlusOutlined /></div>
-                                                            <div style={{ margin: "0 10px" }}><DeleteOutlined /></div>
-                                                            <div><HighlightOutlined /></div>
+                                                            {
+                                                                r.name ?
+                                                                    <div>{r.name}</div>
+                                                                    : <Input onChange={(e) => {
+                                                                        r.name = e.target.value
+                                                                        // this.formRef.current.setFieldsValue(l)
+                                                                    }} />
+                                                            }
+                                                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+
+                                                                {
+                                                                    r.sub_button.length < 5 ?
+                                                                        <div onClick={this.addMenu.bind(this, r)}><PlusOutlined /></div>
+                                                                        : ""
+                                                                }
+                                                                <div style={{ margin: "0 10px" }} onClick={(e) => {
+                                                                    e.stopPropagation()
+                                                                    this.delSubMenu(r,menuIndex)
+                                                                    
+                                                                }}><DeleteOutlined /></div>
+                                                                <div onClick={() => {
+                                                                    console.log(r, "l")
+                                                                    r.name = ""
+                                                                }}><HighlightOutlined /></div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                >
+                                                    {
+                                                        r.sub_button.map((l, i) => {
+                                                            return <Menu.Item key={l.sort} onClick={(e) => {
+                                                                console.log(l)
+                                                                l.sort = `${menuIndex}-${i}`
+                                                                this.setState({
+                                                                    currentMenu: l
+                                                                })
+                                                                if (l.type == "click") {
+                                                                    this.formRef.current.setFieldsValue(l)
+                                                                } else {
+                                                                    l.msg_type = "Jump"
+                                                                    l.reply_info = [l]
+                                                                    // l.name = l.name
+                                                                    this.formRef.current.setFieldsValue(l)
+                                                                }
+
+                                                            }}>
+                                                                <div style={{ display: "flex", justifyContent: "space-between" }}>
+
+                                                                    {
+                                                                        l.name ?
+                                                                            <div>{l.name}</div>
+                                                                            : <Input onChange={(e) => {
+                                                                                l.name = e.target.value
+                                                                                this.formRef.current.setFieldsValue(l)
+                                                                            }} />
+                                                                    }
+                                                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                                        {/* <div onClick={this.addMenu("sub1")}><PlusOutlined /></div> */}
+                                                                        <div style={{ margin: "0 10px" }} onClick={(e) => {
+                                                                            e.stopPropagation()
+                                                                            console.log(l, i, "删除")
+                                                                            r.sub_button.splice(i, 1)
+                                                                            if (r.sub_button && r.sub_button.length == 0) {
+                                                                                r.reply_info = [{ msg_type: "text" }]
+                                                                                r.type = "click"
+                                                                                r.sort = l.sort
+                                                                                this.setState({
+                                                                                    defaultSelectedKeys: [l.sort],
+                                                                                })
+                                                                                delete r.sub_button
+                                                                                this.formRef.current.setFieldsValue(r)
+                                                                            } else {
+                                                                                this.setState({
+                                                                                    defaultSelectedKeys: [r.sub_button[0].sort],
+                                                                                })
+                                                                                if(r.sub_button[0].reply_info){
+                                                                                    this.formRef.current.setFieldsValue(r.sub_button[0])
+                                                                                }else{
+                                                                                    r.sub_button[0].reply_info=[r.sub_button[0]]
+                                                                                    r.sub_button[0].msg_type="Jump"
+                                                                                    this.formRef.current.setFieldsValue(r.sub_button[0])
+                                                                                }
+                                                                                
+                                                                            }
+                                                                            this.forceUpdate()
+                                                                        }}><DeleteOutlined /></div>
+                                                                        <div onClick={() => {
+                                                                            console.log(l, "l")
+                                                                            l.name = ""
+                                                                        }}><HighlightOutlined /></div>
+                                                                    </div>
+                                                                </div>
+                                                            </Menu.Item>
+                                                        })
+                                                    }
+
+                                                </SubMenu>
+                                                :
+                                                <Menu.Item key={r.sort} onClick={(e) => {
+                                                    console.log(r)
+                                                    r.sort = `${menuIndex}-0`
+                                                    this.setState({
+                                                        currentMenu: r
+                                                    }, () => {
+                                                        if (r.type == "click") {
+
+                                                        } else {
+                                                            r.msg_type = "Jump"
+                                                            r.reply_info = [r]
+                                                        }
+                                                        this.formRef.current.setFieldsValue(r)
+                                                    })
+
+
+                                                }}>
+                                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                        {
+                                                            r.name ?
+                                                                <div>{r.name}</div>
+                                                                : <Input onChange={(e) => {
+                                                                    r.name = e.target.value
+                                                                    this.formRef.current.setFieldsValue(r)
+                                                                }} />
+                                                        }
+                                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                            <div onClick={this.addMenu.bind(this, r)}><PlusOutlined /></div>
+                                                            <div style={{ margin: "0 10px" }} onClick={(e) => {
+                                                                e.stopPropagation()
+                                                                this.delSubMenu(r,menuIndex)
+                                                            }}><DeleteOutlined /></div>
+                                                            <div onClick={(e) => {
+                                                                e.stopPropagation()
+                                                                console.log(r, "l")
+                                                                r.name = ""
+                                                            }}><HighlightOutlined /></div>
                                                         </div>
                                                     </div>
-                                                }
-                                                onTitleClick={(e) => {
-                                                    console.log(r)
-                                                    this.formRef.current.setFieldsValue(r)
-                                                }}>
-                                                {
-                                                    r.sub_button
-                                                        ?
-                                                        <>
-                                                            {
-                                                                r.sub_button.map(l => {
-                                                                    return <Menu.Item key={l.key} onClick={(e) => {
-                                                                        console.log(l)
-                                                                        this.setState({
-                                                                            currentMenu: l
-                                                                        })
-                                                                        if (l.type == "click") {
-                                                                            this.formRef.current.setFieldsValue(l)
-                                                                        } else {
-                                                                            // l.msg_type = 5
-                                                                            l.reply_info = [l]
-                                                                            // l.name = l.name
-                                                                            this.formRef.current.setFieldsValue(l)
-                                                                        }
-
-                                                                    }}>
-                                                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                                            <div>{l.name}</div>
-                                                                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                                                <div onClick={this.addMenu("sub1")}><PlusOutlined /></div>
-                                                                                <div style={{ margin: "0 10px" }}><DeleteOutlined /></div>
-                                                                                <div><HighlightOutlined /></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </Menu.Item>
-                                                                })
-                                                            }
-                                                        </>
-                                                        : ""
-                                                }
-
-                                            </SubMenu>
+                                                </Menu.Item>
                                         )
                                     })
                                 }
 
                             </Menu>
+                            {
+                                this.state.menuInfo.defaultMenu && this.state.menuInfo.defaultMenu.button && this.state.menuInfo.defaultMenu.button.length < 3 ?
+                                    <div style={{ width: "100%", height: "50px", display: "flex", alignItems: "center", justifyContent: "center" }} onClick={() => {
+                                        console.log(this.state.menuInfo)
+                                        let info = this.state.menuInfo
+                                        if (info.defaultMenu.button) {
+                                            let r = { name: "", sort: `${info.defaultMenu.button.length}-0`, type: "click", msg_type: "text" }
+                                            info.defaultMenu.button.push({ ...r, reply_info: [r] })
+                                            this.formRef.current.setFieldsValue(r)
+                                        }
+                                        // info.defaultMenu
+                                        this.setState({
+                                            menuInfo: info
+                                        })
+                                    }}><PlusOutlined /></div>
+                                    :
+                                    ""
+                            }
+
                         </div>
                         <div style={{ "width": "78%", border: "1px solid #000" }}>
                             <Form {...layout}
@@ -157,6 +265,26 @@ export default class EarnIncentiveTask extends React.Component {
                                                                 <Form.Item  {...field} label="消息类型" name={[field.name, 'msg_type']} fieldKey={[field.fieldKey, 'msg_type']}>
                                                                     <Radio.Group onChange={(e) => {
                                                                         let arr = this.formRef.current.getFieldValue("reply_info")
+                                                                        if (e.target.value == "Jump") {
+                                                                            Modal.confirm({
+                                                                                title: `提示`,
+                                                                                content: '如果配置跳转链接，将会重置所有数据',
+                                                                                onOk: () => {
+                                                                                    console.log(this.state.currentMenu)
+                                                                                    this.state.currentMenu.type = "view"
+                                                                                    this.setState({
+                                                                                        currentMenu: this.state.currentMenu
+                                                                                    }, () => {
+                                                                                        this.formRef.current.setFieldsValue({ "reply_info": [{ msg_type: "Jump", name: this.state.currentMenu.name, type: "view", }] })
+                                                                                    })
+
+                                                                                },
+                                                                                onCancel: () => {
+                                                                                }
+                                                                            })
+                                                                            return
+                                                                        }
+                                                                        arr[index].type = "click"
                                                                         arr[index].msg_type = e.target.value
                                                                         console.log(arr)
                                                                         this.formRef.current.setFieldsValue({ "reply_info": arr })
@@ -165,7 +293,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                         <Radio value={"image"}>图片</Radio>
                                                                         <Radio value={"news"}>图文卡片</Radio>
                                                                         <Radio value={"mini"}>小程序卡片</Radio>
-                                                                        <Radio value={""}>点击跳转</Radio>
+                                                                        <Radio value={"Jump"}>点击跳转</Radio>
                                                                     </Radio.Group>
                                                                 </Form.Item>
                                                             </div>
@@ -174,8 +302,8 @@ export default class EarnIncentiveTask extends React.Component {
                                                                     // 文字
                                                                     this.formRef.current.getFieldValue("reply_info")[index] && this.formRef.current.getFieldValue("reply_info")[index].msg_type == "text"
                                                                         ?
-                                                                        <Form.Item {...field} label="" name={[field.name, 'content']} fieldKey={[field.fieldKey, 'content']}>
-                                                                            <Input placeholder="文字" />
+                                                                        <Form.Item {...field} label="" name={[field.name, 'content']} fieldKey={[field.fieldKey, 'content']} validateStatus="success">
+                                                                            <Input placeholder="文字" id="success" />
                                                                         </Form.Item>
                                                                         :
                                                                         // 图片
@@ -208,7 +336,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                     </Form.Item>
                                                                                     <Form.Item {...field} label="卡片图" name={[field.name, 'imgs']} fieldKey={[field.fieldKey, 'imgs']} key={field.fieldKey + 3}>
                                                                                         <MyImageUpload
-                                                                                            getUploadFileUrl={(file,list) => { this.getUploadFileUrl('url', file, list, index) }}
+                                                                                            getUploadFileUrl={(file, list) => { this.getUploadFileUrl('url', file, list, index) }}
                                                                                             postUrl={"/mms/wxReply/addMedia"} //上传地址
                                                                                             params={
                                                                                                 this.props.menuInfo.wxCode
@@ -246,7 +374,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                         </Form.Item>
                                                                                         <Form.Item {...field} label="封面图片" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']} key={field.fieldKey + 3}>
                                                                                             <MyImageUpload
-                                                                                                getUploadFileUrl={(file, list) => { this.getUploadFileUrl('url', file,list, index) }}
+                                                                                                getUploadFileUrl={(file, list) => { this.getUploadFileUrl('url', file, list, index) }}
                                                                                                 postUrl={"/mms/wxReply/addMedia"} //上传地址
                                                                                                 params={
                                                                                                     this.props.menuInfo.wxCode
@@ -260,70 +388,86 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                         </Form.Item>
                                                                                     </>
                                                                                     :
-                                                                                    <>
-                                                                                        <Form.Item {...field} label="" name={[field.name, 'type']} fieldKey={[field.fieldKey, 'type']} key={field.fieldKey + 1}>
-                                                                                            <Radio.Group defaultValue={
-                                                                                                this.state.currentMenu &&
-                                                                                                this.state.currentMenu.type
-                                                                                            } style={{ marginTop: 16 }}
-                                                                                                onChange={(e) => {
-                                                                                                    let arr = this.state.currentMenu
-                                                                                                    arr.type = e.target.value
-                                                                                                    this.setState({
-                                                                                                        currentMenu: arr
-                                                                                                    }, () => {
-                                                                                                        this.forceUpdate()
-                                                                                                        console.log(arr)
-                                                                                                    })
+                                                                                    this.formRef.current.getFieldValue("reply_info")[index] && this.formRef.current.getFieldValue("reply_info")[index].msg_type == "Jump" ?
+                                                                                        <>
+                                                                                            <Form.Item {...field} label="" name={[field.name, 'type']} fieldKey={[field.fieldKey, 'type']} key={field.fieldKey + 1}>
+                                                                                                <Radio.Group defaultValue={
+                                                                                                    this.state.currentMenu &&
+                                                                                                    this.state.currentMenu.type
+                                                                                                } style={{ marginTop: 16 }}
+                                                                                                    onChange={(e) => {
+                                                                                                        let arr = this.state.currentMenu
+                                                                                                        arr.type = e.target.value
+                                                                                                        this.setState({
+                                                                                                            currentMenu: arr
+                                                                                                        }, () => {
+                                                                                                            this.forceUpdate()
+                                                                                                            console.log(arr)
+                                                                                                        })
 
-                                                                                                }}
-                                                                                            >
-                                                                                                <Radio.Button value={"view"} key={1}>点击跳转链接</Radio.Button>
-                                                                                                <Radio.Button value={"miniprogram"} key={2}>点击跳转小程序</Radio.Button>
-                                                                                            </Radio.Group>
-                                                                                        </Form.Item>
-                                                                                        {
-                                                                                            this.formRef.current.getFieldValue("reply_info")[index] && this.formRef.current.getFieldValue("reply_info")[index].type == "view"
-                                                                                                ?
-                                                                                                <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']} key={field.fieldKey}>
-                                                                                                    <Input placeholder="跳转路径" />
-                                                                                                </Form.Item>
-                                                                                                :
-                                                                                                <>
-                                                                                                    <Form.Item {...field} label="" name={[field.name, 'appid']} fieldKey={[field.fieldKey, 'appid']} key={field.fieldKey}>
-                                                                                                        <Select
-                                                                                                            placeholder="请选择微信小程序"
-                                                                                                            allowClear
-                                                                                                        >
-                                                                                                            {
-                                                                                                                this.state.mpList.map(r => {
-                                                                                                                    return <Option value={r.appid} key={r.appid}>{r.appName}</Option>
-                                                                                                                })
-                                                                                                            }
-                                                                                                        </Select>
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <Radio.Button value={"view"} key={1}>点击跳转链接</Radio.Button>
+                                                                                                    <Radio.Button value={"miniprogram"} key={2}>点击跳转小程序</Radio.Button>
+                                                                                                </Radio.Group>
+                                                                                            </Form.Item>
+                                                                                            {
+                                                                                                this.formRef.current.getFieldValue("reply_info")[index] && this.formRef.current.getFieldValue("reply_info")[index].type == "view"
+                                                                                                    ?
+                                                                                                    <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']} key={field.fieldKey}>
+                                                                                                        <Input placeholder="跳转路径" />
                                                                                                     </Form.Item>
-                                                                                                    <Form.Item {...field} label="" name={[field.name, 'pagepath']} fieldKey={[field.fieldKey, 'pagepath']} key={field.fieldKey + 1}>
-                                                                                                        <Input placeholder="小程序跳转路径" />
-                                                                                                    </Form.Item>
-                                                                                                    <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']} key={field.fieldKey + 2}>
-                                                                                                        <Input placeholder="备用路径" />
-                                                                                                    </Form.Item>
-                                                                                                </>
-                                                                                        }
+                                                                                                    :
+                                                                                                    <>
+                                                                                                        <Form.Item {...field} label="" name={[field.name, 'appid']} fieldKey={[field.fieldKey, 'appid']} key={field.fieldKey}>
+                                                                                                            <Select
+                                                                                                                placeholder="请选择微信小程序"
+                                                                                                                allowClear
+                                                                                                            >
+                                                                                                                {
+                                                                                                                    this.state.mpList.map(r => {
+                                                                                                                        return <Option value={r.appid} key={r.appid}>{r.appName}</Option>
+                                                                                                                    })
+                                                                                                                }
+                                                                                                            </Select>
+                                                                                                        </Form.Item>
+                                                                                                        <Form.Item {...field} label="" name={[field.name, 'pagepath']} fieldKey={[field.fieldKey, 'pagepath']} key={field.fieldKey + 1}>
+                                                                                                            <Input placeholder="小程序跳转路径" />
+                                                                                                        </Form.Item>
+                                                                                                        <Form.Item {...field} label="" name={[field.name, 'url']} fieldKey={[field.fieldKey, 'url']} key={field.fieldKey + 2}>
+                                                                                                            <Input placeholder="备用路径" />
+                                                                                                        </Form.Item>
+                                                                                                    </>
+                                                                                            }
 
-                                                                                    </>
+                                                                                        </>
+                                                                                        : ""
                                                                 }
                                                             </div>
                                                         </div>
-                                                        <MinusCircleOutlined onClick={() => { remove(field.name) }} />
+                                                        <MinusCircleOutlined onClick={() => {
+                                                            if (this.formRef.current.getFieldValue("reply_info").length == 1) return message.error("至少有一条哟")
+                                                            remove(field.name)
+                                                            console.log(this.formRef.current.getFieldValue("reply_info"))
+                                                        }} />
                                                     </Space>
                                                 ))}
 
-                                                <Form.Item>
-                                                    <Button type="dashed" onClick={() => { add() }} block icon={<PlusOutlined />}>
-                                                        新建一条回复内容
-                                                    </Button>
-                                                </Form.Item>
+
+                                                {
+                                                    this.formRef.current && this.formRef.current.getFieldValue() && this.formRef.current.getFieldValue("reply_info") && this.formRef.current.getFieldValue("reply_info")[0].msg_type != "Jump"
+                                                        ?
+                                                        <Form.Item>
+                                                            <Button type="dashed" onClick={() => {
+                                                                if (this.formRef.current.getFieldValue("reply_info").length == 5) return message.error("一个菜单最多五条回复")
+                                                                add({ msg_type: "" })
+                                                            }} block icon={<PlusOutlined />}>
+                                                                新建一条回复内容
+                                                            </Button>
+                                                        </Form.Item>
+                                                        :
+                                                        ""
+                                                }
                                             </>
                                         )}
                                     </Form.List>
@@ -331,13 +475,20 @@ export default class EarnIncentiveTask extends React.Component {
 
 
                                 <Form.Item {...this.state.tailLayout}>
-                                    <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
+                                    {/* <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button> */}
                                     <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
-                                        确定
+                                        确定修改
                                     </Button>
                                 </Form.Item>
                             </Form>
                         </div>
+                        <div style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
+                            <Button size="large" style={{ margin: "20px 0 0 20px", width: "20%" }} onClick={() => { }}>取消</Button>
+                            <Button type="primary" size="large" style={{ margin: "20px 0 0 20px", width: "20%" }} onClick={this.saveForm.bind(this)}>
+                                确定提交
+                            </Button>
+                        </div>
+
                     </div>
                 </Modal>
 
@@ -345,6 +496,7 @@ export default class EarnIncentiveTask extends React.Component {
         )
     }
     componentDidMount() {
+        this.props.onRef(this)
         this.getWechatMenu()
         this.requestWxProgramList();
     }
@@ -353,20 +505,107 @@ export default class EarnIncentiveTask extends React.Component {
         // this.setState({
         //     openKeys: e
         // })
-        this.forceUpdate()
+        // this.forceUpdate()
 
     }
-    addMenu(key) {
-
+    addMenu(item, e) {
+        // e.stopPropagation()
+        console.log(item)
+        if (item.sub_button) {
+            let r = { name: "", type: "click", reply_info: [{ msg_type: "text" }] }
+            item.sub_button.push(r)
+            this.formRef.current.setFieldsValue(r)
+        } else {
+            // item = {}
+            item.name = item.name
+            item.sub_button = [
+                { name: "", type: "click", reply_info: [{ msg_type: "text" }] }
+            ]
+        }
+        this.setState({
+            menuInfo: this.state.menuInfo
+        })
+        this.forceUpdate()
     }
     submitForm(val) {   // 提交表单
         console.log(val, "val")
-        this.uploadWechatMenu(val)
+        console.log(this.state.currentMenu, "this.state.currentMenu")
+        let editInfo = {
+            ...this.state.currentMenu,
+            ...val
+        }
+        console.log(editInfo, "editInfo")
+        let info = this.state.menuInfo
+        if (info.defaultMenu.button) {
+            info.defaultMenu.button.forEach((l, index) => {
+                if (l.sub_button) {  //有二级菜单
+                    l.sub_button.forEach((h, i) => {
+                        console.log(h)
+                        // l.sort = `${index}-${i}`
+                        if (h.type == "view" && editInfo.type == "view" && editInfo.sort == h.sort) {
+                            console.log(111)
+                            h.type = editInfo.reply_info[0].type
+                            h.name = editInfo.reply_info[0].name
+                            h.url = editInfo.reply_info[0].url
+                            delete h.reply_info
+                        } else if (h.type == "miniprogram" && editInfo.type == "miniprogram" && editInfo.sort == h.sort) {
+                            console.log(222)
+                            h.type = editInfo.reply_info[0].type
+                            h.name = editInfo.reply_info[0].name
+                            h.url = editInfo.reply_info[0].url
+                            h.appid = editInfo.reply_info[0].appid
+                            h.pagepath = editInfo.reply_info[0].pagepath
+                            delete h.reply_info
+                        } else if (h.type == "click" && editInfo.type == "click") {
+                            if (editInfo.sort == h.sort) {
+                                console.log(333)
+                                h.reply_info = editInfo.reply_info
+                                console.log(h, editInfo)
+                            }
+                        } else {
+                            console.log(4444)
+                        }
+
+                    })
+                } else {
+                    //没有二级菜单
+                    if (l.type == "view" && editInfo.type == "view" && editInfo.sort == l.sort) {
+                        console.log(222 - 111)
+                        l.type = editInfo.reply_info[0].type
+                        l.name = editInfo.reply_info[0].name
+                        l.url = editInfo.reply_info[0].url
+                        delete l.reply_info
+                    } else if (l.type == "miniprogram" && editInfo.type == "miniprogram" && editInfo.sort == l.sort) {
+                        console.log(222 - 222)
+                        l.type = editInfo.reply_info[0].type
+                        l.name = editInfo.reply_info[0].name
+                        l.url = editInfo.reply_info[0].url
+                        l.appid = editInfo.reply_info[0].appid
+                        l.pagepath = editInfo.reply_info[0].pagepath
+                        delete l.reply_info
+                    } else if (l.type == "click" && editInfo.type == "click") {
+                        if (editInfo.sort == l.sort) {
+                            console.log(222 - 3333)
+                            l.reply_info = editInfo.reply_info
+                            console.log(l, editInfo)
+                        }
+                    }
+                }
+            })
+        }
+        this.setState({
+            formData: info
+        })
+    }
+    saveForm() {
+        this.uploadWechatMenu()
         this.closeModal()
     }
-
     closeModal() {
+        this.formRef.current.resetFields()
+        // this.props.onRefresh()
         this.props.onCloseModal()
+
     }
 
     getUploadFileUrl(type, file, list, i) {   // 图片上传的方法
@@ -399,52 +638,41 @@ export default class EarnIncentiveTask extends React.Component {
             wxCode: this.props.menuInfo.wxCode
         }
         getWechatMenu(params).then(res => {
-            this.setState({
-                menuInfo: res.data
-            })
+            if(res.data && res.data.length>0){
+                let menuInfo={
+                    defaultMenu:res.data
+                }
+                console.log(menuInfo)
+                // this.setState({
+                //     menuInfo: menuInfo
+                // })
+            }else{
+                
+                this.setState({
+                    menuInfo: res.data
+                })
+            }
+           
         })
     }
-    uploadWechatMenu(val) {
-        let editInfo = {
-            ...this.state.currentMenu,
-            ...val
-        }
-        let info = this.props.menuInfo
-        if (info.defaultMenu.button) {
-            info.defaultMenu.button.forEach(l => {
-                if (l.sub_button) {
-                    l.sub_button.forEach(h => {
-                        if(h.type == "view"){
-                            h={}
-                            h.type = editInfo.reply_info[0].type
-                            h.name = editInfo.reply_info[0].name
-                            h.url = editInfo.reply_info[0].url
-                            delete h.reply_info
-                            // console.log("view",h)
-                        }else if(h.type == "miniprogram"){
-                            // h={}
-                            h.type = editInfo.reply_info[0].type
-                            h.name = editInfo.reply_info[0].name
-                            h.url = editInfo.reply_info[0].url
-                            h.appid = editInfo.reply_info[0].appid
-                            h.pagepath = editInfo.reply_info[0].pagepath
-                            console.log("miniprogram",h)
-                            delete h.reply_info
-                        }else if(h.type == "click"){
-                            if (h.key == editInfo.key) {
-                                h.reply_info = editInfo.reply_info
-                                console.log(h, editInfo)
-                            } 
-                        }
-                    })
-                }
-            })
-        }
-
+    uploadWechatMenu() {
+        let info = this.state.formData.defaultMenu || this.state.menuInfo.defaultMenu
+        info.button.forEach((r, i) => {
+            let obj = {}
+            if (r.sub_button) {
+                obj.name = r.name
+                obj.sub_button = r.sub_button
+                info.button[i] = obj
+            } else {
+                // obj.name = r.name
+                // info.button[i] = obj
+            }
+        })
         let params = {
-            ...info.defaultMenu
+            ...info
         }
-        // return console.log(params)
+        // console.log(params)
+        return console.log(params)
         uploadWechatMenu(params).then(res => {
             message.success("更新成功")
             this.props.onRefresh()
@@ -455,6 +683,71 @@ export default class EarnIncentiveTask extends React.Component {
             this.setState({
                 mpList: res.data
             })
+        })
+    }
+    openBox(val) {
+        console.log(val, "val")
+        let menuInfo = JSON.parse(JSON.stringify(val))
+        if (val.defaultMenu.button && val.defaultMenu.button[0].sub_button && val.defaultMenu.button[0].sub_button[0]) {
+            this.formRef.current.setFieldsValue({ "reply_info": val.defaultMenu.button[0].sub_button[0].reply_info })
+        } else {
+            this.formRef.current.setFieldsValue({ "reply_info": val.defaultMenu.button[0] })
+        }
+        let arr = ""
+        let openKeys = []
+        if (menuInfo && this.props.openModal) {
+            if (menuInfo.defaultMenu) {
+                arr = menuInfo.defaultMenu.button
+                if (arr && arr.length > 0) {
+                    arr.forEach((r, index) => {
+                        openKeys.push(r.name)
+                        if (r.sub_button) {
+                            r.sub_button.forEach((l, i) => {
+                                l.sort = `${index}-${i}`
+                            })
+                        } else {
+                            r.sort = `${index}-0`
+                        }
+                    })
+
+                }
+            } else {
+                arr = ""
+            }
+
+        }
+        this.setState({
+            defaultSelectedKeys: ["0-0"],
+            menuInfo: menuInfo,
+            openKeys: openKeys
+        })
+    }
+    //删除一级菜单
+    delSubMenu(r,menuIndex){
+        console.log(r, menuIndex, "删除")
+        let menuInfo = this.state.menuInfo
+        menuInfo.defaultMenu.button.splice(menuIndex, 1)
+        console.log(menuInfo, "menuInfo")
+        this.setState({
+            menuInfo: menuInfo
+        },()=>{
+            //判断删除的时候选中某一个
+            if(menuInfo.defaultMenu.button.length>0){
+                // this.formRef.current.setFieldsValue(menuInfo.defaultMenu.button[0])
+                console.log(menuInfo.defaultMenu.button)
+                if(menuInfo.defaultMenu.button[0].sub_button){
+                    this.setState({
+                        defaultSelectedKeys: [menuInfo.defaultMenu.button[0].sub_button[0].sort],
+                    })
+                    this.formRef.current.setFieldsValue(menuInfo.defaultMenu.button[0].sub_button[0])
+                }else{
+                    this.setState({
+                        defaultSelectedKeys: [menuInfo.defaultMenu.button[0].sort],
+                    })
+                    this.formRef.current.setFieldsValue(menuInfo.defaultMenu.button[0])
+                }
+               
+            }
         })
     }
 }

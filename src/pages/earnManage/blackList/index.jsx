@@ -45,7 +45,7 @@ export default class EarnIncentiveTask extends React.Component {
                 {
                     title: "操作",
                     key: "action",
-                    // fixed: 'right', width: 210,
+                    fixed: 'right', width: 150,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
@@ -118,8 +118,8 @@ export default class EarnIncentiveTask extends React.Component {
                             name="taskForm"
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
-                            <Form.Item label="用户UserId" name="userId" rules={[{ required: true, message: '请填写名称' }]}>
-                                <Input placeholder="请输入名称" disabled={this.state.source == "edit"} />
+                            <Form.Item label="用户UserId" name="userId" rules={[{ required: true, message: '请填写用户UserId' }]}>
+                                <Input placeholder="请输入用户UserId" disabled={this.state.source == "edit"} />
                             </Form.Item>
                             <Form.Item label="备注" name="mark">
                                 <Input placeholder="请输入备注" />

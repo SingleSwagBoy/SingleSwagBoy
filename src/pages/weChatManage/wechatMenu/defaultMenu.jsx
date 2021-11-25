@@ -713,7 +713,18 @@ export default class EarnIncentiveTask extends React.Component {
                                         </Form>
                                     </div>
                                     <div style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
-                                        <Button size="large" style={{ margin: "20px 0 0 20px", width: "20%" }} onClick={() => { }}>取消</Button>
+                                        {
+                                            this.state.radioState == "personal" ? 
+                                            <Button size="large" style={{ margin: "20px 0 0 20px", width: "20%" }} onClick={() => {
+                                                this.setState({
+                                                    isList:true
+                                                })
+                                             }}>返回列表</Button>
+                                            :
+                                            ""
+                                        }
+                                       
+                                        <Button size="large" style={{ margin: "20px 0 0 20px", width: "20%" }} onClick={() => { this.closeModal() }}>取消</Button>
                                         <Button type="primary" size="large" style={{ margin: "20px 0 0 20px", width: "20%" }} onClick={this.saveForm.bind(this)}>
                                             确定提交
                                         </Button>

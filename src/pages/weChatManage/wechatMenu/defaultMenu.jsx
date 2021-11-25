@@ -210,7 +210,15 @@ export default class EarnIncentiveTask extends React.Component {
                                                 {
                                                     this.state.matchrule.map((r, i) => {
                                                         return <Col span={8} style={{ marginBottom: "20px" }}>
-                                                            <Card title={`标签人群设置${i + 1}`} bordered={false}>
+                                                            <Card title={`标签人群设置${i + 1}`} bordered={false} 
+                                                            extra={<div  onClick={()=>{
+                                                                let arr = this.state.matchrule
+                                                                arr.splice(i,1)
+                                                                this.setState({
+                                                                    matchrule:arr
+                                                                })
+                                                            }}>删除</div>}
+                                                            >
                                                                 <Radio.Group style={{ marginBottom: 16 }}
                                                                     defaultValue={Number(r.client_platform_type)}
                                                                     onChange={(e) => {

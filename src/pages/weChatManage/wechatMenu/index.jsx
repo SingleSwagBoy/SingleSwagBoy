@@ -25,7 +25,9 @@ export default class EarnIncentiveTask extends React.Component {
                 wrapperCol: { offset: 16, span: 8 },
             },
             visible: false,
+            openPersonModal:false,
             currentItem: "",
+            openModal:false,
             columns: [
                 {
                     title: "公众号名称",
@@ -108,13 +110,19 @@ export default class EarnIncentiveTask extends React.Component {
                     onRefresh={this.getWxlist.bind(this)}
                     onRef={this.onRef.bind(this)}
                 ></DefaultMenu>
+                 {/* <Personal  openPersonModal={this.state.openPersonModal}></Personal> */}
             </div>
         )
     }
     componentDidMount() {
         this.getWxlist();
     }
-    closeModal() {
+    closeModal(val) {
+        // if(val){
+        //     this.setState({
+        //         openPersonModal:true
+        //     })
+        // }
         this.setState({
             openModal: false,
         })

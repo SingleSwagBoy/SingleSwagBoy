@@ -1,3 +1,10 @@
-.menu_inline{
+.menu_inline {
     width: 100% !important;
+}
+
+.ant-menu-title-content>div>div:nth-child(1) {
+    width: 50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

@@ -147,7 +147,7 @@ export default class EarnIncentiveTask extends React.Component {
                             <>
                                 <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
                                     <Button type="primary" size="large" onClick={() => {
-                                        if(!this.state.menuInfo.defaultMenu || !this.state.menuInfo.defaultMenu.button || this.state.menuInfo.defaultMenu.button.length == 0){
+                                        if (!this.state.menuInfo.defaultMenu || !this.state.menuInfo.defaultMenu.button || this.state.menuInfo.defaultMenu.button.length == 0) {
                                             return message.error("请先添加默认菜单")
                                         }
                                         this.setState({
@@ -283,7 +283,7 @@ export default class EarnIncentiveTask extends React.Component {
                                             }}
                                             expandIcon={<></>}
                                             onSelect={(e) => { }}
-                                            onOpenChange={this.onOpenChange.bind(this)} style={{ width: 256 }}
+                                            style={{ width: 256 }}
                                         >
                                             {
                                                 menuInfo.defaultMenu && menuInfo.defaultMenu.button.map((r, menuIndex) => {
@@ -296,9 +296,15 @@ export default class EarnIncentiveTask extends React.Component {
                                                                         {
                                                                             r.name ?
                                                                                 <div>{r.name}</div>
-                                                                                : <Input onChange={(e) => {
+                                                                                : <Input onBlur={(e) => {
                                                                                     r.name = e.target.value
-                                                                                    // this.formRef.current.setFieldsValue(l)
+                                                                                    // this.formRef.current.setFieldsValue(r)
+                                                                                    // this.forceUpdate()
+                                                                                    let arr = openKeys
+                                                                                    openKeys[menuIndex] = r.name
+                                                                                    this.setState({
+                                                                                        openKeys: arr
+                                                                                    })
                                                                                 }} />
                                                                         }
                                                                         <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -314,9 +320,19 @@ export default class EarnIncentiveTask extends React.Component {
 
                                                                             }}><DeleteOutlined /></div>
                                                                             <div onClick={() => {
-                                                                                console.log(r, "l")
-                                                                                r.name = ""
-                                                                                this.forceUpdate()
+                                                                                console.log(r, openKeys, "l")
+                                                                                let openInfo = openKeys.filter(item => item != r.name)
+                                                                                console.log(openInfo)
+                                                                                if (openInfo.length > 0) {
+                                                                                    r.name = ""
+                                                                                    openInfo.push(r.name)
+                                                                                } else {
+                                                                                    openInfo = [""]
+                                                                                }
+                                                                                this.setState({
+                                                                                    openKeys: openInfo
+                                                                                })
+                                                                                // this.forceUpdate()
                                                                             }}><HighlightOutlined /></div>
                                                                         </div>
                                                                     </div>
@@ -345,8 +361,14 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                 {
                                                                                     l.name ?
                                                                                         <div>{l.name}</div>
-                                                                                        : <Input onChange={(e) => {
+                                                                                        : <Input onBlur={(e) => {
                                                                                             l.name = e.target.value
+                                                                                            let arr = openKeys
+                                                                                            console.log(openKeys, i, "wo")
+                                                                                            // openKeys[i] = l.name
+                                                                                            this.setState({
+                                                                                                openKeys: arr
+                                                                                            })
                                                                                             this.formRef.current.setFieldsValue(l)
                                                                                         }} />
                                                                                 }
@@ -383,8 +405,19 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                     <div onClick={(e) => {
                                                                                         e.stopPropagation()
                                                                                         console.log(l, "l")
-                                                                                        l.name = ""
-                                                                                        this.forceUpdate()
+                                                                                        let openInfo = openKeys.filter(item => item != l.name)
+                                                                                        console.log(openInfo)
+                                                                                        if (openInfo.length > 0) {
+                                                                                            l.name = ""
+                                                                                            openInfo.push(l.name)
+                                                                                        } else {
+                                                                                            openInfo = [""]
+                                                                                        }
+
+                                                                                        this.setState({
+                                                                                            openKeys: openInfo
+                                                                                        })
+                                                                                        // this.forceUpdate()
                                                                                     }}><HighlightOutlined /></div>
                                                                                 </div>
                                                                             </div>
@@ -429,7 +462,19 @@ export default class EarnIncentiveTask extends React.Component {
                                                                         <div onClick={(e) => {
                                                                             e.stopPropagation()
                                                                             console.log(r, "l")
-                                                                            r.name = ""
+                                                                            let openInfo = openKeys.filter(item => item != r.name)
+                                                                            console.log(openInfo)
+                                                                            if (openInfo.length > 0) {
+                                                                                r.name = ""
+                                                                                openInfo.push(r.name)
+                                                                            } else {
+                                                                                openInfo = [""]
+                                                                            }
+
+                                                                            this.setState({
+                                                                                openKeys: openInfo
+                                                                            })
+
                                                                         }}><HighlightOutlined /></div>
                                                                     </div>
                                                                 </div>
@@ -758,14 +803,6 @@ export default class EarnIncentiveTask extends React.Component {
             return "未配置"
         }
     }
-    onOpenChange(e) {
-        // console.log(e, "onOpenChange")
-        // this.setState({
-        //     openKeys: e
-        // })
-        // this.forceUpdate()
-
-    }
     addMenu(item, e) {
         e.stopPropagation()
         console.log(item)
@@ -810,7 +847,7 @@ export default class EarnIncentiveTask extends React.Component {
                 if (l.sub_button) {  //有二级菜单
                     l.sub_button.forEach((h, i) => {
                         console.log(h)
-                        if(!h.name) return message.error("请填写菜单名称")
+                        if (!h.name) return message.error("请填写菜单名称")
                         // l.sort = `${index}-${i}`
                         if (h.type == "view" && editInfo.type == "view" && editInfo.sort == h.sort) {
                             console.log(111)
@@ -882,7 +919,7 @@ export default class EarnIncentiveTask extends React.Component {
             name: "",
             isList: false,
             source: "",
-            formData:""
+            formData: ""
         })
 
     }
@@ -962,8 +999,8 @@ export default class EarnIncentiveTask extends React.Component {
         }
         console.log(params, this.state.source)
         // return console.log(params,this.state.source)
-        if(params.button && params.button.length == 0){
-            this.delWechatMenu(params,"default")
+        if (params.button && params.button.length == 0) {
+            this.delWechatMenu(params, "default")
             return
         }
         if (this.state.source == "add" || !params.id) {
@@ -1091,6 +1128,16 @@ export default class EarnIncentiveTask extends React.Component {
                     this.formRef.current.setFieldsValue(menuInfo.defaultMenu.button[0])
                 }
 
+            } else {
+                console.log("我崩了")
+                // this.formRef.current.resetFields()
+                // let r = { name: "", sort: `${menuInfo.defaultMenu.button.length}-0`, type: "click", msg_type: "text","content":"" }
+                // menuInfo.defaultMenu.button =[]
+                // this.setState({
+                //     menuInfo:menuInfo
+                // })
+                // this.formRef.current.setFieldsValue(r)
+                this.forceUpdate()
             }
         })
     }
@@ -1108,14 +1155,14 @@ export default class EarnIncentiveTask extends React.Component {
             })
         })
     }
-    delWechatMenu(item,type) {
+    delWechatMenu(item, type) {
         let params = {
             id: item.id
         }
         delWechatMenu(params).then(res => {
             message.success("删除成功")
             this.getWechatMenu()
-            if(type == "default"){
+            if (type == "default") {
                 this.props.onRefresh()
                 this.closeModal()
             }

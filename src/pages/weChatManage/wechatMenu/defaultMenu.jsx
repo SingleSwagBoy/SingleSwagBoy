@@ -147,6 +147,9 @@ export default class EarnIncentiveTask extends React.Component {
                             <>
                                 <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
                                     <Button type="primary" size="large" onClick={() => {
+                                        if(!this.state.menuInfo.defaultMenu || !this.state.menuInfo.defaultMenu.button || this.state.menuInfo.defaultMenu.button.length == 0){
+                                            return message.error("请先添加默认菜单")
+                                        }
                                         this.setState({
                                             isList: false,
                                             source: "add"
@@ -210,14 +213,14 @@ export default class EarnIncentiveTask extends React.Component {
                                                 {
                                                     this.state.matchrule.map((r, i) => {
                                                         return <Col span={8} style={{ marginBottom: "20px" }}>
-                                                            <Card title={`标签人群设置${i + 1}`} bordered={false} 
-                                                            extra={<div  onClick={()=>{
-                                                                let arr = this.state.matchrule
-                                                                arr.splice(i,1)
-                                                                this.setState({
-                                                                    matchrule:arr
-                                                                })
-                                                            }}>删除</div>}
+                                                            <Card title={`标签人群设置${i + 1}`} bordered={false}
+                                                                extra={<div onClick={() => {
+                                                                    let arr = this.state.matchrule
+                                                                    arr.splice(i, 1)
+                                                                    this.setState({
+                                                                        matchrule: arr
+                                                                    })
+                                                                }}>删除</div>}
                                                             >
                                                                 <Radio.Group style={{ marginBottom: 16 }}
                                                                     defaultValue={Number(r.client_platform_type)}
@@ -447,7 +450,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                         this.formRef.current.setFieldsValue(r)
                                                     } else {
                                                         info.defaultMenu = {
-                                                            button:[],
+                                                            button: [],
                                                             menuType: this.state.radioState,
                                                             name: "",
                                                             status: "on",
@@ -681,11 +684,11 @@ export default class EarnIncentiveTask extends React.Component {
 
 
                                                             {
-                                                                this.formRef.current && 
-                                                                this.formRef.current.getFieldValue() && 
-                                                                this.formRef.current.getFieldValue("reply_info") && 
-                                                                this.formRef.current.getFieldValue("reply_info")[0].msg_type != "Jump" &&
-                                                                this.formRef.current.getFieldValue("reply_info").length <3
+                                                                this.formRef.current &&
+                                                                    this.formRef.current.getFieldValue() &&
+                                                                    this.formRef.current.getFieldValue("reply_info") &&
+                                                                    this.formRef.current.getFieldValue("reply_info")[0].msg_type != "Jump" &&
+                                                                    this.formRef.current.getFieldValue("reply_info").length < 3
                                                                     ?
                                                                     <Form.Item>
                                                                         <Button type="dashed" onClick={() => {
@@ -714,16 +717,16 @@ export default class EarnIncentiveTask extends React.Component {
                                     </div>
                                     <div style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
                                         {
-                                            this.state.radioState == "personal" ? 
-                                            <Button size="large" style={{ margin: "20px 0 0 20px", width: "20%" }} onClick={() => {
-                                                this.setState({
-                                                    isList:true
-                                                })
-                                             }}>返回列表</Button>
-                                            :
-                                            ""
+                                            this.state.radioState == "personal" ?
+                                                <Button size="large" style={{ margin: "20px 0 0 20px", width: "20%" }} onClick={() => {
+                                                    this.setState({
+                                                        isList: true
+                                                    })
+                                                }}>返回列表</Button>
+                                                :
+                                                ""
                                         }
-                                       
+
                                         <Button size="large" style={{ margin: "20px 0 0 20px", width: "20%" }} onClick={() => { this.closeModal() }}>取消</Button>
                                         <Button type="primary" size="large" style={{ margin: "20px 0 0 20px", width: "20%" }} onClick={this.saveForm.bind(this)}>
                                             确定提交
@@ -807,6 +810,7 @@ export default class EarnIncentiveTask extends React.Component {
                 if (l.sub_button) {  //有二级菜单
                     l.sub_button.forEach((h, i) => {
                         console.log(h)
+                        if(!h.name) return message.error("请填写菜单名称")
                         // l.sort = `${index}-${i}`
                         if (h.type == "view" && editInfo.type == "view" && editInfo.sort == h.sort) {
                             console.log(111)
@@ -877,7 +881,8 @@ export default class EarnIncentiveTask extends React.Component {
             matchrule: [],
             name: "",
             isList: false,
-            source: ""
+            source: "",
+            formData:""
         })
 
     }
@@ -957,11 +962,50 @@ export default class EarnIncentiveTask extends React.Component {
         }
         console.log(params, this.state.source)
         // return console.log(params,this.state.source)
-        this.state.source == "add" ? addWechatMenu(params) : uploadWechatMenu(params).then(res => {
-            message.success(this.state.source == "edit" ? "更新成功" : "新增成功")
-            this.props.onRefresh()
-            this.closeModal()
-        })
+        if(params.button && params.button.length == 0){
+            this.delWechatMenu(params,"default")
+            return
+        }
+        if (this.state.source == "add" || !params.id) {
+            addWechatMenu(params).then(res => {
+                if (res.data.errCode == 0) {
+                    message.success("新增成功")
+                    if (this.state.radioState == "default") {
+                        this.props.onRefresh()
+                        this.closeModal()
+                    } else {
+                        this.setState({
+                            isList: true,
+                        }, () => {
+                            this.getWechatMenu()
+                        })
+                    }
+
+                } else {
+                    message.error("新增失败")
+                }
+
+            })
+        } else {
+            uploadWechatMenu(params).then(res => {
+                if (res.data.errCode == 0) {
+                    if (this.state.radioState == "default") {
+                        this.props.onRefresh()
+                        this.closeModal()
+                    } else {
+                        this.setState({
+                            isList: true,
+                        }, () => {
+                            this.getWechatMenu()
+                        })
+                    }
+                } else {
+                    message.error("更新失败")
+                }
+
+            })
+        }
+
     }
     requestWxProgramList() {
         requestWxProgramList().then(res => {
@@ -1064,13 +1108,17 @@ export default class EarnIncentiveTask extends React.Component {
             })
         })
     }
-    delWechatMenu(item) {
+    delWechatMenu(item,type) {
         let params = {
             id: item.id
         }
         delWechatMenu(params).then(res => {
             message.success("删除成功")
             this.getWechatMenu()
+            if(type == "default"){
+                this.props.onRefresh()
+                this.closeModal()
+            }
         })
     }
 }

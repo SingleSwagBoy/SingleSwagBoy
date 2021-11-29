@@ -360,11 +360,11 @@ export const syncHomeList = (params) => { return request.get(`${baseUrl}/mms/cha
 
 
 //微信菜单
-export const addWechatMenu = (params) => { return request2.post(`${baseUrl}/mms/wx/menu/new/add`,params); };                 // 创建菜单
+export const addWechatMenu = (params) => { return request.post(`${baseUrl}/mms/wx/menu/new/add`,params); };                 // 创建菜单
 export const getWechatMenu = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/get`,{ params: params }); };                 // 获取菜单
 export const delWechatMenu = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/delete`,{ params: params }); };                 // 删除菜单
 export const getWxlist = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/wxlist`,{ params: params }); };                 // 删除菜单
-export const uploadWechatMenu = (params) => { return request2.post(`${baseUrl}/mms/wx/menu/new/update`,params); };           // 编辑菜单
+export const uploadWechatMenu = (params) => { return request.post(`${baseUrl}/mms/wx/menu/new/update`,params); };           // 编辑菜单
 export const getFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/list`,params); };           // 粉丝标签列表
 
 //火星开机进入 

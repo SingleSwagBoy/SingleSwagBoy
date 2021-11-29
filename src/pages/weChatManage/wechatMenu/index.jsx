@@ -91,7 +91,7 @@ export default class EarnIncentiveTask extends React.Component {
                 }
                     extra={
                         <div>
-                            <MySyncBtn type={13} name='推送到微信' />
+                           <MySyncBtn type={4} name={'微信缓存'} />
                         </div>
                     }
                 >

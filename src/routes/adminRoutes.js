@@ -46,6 +46,7 @@ const OffineConfig = lazy(() => import('pages/configManage/offlineConfig/offline
 
 const WxMsg = lazy(() => import('pages/weChatManage/WxMsg/index.jsx'))
 const WechatMenu = lazy(() => import('pages/weChatManage/wechatMenu/index.jsx'))
+const FansTag = lazy(() => import('pages/weChatManage/fansTag/index.jsx'))
 
 const EarnIncentiveTask = lazy(() => import('pages/earnManage/earnIncentiveTask/index.jsx'))
 const WithdrawalGoodsList = lazy(() => import('pages/earnManage/withdrawalGoodsList/index.jsx'))
@@ -144,7 +145,8 @@ const adminRoutes = [
     { name: '自动回复', icon: UnorderedListOutlined, path: '/mms/wxReply', component: WxReply, code: "WeChatManage", sub_code: 'wxReply' },
     { name: '支付模板', icon: UnorderedListOutlined, path: '/mms/wx/tmplMsg', component: wxTemplateMsg, code: "WeChatManage", sub_code: 'TmplMsgTag' },
     { name: '客服消息', icon: UnorderedListOutlined, path: '/mms/wx/msg', component: WxMsg, code: "WeChatManage", sub_code: 'wxMsg' },
-    { name: '微信菜单', icon: UnorderedListOutlined, path: '/mms/wx/wechatMenu', component: WechatMenu, code: "WeChatManage", sub_code: 'wxMsg' },
+    { name: '微信菜单', icon: UnorderedListOutlined, path: '/mms/wx/wechatMenu', component: WechatMenu, code: "WeChatManage", sub_code: 'wechatMenu' },
+    { name: '粉丝标签', icon: UnorderedListOutlined, path: '/mms/wx/fansTag', component: FansTag, code: "WeChatManage", sub_code: 'fansTag' },
 
     //  赚赚管理
     { name: '赚赚激励任务', icon: UnorderedListOutlined, path: '/mms/earnManage/earnIncentiveTask', component: EarnIncentiveTask, code: "earnManage", sub_code: 'earnIncentiveTask' },

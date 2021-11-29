@@ -365,7 +365,15 @@ export const getWechatMenu = (params) => { return request2.get(`${baseUrl}/mms/w
 export const delWechatMenu = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/delete`,{ params: params }); };                 // 删除菜单
 export const getWxlist = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/wxlist`,{ params: params }); };                 // 删除菜单
 export const uploadWechatMenu = (params) => { return request.post(`${baseUrl}/mms/wx/menu/new/update`,params); };           // 编辑菜单
-export const getFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/list`,params); };           // 粉丝标签列表
+
+
+//微信粉丝
+export const getFansTagList = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/list`,params); };           // 获取微信标签详情列表
+export const addFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/add`,params); };           // 新增粉丝标签
+export const updateFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/update`,params); };           // 更新粉丝标签
+export const delFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/del`,params); };           // 删除粉丝标签
+export const getFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/get`,params); };           // 粉丝标签列表
+
 
 //火星开机进入 
 export const getMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/marsStartup/get`,{ params: params }); };                 // 获取

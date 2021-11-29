@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { uploadWechatMenu, getWechatMenu, getFansTag, requestWxProgramList, addWechatMenu, delWechatMenu } from 'api'
+import { uploadWechatMenu, getWechatMenu, getFansTagList, requestWxProgramList, addWechatMenu, delWechatMenu } from 'api'
 import { Radio, Switch, Menu, Button, message, Modal, Divider, Input, Form, Select, Space, Card, Col, Row, Table, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import { PlusOutlined, DeleteOutlined, HighlightOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -1018,7 +1018,7 @@ export default class EarnIncentiveTask extends React.Component {
         console.log(val, "val")
 
         if (val && val.wxCode) {
-            this.getFansTag(val)
+            this.getFansTagList(val)
         }
         let menuInfo = JSON.parse(JSON.stringify(val))
 
@@ -1094,7 +1094,7 @@ export default class EarnIncentiveTask extends React.Component {
             }
         })
     }
-    getFansTag(item) {
+    getFansTagList(item) {
         let params = {
             wxAppCode: item.wxCode || item.defaultMenu.wxCode,
             page: {
@@ -1102,7 +1102,7 @@ export default class EarnIncentiveTask extends React.Component {
                 pageSize: 9999
             }
         }
-        getFansTag(params).then(res => {
+        getFansTagList(params).then(res => {
             this.setState({
                 fansTagList: res.data
             })

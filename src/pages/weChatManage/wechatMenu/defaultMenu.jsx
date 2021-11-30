@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { uploadWechatMenu, getWechatMenu, getFansTagList, requestWxProgramList, addWechatMenu, delWechatMenu } from 'api'
+import { uploadWechatMenu, getWechatMenu, getFansTagList, requestWxProgramList, addWechatMenu, delWechatMenu,setMenuState } from 'api'
 import { Radio, Switch, Menu, Button, message, Modal, Divider, Input, Form, Select, Space, Card, Col, Row, Table, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import { PlusOutlined, DeleteOutlined, HighlightOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -54,7 +54,7 @@ export default class EarnIncentiveTask extends React.Component {
                     }
                 },
                 {
-                    title: "状态",  //上下线状态(1上线2下线)
+                    title: "状态",  //
                     dataIndex: "status",
                     key: "status",
                     render: (rowValue, row, index) => {
@@ -64,9 +64,9 @@ export default class EarnIncentiveTask extends React.Component {
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" key={new Date().getTime()}
                                     defaultChecked={rowValue == "on" ? true : false}
                                     onChange={(val) => {
-                                        console.log(val)
+                                        console.log(val,row)
                                         // row.state = val ? 1 : 0
-                                        // this.changeZzItemList(row)
+                                        this.setMenuState(row,val)
                                     }}
                                 />
                             </div>
@@ -92,15 +92,17 @@ export default class EarnIncentiveTask extends React.Component {
                                         console.log(row)
                                         this.setState({
                                             isList: false,
-                                            source: "edit"
+                                            source: "edit",
+                                            matchrule: row.matchrule,
+                                            menuName: row.name,
                                         }, () => {
                                             let val = {}
                                             val.defaultMenu = row
                                             val.wxCode = row.wxCode
                                             console.log(val)
                                             this.setState({
-                                                matchrule: row.matchrule,
-                                                menuName: row.name,
+                                               
+                                               
                                             }, () => {
                                                 this.openBox(val)
                                             })
@@ -254,7 +256,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                 >
                                                                     {
                                                                         fansTagList.map(r => {
-                                                                            return <Option value={r.id} key={r.id}>{r.name}</Option>
+                                                                            return <Option value={r.id} key={r.id}>{r.name}----{r.count}</Option>
                                                                         })
                                                                     }
                                                                 </Select>
@@ -1166,6 +1168,15 @@ export default class EarnIncentiveTask extends React.Component {
                 this.props.onRefresh()
                 this.closeModal()
             }
+        })
+    }
+    setMenuState(item, state) {
+        let params = {
+            status: state?"on":"off",
+            id:item.id
+        }
+        setMenuState(params).then(res => {
+            message.success("更改成功")
         })
     }
 }

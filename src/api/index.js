@@ -367,6 +367,15 @@ export const getWxlist = (params) => { return request2.get(`${baseUrl}/mms/wx/me
 export const setMenuState = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/status`,{ params: params }); };                 // 设置菜单状态
 export const uploadWechatMenu = (params) => { return request.post(`${baseUrl}/mms/wx/menu/new/update`,params); };           // 编辑菜单
 
+//微信个性化群发
+export const preSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/preview`,params); };           // 微信群发预览
+export const addSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/add`,params); };           // 新建微信群发
+export const materialSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/material`,params); };           // 获取微信图文素材
+export const getSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/list`,{ params: params }); };           // 群发列表
+export const everySend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/data`,{ params: params }); };           // 微信群发结束后的统计结果
+export const cancelSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/cancel`,{ params: params }); };           // 取消预约推送
+export const reSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/resend`,{ params: params }); };           // 取消推送重发
+
 
 //微信粉丝
 export const getFansTagList = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/list`,params); };           // 获取微信标签详情列表

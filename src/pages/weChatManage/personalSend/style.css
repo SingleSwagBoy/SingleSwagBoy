@@ -1,0 +1,14 @@
+.popBox >div{
+    margin: 10px;
+}
+.ant-list-item{
+    border:1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+.ant-card-bordered{
+    border: 0 !important;
+}
+.ant-card-body{
+    padding: 0px;
+    border-bottom: 1px solid #f0f0f0;
+}

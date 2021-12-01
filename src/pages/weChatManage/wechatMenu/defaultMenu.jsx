@@ -219,10 +219,12 @@ export default class EarnIncentiveTask extends React.Component {
                                                                 extra={<div onClick={() => {
                                                                     let arr = this.state.matchrule
                                                                     arr.splice(i, 1)
+                                                                    console.log(arr,"arr")
                                                                     this.setState({
                                                                         matchrule: arr
                                                                     })
                                                                 }}>删除</div>}
+                                                                key={r.tag_id}
                                                             >
                                                                 <Radio.Group style={{ marginBottom: 16 }}
                                                                     defaultValue={Number(r.client_platform_type)}
@@ -1039,7 +1041,7 @@ export default class EarnIncentiveTask extends React.Component {
                         })
                     }
                 } else {
-                    message.error("更新失败")
+                    message.error(res.data.msg)
                 }
 
             })
@@ -1082,6 +1084,10 @@ export default class EarnIncentiveTask extends React.Component {
                 if (this.formRef.current) {
                     console.log(arr, "arr")
                     if (arr && arr.length > 0 && arr[0].sub_button && arr[0].sub_button[0]) {
+                        if(arr[0].sub_button[0].type == "view" || arr[0].sub_button[0].type == "miniprogram"){
+                            arr[0].sub_button[0].msg_type = "Jump"
+                            arr[0].sub_button[0].reply_info = [arr[0].sub_button[0]]
+                        }
                         this.formRef.current.setFieldsValue(arr[0].sub_button[0])
                         this.setState({
                             currentMenu: arr[0].sub_button[0]

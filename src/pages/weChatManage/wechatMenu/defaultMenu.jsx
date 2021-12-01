@@ -581,7 +581,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                 this.formRef.current.getFieldValue("reply_info")[index] && this.formRef.current.getFieldValue("reply_info")[index].msg_type == "text"
                                                                                     ?
                                                                                     <Form.Item {...field} label="" name={[field.name, 'content']} fieldKey={[field.fieldKey, 'content']} validateStatus="success">
-                                                                                        <Input placeholder="文字" id="success" />
+                                                                                        <Input.TextArea placeholder="文字" id="success" />
                                                                                     </Form.Item>
                                                                                     :
                                                                                     // 图片

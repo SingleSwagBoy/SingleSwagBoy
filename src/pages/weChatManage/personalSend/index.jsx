@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend } from 'api'
-import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Checkbox, Space } from 'antd'
+import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Checkbox, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
@@ -45,6 +45,8 @@ export default class EarnIncentiveTask extends React.Component {
             allMaterial: "",
             fansTagList: [],//粉丝
             activityIndex: null,
+            submitInfo: "",
+            sendState: false,
             columns: [
                 {
                     title: "发送记录",
@@ -104,7 +106,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     render() {
-        let { wxPublic, lists, layout, loading, columns, entranceState, allMaterial, fansTagList } = this.state;
+        let { wxPublic, lists, layout, loading, columns, entranceState, allMaterial, fansTagList, sendState } = this.state;
         return (
             <div>
                 <Card title={
@@ -321,13 +323,10 @@ export default class EarnIncentiveTask extends React.Component {
 
 
                             <Form.Item {...this.state.tailLayout}>
-                                <Button onClick={() => { this.setState({ entranceState: false }) }}>预览</Button>
-
-                                <Popover content={this.getSendResult()} trigger="hover">
-                                    <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
-                                        群发
-                                    </Button>
-                                </Popover>
+                                <Button onClick={() => { this.setState({ entranceState: false, allMaterial: "" }) }}>预览</Button>
+                                <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                                    群发
+                                </Button>
                             </Form.Item>
                         </Form>
                     }
@@ -336,6 +335,9 @@ export default class EarnIncentiveTask extends React.Component {
                     onClose={() => this.setState({ materialShow: false })} onChooseInfo={this.onChooseInfo.bind(this)}
                     onRef={this.onRef}
                 ></MaterialDialog>
+                <Modal title="群发" centered visible={sendState} onCancel={() => { this.setState({ sendState: false }) }} footer={null} width={600}>
+                    {this.getSendResult()}
+                </Modal>
             </div >
         )
     }
@@ -390,12 +392,32 @@ export default class EarnIncentiveTask extends React.Component {
 
         )
     }
-    getSendResult(){
+    getSendResult() {
+        console.log(this.state.submitInfo)
         return (
             <div>
-                <div>推送粉丝标签：{}</div>
-                <div></div>
-                <div></div>
+                <div>推送粉丝标签：{this.state.submitInfo && this.state.submitInfo.tagsName.join(",")}</div>
+                <div>预计送达：<InputNumber placeholder="预计送达粉丝数量" onChange={(e)=>{
+                    //  let info = this.state.submitInfo
+                    //  info.sendType = e.target.value
+                    //  this.setState({submitInfo:info})
+                }} /></div>
+                <div>发送方式：
+                    <Radio.Group onChange={(e) => {
+                        let info = this.state.submitInfo
+                        info.sendType = e.target.value
+                        this.setState({submitInfo:info})
+                    }}>
+                        <Radio value={1}>立即发送</Radio>
+                        <Radio value={2}>定时发送</Radio>
+                    </Radio.Group>
+                </div>
+                {
+                    this.state.submitInfo.sendType == 2
+                    ?
+                    <div><DatePicker /></div>
+                    :""
+                }
             </div>
 
         )
@@ -426,7 +448,13 @@ export default class EarnIncentiveTask extends React.Component {
         val.cover = val.articles[0].thumb_url
         val.digest = val.articles[0].digest
         val.wxCode = this.state.wxCode
-        // this.s
+        this.setState({
+            submitInfo: val
+        }, () => {
+            this.setState({
+                sendState: true
+            })
+        })
         console.log(val, "val")
         // this.closeModal()
     }

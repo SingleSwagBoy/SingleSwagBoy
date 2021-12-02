@@ -300,7 +300,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                         {
                                                                             r.name ?
                                                                                 <div>{r.name}</div>
-                                                                                : <Input onBlur={(e) => {
+                                                                                : <Input maxLength="16" onBlur={(e) => {
                                                                                     r.name = e.target.value
                                                                                     // this.formRef.current.setFieldsValue(r)
                                                                                     // this.forceUpdate()
@@ -365,7 +365,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                 {
                                                                                     l.name ?
                                                                                         <div>{l.name}</div>
-                                                                                        : <Input onBlur={(e) => {
+                                                                                        : <Input maxLength="40" onBlur={(e) => {
                                                                                             l.name = e.target.value
                                                                                             let arr = openKeys
                                                                                             console.log(openKeys, i, "wo")
@@ -452,7 +452,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                     {
                                                                         r.name ?
                                                                             <div>{r.name}</div>
-                                                                            : <Input onChange={(e) => {
+                                                                            : <Input maxLength="16" onChange={(e) => {
                                                                                 r.name = e.target.value
                                                                                 this.formRef.current.setFieldsValue(r)
                                                                             }} />
@@ -800,7 +800,7 @@ export default class EarnIncentiveTask extends React.Component {
         if (val.matchrule && val.matchrule.length > 0) {
             let info = ""
             val.matchrule.forEach(r => {
-                info = info + r.client_platform_type + "+" + r.tag_name + "/"
+                info = info + (r.client_platform_type == 1?"苹果": r.client_platform_type == 2?"安卓":r.client_platform_type == 2?"其他":"全部" )+ "+" + r.tag_name + "---"
             })
             return info
         } else {

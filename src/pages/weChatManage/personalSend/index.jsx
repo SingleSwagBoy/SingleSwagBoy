@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend,addSend } from 'api'
+import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend, addSend } from 'api'
 import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Checkbox, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -222,13 +222,17 @@ export default class EarnIncentiveTask extends React.Component {
                                                         ?
                                                         <Radio.Group onChange={(e) => {
                                                             console.log(e)
-                                                            if (e.target.checked) {
-                                                                this.formRef.current.setFieldsValue({ [e.target.value]: 1 })
-                                                            } else {
-                                                                this.formRef.current.setFieldsValue({ [e.target.value]: 0 })
-                                                            }
+                                                            // this.formRef.current.setFieldsValue({ [e.target.value]: 0 })
+                                                            let info = this.state.allMaterial
+                                                            console.log(info, "info")
+                                                            info[this.state.activityIndex][e.target.value] = e.target.checked ? 1 : 0
+                                                            this.setState({
+                                                                allMaterial: info
+                                                            })
                                                         }}
-                                                            defaultChecked={this.formRef.current && (this.formRef.current.getFieldValue("need_open_comment") || this.formRef.current.getFieldValue("only_fans_can_comment"))}
+                                                            defaultChecked={this.state.allMaterial[this.state.activityIndex].need_open_comment
+                                                                || this.state.allMaterial[this.state.activityIndex].only_fans_can_comment
+                                                            }
                                                         >
                                                             <Radio value={"need_open_comment"}>所有人均可留言</Radio>
                                                             <Radio value={"only_fans_can_comment"}>仅关注后可留言</Radio>
@@ -262,7 +266,7 @@ export default class EarnIncentiveTask extends React.Component {
                                             </Form.Item>
                                         </div>
                                         <div style={{ width: "25%" }}>
-                                            <div style={{ "width": "100%", "border": "1px solid red" }}>
+                                            <div style={{ "width": "100%", "border": "1px solid #ccc" }}>
                                                 {
                                                     this.state.allMaterial.map((l, index) => {
                                                         return (
@@ -397,7 +401,7 @@ export default class EarnIncentiveTask extends React.Component {
         return (
             <div>
                 <div>推送粉丝标签：{this.state.submitInfo && this.state.submitInfo.tagsName.join(",")}</div>
-                <div>发送方式：
+                <div style={{margin:"10px 0"}}>发送方式：
                     <Radio.Group onChange={(e) => {
                         let info = this.state.submitInfo
                         info.sendType = e.target.value
@@ -410,7 +414,7 @@ export default class EarnIncentiveTask extends React.Component {
                 {
                     this.state.submitInfo.sendType == 2
                         ?
-                        <div>选择时间：<DatePicker showTime onChange={(e) => {
+                        <div >选择时间：<DatePicker showTime onChange={(e) => {
                             console.log(e)
                             let info = this.state.submitInfo
                             info.sendTime = moment(e[0]).format(format)
@@ -418,10 +422,15 @@ export default class EarnIncentiveTask extends React.Component {
                         }} /></div>
                         : ""
                 }
-                <div>
-                    <Button type="primary" style={{ margin: "0 20px" }} onClick={this.sendFunc.bind(this)}>
-                        {this.state.submitInfo.sendType== 1?"立即群发":"创建定时任务"}
-                    </Button>
+                <div style={{margin:"10px 0"}}>
+                    {
+                        this.state.submitInfo.sendType ?
+                            <Button type="primary" style={{ margin: "0 20px" }} onClick={this.sendFunc.bind(this)}>
+                                {this.state.submitInfo.sendType == 1 ? "立即群发" : "创建定时任务"}
+                            </Button> :
+                            ""
+                    }
+
                 </div>
             </div>
 
@@ -463,12 +472,12 @@ export default class EarnIncentiveTask extends React.Component {
         console.log(val, "val")
         // this.closeModal()
     }
-    sendFunc(){
+    sendFunc() {
         console.log(this.state.submitInfo)
-        if(this.state.submitInfo.sendType == 1){
-           
-        }else{
-            if(!this.state.submitInfo.sendTime) return message.error("请选择发送时间")
+        if (this.state.submitInfo.sendType == 1) {
+
+        } else {
+            if (!this.state.submitInfo.sendTime) return message.error("请选择发送时间")
             this.addSend()
         }
     }
@@ -591,7 +600,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
         addSend(params).then(res => {
             this.setState({
-                
+
             })
         })
     }

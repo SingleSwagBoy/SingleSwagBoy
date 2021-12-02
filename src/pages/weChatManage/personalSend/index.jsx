@@ -79,7 +79,7 @@ export default class EarnIncentiveTask extends React.Component {
                                         <div>{row.content}</div>
                                         :
                                         <div style={{ display: "flex", alignItems: "center" }}>
-                                            <div><img src={row.cover} alt="" /></div>
+                                            <div><img style={{with:"100px",height:"100px"}} src={row.cover} alt="" /></div>
                                             <div>
                                                 <div>{row.content}</div>
                                                 {
@@ -205,6 +205,8 @@ export default class EarnIncentiveTask extends React.Component {
                                             </Form.Item>
                                             <Form.Item label="封面图" name="cover">
                                                 <MyImageUpload
+                                                    postUrl={"/mms/wxReply/addMedia"} //上传地址
+                                                    params={this.state.wxCode} //另外的参数
                                                     getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem) }}
                                                     imageUrl={this.formRef.current && this.formRef.current.getFieldValue("cover")} />
                                             </Form.Item>
@@ -221,10 +223,8 @@ export default class EarnIncentiveTask extends React.Component {
                                                     this.formRef.current && this.formRef.current.getFieldValue("comment")
                                                         ?
                                                         <Radio.Group onChange={(e) => {
-                                                            console.log(e)
                                                             // this.formRef.current.setFieldsValue({ [e.target.value]: 0 })
                                                             let info = this.state.allMaterial
-                                                            console.log(info, "info")
                                                             info[this.state.activityIndex][e.target.value] = e.target.checked ? 1 : 0
                                                             this.setState({
                                                                 allMaterial: info
@@ -376,7 +376,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     getDataDetail(row) {
         return (
-            <div>
+            <div style={{display:"flex"}}>
                 {
                     this.state.everyHis.map((r, i) => {
                         return (
@@ -397,11 +397,10 @@ export default class EarnIncentiveTask extends React.Component {
         )
     }
     getSendResult() {
-        console.log(this.state.submitInfo)
         return (
             <div>
                 <div>推送粉丝标签：{this.state.submitInfo && this.state.submitInfo.tagsName.join(",")}</div>
-                <div style={{margin:"10px 0"}}>发送方式：
+                <div style={{ margin: "10px 0" }}>发送方式：
                     <Radio.Group onChange={(e) => {
                         let info = this.state.submitInfo
                         info.sendType = e.target.value
@@ -415,14 +414,13 @@ export default class EarnIncentiveTask extends React.Component {
                     this.state.submitInfo.sendType == 2
                         ?
                         <div >选择时间：<DatePicker showTime onChange={(e) => {
-                            console.log(e)
                             let info = this.state.submitInfo
-                            info.sendTime = moment(e[0]).format(format)
+                            info.sendTime = moment(e).format(format)
                             this.setState({ submitInfo: info })
                         }} /></div>
                         : ""
                 }
-                <div style={{margin:"10px 0"}}>
+                <div style={{ margin: "10px 0" }}>
                     {
                         this.state.submitInfo.sendType ?
                             <Button type="primary" style={{ margin: "0 20px" }} onClick={this.sendFunc.bind(this)}>
@@ -437,7 +435,6 @@ export default class EarnIncentiveTask extends React.Component {
         )
     }
     changeSize = (page, pageSize) => {   // 分页
-        console.log(page, pageSize);
         this.setState({
             page: page,
             pageSize: pageSize
@@ -448,7 +445,6 @@ export default class EarnIncentiveTask extends React.Component {
     submitForm(val) {   // 提交表单
         if (val.tags) {
             let arr = this.state.fansTagList.filter(item => val.tags.some(r => item.id == r))
-            console.log(arr)
             let tagsName = []
             arr.forEach(r => {
                 tagsName.push(r.name)
@@ -564,11 +560,11 @@ export default class EarnIncentiveTask extends React.Component {
     getUploadFileUrl(type, file, newItem) {
         console.log(type, file, newItem, "newItem")
         let that = this;
-        let image_url = file;
-
-        that.formRef.current.setFieldsValue({ [type]: image_url });
+        let image_url = newItem;
+        that.formRef.current.setFieldsValue({ [type]: image_url.url });
         let info = this.state.allMaterial
-        info[this.state.activityIndex].thumb_url = image_url
+        info[this.state.activityIndex].thumb_url = image_url.url
+        info[this.state.activityIndex].thumb_media_id = image_url.mediaID
         this.setState({
             allMaterial: info
         })
@@ -598,9 +594,13 @@ export default class EarnIncentiveTask extends React.Component {
         let params = {
             ...this.state.submitInfo
         }
+        return console.log(params)
         addSend(params).then(res => {
             this.setState({
-
+                visible: false,
+                sendState: false,
+            },()=>{
+                message.success("操作成功")
             })
         })
     }

@@ -998,9 +998,7 @@ export default class EarnIncentiveTask extends React.Component {
             info.matchrule = this.state.matchrule
             info.name = this.state.menuName
         }
-        let params = {
-            ...info
-        }
+        let params = info
         console.log(params, this.state.source)
         // return console.log(params,this.state.source)
         if (params.button && params.button.length == 0) {
@@ -1096,7 +1094,7 @@ export default class EarnIncentiveTask extends React.Component {
                         if(arr && arr.length > 0){
                             if(arr[0].type == "view" || arr[0].type == "miniprogram"){
                                 arr[0].msg_type = "Jump"
-                                arr[0].reply_info = [arr[0]]
+                                arr[0].reply_info = JSON.parse(JSON.stringify([arr[0]]))
                             }
                            
                         }

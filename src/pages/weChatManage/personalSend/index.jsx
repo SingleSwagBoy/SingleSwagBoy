@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend } from 'api'
+import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend,addSend } from 'api'
 import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Checkbox, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -397,16 +397,11 @@ export default class EarnIncentiveTask extends React.Component {
         return (
             <div>
                 <div>推送粉丝标签：{this.state.submitInfo && this.state.submitInfo.tagsName.join(",")}</div>
-                <div>预计送达：<InputNumber placeholder="预计送达粉丝数量" onChange={(e)=>{
-                    //  let info = this.state.submitInfo
-                    //  info.sendType = e.target.value
-                    //  this.setState({submitInfo:info})
-                }} /></div>
                 <div>发送方式：
                     <Radio.Group onChange={(e) => {
                         let info = this.state.submitInfo
                         info.sendType = e.target.value
-                        this.setState({submitInfo:info})
+                        this.setState({ submitInfo: info })
                     }}>
                         <Radio value={1}>立即发送</Radio>
                         <Radio value={2}>定时发送</Radio>
@@ -414,10 +409,20 @@ export default class EarnIncentiveTask extends React.Component {
                 </div>
                 {
                     this.state.submitInfo.sendType == 2
-                    ?
-                    <div><DatePicker /></div>
-                    :""
+                        ?
+                        <div>选择时间：<DatePicker showTime onChange={(e) => {
+                            console.log(e)
+                            let info = this.state.submitInfo
+                            info.sendTime = moment(e[0]).format(format)
+                            this.setState({ submitInfo: info })
+                        }} /></div>
+                        : ""
                 }
+                <div>
+                    <Button type="primary" style={{ margin: "0 20px" }} onClick={this.sendFunc.bind(this)}>
+                        {this.state.submitInfo.sendType== 1?"立即群发":"创建定时任务"}
+                    </Button>
+                </div>
             </div>
 
         )
@@ -458,7 +463,15 @@ export default class EarnIncentiveTask extends React.Component {
         console.log(val, "val")
         // this.closeModal()
     }
-
+    sendFunc(){
+        console.log(this.state.submitInfo)
+        if(this.state.submitInfo.sendType == 1){
+           
+        }else{
+            if(!this.state.submitInfo.sendTime) return message.error("请选择发送时间")
+            this.addSend()
+        }
+    }
     getSend() {
         let params = {
             currentPage: this.state.page,
@@ -569,6 +582,16 @@ export default class EarnIncentiveTask extends React.Component {
         getFansTagList(params).then(res => {
             this.setState({
                 fansTagList: res.data
+            })
+        })
+    }
+    addSend() {
+        let params = {
+            ...this.state.submitInfo
+        }
+        addSend(params).then(res => {
+            this.setState({
+                
             })
         })
     }

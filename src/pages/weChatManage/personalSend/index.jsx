@@ -190,7 +190,13 @@ export default class EarnIncentiveTask extends React.Component {
                                     <div style={{ display: "flex", alignItems: "flex-star", justifyContent: "space-between" }}>
                                         <div style={{ width: "52%" }}>
                                             <Form.Item label="图文标题" name="content">
-                                                <Input placeholder="图文标题" />
+                                                <Input placeholder="图文标题" onChange={(e) => {
+                                                    let info = this.state.allMaterial
+                                                    info[this.state.activityIndex].title = e.target.value
+                                                    this.setState({
+                                                        allMaterial: info
+                                                    })
+                                                }} />
                                             </Form.Item>
                                             <Form.Item label="图文摘要" name="digest">
                                                 <Input placeholder="图文摘要" />
@@ -315,10 +321,13 @@ export default class EarnIncentiveTask extends React.Component {
 
 
                             <Form.Item {...this.state.tailLayout}>
-                                <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
-                                <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
-                                    确定
-                                </Button>
+                                <Button onClick={() => { this.setState({ entranceState: false }) }}>预览</Button>
+
+                                <Popover content={this.getSendResult()} trigger="hover">
+                                    <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                                        群发
+                                    </Button>
+                                </Popover>
                             </Form.Item>
                         </Form>
                     }
@@ -381,6 +390,16 @@ export default class EarnIncentiveTask extends React.Component {
 
         )
     }
+    getSendResult(){
+        return (
+            <div>
+                <div>推送粉丝标签：{}</div>
+                <div></div>
+                <div></div>
+            </div>
+
+        )
+    }
     changeSize = (page, pageSize) => {   // 分页
         console.log(page, pageSize);
         this.setState({
@@ -399,13 +418,15 @@ export default class EarnIncentiveTask extends React.Component {
                 tagsName.push(r.name)
             })
             val.tagsName = tagsName
-        }else{
+        } else {
             val.tagsName = []
         }
+        val.articles = this.state.allMaterial
         val.content = val.articles[0].title
         val.cover = val.articles[0].thumb_url
         val.digest = val.articles[0].digest
-        val.articles = this.state.allMaterial
+        val.wxCode = this.state.wxCode
+        // this.s
         console.log(val, "val")
         // this.closeModal()
     }
@@ -496,7 +517,12 @@ export default class EarnIncentiveTask extends React.Component {
         let image_url = file;
 
         that.formRef.current.setFieldsValue({ [type]: image_url });
-        that.forceUpdate();
+        let info = this.state.allMaterial
+        info[this.state.activityIndex].thumb_url = image_url
+        this.setState({
+            allMaterial: info
+        })
+        // that.forceUpdate();
     }
     //获取上传文件图片地址 
     getUploadFileImageUrlByType(type) {

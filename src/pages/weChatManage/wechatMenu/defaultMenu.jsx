@@ -1093,9 +1093,12 @@ export default class EarnIncentiveTask extends React.Component {
                             currentMenu: arr[0].sub_button[0]
                         })
                     } else {
-                        if(arr[0].type == "view" || arr[0].type == "miniprogram"){
-                            arr[0].msg_type = "Jump"
-                            arr[0].reply_info = [arr[0]]
+                        if(arr && arr.length > 0){
+                            if(arr[0].type == "view" || arr[0].type == "miniprogram"){
+                                arr[0].msg_type = "Jump"
+                                arr[0].reply_info = [arr[0]]
+                            }
+                           
                         }
                         this.formRef.current.setFieldsValue(arr[0])
                         this.setState({

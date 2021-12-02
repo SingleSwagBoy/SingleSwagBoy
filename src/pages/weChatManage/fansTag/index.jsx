@@ -299,9 +299,17 @@ export default class EarnIncentiveTask extends React.Component {
         })
     }
     getWxName(row){
-        let arr = this.state.wxPublic.filter(item=>item.code == row.wxAppCode)
-        if(arr.length>0){
-            return arr[0].name
+        if(row.wxAppCode){
+            let arr = this.state.wxPublic.filter(item=>row.wxAppCode.split(",").some(r=>item.code == r))
+            if(arr.length>0){
+                let name = []
+                arr.forEach(r=>{
+                    name.push(r.name)
+                })
+                return name.join(",")
+            }else{
+                return "未知"
+            }
         }else{
             return "未知"
         }

@@ -1,8 +1,8 @@
 
 
 import React, { Component } from 'react'
-import { } from 'api'
-import { Checkbox, Card, Button, message, Table, Modal, List, Select } from 'antd'
+import {materialSend } from 'api'
+import { Checkbox, Card, Button, message, Pagination, Modal, List, Select } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
 import moment from 'moment';
@@ -13,10 +13,12 @@ export default class EarnIncentiveTask extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            page: 1,
-            pageSize: 10,
+            page: 0,
+            pageSize: 12,
             total: 0,
             loading: false,
+            checkedItem: [],
+            chooseMaterial: [],//选择素材的数组
             layout: {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 20 },
@@ -24,21 +26,53 @@ export default class EarnIncentiveTask extends React.Component {
             tailLayout: {
                 wrapperCol: { offset: 20, span: 4 },
             },
+            materialData: [],
+            materialShow: false,
         }
     }
     render() {
-        let { } = this.state;
-        let { materialShow, totalCount, materialData } = this.props
+        let {materialData,materialShow } = this.state;
+        let { totalCount, } = this.props
         return (
             <div className="materialBox">
-                <Modal title="图文素材列表" centered visible={materialShow} onCancel={() => { }} footer={null} width={800}>
-                    <Checkbox.Group style={{ width: '100%' }} onChange={() => { }}>
+                <Modal title="图文素材列表" centered visible={materialShow} onCancel={() => { this.props.onClose() }} footer={null} width={800}>
+                    <Checkbox.Group defaultValue={this.state.checkedItem} style={{ width: '100%' }} onChange={(e) => {
+                        console.log(e)
+                        this.setState({
+                            checkedItem: e
+                        })
+                    }}>
                         <List
                             grid={{ gutter: 16, column: 3 }}
                             dataSource={materialData}
                             renderItem={(item, index) => (
-                                <List.Item>
-                                    <Checkbox value={item.media_id}>
+                                <List.Item key={index}>
+                                    <Checkbox value={item.media_id} onClick={(e) => {
+                                        let arr = this.state.chooseMaterial
+                                        console.log(arr, "arr")
+                                        if (e.target.checked) {
+                                            let num = 0
+                                            arr.forEach(r => {
+                                                num = num + r.content.news_item.length
+                                            })
+                                            if (num + item.content.news_item.length > 6) {
+                                                let info = this.state.checkedItem
+                                                info.splice(info.length - 1, 1)
+                                                this.setState({
+                                                    checkedItem: info
+                                                })
+                                                console.log(info)
+                                                return message.error("已超过6条素材,后续选中的素材都不生效")
+                                            }
+                                            arr.push(item)
+                                        } else {
+                                            console.log(arr,item)
+                                            arr = arr.filter(r => r.media_id != item.media_id)
+                                        }
+                                        this.setState({
+                                            chooseMaterial: arr
+                                        })
+                                    }}>
                                         {
                                             item.content.news_item && item.content.news_item.map((r, i) => {
                                                 return (
@@ -65,24 +99,54 @@ export default class EarnIncentiveTask extends React.Component {
                             )}
                         />
                     </Checkbox.Group>
+                    <div style={{ width: "100%", display: "flex", "alignItems": "center", justifyContent: "space-between" }}>
+                        <div><Pagination defaultCurrent={1} pageSize={this.state.pageSize} total={totalCount} onChange={(page, pageSize) => this.changeSize(page, pageSize)} /></div>
+                        <div>
+                            <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
+                            <Button type="primary" style={{ margin: "0 20px" }} onClick={()=>{
+                                this.props.onChooseInfo(this.state.chooseMaterial)
+                            }}>
+                                确定
+                            </Button>
+                        </div>
+                    </div>
+
                 </Modal>
             </div>
         )
     }
     componentDidMount() {
-
+        this.props.onRef(this)
     }
-
+    openDialog(state, data) {
+        console.log(state, data)
+        this.setState({
+            materialData: data,
+            materialShow: state,
+        })
+    }
 
     changeSize = (page, pageSize) => {   // 分页
         console.log(page, pageSize);
         this.setState({
-            page: page,
-            pageSize: pageSize
+            page: page - 1
         }, () => {
-            this.getSend()
+            this.materialSend()
         })
     }
-
+    materialSend(){
+        let params={
+            "type": "news",   //news 图文
+            "count": this.state.pageSize,   // 数量
+            "wxCode": this.props.wxCode,  // 公众号code
+            "offset": (this.state.page) * this.state.pageSize  //偏移量
+        }
+        materialSend(params).then(res=>{
+            console.log(res.data)
+            this.setState({
+                materialData:res.data.item
+            })
+        })
+    }
 
 }

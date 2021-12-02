@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { getSend, materialSend, updateFansTag, delFansTag, getPublicList, everySend } from 'api'
-import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Switch, Space } from 'antd'
+import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend } from 'api'
+import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Checkbox, Space } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
 import { MySyncBtn } from "@/components/views.js"
 import MaterialDialog from "./materialDialog"
+import { MyImageUpload } from '@/components/views.js';
 import util from 'utils'
 import "./style.css"
 const { Option } = Select;
@@ -19,14 +20,14 @@ export default class EarnIncentiveTask extends React.Component {
             page: 1,
             pageSize: 10,
             total: 0,
-            totalCount:0,//素材
+            totalCount: 0,//素材
             loading: false,
             layout: {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 20 },
             },
             tailLayout: {
-                wrapperCol: { offset: 20, span: 4 },
+                wrapperCol: { offset: 12, span: 12 },
             },
             lists: [],
             productLists: [],
@@ -40,7 +41,10 @@ export default class EarnIncentiveTask extends React.Component {
             wxCode: "",
             start: "",
             end: "",
-            materialShow:false,
+            materialShow: false,
+            allMaterial: "",
+            fansTagList: [],//粉丝
+            activityIndex: null,
             columns: [
                 {
                     title: "发送记录",
@@ -100,7 +104,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     render() {
-        let { wxPublic, lists, layout, loading, columns, entranceState, user_tag } = this.state;
+        let { wxPublic, lists, layout, loading, columns, entranceState, allMaterial, fansTagList } = this.state;
         return (
             <div>
                 <Card title={
@@ -125,7 +129,8 @@ export default class EarnIncentiveTask extends React.Component {
                                         source: "add",
                                         entranceState: true,
                                     }, () => {
-                                        this.formRef.current.resetFields();
+                                        this.getMaterial()
+                                        this.formRef.current.resetFields()
                                     })
                                 }}
                             >新建推送</Button>
@@ -165,41 +170,149 @@ export default class EarnIncentiveTask extends React.Component {
                         }}
                     />
                 </Card>
-                <Modal title="新建推送" centered visible={entranceState} onCancel={() => { this.setState({ entranceState: false }) }} footer={null} width={800}>
+                <Modal title="新建推送" centered visible={entranceState} onCancel={() => { this.setState({ entranceState: false, allMaterial: "" }) }} footer={null} width={1200}>
                     {
                         <Form {...layout}
                             name="taskForm"
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
-                            {/* <Form.Item label="粉丝标签" name="fansTagName" rules={[{ required: true, message: '请填写粉丝标签' }]}>
-                                <Input placeholder="请输入粉丝标签" />
-                            </Form.Item> */}
-                            {/* <Form.Item label="电视家用户标签" name="userTagId" rules={[{ required: true, message: '请选择电视家用户标签' }]}>
-                                <Select allowClear style={{ width: "100%" }} placeholder="请选择电视家用户标签">
-                                    {
-                                        user_tag.map(r => {
-                                            return <Option value={r.code} key={r.id}>{r.name}</Option>
-                                        })
-                                    }
-                                </Select>
-                            </Form.Item> */}
                             <Form.Item label="消息类型" name="msg_type">
                                 <Radio.Group defaultValue={"mpnews"} style={{ marginBottom: "16px" }} onChange={(e) => {
-                                    
                                 }}>
-                                     <Radio.Button value={"mpnews"} key={1}>图文消息</Radio.Button>
+                                    <Radio.Button value={"mpnews"} key={1}>图文消息</Radio.Button>
                                     <Radio.Button value={"text"} key={2}>文字消息</Radio.Button>
-                                   
+
                                 </Radio.Group>
                             </Form.Item>
-                            <Form.Item label="导入图文" name="msg_type">
-                                <Button onClick={()=>{
-                                    this.getMaterial()
-                                    this.setState({
-                                        materialShow:true
-                                    })
-                                }}><PlusOutlined />添加图文</Button>
-                            </Form.Item>
+                            {
+                                allMaterial
+                                    ?
+                                    <div style={{ display: "flex", alignItems: "flex-star", justifyContent: "space-between" }}>
+                                        <div style={{ width: "52%" }}>
+                                            <Form.Item label="图文标题" name="content">
+                                                <Input placeholder="图文标题" />
+                                            </Form.Item>
+                                            <Form.Item label="图文摘要" name="digest">
+                                                <Input placeholder="图文摘要" />
+                                            </Form.Item>
+                                            <Form.Item label="封面图" name="cover">
+                                                <MyImageUpload
+                                                    getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem) }}
+                                                    imageUrl={this.formRef.current && this.formRef.current.getFieldValue("cover")} />
+                                            </Form.Item>
+                                            <Form.Item label="留言设置" name="comment">
+                                                <Checkbox
+                                                    key={this.formRef.current && this.formRef.current.getFieldValue("comment")}
+                                                    defaultChecked={this.formRef.current && this.formRef.current.getFieldValue("comment")}
+                                                    onChange={(e) => {
+                                                        this.formRef.current.setFieldsValue({ "comment": e.target.checked })
+                                                        this.forceUpdate()
+                                                    }}
+                                                >留言</Checkbox>
+                                                {
+                                                    this.formRef.current && this.formRef.current.getFieldValue("comment")
+                                                        ?
+                                                        <Radio.Group onChange={(e) => {
+                                                            console.log(e)
+                                                            if (e.target.checked) {
+                                                                this.formRef.current.setFieldsValue({ [e.target.value]: 1 })
+                                                            } else {
+                                                                this.formRef.current.setFieldsValue({ [e.target.value]: 0 })
+                                                            }
+                                                        }}
+                                                            defaultChecked={this.formRef.current && (this.formRef.current.getFieldValue("need_open_comment") || this.formRef.current.getFieldValue("only_fans_can_comment"))}
+                                                        >
+                                                            <Radio value={"need_open_comment"}>所有人均可留言</Radio>
+                                                            <Radio value={"only_fans_can_comment"}>仅关注后可留言</Radio>
+                                                        </Radio.Group>
+                                                        :
+                                                        ""
+
+                                                }
+                                            </Form.Item>
+                                            <Form.Item label="转载设置" name="sendIgnoreReprint">
+                                                <Checkbox key={this.formRef.current && this.formRef.current.getFieldValue("sendIgnoreReprint")}
+                                                    defaultChecked={this.formRef.current && this.formRef.current.getFieldValue("sendIgnoreReprint") == 1}
+                                                    onChange={(e) => {
+                                                        this.formRef.current.setFieldsValue({ sendIgnoreReprint: e.target.checked ? 1 : 0 })
+                                                    }}
+                                                >原创校准</Checkbox>
+                                            </Form.Item>
+                                            <Form.Item label="推送粉丝标签" name="tags">
+                                                <Select
+                                                    placeholder="请选择粉丝标签"
+                                                    allowClear
+                                                    mode="multiple"
+                                                    style={{ width: "100%" }}
+                                                >
+                                                    {
+                                                        fansTagList.map(r => {
+                                                            return <Option value={r.id} key={r.id}>{r.name}----{r.count}</Option>
+                                                        })
+                                                    }
+                                                </Select>
+                                            </Form.Item>
+                                        </div>
+                                        <div style={{ width: "25%" }}>
+                                            <div style={{ "width": "100%", "border": "1px solid red" }}>
+                                                {
+                                                    this.state.allMaterial.map((l, index) => {
+                                                        return (
+                                                            <div key={index} className={`material_list ${index == 0 ? "some_list" : ""} ${this.state.activityIndex == index ? "hasBorder" : ""}`}
+                                                                onClick={() => {
+                                                                    this.setState({
+                                                                        activityIndex: index
+                                                                    }, () => {
+                                                                        console.log(l)
+                                                                        let obj = {
+                                                                            content: l.title,
+                                                                            cover: l.thumb_url,
+                                                                            digest: l.digest,
+                                                                            comment: false,
+                                                                            msg_type: "mpnews",
+                                                                            sendIgnoreReprint: 0,
+                                                                            need_open_comment: l.need_open_comment == 1 ? true : false,
+                                                                            only_fans_can_comment: l.only_fans_can_comment == 1 ? true : false
+                                                                        }
+                                                                        this.formRef.current.setFieldsValue(obj)
+                                                                        this.forceUpdate();
+                                                                    })
+
+                                                                }}
+                                                            >
+                                                                <div>{l.title}</div>
+                                                                <div><img src={l.thumb_url} alt="" /></div>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+
+                                            </div>
+                                            <div style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between", marginTop: "20px", cursor: "pointer" }}>
+                                                <div>清空图文</div>
+                                                <div onClick={() => {
+                                                    this.setState({
+                                                        materialShow: true
+                                                    }, () => {
+                                                        this.child.openDialog(true, this.state.materialData)
+                                                    })
+                                                }}>导入图文</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    :
+                                    <Form.Item label="导入图文">
+                                        <Button onClick={() => {
+                                            this.setState({
+                                                materialShow: true
+                                            }, () => {
+                                                this.child.openDialog(true, this.state.materialData)
+                                            })
+                                        }}><PlusOutlined />添加图文</Button>
+
+                                    </Form.Item>
+                            }
+
 
                             <Form.Item {...this.state.tailLayout}>
                                 <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
@@ -210,15 +323,19 @@ export default class EarnIncentiveTask extends React.Component {
                         </Form>
                     }
                 </Modal>
-                <MaterialDialog materialShow={this.state.materialShow} totalCount={this.state.totalCount}
-                materialData={this.state.materialData}
+                <MaterialDialog totalCount={this.state.totalCount} wxCode={this.state.wxCode}
+                    onClose={() => this.setState({ materialShow: false })} onChooseInfo={this.onChooseInfo.bind(this)}
+                    onRef={this.onRef}
                 ></MaterialDialog>
-            </div>
+            </div >
         )
+    }
+    onRef = (ref) => {
+        this.child = ref
     }
     componentDidMount() {
         this.getPublicList()
-        // this.requestNewAdTagList()
+
     }
     getSendHisTemp(row) { //记录按钮的状态气泡框
         return (
@@ -274,13 +391,23 @@ export default class EarnIncentiveTask extends React.Component {
         })
     }
     submitForm(val) {   // 提交表单
+        if (val.tags) {
+            let arr = this.state.fansTagList.filter(item => val.tags.some(r => item.id == r))
+            console.log(arr)
+            let tagsName = []
+            arr.forEach(r => {
+                tagsName.push(r.name)
+            })
+            val.tagsName = tagsName
+        }else{
+            val.tagsName = []
+        }
+        val.content = val.articles[0].title
+        val.cover = val.articles[0].thumb_url
+        val.digest = val.articles[0].digest
+        val.articles = this.state.allMaterial
         console.log(val, "val")
-        // if (this.state.source == "edit") {
-        //     this.updateFansTag(val)
-        // } else {
-        //     this.addSend(val)
-        // }
-        this.closeModal()
+        // this.closeModal()
     }
 
     getSend() {
@@ -299,53 +426,6 @@ export default class EarnIncentiveTask extends React.Component {
             })
         })
     }
-    // closeModal() {
-    //     this.setState({
-    //         entranceState: false
-    //     })
-    // }
-    // addSend(val) {
-    //     let params = {
-    //         ...val,
-    //     }
-    //     addSend(params).then(res => {
-    //         this.getSend()
-    //         message.success("成功")
-
-    //     })
-    // }
-
-
-    // deleteItem(item) {  // 删除数据
-    //     Modal.confirm({
-    //         title: `确认删除该条数据吗？`,
-    //         // content: '确认删除？',
-    //         onOk: () => {
-    //             this.delFansTag(item)
-    //         },
-    //         onCancel: () => {
-    //         }
-    //     })
-    // }
-    // delFansTag(item) {
-    //     let params = {
-    //         id: item.id
-    //     }
-    //     delFansTag(params).then(res => {
-    //         message.success("删除成功")
-    //         this.getSend()
-    //     })
-    // }
-    // updateFansTag(val) {
-    //     let params = {
-    //         ...this.state.currentItem,
-    //         ...val
-    //     }
-    //     updateFansTag(params).then(res => {
-    //         message.success("更新成功")
-    //         this.getSend()
-    //     })
-    // }
     getPublicList() {
         getPublicList({}).then(res => {
             console.log(res)
@@ -355,6 +435,7 @@ export default class EarnIncentiveTask extends React.Component {
                     wxCode: res.data.data[0].code
                 }, () => {
                     this.getSend()
+                    this.getFansTagList()
                 })
                 this.forceUpdate()
             }
@@ -368,18 +449,72 @@ export default class EarnIncentiveTask extends React.Component {
             })
         })
     }
-    getMaterial(){
-        let params={
+    getMaterial() {
+        let params = {
             "type": "news",   //news 图文
             "count": 12,   // 数量
             "wxCode": this.state.wxCode,  // 公众号code
             "offset": 0   //偏移量
         }
-        materialSend(params).then(res=>{
+        materialSend(params).then(res => {
             console.log(res.data)
             this.setState({
-                materialData:res.data.item,
-                totalCount:res.data.total_count
+                materialData: res.data.item,
+                totalCount: res.data.total_count
+            })
+        })
+    }
+    onChooseInfo(arr) {//选择了素材回来
+        console.log(arr)
+        this.child.openDialog(false)
+        let info = []
+        arr.forEach(r => {
+            info.push(...r.content.news_item)
+        })
+        this.setState({
+            allMaterial: info,
+            activityIndex: 0
+        }, () => {
+            let obj = {
+                content: info[0].title,
+                cover: info[0].thumb_url,
+                digest: info[0].digest,
+                comment: false,
+                msg_type: "mpnews",
+                sendIgnoreReprint: 0,
+                need_open_comment: info[0].need_open_comment == 1 ? true : false,
+                only_fans_can_comment: info[0].only_fans_can_comment == 1 ? true : false
+            }
+            this.formRef.current.setFieldsValue(obj)
+            this.forceUpdate();
+        })
+    }
+    //获取上传文件
+    getUploadFileUrl(type, file, newItem) {
+        console.log(type, file, newItem, "newItem")
+        let that = this;
+        let image_url = file;
+
+        that.formRef.current.setFieldsValue({ [type]: image_url });
+        that.forceUpdate();
+    }
+    //获取上传文件图片地址 
+    getUploadFileImageUrlByType(type) {
+        let that = this;
+        let image_url = that.formRef.current.getFieldValue(type);
+        return image_url ? image_url : '';
+    }
+    getFansTagList() {
+        let params = {
+            wxAppCode: this.state.wxCode,
+            page: {
+                currentPage: 1,
+                pageSize: 9999
+            }
+        }
+        getFansTagList(params).then(res => {
+            this.setState({
+                fansTagList: res.data
             })
         })
     }

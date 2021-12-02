@@ -54,6 +54,13 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "公众号",
                     dataIndex: "wxAppCode",
                     key: "wxAppCode",
+                    render: (rowValue, row, index) => {
+                        return (
+                            <div>
+                                {this.getWxName(row)}
+                            </div>
+                        )
+                    }
 
                 },
                 {
@@ -290,5 +297,13 @@ export default class EarnIncentiveTask extends React.Component {
                 user_tag: res.data
             })
         })
+    }
+    getWxName(row){
+        let arr = this.state.wxPublic.filter(item=>item.code == row.wxAppCode)
+        if(arr.length>0){
+            return arr[0].name
+        }else{
+            return "未知"
+        }
     }
 }

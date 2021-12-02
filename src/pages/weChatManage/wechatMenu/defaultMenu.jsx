@@ -1093,6 +1093,10 @@ export default class EarnIncentiveTask extends React.Component {
                             currentMenu: arr[0].sub_button[0]
                         })
                     } else {
+                        if(arr[0].type == "view" || arr[0].type == "miniprogram"){
+                            arr[0].msg_type = "Jump"
+                            arr[0].reply_info = [arr[0]]
+                        }
                         this.formRef.current.setFieldsValue(arr[0])
                         this.setState({
                             currentMenu: arr[0]
@@ -1145,6 +1149,7 @@ export default class EarnIncentiveTask extends React.Component {
                 //     menuInfo:menuInfo
                 // })
                 // this.formRef.current.setFieldsValue(r)
+                this.formRef.current.setFieldsValue({msg_type:"text",name:"",reply_info:[{}]})
                 this.forceUpdate()
             }
         })

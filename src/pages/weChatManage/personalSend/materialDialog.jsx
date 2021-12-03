@@ -35,8 +35,8 @@ export default class EarnIncentiveTask extends React.Component {
         let { totalCount, } = this.props
         return (
             <div className="materialBox">
-                <Modal title="图文素材列表" centered visible={materialShow} onCancel={() => { this.props.onClose() }} footer={null} width={800}>
-                    <Checkbox.Group defaultValue={this.state.checkedItem} style={{ width: '100%' }} onChange={(e) => {
+                <Modal title="图文素材列表" centered visible={materialShow} onCancel={() => { this.setState({materialShow:false}) }} footer={null} width={800}>
+                    <Checkbox.Group defaultValue={this.state.checkedItem} key={this.state.checkedItem} style={{ width: '100%' }} onChange={(e) => {
                         console.log(e)
                         this.setState({
                             checkedItem: e
@@ -102,7 +102,7 @@ export default class EarnIncentiveTask extends React.Component {
                     <div style={{ width: "100%", display: "flex", "alignItems": "center", justifyContent: "space-between" }}>
                         <div><Pagination defaultCurrent={1} pageSize={this.state.pageSize} total={totalCount} onChange={(page, pageSize) => this.changeSize(page, pageSize)} /></div>
                         <div>
-                            <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
+                            <Button onClick={() => { this.setState({ materialShow: false }) }}>取消</Button>
                             <Button type="primary" style={{ margin: "0 20px" }} onClick={()=>{
                                 this.props.onChooseInfo(this.state.chooseMaterial)
                             }}>
@@ -118,12 +118,32 @@ export default class EarnIncentiveTask extends React.Component {
     componentDidMount() {
         this.props.onRef(this)
     }
-    openDialog(state, data) {
+    openDialog(state, data,item) {
         console.log(state, data)
         this.setState({
             materialData: data,
             materialShow: state,
+            chooseMaterial:[],
+            checkedItem:[]
+        },()=>{
+            if(item){
+                console.log(item)
+                data.forEach((r)=>{
+                    let arr = r.content.news_item.filter(l=>item.some(h=>h.thumb_media_id == l.thumb_media_id))
+                    if(arr.length>0){
+                        let checkedItem = this.state.checkedItem
+                        let chooseMaterial = this.state.chooseMaterial
+                        chooseMaterial.push(r)
+                        checkedItem.push(r.media_id)
+                        this.setState({
+                            checkedItem:checkedItem, //被选中的key
+                            chooseMaterial:chooseMaterial //已经选择的素材
+                        })
+                    }
+                })
+            }
         })
+        
     }
 
     changeSize = (page, pageSize) => {   // 分页

@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
-import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend, addSend } from 'api'
+import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend, addSend, preSend,cancelSend,reSend } from 'api'
 import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Checkbox, InputNumber } from 'antd'
 import { } from 'react-router-dom'
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
+import QRCode from 'qrcode.react';
+import { PlusOutlined, ArrowUpOutlined, ArrowDownOutlined, DeleteOutlined } from "@ant-design/icons"
+import 'braft-editor/dist/index.css'
+import BraftEditor from 'braft-editor'
 import moment from 'moment';
 import { MySyncBtn } from "@/components/views.js"
 import MaterialDialog from "./materialDialog"
@@ -47,6 +50,9 @@ export default class EarnIncentiveTask extends React.Component {
             activityIndex: null,
             submitInfo: "",
             sendState: false,
+            qrCodeShow: false,//二维码框
+            setLinkUrl: "",
+            editorState: BraftEditor.createEditorState(),
             columns: [
                 {
                     title: "发送记录",
@@ -79,7 +85,7 @@ export default class EarnIncentiveTask extends React.Component {
                                         <div>{row.content}</div>
                                         :
                                         <div style={{ display: "flex", alignItems: "center" }}>
-                                            <div><img style={{with:"100px",height:"100px"}} src={row.cover} alt="" /></div>
+                                            <div><img style={{ with: "100px", height: "100px" }} src={row.cover} alt="" /></div>
                                             <div>
                                                 <div>{row.content}</div>
                                                 {
@@ -106,7 +112,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     render() {
-        let { wxPublic, lists, layout, loading, columns, entranceState, allMaterial, fansTagList, sendState } = this.state;
+        let { wxPublic, lists, layout, loading, columns, entranceState, allMaterial, fansTagList, sendState, qrCodeShow } = this.state;
         return (
             <div>
                 <Card title={
@@ -139,7 +145,7 @@ export default class EarnIncentiveTask extends React.Component {
                         </div>
                     }
                 >
-                    <Radio.Group defaultValue={this.state.wxCode} style={{ marginBottom: "16px" }} onChange={(e) => {
+                    <Radio.Group defaultValue={this.state.wxCode} key={this.state.wxCode} style={{ marginBottom: "16px" }} onChange={(e) => {
                         this.setState({
                             wxCode: e.target.value
                         }, () => {
@@ -178,8 +184,9 @@ export default class EarnIncentiveTask extends React.Component {
                             name="taskForm"
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
-                            <Form.Item label="消息类型" name="msg_type">
+                            <Form.Item label="消息类型" name="msgType">
                                 <Radio.Group defaultValue={"mpnews"} style={{ marginBottom: "16px" }} onChange={(e) => {
+                                    this.forceUpdate()
                                 }}>
                                     <Radio.Button value={"mpnews"} key={1}>图文消息</Radio.Button>
                                     <Radio.Button value={"text"} key={2}>文字消息</Radio.Button>
@@ -208,7 +215,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                     postUrl={"/mms/wxReply/addMedia"} //上传地址
                                                     params={this.state.wxCode} //另外的参数
                                                     getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem) }}
-                                                    imageUrl={this.formRef.current && this.formRef.current.getFieldValue("cover")} />
+                                                    imageUrl={this.state.allMaterial[this.state.activityIndex].thumb_url} />
                                             </Form.Item>
                                             <Form.Item label="留言设置" name="comment">
                                                 <Checkbox
@@ -281,7 +288,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                             cover: l.thumb_url,
                                                                             digest: l.digest,
                                                                             comment: false,
-                                                                            msg_type: "mpnews",
+                                                                            msgType: "mpnews",
                                                                             sendIgnoreReprint: 0,
                                                                             need_open_comment: l.need_open_comment == 1 ? true : false,
                                                                             only_fans_can_comment: l.only_fans_can_comment == 1 ? true : false
@@ -300,34 +307,128 @@ export default class EarnIncentiveTask extends React.Component {
                                                 }
 
                                             </div>
+                                            <div style={{ display: "flex", width: "100%", alignItems: "center", "justifyContent": "space-between" }}>
+                                                <div onClick={() => {
+                                                    let info = this.state.allMaterial
+                                                    if (this.state.activityIndex != 0) {
+                                                        info[this.state.activityIndex] = info.splice(this.state.activityIndex - 1, 1, info[this.state.activityIndex])[0];
+                                                        this.setState({
+                                                            activityIndex: this.state.activityIndex - 1
+                                                        })
+                                                    } else {
+                                                        // fieldData.push(fieldData.shift());
+                                                        message.error("已经是第一个了")
+                                                    }
+                                                    this.setState({
+                                                        allMaterial: info
+                                                    })
+                                                }}><ArrowUpOutlined /></div>
+                                                <div onClick={() => {
+                                                    let info = this.state.allMaterial
+                                                    if (this.state.activityIndex != info.length - 1) {
+                                                        info[this.state.activityIndex] = info.splice(this.state.activityIndex + 1, 1, info[this.state.activityIndex])[0];
+                                                        this.setState({
+                                                            activityIndex: this.state.activityIndex + 1
+                                                        })
+                                                    } else {
+                                                        message.error("已经是最后一个了")
+                                                    }
+                                                    this.setState({
+                                                        allMaterial: info
+                                                    })
+                                                }}><ArrowDownOutlined /></div>
+                                                <div onClick={() => {
+                                                    let info = this.state.allMaterial
+                                                    let index = 0
+                                                    if (this.state.activityIndex == 0) {
+                                                        info.splice(0, 1)
+                                                        index = 0
+                                                    } else {
+                                                        info.splice(this.state.activityIndex, 1)
+                                                        index = this.state.activityIndex - 1
+                                                    }
+                                                    this.setState({
+                                                        allMaterial: info,
+                                                        activityIndex: index
+                                                    }, () => {
+                                                        let obj = {
+                                                            content: info[index].title,
+                                                            cover: info[index].thumb_url,
+                                                            digest: info[index].digest,
+                                                        }
+                                                        this.formRef.current.setFieldsValue(obj)
+                                                    })
+                                                }}><DeleteOutlined /></div>
+                                            </div>
                                             <div style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between", marginTop: "20px", cursor: "pointer" }}>
                                                 <div>清空图文</div>
                                                 <div onClick={() => {
                                                     this.setState({
                                                         materialShow: true
                                                     }, () => {
-                                                        this.child.openDialog(true, this.state.materialData)
+                                                        console.log(this.state.materialData, this.state.allMaterial)
+                                                        this.child.openDialog(true, this.state.materialData, this.state.allMaterial)
                                                     })
                                                 }}>导入图文</div>
                                             </div>
                                         </div>
                                     </div>
                                     :
-                                    <Form.Item label="导入图文">
-                                        <Button onClick={() => {
-                                            this.setState({
-                                                materialShow: true
-                                            }, () => {
-                                                this.child.openDialog(true, this.state.materialData)
-                                            })
-                                        }}><PlusOutlined />添加图文</Button>
+                                    this.formRef.current && this.formRef.current.getFieldValue("msgType") == "text"
+                                        ?
+                                        <>
 
-                                    </Form.Item>
+                                            <Form.Item label="文字消息" name="content" >
+                                                <div style={{width:"100%",height:"400px",overflow:"hidden"}}>
+                                                    <BraftEditor
+                                                        value={this.state.editorState}
+                                                        onChange={this.handleChange.bind(this)}
+                                                    />
+                                                </div>
+
+                                            </Form.Item>
+                                            <Form.Item label="注意">
+                                                <Alert message={
+                                                    <div>
+                                                        {/* <div> * 输入文案后，鼠标选中想要插入链接的关键词，点击出现的“设置链接”，即可填入链接。关键词不包含空格、换行哦！</div> */}
+                                                        <div>* 因为微信接口限制，目前仅支持添加微信已群发的文章链接</div>
+                                                    </div>
+                                                } type="success" />
+                                            </Form.Item>
+
+                                            <Form.Item label="推送粉丝标签" name="tags">
+                                                <Select
+                                                    placeholder="请选择粉丝标签"
+                                                    allowClear
+                                                    mode="multiple"
+                                                    style={{ width: "100%" }}
+                                                >
+                                                    {
+                                                        fansTagList.map(r => {
+                                                            return <Option value={r.id} key={r.id}>{r.name}----{r.count}</Option>
+                                                        })
+                                                    }
+                                                </Select>
+                                            </Form.Item>
+                                        </>
+
+                                        :
+                                        <Form.Item label="导入图文">
+                                            <Button onClick={() => {
+                                                this.setState({
+                                                    materialShow: true
+                                                }, () => {
+                                                    this.child.openDialog(true, this.state.materialData)
+                                                })
+                                            }}><PlusOutlined />添加图文</Button>
+
+                                        </Form.Item>
+
                             }
 
 
                             <Form.Item {...this.state.tailLayout}>
-                                <Button onClick={() => { this.setState({ entranceState: false, allMaterial: "" }) }}>预览</Button>
+                                <Button onClick={() => this.previewClick()}>预览</Button>
                                 <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
                                     群发
                                 </Button>
@@ -341,6 +442,9 @@ export default class EarnIncentiveTask extends React.Component {
                 ></MaterialDialog>
                 <Modal title="群发" centered visible={sendState} onCancel={() => { this.setState({ sendState: false }) }} footer={null} width={600}>
                     {this.getSendResult()}
+                </Modal>
+                <Modal title="预览二维码" centered visible={qrCodeShow} onCancel={() => { this.setState({ qrCodeShow: false }) }} footer={null} width={600}>
+                    {this.getQrCode()}
                 </Modal>
             </div >
         )
@@ -362,10 +466,14 @@ export default class EarnIncentiveTask extends React.Component {
                     {/* 1未发送2发送中3已发送4已取消 */}
                     {
                         row.status == 1 ?
-                            <Button type="" danger>取消定时发送</Button>
+                            <Button type="" danger onClick={()=>{
+                                this.cancelSend(row)
+                            }}>取消定时发送</Button>
                             :
                             row.status == 4 ?
-                                <Button type="primary">再次发送</Button>
+                                <Button type="primary" onClick={()=>{
+                                    this.reSend(row)
+                                }}>再次发送</Button>
                                 :
                                 ""
                     }
@@ -374,9 +482,20 @@ export default class EarnIncentiveTask extends React.Component {
             </div>
         )
     }
+    getQrCode() { //获取二维码
+        return (
+            <div style={{ width: "100%", display: "flex", "alignItems": "center", "justifyContent": "center" }}>
+                <QRCode
+                    value={this.state.qrUrl}  //value参数为生成二维码的链接
+                    size={200} //二维码的宽高尺寸
+                    fgColor="#000000"  //二维码的颜色
+                />
+            </div>
+        )
+    }
     getDataDetail(row) {
         return (
-            <div style={{display:"flex"}}>
+            <div style={{ display: "flex" }}>
                 {
                     this.state.everyHis.map((r, i) => {
                         return (
@@ -442,7 +561,7 @@ export default class EarnIncentiveTask extends React.Component {
             this.getSend()
         })
     }
-    submitForm(val) {   // 提交表单
+    submitForm(val, type) {   // 提交表单
         if (val.tags) {
             let arr = this.state.fansTagList.filter(item => val.tags.some(r => item.id == r))
             let tagsName = []
@@ -453,20 +572,34 @@ export default class EarnIncentiveTask extends React.Component {
         } else {
             val.tagsName = []
         }
-        val.articles = this.state.allMaterial
-        val.content = val.articles[0].title
-        val.cover = val.articles[0].thumb_url
-        val.digest = val.articles[0].digest
+        if (this.state.allMaterial) {
+            val.articles = this.state.allMaterial
+            val.content = val.articles[0].title
+            val.cover = val.articles[0].thumb_url
+            val.digest = val.articles[0].digest
+        }
+
         val.wxCode = this.state.wxCode
         this.setState({
             submitInfo: val
         }, () => {
-            this.setState({
-                sendState: true
-            })
+            if (type == "preview") {
+                this.preSend() //预览
+            } else {
+                this.setState({
+                    sendState: true
+                })
+            }
+
         })
         console.log(val, "val")
         // this.closeModal()
+    }
+    previewClick() {
+        let info = this.formRef.current.getFieldValue()
+        console.log(info, "info")
+        this.submitForm(info, "preview")
+
     }
     sendFunc() {
         console.log(this.state.submitInfo)
@@ -547,7 +680,7 @@ export default class EarnIncentiveTask extends React.Component {
                 cover: info[0].thumb_url,
                 digest: info[0].digest,
                 comment: false,
-                msg_type: "mpnews",
+                msgType: "mpnews",
                 sendIgnoreReprint: 0,
                 need_open_comment: info[0].need_open_comment == 1 ? true : false,
                 only_fans_can_comment: info[0].only_fans_can_comment == 1 ? true : false
@@ -590,7 +723,7 @@ export default class EarnIncentiveTask extends React.Component {
             })
         })
     }
-    addSend() {
+    addSend() { //新建
         let params = {
             ...this.state.submitInfo
         }
@@ -599,9 +732,52 @@ export default class EarnIncentiveTask extends React.Component {
             this.setState({
                 visible: false,
                 sendState: false,
-            },()=>{
+            }, () => {
                 message.success("操作成功")
             })
         })
+    }
+    preSend() { //预览
+        let params = {
+            ...this.state.submitInfo
+        }
+        // return console.log(params)
+        preSend(params).then(res => {
+            console.log(res.data)
+            this.setState({
+                qrUrl: res.data,
+                qrCodeShow: true
+            })
+        })
+    }
+    cancelSend(item) { //取消预约推送
+        let params = {
+            id:item.id
+        }
+        // return console.log(params)
+        cancelSend(params).then(res => {
+            this.getSend()
+        })
+    }
+    reSend(item) { //取消预约推送
+        let params = {
+            id:item.id
+        }
+        // return console.log(params)
+        reSend(params).then(res => {
+            this.getSend()
+        })
+    }
+    handleChange = (editorState) => {
+        // console.log(editorState,editorState.toHTML())
+        if(this.formRef.current){
+            this.formRef.current.setFieldsValue({ "content": editorState.toHTML() })
+            // BraftEditor.createEditorState(editorState.toHTML())
+            this.setState({
+                editorState:editorState.toHTML()
+            })
+        }
+        
+        
     }
 }

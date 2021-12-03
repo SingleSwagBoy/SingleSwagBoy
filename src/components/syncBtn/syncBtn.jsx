@@ -27,6 +27,7 @@ import {
     syncSuggest,                    //首页为你推荐
     syncWordsConfig,                //首页文字轮播同步缓存
     syncHomeList,                   //首页直播配置同步
+    syncSource,                   //源失效
 } from 'api'
 
 
@@ -65,6 +66,7 @@ export default class SyncBtn extends Component {
         if (type === 16) return syncSuggest();                                 //首页为你推荐
         if (type === 17) return syncWordsConfig();                                 //首页文字轮播同步缓存
         if (type === 18) return syncHomeList(params);                                 //首页直播配置同步
+        if (type === 19) return syncSource();                                 //源失效
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

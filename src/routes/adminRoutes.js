@@ -35,6 +35,7 @@ const LivePreview = lazy(() => import('pages/channelManage/livePreview/index.jsx
 const AddressNews = lazy(() => import('pages/configManage/addressNews/index.jsx'))
 const ChannelSubject = lazy(() => import('pages/channelManage/channelSubject/index.jsx'))
 const MarsBootIn= lazy(() => import('pages/channelManage/marsBootIn/index.jsx'))
+const SourceFailure= lazy(() => import('pages/channelManage/sourceFailure/index.jsx'))
 const EditSubject = lazy(() => import('pages/channelManage/editSubject/index.jsx'))
 const ConfigDoc = lazy(() => import('pages/config/doc.jsx'));
 const WxReply = lazy(() => import('pages/wechart/autoReply/wxReply.jsx'));
@@ -109,6 +110,7 @@ const adminRoutes = [
     { name: '直播预告', icon: UnorderedListOutlined, path: '/mms/channel/livePreview', component: LivePreview, code: "channelManage", sub_code: 'livePreview' },
     { name: '频道专题', icon: UnorderedListOutlined, path: '/mms/channelManage/channelSubject', component: ChannelSubject, code: "channelManage", sub_code: 'ChannelSubject' },
     { name: '火星开机进入', icon: UnorderedListOutlined, path: '/mms/channelManage/marsBootIn', component: MarsBootIn, code: "channelManage", sub_code: 'marsBootIn' },
+    { name: '源失效推荐', icon: UnorderedListOutlined, path: '/mms/channelManage/sourceFailure', component: SourceFailure, code: "channelManage", sub_code: 'sourceFailure' },
     { name: '编辑专题', icon: UnorderedListOutlined, path: '/mms/channelManage/editSubject/:id', component: EditSubject, code: "channelManage" }, //频道专题二级页面
 
     //广告管理

@@ -322,6 +322,16 @@ export const updateGoods = (params) => { return request.post(`${baseUrl}/mms/act
 
 
 
+//源失效推推荐
+export const getSource = (params) => { return request.post(`${baseUrl}/mms/channel/sourceInvalidRecommend/get`, params); };                 // 获取源失效推荐
+export const addSource = (params) => { return request.post(`${baseUrl}/mms/channel/sourceInvalidRecommend/add`, params); };                 // 新增源失效推荐
+export const updateSource = (params) => { return request.post(`${baseUrl}/mms/channel/sourceInvalidRecommend/update`, params); };                 // 更新源失效推荐
+export const delSource = (params) => { return request.post(`${baseUrl}/mms/channel/sourceInvalidRecommend/del`, params); };                 // 删除源失效推荐
+export const syncSource = (params) => { return request.get(`${baseUrl}/mms/channel/sourceInvalidRecommend/sync`, {params:params}); };                 // 同步缓存-源失效推荐
+export const copySource = (params) => { return request.post(`${baseUrl}/mms/channel/sourceInvalidRecommend/copy`, params); };                 // 复制源失效推荐
+
+
+
 
 //节目单视频集配置
 export const getProgramlist = (params) => { return request.get(`${baseUrl}/mms/channel/svcollection/programlist`, { params: params }); };                 // 节目单视频集列表

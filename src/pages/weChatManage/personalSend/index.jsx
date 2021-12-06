@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend, addSend, preSend,cancelSend,reSend } from 'api'
+import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend, addSend, preSend, cancelSend, reSend } from 'api'
 import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Checkbox, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import QRCode from 'qrcode.react';
@@ -148,7 +148,7 @@ export default class EarnIncentiveTask extends React.Component {
                     <Radio.Group defaultValue={this.state.wxCode} key={this.state.wxCode} style={{ marginBottom: "16px" }} onChange={(e) => {
                         this.setState({
                             wxCode: e.target.value,
-                            page:1
+                            page: 1
                         }, () => {
                             this.getSend()
                         })
@@ -187,7 +187,32 @@ export default class EarnIncentiveTask extends React.Component {
                             onFinish={this.submitForm.bind(this)}>
                             <Form.Item label="消息类型" name="msgType">
                                 <Radio.Group defaultValue={"mpnews"} style={{ marginBottom: "16px" }} onChange={(e) => {
-                                    this.forceUpdate()
+                                    // this.forceUpdate()
+                                    Modal.confirm({
+                                        title: `切换会清空当前所填数据`,
+                                        content: '确认切换？',
+                                        onOk: () => {
+                                            this.forceUpdate()
+                                            if(e.target.value == "mpnews"){
+                                                this.formRef.current.resetFields()
+                                            }else{
+                                                this.setState({
+                                                    allMaterial:""
+                                                })
+                                            }
+                                        },
+                                        onCancel: () => {
+                                            if(e.target.value == "mpnews"){
+                                                this.formRef.current.setFieldsValue({"msgType":"text"})
+                                            }else{
+                                                this.formRef.current.setFieldsValue({"msgType":"mpnews"})
+                                                this.setState({
+                                                    allMaterial:""
+                                                })
+                                            }
+                                        }
+                                    })
+                                    
                                 }}>
                                     <Radio.Button value={"mpnews"} key={1}>图文消息</Radio.Button>
                                     <Radio.Button value={"text"} key={2}>文字消息</Radio.Button>
@@ -195,196 +220,210 @@ export default class EarnIncentiveTask extends React.Component {
                                 </Radio.Group>
                             </Form.Item>
                             {
-                                allMaterial
+                                this.formRef.current && this.formRef.current.getFieldValue("msgType") == "mpnews"
                                     ?
-                                    <div style={{ display: "flex", alignItems: "flex-star", justifyContent: "space-between" }}>
-                                        <div style={{ width: "52%" }}>
-                                            <Form.Item label="图文标题" name="content">
-                                                <Input placeholder="图文标题" onChange={(e) => {
-                                                    let info = this.state.allMaterial
-                                                    info[this.state.activityIndex].title = e.target.value
-                                                    this.setState({
-                                                        allMaterial: info
-                                                    })
-                                                }} />
-                                            </Form.Item>
-                                            <Form.Item label="图文摘要" name="digest">
-                                                <Input placeholder="图文摘要" />
-                                            </Form.Item>
-                                            <Form.Item label="封面图" name="cover">
-                                                <MyImageUpload
-                                                    postUrl={"/mms/wxReply/addMedia"} //上传地址
-                                                    params={this.state.wxCode} //另外的参数
-                                                    getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem) }}
-                                                    imageUrl={this.state.allMaterial[this.state.activityIndex].thumb_url} />
-                                            </Form.Item>
-                                            <Form.Item label="留言设置" name="comment">
-                                                <Checkbox
-                                                    key={this.formRef.current && this.formRef.current.getFieldValue("comment")}
-                                                    defaultChecked={this.formRef.current && this.formRef.current.getFieldValue("comment")}
-                                                    onChange={(e) => {
-                                                        this.formRef.current.setFieldsValue({ "comment": e.target.checked })
-                                                        this.forceUpdate()
-                                                    }}
-                                                >留言</Checkbox>
-                                                {
-                                                    this.formRef.current && this.formRef.current.getFieldValue("comment")
-                                                        ?
-                                                        <Radio.Group onChange={(e) => {
-                                                            // this.formRef.current.setFieldsValue({ [e.target.value]: 0 })
-                                                            let info = this.state.allMaterial
-                                                            info[this.state.activityIndex][e.target.value] = e.target.checked ? 1 : 0
-                                                            this.setState({
-                                                                allMaterial: info
-                                                            })
+                                    allMaterial ?
+                                        <div style={{ display: "flex", alignItems: "flex-star", justifyContent: "space-between" }}>
+                                            <div style={{ width: "52%" }}>
+                                                <Form.Item label="图文标题" name="content">
+                                                    <Input placeholder="图文标题" onChange={(e) => {
+                                                        let info = this.state.allMaterial
+                                                        info[this.state.activityIndex].title = e.target.value
+                                                        this.setState({
+                                                            allMaterial: info
+                                                        })
+                                                    }} />
+                                                </Form.Item>
+                                                <Form.Item label="图文摘要" name="digest">
+                                                    <Input placeholder="图文摘要" />
+                                                </Form.Item>
+                                                <Form.Item label="封面图" name="cover">
+                                                    <MyImageUpload
+                                                        postUrl={"/mms/wxReply/addMedia"} //上传地址
+                                                        params={this.state.wxCode} //另外的参数
+                                                        getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem) }}
+                                                        imageUrl={this.state.allMaterial[this.state.activityIndex].thumb_url} />
+                                                </Form.Item>
+                                                <Form.Item label="留言设置" name="comment">
+                                                    <Checkbox
+                                                        key={this.formRef.current && this.formRef.current.getFieldValue("comment")}
+                                                        defaultChecked={this.formRef.current && this.formRef.current.getFieldValue("comment")}
+                                                        onChange={(e) => {
+                                                            this.formRef.current.setFieldsValue({ "comment": e.target.checked })
+                                                            this.forceUpdate()
                                                         }}
-                                                            defaultChecked={this.state.allMaterial[this.state.activityIndex].need_open_comment
-                                                                || this.state.allMaterial[this.state.activityIndex].only_fans_can_comment
-                                                            }
-                                                        >
-                                                            <Radio value={"need_open_comment"}>所有人均可留言</Radio>
-                                                            <Radio value={"only_fans_can_comment"}>仅关注后可留言</Radio>
-                                                        </Radio.Group>
-                                                        :
-                                                        ""
-
-                                                }
-                                            </Form.Item>
-                                            <Form.Item label="转载设置" name="sendIgnoreReprint">
-                                                <Checkbox key={this.formRef.current && this.formRef.current.getFieldValue("sendIgnoreReprint")}
-                                                    defaultChecked={this.formRef.current && this.formRef.current.getFieldValue("sendIgnoreReprint") == 1}
-                                                    onChange={(e) => {
-                                                        this.formRef.current.setFieldsValue({ sendIgnoreReprint: e.target.checked ? 1 : 0 })
-                                                    }}
-                                                >原创校准</Checkbox>
-                                            </Form.Item>
-                                            <Form.Item label="推送粉丝标签" name="tags">
-                                                <Select
-                                                    placeholder="请选择粉丝标签"
-                                                    allowClear
-                                                    mode="multiple"
-                                                    style={{ width: "100%" }}
-                                                >
+                                                    >留言</Checkbox>
                                                     {
-                                                        fansTagList.map(r => {
-                                                            return <Option value={r.id} key={r.id}>{r.name}----{r.count}</Option>
-                                                        })
-                                                    }
-                                                </Select>
-                                            </Form.Item>
-                                        </div>
-                                        <div style={{ width: "25%" }}>
-                                            <div style={{ "width": "100%", "border": "1px solid #ccc" }}>
-                                                {
-                                                    this.state.allMaterial.map((l, index) => {
-                                                        return (
-                                                            <div key={index} className={`material_list ${index == 0 ? "some_list" : ""} ${this.state.activityIndex == index ? "hasBorder" : ""}`}
-                                                                onClick={() => {
-                                                                    this.setState({
-                                                                        activityIndex: index
-                                                                    }, () => {
-                                                                        console.log(l)
-                                                                        let obj = {
-                                                                            content: l.title,
-                                                                            cover: l.thumb_url,
-                                                                            digest: l.digest,
-                                                                            comment: false,
-                                                                            msgType: "mpnews",
-                                                                            sendIgnoreReprint: 0,
-                                                                            need_open_comment: l.need_open_comment == 1 ? true : false,
-                                                                            only_fans_can_comment: l.only_fans_can_comment == 1 ? true : false
-                                                                        }
-                                                                        this.formRef.current.setFieldsValue(obj)
-                                                                        this.forceUpdate();
-                                                                    })
-
-                                                                }}
+                                                        this.formRef.current && this.formRef.current.getFieldValue("comment")
+                                                            ?
+                                                            <Radio.Group onChange={(e) => {
+                                                                // this.formRef.current.setFieldsValue({ [e.target.value]: 0 })
+                                                                let info = this.state.allMaterial
+                                                                info[this.state.activityIndex][e.target.value] = e.target.checked ? 1 : 0
+                                                                this.setState({
+                                                                    allMaterial: info
+                                                                })
+                                                            }}
+                                                                defaultChecked={this.state.allMaterial[this.state.activityIndex].need_open_comment
+                                                                    || this.state.allMaterial[this.state.activityIndex].only_fans_can_comment
+                                                                }
                                                             >
-                                                                <div>{l.title}</div>
-                                                                <div><img src={l.thumb_url} alt="" /></div>
-                                                            </div>
-                                                        )
-                                                    })
-                                                }
+                                                                <Radio value={"need_open_comment"}>所有人均可留言</Radio>
+                                                                <Radio value={"only_fans_can_comment"}>仅关注后可留言</Radio>
+                                                            </Radio.Group>
+                                                            :
+                                                            ""
 
-                                            </div>
-                                            <div style={{ display: "flex", width: "100%", alignItems: "center", "justifyContent": "space-between" }}>
-                                                <div onClick={() => {
-                                                    let info = this.state.allMaterial
-                                                    if (this.state.activityIndex != 0) {
-                                                        info[this.state.activityIndex] = info.splice(this.state.activityIndex - 1, 1, info[this.state.activityIndex])[0];
-                                                        this.setState({
-                                                            activityIndex: this.state.activityIndex - 1
-                                                        })
-                                                    } else {
-                                                        // fieldData.push(fieldData.shift());
-                                                        message.error("已经是第一个了")
                                                     }
-                                                    this.setState({
-                                                        allMaterial: info
-                                                    })
-                                                }}><ArrowUpOutlined /></div>
-                                                <div onClick={() => {
-                                                    let info = this.state.allMaterial
-                                                    if (this.state.activityIndex != info.length - 1) {
-                                                        info[this.state.activityIndex] = info.splice(this.state.activityIndex + 1, 1, info[this.state.activityIndex])[0];
-                                                        this.setState({
-                                                            activityIndex: this.state.activityIndex + 1
-                                                        })
-                                                    } else {
-                                                        message.error("已经是最后一个了")
-                                                    }
-                                                    this.setState({
-                                                        allMaterial: info
-                                                    })
-                                                }}><ArrowDownOutlined /></div>
-                                                <div onClick={() => {
-                                                    let info = this.state.allMaterial
-                                                    let index = 0
-                                                    if (this.state.activityIndex == 0) {
-                                                        info.splice(0, 1)
-                                                        index = 0
-                                                    } else {
-                                                        info.splice(this.state.activityIndex, 1)
-                                                        index = this.state.activityIndex - 1
-                                                    }
-                                                    this.setState({
-                                                        allMaterial: info,
-                                                        activityIndex: index
-                                                    }, () => {
-                                                        let obj = {
-                                                            content: info[index].title,
-                                                            cover: info[index].thumb_url,
-                                                            digest: info[index].digest,
+                                                </Form.Item>
+                                                <Form.Item label="转载设置" name="sendIgnoreReprint">
+                                                    <Checkbox key={this.formRef.current && this.formRef.current.getFieldValue("sendIgnoreReprint")}
+                                                        defaultChecked={this.formRef.current && this.formRef.current.getFieldValue("sendIgnoreReprint") == 1}
+                                                        onChange={(e) => {
+                                                            this.formRef.current.setFieldsValue({ sendIgnoreReprint: e.target.checked ? 1 : 0 })
+                                                        }}
+                                                    >原创校准</Checkbox>
+                                                </Form.Item>
+                                                <Form.Item label="推送粉丝标签" name="tags">
+                                                    <Select
+                                                        placeholder="请选择粉丝标签"
+                                                        allowClear
+                                                        mode="multiple"
+                                                        style={{ width: "100%" }}
+                                                    >
+                                                        {
+                                                            fansTagList.map(r => {
+                                                                return <Option value={r.id} key={r.id}>{r.name}----{r.count}</Option>
+                                                            })
                                                         }
-                                                        this.formRef.current.setFieldsValue(obj)
-                                                    })
-                                                }}><DeleteOutlined /></div>
+                                                    </Select>
+                                                </Form.Item>
                                             </div>
-                                            <div style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between", marginTop: "20px", cursor: "pointer" }}>
-                                                <div>清空图文</div>
-                                                <div onClick={() => {
-                                                    this.setState({
-                                                        materialShow: true
-                                                    }, () => {
-                                                        console.log(this.state.materialData, this.state.allMaterial)
-                                                        this.child.openDialog(true, this.state.materialData, this.state.allMaterial)
-                                                    })
-                                                }}>导入图文</div>
+                                            <div style={{ width: "25%" }}>
+                                                <div style={{ "width": "100%", "border": "1px solid #ccc" }}>
+                                                    {
+                                                        this.state.allMaterial.map((l, index) => {
+                                                            return (
+                                                                <div key={index} className={`material_list ${index == 0 ? "some_list" : ""} ${this.state.activityIndex == index ? "hasBorder" : ""}`}
+                                                                    onClick={() => {
+                                                                        this.setState({
+                                                                            activityIndex: index
+                                                                        }, () => {
+                                                                            console.log(l)
+                                                                            let obj = {
+                                                                                content: l.title,
+                                                                                cover: l.thumb_url,
+                                                                                digest: l.digest,
+                                                                                comment: false,
+                                                                                msgType: "mpnews",
+                                                                                sendIgnoreReprint: 0,
+                                                                                need_open_comment: l.need_open_comment == 1 ? true : false,
+                                                                                only_fans_can_comment: l.only_fans_can_comment == 1 ? true : false
+                                                                            }
+                                                                            this.formRef.current.setFieldsValue(obj)
+                                                                            this.forceUpdate();
+                                                                        })
+
+                                                                    }}
+                                                                >
+                                                                    <div>{l.title}</div>
+                                                                    <div><img src={l.thumb_url} alt="" /></div>
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
+
+                                                </div>
+                                                <div style={{ display: "flex", width: "100%", alignItems: "center", "justifyContent": "space-between" }}>
+                                                    <div onClick={() => {
+                                                        let info = this.state.allMaterial
+                                                        if (this.state.activityIndex != 0) {
+                                                            info[this.state.activityIndex] = info.splice(this.state.activityIndex - 1, 1, info[this.state.activityIndex])[0];
+                                                            this.setState({
+                                                                activityIndex: this.state.activityIndex - 1
+                                                            })
+                                                        } else {
+                                                            // fieldData.push(fieldData.shift());
+                                                            message.error("已经是第一个了")
+                                                        }
+                                                        this.setState({
+                                                            allMaterial: info
+                                                        })
+                                                    }}><ArrowUpOutlined /></div>
+                                                    <div onClick={() => {
+                                                        let info = this.state.allMaterial
+                                                        if (this.state.activityIndex != info.length - 1) {
+                                                            info[this.state.activityIndex] = info.splice(this.state.activityIndex + 1, 1, info[this.state.activityIndex])[0];
+                                                            this.setState({
+                                                                activityIndex: this.state.activityIndex + 1
+                                                            })
+                                                        } else {
+                                                            message.error("已经是最后一个了")
+                                                        }
+                                                        this.setState({
+                                                            allMaterial: info
+                                                        })
+                                                    }}><ArrowDownOutlined /></div>
+                                                    <div onClick={() => {
+                                                        let info = this.state.allMaterial
+                                                        let index = 0
+                                                        if (this.state.activityIndex == 0) {
+                                                            info.splice(0, 1)
+                                                            index = 0
+                                                        } else {
+                                                            info.splice(this.state.activityIndex, 1)
+                                                            index = this.state.activityIndex - 1
+                                                        }
+                                                        this.setState({
+                                                            allMaterial: info,
+                                                            activityIndex: index
+                                                        }, () => {
+                                                            let obj = {
+                                                                content: info[index].title,
+                                                                cover: info[index].thumb_url,
+                                                                digest: info[index].digest,
+                                                            }
+                                                            this.formRef.current.setFieldsValue(obj)
+                                                        })
+                                                    }}><DeleteOutlined /></div>
+                                                </div>
+                                                <div style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between", marginTop: "20px", cursor: "pointer" }}>
+                                                    <div>清空图文</div>
+                                                    <div onClick={() => {
+                                                        this.setState({
+                                                            materialShow: true
+                                                        }, () => {
+                                                            console.log(this.state.materialData, this.state.allMaterial)
+                                                            this.child.openDialog(true, this.state.materialData, this.state.allMaterial)
+                                                        })
+                                                    }}>导入图文</div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        :
+                                        <Form.Item label="导入图文">
+                                            <Button onClick={() => {
+                                                this.setState({
+                                                    materialShow: true
+                                                }, () => {
+                                                    this.child.openDialog(true, this.state.materialData)
+                                                })
+                                            }}><PlusOutlined />添加图文</Button>
+
+                                        </Form.Item>
                                     :
                                     this.formRef.current && this.formRef.current.getFieldValue("msgType") == "text"
                                         ?
                                         <>
 
                                             <Form.Item label="文字消息" name="content" >
-                                                <div style={{width:"100%",height:"400px",overflow:"hidden"}}>
-                                                    <BraftEditor
+                                                {/* <div style={{ width: "100%", height: "400px", overflow: "hidden" }}> */}
+                                                <div style={{ width: "100%", overflow: "hidden" }}>
+                                                    {/* <BraftEditor
                                                         value={this.state.editorState}
                                                         onChange={this.handleChange.bind(this)}
-                                                    />
+                                                    /> */}
+                                                    <Input.TextArea placeholder="文字消息内容" />
                                                 </div>
 
                                             </Form.Item>
@@ -414,6 +453,8 @@ export default class EarnIncentiveTask extends React.Component {
                                         </>
 
                                         :
+                                        
+                                        // 
                                         <Form.Item label="导入图文">
                                             <Button onClick={() => {
                                                 this.setState({
@@ -467,12 +508,12 @@ export default class EarnIncentiveTask extends React.Component {
                     {/* 1未发送2发送中3已发送4已取消 */}
                     {
                         row.status == 1 ?
-                            <Button type="" danger onClick={()=>{
+                            <Button type="" danger onClick={() => {
                                 this.cancelSend(row)
                             }}>取消定时发送</Button>
                             :
                             row.status == 4 ?
-                                <Button type="primary" onClick={()=>{
+                                <Button type="primary" onClick={() => {
                                     this.reSend(row)
                                 }}>再次发送</Button>
                                 :
@@ -728,7 +769,7 @@ export default class EarnIncentiveTask extends React.Component {
         let params = {
             ...this.state.submitInfo
         }
-        return console.log(params)
+        // return console.log(params)
         addSend(params).then(res => {
             this.setState({
                 visible: false,
@@ -753,7 +794,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     cancelSend(item) { //取消预约推送
         let params = {
-            id:item.id
+            id: item.id
         }
         // return console.log(params)
         cancelSend(params).then(res => {
@@ -762,7 +803,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     reSend(item) { //取消预约推送
         let params = {
-            id:item.id
+            id: item.id
         }
         // return console.log(params)
         reSend(params).then(res => {
@@ -771,14 +812,14 @@ export default class EarnIncentiveTask extends React.Component {
     }
     handleChange = (editorState) => {
         // console.log(editorState,editorState.toHTML())
-        if(this.formRef.current){
+        if (this.formRef.current) {
             this.formRef.current.setFieldsValue({ "content": editorState.toHTML() })
             // BraftEditor.createEditorState(editorState.toHTML())
             this.setState({
-                editorState:editorState.toHTML()
+                editorState: editorState.toHTML()
             })
         }
-        
-        
+
+
     }
 }

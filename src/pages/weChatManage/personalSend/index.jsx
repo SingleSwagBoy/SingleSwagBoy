@@ -189,26 +189,26 @@ export default class EarnIncentiveTask extends React.Component {
                                         content: '确认切换？',
                                         onOk: () => {
                                             this.forceUpdate()
-                                            if(e.target.value == "mpnews"){
+                                            if (e.target.value == "mpnews") {
                                                 this.formRef.current.resetFields()
-                                            }else{
+                                            } else {
                                                 this.setState({
-                                                    allMaterial:""
+                                                    allMaterial: ""
                                                 })
                                             }
                                         },
                                         onCancel: () => {
-                                            if(e.target.value == "mpnews"){
-                                                this.formRef.current.setFieldsValue({"msgType":"text"})
-                                            }else{
-                                                this.formRef.current.setFieldsValue({"msgType":"mpnews"})
+                                            if (e.target.value == "mpnews") {
+                                                this.formRef.current.setFieldsValue({ "msgType": "text" })
+                                            } else {
+                                                this.formRef.current.setFieldsValue({ "msgType": "mpnews" })
                                                 this.setState({
-                                                    allMaterial:""
+                                                    allMaterial: ""
                                                 })
                                             }
                                         }
                                     })
-                                    
+
                                 }}>
                                     <Radio.Button value={"mpnews"} key={1}>图文消息</Radio.Button>
                                     <Radio.Button value={"text"} key={2}>文字消息</Radio.Button>
@@ -363,7 +363,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                     <div onClick={() => {
                                                         let info = this.state.allMaterial
                                                         let index = 0
-                                                        if(info.length == 1)  return this.setState({allMaterial:""})
+                                                        if (info.length == 1) return this.setState({ allMaterial: "" })
                                                         if (this.state.activityIndex == 0) {
                                                             info.splice(0, 1)
                                                             index = 0
@@ -375,7 +375,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                             allMaterial: info,
                                                             activityIndex: index
                                                         }, () => {
-                                                            
+
                                                             let obj = {
                                                                 content: info[index].title,
                                                                 cover: info[index].thumb_url,
@@ -386,8 +386,8 @@ export default class EarnIncentiveTask extends React.Component {
                                                     }}><DeleteOutlined /></div>
                                                 </div>
                                                 <div style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between", marginTop: "20px", cursor: "pointer" }}>
-                                                    <div onClick={()=>{
-                                                        this.setState({allMaterial:""})
+                                                    <div onClick={() => {
+                                                        this.setState({ allMaterial: "" })
                                                     }}>清空图文</div>
                                                     <div onClick={() => {
                                                         this.setState({
@@ -453,7 +453,7 @@ export default class EarnIncentiveTask extends React.Component {
                                         </>
 
                                         :
-                                        
+
                                         // 
                                         <Form.Item label="导入图文">
                                             <Button onClick={() => {
@@ -482,7 +482,14 @@ export default class EarnIncentiveTask extends React.Component {
                     onClose={() => this.setState({ materialShow: false })} onChooseInfo={this.onChooseInfo.bind(this)}
                     onRef={this.onRef}
                 ></MaterialDialog>
-                <Modal title="群发" centered visible={sendState} onCancel={() => { this.setState({ sendState: false }) }} footer={null} width={600}>
+                <Modal title="群发" key={this.state.sendState}  centered visible={sendState} onCancel={() => {
+                    let info = this.state.submitInfo
+                    info.sendType = null
+                    this.setState({ 
+                        submitInfo:info,
+                        sendState: false,
+                     })
+                }} footer={null} width={600}>
                     {this.getSendResult()}
                 </Modal>
                 <Modal title="预览二维码" centered visible={qrCodeShow} onCancel={() => { this.setState({ qrCodeShow: false }) }} footer={null} width={600}>
@@ -646,7 +653,7 @@ export default class EarnIncentiveTask extends React.Component {
     sendFunc() {
         console.log(this.state.submitInfo)
         if (this.state.submitInfo.sendType == 1) {
-
+            this.addSend()
         } else {
             if (!this.state.submitInfo.sendTime) return message.error("请选择发送时间")
             this.addSend()
@@ -773,7 +780,7 @@ export default class EarnIncentiveTask extends React.Component {
         addSend(params).then(res => {
             this.setState({
                 sendState: false,
-                entranceState:false,
+                entranceState: false,
             }, () => {
                 message.success("操作成功")
                 this.getSend()

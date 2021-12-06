@@ -151,6 +151,7 @@ export default class EarnIncentiveTask extends React.Component {
                             page: 1
                         }, () => {
                             this.getSend()
+                            this.getFansTagList()
                         })
                     }}>
                         {

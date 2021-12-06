@@ -95,7 +95,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     onChange={(val) => {
                                         console.log(val)
                                         let obj = JSON.parse(JSON.stringify(row))
-                                        obj.status = val ? 1 : 0
+                                        obj.status = val ? 1 : 2
                                         this.setState({
                                             currentItem: "",
                                         }, () => {

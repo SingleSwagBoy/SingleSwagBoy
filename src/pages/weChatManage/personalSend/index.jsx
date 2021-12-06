@@ -33,11 +33,7 @@ export default class EarnIncentiveTask extends React.Component {
                 wrapperCol: { offset: 12, span: 12 },
             },
             lists: [],
-            productLists: [],
-            visible: false,
             tagList: [],
-            currentItem: "",
-            source: "",
             wxPublic: [],
             everyHis: [],
             user_tag: [],
@@ -134,7 +130,6 @@ export default class EarnIncentiveTask extends React.Component {
                             <Button type="primary" style={{ margin: "0 10px" }}
                                 onClick={() => {
                                     this.setState({
-                                        source: "add",
                                         entranceState: true,
                                     }, () => {
                                         this.getMaterial()
@@ -368,6 +363,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                     <div onClick={() => {
                                                         let info = this.state.allMaterial
                                                         let index = 0
+                                                        if(info.length == 1)  return this.setState({allMaterial:""})
                                                         if (this.state.activityIndex == 0) {
                                                             info.splice(0, 1)
                                                             index = 0
@@ -379,6 +375,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                             allMaterial: info,
                                                             activityIndex: index
                                                         }, () => {
+                                                            
                                                             let obj = {
                                                                 content: info[index].title,
                                                                 cover: info[index].thumb_url,
@@ -389,7 +386,9 @@ export default class EarnIncentiveTask extends React.Component {
                                                     }}><DeleteOutlined /></div>
                                                 </div>
                                                 <div style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between", marginTop: "20px", cursor: "pointer" }}>
-                                                    <div>清空图文</div>
+                                                    <div onClick={()=>{
+                                                        this.setState({allMaterial:""})
+                                                    }}>清空图文</div>
                                                     <div onClick={() => {
                                                         this.setState({
                                                             materialShow: true
@@ -773,10 +772,11 @@ export default class EarnIncentiveTask extends React.Component {
         // return console.log(params)
         addSend(params).then(res => {
             this.setState({
-                visible: false,
                 sendState: false,
+                entranceState:false,
             }, () => {
                 message.success("操作成功")
+                this.getSend()
             })
         })
     }

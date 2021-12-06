@@ -257,6 +257,17 @@ function randomWord(randomFlag, min, max) {
   }
   return str;
 }
+//从一个数组里面随机挑几个元素
+function getRandomArrayValue(arr, num) {
+  var sData = arr.slice(0), i = arr.length, min = i - num, item, index;
+  while (i-- > min) {
+      index = Math.floor((i + 1) * Math.random());
+      item = sData[index];
+      sData[index] = sData[i];
+      sData[i] = item;
+  }
+  return sData.slice(min);
+}
 
 function getValueFromEvent(e) { //去掉输入框里面的空格
   return e.target.value.replace(/(^\s*)|(\s*$)/g, '');
@@ -293,7 +304,8 @@ let objFun = {
   randomWord,
   getValueFromEvent,
   isNumber,
-  limitNumber
+  limitNumber,
+  getRandomArrayValue
 }
 
 export default objFun

@@ -50,11 +50,17 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "名称",
                     dataIndex: "name",
                     key: "name",
+                    width: 200,
                 },
                 {
                     title: "推荐频道",
-                    dataIndex: "content",
-                    key: "content",
+                    dataIndex: "type",
+                    key: "type",
+                    render: (rowValue, row, index) => {
+                        return (
+                            <div>{rowValue == 1 ? "推荐频道":rowValue == 2?"自动填充":"未知"}</div>
+                        )
+                    }
                 },
                 {
                     title: "用户标签",
@@ -233,7 +239,10 @@ export default class EarnIncentiveTask extends React.Component {
                         }}
                     />
                 </Card>
-                <Modal title="新增任务" centered visible={entranceState} onCancel={() => { this.setState({ entranceState: false }) }} footer={null} width={1200}>
+                <Modal title="新增任务" centered visible={entranceState} onCancel={() => { 
+                    this.setState({ entranceState: false })
+                    this.formRef.current.resetFields()
+                     }} footer={null} width={1200}>
                     {
                         <Form {...layout}
                             name="taskForm"
@@ -378,6 +387,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     submitForm(val) {   // 提交表单
         console.log(val, "val")
+        // return
         if (this.state.source == "edit") {
             this.updateSource(val)
         } else {
@@ -429,14 +439,21 @@ export default class EarnIncentiveTask extends React.Component {
                 ...val
             }
         } else {
+            let content = []
+            if(val.type == 2){
+                let arr = util.getRandomArrayValue(this.state.channelList,val.count)
+                arr.forEach(r=>{
+                    content.push(r.code)
+                })
+                
+            }
             params = {
                 ...this.state.currentItem,
                 ...val,
                 onlineTime: parseInt(val.time[0].valueOf() / 1000),
                 offlineTime: parseInt(val.time[1].valueOf() / 1000),
                 status: val.status ? 1 : 2,
-                content:val.type== 1?val.content?val.content.join(","):"":""
-                // channelName: this.state.channelList.filter(r => r.code == val.channelId)[0].name
+                content:val.type== 1?val.content?val.content.join(","):"": content.join(",")
             }
         }
         // return console.log(params,"params")

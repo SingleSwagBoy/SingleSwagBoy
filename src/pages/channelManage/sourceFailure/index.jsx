@@ -419,12 +419,20 @@ export default class EarnIncentiveTask extends React.Component {
         })
     }
     addSource(val) {
+        let content = []
+        if(val.type == 2){
+            let arr = util.getRandomArrayValue(this.state.channelList,val.count)
+            arr.forEach(r=>{
+                content.push(r.code)
+            })
+            
+        }
         let params = {
             ...val,
             onlineTime: parseInt(val.time[0].valueOf() / 1000),
             offlineTime: parseInt(val.time[1].valueOf() / 1000),
             status: val.status ? 1 : 2,
-            content:val.type== 1?val.content?val.content.join(","):"":""
+            content:val.type== 1?val.content?val.content.join(","):"":content.join(",")
             // channelName: this.state.channelList.filter(r => r.code == val.channelId)[0].name
         }
         addSource(params).then(res => {

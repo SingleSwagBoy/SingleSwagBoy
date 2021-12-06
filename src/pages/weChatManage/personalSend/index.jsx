@@ -202,9 +202,9 @@ export default class EarnIncentiveTask extends React.Component {
                                                 this.formRef.current.setFieldsValue({ "msgType": "text" })
                                             } else {
                                                 this.formRef.current.setFieldsValue({ "msgType": "mpnews" })
-                                                this.setState({
-                                                    allMaterial: ""
-                                                })
+                                                // this.setState({
+                                                //     allMaterial: ""
+                                                // })
                                             }
                                         }
                                     })
@@ -240,7 +240,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                         getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem) }}
                                                         imageUrl={this.state.allMaterial[this.state.activityIndex].thumb_url} />
                                                 </Form.Item>
-                                                <Form.Item label="留言设置" name="comment">
+                                                {/* <Form.Item label="留言设置" name="comment">
                                                     <Checkbox
                                                         key={this.formRef.current && this.formRef.current.getFieldValue("comment")}
                                                         defaultChecked={this.formRef.current && this.formRef.current.getFieldValue("comment")}
@@ -286,15 +286,15 @@ export default class EarnIncentiveTask extends React.Component {
                                                             ""
 
                                                     }
-                                                </Form.Item>
-                                                <Form.Item label="转载设置" name="sendIgnoreReprint">
+                                                </Form.Item> */}
+                                                {/* <Form.Item label="转载设置" name="sendIgnoreReprint">
                                                     <Checkbox key={this.formRef.current && this.formRef.current.getFieldValue("sendIgnoreReprint")}
                                                         defaultChecked={this.formRef.current && this.formRef.current.getFieldValue("sendIgnoreReprint") == 1}
                                                         onChange={(e) => {
                                                             this.formRef.current.setFieldsValue({ sendIgnoreReprint: e.target.checked ? 1 : 0 })
                                                         }}
                                                     >原创校准</Checkbox>
-                                                </Form.Item>
+                                                </Form.Item> */}
                                                 <Form.Item label="推送粉丝标签" name="tags">
                                                     <Select
                                                         placeholder="请选择粉丝标签"
@@ -327,9 +327,9 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                 digest: l.digest,
                                                                                 comment: false,
                                                                                 msgType: "mpnews",
-                                                                                sendIgnoreReprint: 0,
-                                                                                need_open_comment: l.need_open_comment == 1 ? true : false,
-                                                                                only_fans_can_comment: l.only_fans_can_comment == 1 ? true : false
+                                                                                // sendIgnoreReprint: 0,
+                                                                                // need_open_comment: l.need_open_comment == 1 ? true : false,
+                                                                                // only_fans_can_comment: l.only_fans_can_comment == 1 ? true : false
                                                                             }
                                                                             this.formRef.current.setFieldsValue(obj)
                                                                             this.forceUpdate();
@@ -411,7 +411,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                             console.log(this.state.materialData, this.state.allMaterial)
                                                             this.child.openDialog(true, this.state.materialData, this.state.allMaterial)
                                                         })
-                                                    }}>导入图文</div>
+                                                    }}>选择图文模版</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -745,9 +745,9 @@ export default class EarnIncentiveTask extends React.Component {
                 digest: info[0].digest,
                 comment: false,
                 msgType: "mpnews",
-                sendIgnoreReprint: 0,
-                need_open_comment: info[0].need_open_comment == 1 ? true : false,
-                only_fans_can_comment: info[0].only_fans_can_comment == 1 ? true : false
+                // sendIgnoreReprint: 0,
+                // need_open_comment: info[0].need_open_comment == 1 ? true : false,
+                // only_fans_can_comment: info[0].only_fans_can_comment == 1 ? true : false
             }
             this.formRef.current.setFieldsValue(obj)
             this.forceUpdate();

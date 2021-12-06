@@ -147,7 +147,8 @@ export default class EarnIncentiveTask extends React.Component {
                 >
                     <Radio.Group defaultValue={this.state.wxCode} key={this.state.wxCode} style={{ marginBottom: "16px" }} onChange={(e) => {
                         this.setState({
-                            wxCode: e.target.value
+                            wxCode: e.target.value,
+                            page:1
                         }, () => {
                             this.getSend()
                         })

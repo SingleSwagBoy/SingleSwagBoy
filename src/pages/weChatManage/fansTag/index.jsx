@@ -70,7 +70,7 @@ export default class EarnIncentiveTask extends React.Component {
                     render: (rowValue, row, index) => {
                         return (
                             // 0-未开始（默认）；1-进行中；2-已完成
-                            <div>{rowValue == 1 ? "进行中" : rowValue == 2 ? "已完成" : "未开始"}</div>
+                            <div>{rowValue == 1 ? `进行中(${parseInt(row.remainTime / 60 / 60)})小时` : rowValue == 2 ? "已完成" : "未开始"}</div>
                         )
                     }
                 },

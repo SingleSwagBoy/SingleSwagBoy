@@ -246,6 +246,15 @@ export default class EarnIncentiveTask extends React.Component {
                                                         defaultChecked={this.formRef.current && this.formRef.current.getFieldValue("comment")}
                                                         onChange={(e) => {
                                                             this.formRef.current.setFieldsValue({ "comment": e.target.checked })
+                                                            let info = this.state.allMaterial
+                                                            if(!e.target.checked){
+                                                                info[this.state.activityIndex]["only_fans_can_comment"] = 0
+                                                                info[this.state.activityIndex]["need_open_comment"] = 0
+                                                            }
+                                                            this.setState({
+                                                                allMaterial: info
+                                                            })
+                                                           
                                                             this.forceUpdate()
                                                         }}
                                                     >留言</Checkbox>
@@ -255,7 +264,13 @@ export default class EarnIncentiveTask extends React.Component {
                                                             <Radio.Group onChange={(e) => {
                                                                 // this.formRef.current.setFieldsValue({ [e.target.value]: 0 })
                                                                 let info = this.state.allMaterial
-                                                                info[this.state.activityIndex][e.target.value] = e.target.checked ? 1 : 0
+                                                                if(e.target.value == "need_open_comment"){
+                                                                    info[this.state.activityIndex][e.target.value] = e.target.checked ? 1 : 0
+                                                                    info[this.state.activityIndex]["only_fans_can_comment"] = 0
+                                                                }else{
+                                                                    info[this.state.activityIndex][e.target.value] = e.target.checked ? 1 : 0
+                                                                    info[this.state.activityIndex]["need_open_comment"] = 0
+                                                                }
                                                                 this.setState({
                                                                     allMaterial: info
                                                                 })

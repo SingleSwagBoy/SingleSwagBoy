@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getSend, materialSend, getFansTagList, delFansTag, getPublicList, everySend, addSend, preSend, cancelSend, reSend } from 'api'
+import { getSend, materialSend, getFansTagList, getPublicList, everySend, addSend, preSend, cancelSend, reSend } from 'api'
 import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Checkbox, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import QRCode from 'qrcode.react';
@@ -91,7 +91,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                 <Button size="small" style={{ margin: "0 20px 0 0" }} onClick={() => this.everySend(row.id)}>数据详情</Button>
                                                             </Popover>
 
-                                                            <Button size="small" danger>删除</Button>
+                                                            {/* <Button size="small" danger>删除</Button> */}
                                                         </div>
                                                         :
                                                         ""
@@ -231,7 +231,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                     }} />
                                                 </Form.Item>
                                                 <Form.Item label="图文摘要" name="digest">
-                                                    <Input placeholder="图文摘要" />
+                                                    <Input.TextArea placeholder="图文摘要" disabled />
                                                 </Form.Item>
                                                 <Form.Item label="封面图" name="cover">
                                                     <MyImageUpload

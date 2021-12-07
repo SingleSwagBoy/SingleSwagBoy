@@ -82,7 +82,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                 ?
                                                                 <div style={{ maxHeight: "300px", width: "100%", position: "relative" }} >
                                                                     <div ><img style={{ width: "100%", height: "100px" }} src={r.thumb_url} alt="" /></div>
-                                                                    <div style={{ position: "absolute", "bottom": "0", "color": "#fff", padding: "10px" }}>{r.title}</div>
+                                                                    <div style={{ position: "absolute", "bottom": "0", "color": "#000", padding: "10px" }}>{r.title}</div>
                                                                 </div>
                                                                 :
                                                                 <div style={{ display: "flex", "alignItems": "center", "justifyContent": 'space-between', padding: "10px" }} >

@@ -408,7 +408,7 @@ export const addEnterChannel = (params) => { return request2.post(`${baseUrl}/mm
 export const getEnterChannel = (params) => { return request2.post(`${baseUrl}/mms/config/vipBootChannelConfig/get`,params); };                 // 查询会员开机进入频道配置
 export const delEnterChannel = (params) => { return request2.delete(`${baseUrl}/mms/config/vipBootChannelConfig/del`,{params:params}); };                 // 会员开机进入频道配置 - 删除
 export const uploadEnterChannel = (params) => { return request2.put(`${baseUrl}/mms/config/vipBootChannelConfig/update`,params); };                 // 更新会员开机进入频道配置
-export const syncEnterChannel = (params) => { return request2.post(`${baseUrl}/mms/config/vipBootChannelConfig/sync`,params); };                 // 同步会员开机进入频道配置
+export const syncEnterChannel = (params) => { return request2.get(`${baseUrl}/mms/config/vipBootChannelConfig/sync`,{params:params}); };                 // 同步会员开机进入频道配置
 
 //体育频道视频集配置
 export const getChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcList`,params); };                 // 配置管理-体育频道视频集配置-列表

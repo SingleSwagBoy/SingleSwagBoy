@@ -208,11 +208,11 @@ export default class EarnIncentiveTask extends React.Component {
                                 <Input placeholder="请输入任务描述" />
                             </Form.Item>
                             <Form.Item label="任务类型" name="taskType" rules={[{ required: true, message: '请选择任务类型' }]}>
-                                <Select
+                                <Select disabled={this.state.source == "edit"}
                                     placeholder="请输入用户标签"
                                     allowClear
                                     {...this.state.selectProps}
-                                    onChange={()=>this.forceUpdate()}
+                                    onChange={() => this.forceUpdate()}
                                 >
                                     <Option value={1} key={1}>每日看电视-累计时间</Option>
                                     <Option value={2} key={2}>每日看电视-观看频道数</Option>
@@ -223,25 +223,36 @@ export default class EarnIncentiveTask extends React.Component {
                                 this.formRef.current && this.formRef.current.getFieldValue("taskType") == 1
                                     ?
                                     <Form.Item label="累计时间" name="oneDayCount" rules={[{ required: true, message: '请输入累计时间' }]}>
-                                        <Input type="number" addonAfter={"分钟"} />
+                                        <Input type="number" addonAfter={"分钟"} disabled={this.state.source == "edit"} />
                                     </Form.Item>
                                     :
 
                                     this.formRef.current && this.formRef.current.getFieldValue("taskType") == 2 ?
                                         <Form.Item label="观看频道数" name="oneDayCount" rules={[{ required: true, message: '请输入观看频道数' }]}>
-                                            <Input type="number" addonAfter={"个"} />
+                                            <Input type="number" addonAfter={"个"} disabled={this.state.source == "edit"} />
                                         </Form.Item>
                                         :
                                         ""
                             }
                             <Form.Item label="任务天数" name="taskDays" rules={[{ required: true, message: '请填写任务天数' }]}   >
-                                <InputNumber placeholder="请输入任务天数" min={0} />
+                                <InputNumber placeholder="请输入任务天数" min={0} disabled={this.state.source == "edit"} />
                             </Form.Item>
                             <Form.Item label="有效时间" name="time" rules={[{ required: true, message: '请选择有效时间' }]}>
-                                <RangePicker placeholder={['上线时间', '下线时间']} showTime ></RangePicker>
+                                <RangePicker placeholder={['上线时间', '下线时间']}
+                                    showTime
+                                    disabled={[this.state.source == "edit", false]}
+                                    onChange={(e)=>{
+                                        console.log(e,e[1].valueOf(),this.state.currentItem.end * 1000)
+                                        if(e[1].valueOf() <= this.state.currentItem.end * 1000){
+                                            message.error("有效时间只能延长，不能缩短")
+                                            return this.formRef.current.setFieldsValue({"time":[moment(this.state.currentItem.start * 1000),moment(this.state.currentItem.end * 1000)]})
+                                            
+                                        }
+                                    }}
+                                ></RangePicker>
                             </Form.Item>
                             <Form.Item label="达成奖励" name="rewardType" rules={[{ required: true, message: '请选择达成奖励' }]}>
-                                <Select
+                                <Select disabled={this.state.source == "edit"}
                                     placeholder="请输入用户标签"
                                     allowClear
                                     {...this.state.selectProps}
@@ -259,13 +270,13 @@ export default class EarnIncentiveTask extends React.Component {
                                 this.formRef.current && this.formRef.current.getFieldValue("rewardType") == 1
                                     ?
                                     <Form.Item label="金币" name="rewardCount" rules={[{ required: true, message: '请输入金币' }]}>
-                                        <InputNumber min={0} />
+                                        <InputNumber min={0} disabled={this.state.source == "edit"} />
                                     </Form.Item>
                                     :
 
                                     this.formRef.current && this.formRef.current.getFieldValue("rewardType") == 2 ?
                                         <Form.Item label="会员天数" name="rewardCount" rules={[{ required: true, message: '请选择会员天数' }]}>
-                                            <Select
+                                            <Select disabled={this.state.source == "edit"}
                                                 placeholder="请输入用户标签"
                                                 allowClear
                                             // {...this.state.selectProps}
@@ -348,7 +359,7 @@ export default class EarnIncentiveTask extends React.Component {
             ...val,
             start: parseInt(val.time[0].valueOf() / 1000),
             end: parseInt(val.time[1].valueOf() / 1000),
-            oneDayCount:Number(val.oneDayCount),
+            oneDayCount: Number(val.oneDayCount),
             reward: {
                 rewardType: val.rewardType,
                 rewardCount: val.rewardCount
@@ -365,7 +376,7 @@ export default class EarnIncentiveTask extends React.Component {
             ...val,
             start: parseInt(val.time[0].valueOf() / 1000),
             end: parseInt(val.time[1].valueOf() / 1000),
-            oneDayCount:Number(val.oneDayCount),
+            oneDayCount: Number(val.oneDayCount),
             reward: {
                 rewardType: val.rewardType,
                 rewardCount: val.rewardCount

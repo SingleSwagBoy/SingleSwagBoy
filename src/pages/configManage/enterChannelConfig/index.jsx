@@ -187,7 +187,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     })
                                 }}
                             >新增</Button>
-                            {/* <MySyncBtn type={19} name='同步缓存' /> */}
+                            <MySyncBtn type={20} name='同步缓存' />
                         </div>
                     }
                 >
@@ -275,7 +275,7 @@ export default class EarnIncentiveTask extends React.Component {
                                 <InputNumber placeholder="下发人数" style={{width:"200px"}} />
                             </Form.Item>
                             <Form.Item label="开机频率" name="frequencyDays" >
-                                <Input placeholder="开机频率" type="number" addonAfter={"$"} style={{width:"200px"}} />
+                                <Input placeholder="开机频率" type="number" addonAfter={"天一次"} style={{width:"200px"}} />
                             </Form.Item>
                             <Form.Item label="优先级" name="sortOrder" >
                                 <InputNumber placeholder="优先级" style={{width:"200px"}} />
@@ -323,7 +323,6 @@ export default class EarnIncentiveTask extends React.Component {
         })
     }
     changeSize = (page, pageSize) => {   // 分页
-        console.log(page, pageSize);
         this.setState({
             page: page,
             pageSize: pageSize
@@ -345,6 +344,10 @@ export default class EarnIncentiveTask extends React.Component {
     getEnterChannel() {
         let params = {
             bootChannelCode: this.state.searchWord.name,
+            page:{
+                currentPage:this.state.page,
+                pageSize:this.state.pageSize
+            }
         }
         getEnterChannel(params).then(res => {
             this.setState({

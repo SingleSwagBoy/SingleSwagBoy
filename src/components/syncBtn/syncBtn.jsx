@@ -28,6 +28,7 @@ import {
     syncWordsConfig,                //首页文字轮播同步缓存
     syncHomeList,                   //首页直播配置同步
     syncSource,                   //源失效
+    syncEnterChannel,                   //会员开机进入配置
 } from 'api'
 
 
@@ -67,6 +68,7 @@ export default class SyncBtn extends Component {
         if (type === 17) return syncWordsConfig();                                 //首页文字轮播同步缓存
         if (type === 18) return syncHomeList(params);                                 //首页直播配置同步
         if (type === 19) return syncSource();                                 //源失效
+        if (type === 20) return syncEnterChannel();                                 //会员开机进入配置
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

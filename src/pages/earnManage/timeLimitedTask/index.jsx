@@ -348,6 +348,7 @@ export default class EarnIncentiveTask extends React.Component {
             ...val,
             start: parseInt(val.time[0].valueOf() / 1000),
             end: parseInt(val.time[1].valueOf() / 1000),
+            oneDayCount:Number(val.oneDayCount),
             reward: {
                 rewardType: val.rewardType,
                 rewardCount: val.rewardCount
@@ -364,6 +365,7 @@ export default class EarnIncentiveTask extends React.Component {
             ...val,
             start: parseInt(val.time[0].valueOf() / 1000),
             end: parseInt(val.time[1].valueOf() / 1000),
+            oneDayCount:Number(val.oneDayCount),
             reward: {
                 rewardType: val.rewardType,
                 rewardCount: val.rewardCount

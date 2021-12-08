@@ -319,7 +319,7 @@ export default class EarnIncentiveTask extends React.Component {
 
                                     this.formRef.current && this.formRef.current.getFieldValue("type") == 2 ?
                                         <Form.Item label="频道个数" name="count" >
-                                            <InputNumber placeholder="频道个数" />
+                                            <InputNumber placeholder="频道个数" min={0} />
                                         </Form.Item>
                                         : 
                                         ""

@@ -400,6 +400,15 @@ export const getMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/m
 export const addMarsList = (params) => { return request2.post(`${baseUrl}/mms/ad/marsStartup/add`,params); };                 // 获取
 export const uploadMarsList = (params) => { return request2.post(`${baseUrl}/mms/ad/marsStartup/update`,params); };                 // 获取
 export const delMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/marsStartup/del`,{ params: params }); };                 // 获取
+
+
+
+//赚赚限时任务
+// export const addLimitTask = (params) => { return request2.post(`${baseUrl}/mms/config/common/add`,params); };                 // 添加限时任务
+// export const getLimitTask = (params) => { return request2.get(`${baseUrl}/mms/config/common/list`,{params:params}); };                 // 查询限时任务
+// export const delLimitTask = (params) => { return request2.post(`${baseUrl}/mms/config/common/delete`,params); };                 // 删除限时任务
+// export const updateLimitTask = (params) => { return request2.post(`${baseUrl}/mms/config/common/update`,params); };                 // 更新限时任务
+// export const syncLimitTask = (params) => { return request2.get(`${baseUrl}/mms/config/common/sync_slice`,{params:params}); };                 // 同步限时任务
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

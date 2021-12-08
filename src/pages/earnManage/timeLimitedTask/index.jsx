@@ -66,7 +66,7 @@ export default class EarnIncentiveTask extends React.Component {
                     key: "taskType",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{rowValue == 1?"每日看电视-累计时间":rowValue == 2?"每日看电视-观看频道数":"未知"}</div>
+                            <div>{rowValue == 1 ? "每日看电视-累计时间" : rowValue == 2 ? "每日看电视-观看频道数" : "未知"}</div>
                         )
                     }
                 },
@@ -92,7 +92,7 @@ export default class EarnIncentiveTask extends React.Component {
                             <div>
                                 {/* {rowValue === 1?"有效":"无效"} */}
                                 <Switch checkedChildren="已上线" unCheckedChildren="未上线" key={new Date().getTime()}
-                                    defaultChecked={(row.start<=(new Date().getTime() / 1000) && row.end>(new Date().getTime()/ 1000))? true : false} disabled
+                                    defaultChecked={(row.start <= (new Date().getTime() / 1000) && row.end > (new Date().getTime() / 1000)) ? true : false} disabled
                                 />
                             </div>
                         )
@@ -174,7 +174,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     })
                                 }}
                             >新增</Button>
-                             <MySyncBtn type={7} name='同步缓存' params={{ key: this.state.key }} />
+                            <MySyncBtn type={7} name='同步缓存' params={{ key: this.state.key }} />
                         </div>
                     }
                 >
@@ -212,12 +212,28 @@ export default class EarnIncentiveTask extends React.Component {
                                     placeholder="请输入用户标签"
                                     allowClear
                                     {...this.state.selectProps}
+                                    onChange={()=>this.forceUpdate()}
                                 >
                                     <Option value={1} key={1}>每日看电视-累计时间</Option>
                                     <Option value={2} key={2}>每日看电视-观看频道数</Option>
 
                                 </Select>
                             </Form.Item>
+                            {
+                                this.formRef.current && this.formRef.current.getFieldValue("taskType") == 1
+                                    ?
+                                    <Form.Item label="累计时间" name="oneDayCount" rules={[{ required: true, message: '请输入累计时间' }]}>
+                                        <Input type="number" addonAfter={"分钟"} />
+                                    </Form.Item>
+                                    :
+
+                                    this.formRef.current && this.formRef.current.getFieldValue("taskType") == 2 ?
+                                        <Form.Item label="观看频道数" name="oneDayCount" rules={[{ required: true, message: '请输入观看频道数' }]}>
+                                            <Input type="number" addonAfter={"个"} />
+                                        </Form.Item>
+                                        :
+                                        ""
+                            }
                             <Form.Item label="任务天数" name="taskDays" rules={[{ required: true, message: '请填写任务天数' }]}   >
                                 <InputNumber placeholder="请输入任务天数" min={0} />
                             </Form.Item>
@@ -234,8 +250,8 @@ export default class EarnIncentiveTask extends React.Component {
                                         this.forceUpdate()
                                     }}
                                 >
-                                    <Option value={1} key={1}>每日看电视-累计时间</Option>
-                                    <Option value={2} key={2}>每日看电视-观看频道数</Option>
+                                    <Option value={1} key={1}>金币</Option>
+                                    <Option value={2} key={2}>会员</Option>
 
                                 </Select>
                             </Form.Item>
@@ -325,19 +341,19 @@ export default class EarnIncentiveTask extends React.Component {
         })
     }
     addList(val) {
-        let header={
-            key:this.state.key,
+        let header = {
+            key: this.state.key,
         }
         let params = {
             ...val,
             start: parseInt(val.time[0].valueOf() / 1000),
             end: parseInt(val.time[1].valueOf() / 1000),
-            reward:{
-                rewardType:val.rewardType,
-                rewardCount:val.rewardCount
+            reward: {
+                rewardType: val.rewardType,
+                rewardCount: val.rewardCount
             }
         }
-        addList(header,params).then(res => {
+        addList(header, params).then(res => {
             this.getList()
             message.success("新增成功")
         })
@@ -348,17 +364,17 @@ export default class EarnIncentiveTask extends React.Component {
             ...val,
             start: parseInt(val.time[0].valueOf() / 1000),
             end: parseInt(val.time[1].valueOf() / 1000),
-            reward:{
-                rewardType:val.rewardType,
-                rewardCount:val.rewardCount
+            reward: {
+                rewardType: val.rewardType,
+                rewardCount: val.rewardCount
             }
         }
-        let header={
-            key:this.state.key,
-            id:this.state.currentItem.indexId
+        let header = {
+            key: this.state.key,
+            id: this.state.currentItem.indexId
         }
         // return console.log(params,"params")
-        updateList(header,params).then(res => {
+        updateList(header, params).then(res => {
             this.getList()
             message.success("更新成功")
         })
@@ -386,8 +402,8 @@ export default class EarnIncentiveTask extends React.Component {
             this.getList()
         })
     }
-      //获取上传文件
-      getUploadFileUrl(type, file, newItem) {
+    //获取上传文件
+    getUploadFileUrl(type, file, newItem) {
         let that = this;
         let image_url = newItem.fileUrl;
         let obj = {};
@@ -399,13 +415,13 @@ export default class EarnIncentiveTask extends React.Component {
     //获取上传文件图片地址 
     getUploadFileImageUrlByType(type) {
         let that = this;
-        if(that.formRef.current){
+        if (that.formRef.current) {
             let image_url = that.formRef.current.getFieldValue(type);
             return image_url ? image_url : '';
-        }else{
+        } else {
             return null
         }
-        
+
     }
     // copySource(item) {
     //     let params = {

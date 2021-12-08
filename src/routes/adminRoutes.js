@@ -62,6 +62,7 @@ const RiskAreaConfig = lazy(() => import('pages/configManage/riskAreaConfig/risk
 const TagConfig = lazy(() => import('pages/configManage/tagConfig/tagConfig.jsx'));
 const ChannelShortVideoList = lazy(() => import('pages/configManage/channelShortVideoList/index.jsx'));
 const ShortListConfig = lazy(() => import('pages/configManage/shortListConfig/index.jsx'));
+const SportsIndexBanner = lazy(() => import('pages/configManage/sportsIndexBanner/index.jsx'));
 const RecommendConfig = lazy(() => import('pages/configManage/recommendConfig/index.jsx'));
 const WordsSwiperConfig = lazy(() => import('pages/configManage/wordsSwiperConfig/index.jsx'));
 const HomeBroadcast = lazy(() => import('pages/configManage/homeBroadcast/index.jsx'));
@@ -140,6 +141,7 @@ const adminRoutes = [
     { name: '标签配置', icon: UnorderedListOutlined, path: '/mms/config/tagConfig', component: TagConfig, code: "configManage", sub_code: 'tagConfig' },
     { name: '节目单视频集配置', icon: UnorderedListOutlined, path: '/mms/config/channelShortVideoList', component: ChannelShortVideoList, code: "configManage", sub_code: 'channelShortVideoList' },
     { name: '短视频集配置', icon: UnorderedListOutlined, path: '/mms/config/shortListConfig', component: ShortListConfig, code: "configManage", sub_code: 'shortListConfig' },
+    { name: '体育频道视频集配置', icon: UnorderedListOutlined, path: '/mms/config/sportsIndexBanner', component: SportsIndexBanner, code: "configManage", sub_code: 'sportsIndexBanner' },
     { name: '首页为你推荐配置', icon: UnorderedListOutlined, path: '/mms/config/recommendConfig', component: RecommendConfig, code: "configManage", sub_code: 'recommendConfig' },
     { name: '文字轮播配置', icon: UnorderedListOutlined, path: '/mms/config/wordsSwiperConfig', component: WordsSwiperConfig, code: "configManage", sub_code: 'wordsSwiperConfig' },
     { name: '首页直播配置', icon: UnorderedListOutlined, path: '/mms/config/homeBroadcast', component: HomeBroadcast, code: "configManage", sub_code: 'homeBroadcast' },

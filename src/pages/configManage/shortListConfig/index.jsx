@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import {  searchShortList, getShortList, addShortList, updateShortList, delShortList } from 'api'
-import { Breadcrumb, Card, TimePicker, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
+import { searchShortList, getShortList, addShortList, updateShortList, delShortList } from 'api'
+import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import { MySyncBtn } from "@/components/views.js"
+import { MyImageUpload } from '@/components/views.js';
 import util from 'utils'
 import "./style.css"
-const { Option } = Select;export default class EarnIncentiveTask extends React.Component {
+const { Option } = Select; export default class EarnIncentiveTask extends React.Component {
     formRef = React.createRef();
     constructor(props) {
         super(props);
@@ -43,6 +44,14 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
                     title: "视频数量",
                     dataIndex: "total",
                     key: "total",
+                },
+                {
+                    title: "缩略图",
+                    dataIndex: "cover",
+                    key: "cover",
+                    render: (rowValue, row, index) => {
+                        return <Image width={80} src={rowValue} />
+                    }
                 },
                 {
                     title: "操作",
@@ -84,7 +93,7 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
         }
     }
     render() {
-        let {  lists, layout, loading, columns, entranceState, shortList } = this.state;
+        let { lists, layout, loading, columns, entranceState, shortList } = this.state;
         return (
             <div>
                 <Card title={
@@ -146,12 +155,12 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
                                                         <InputNumber placeholder="请输入排序" />
                                                     </Form.Item>
                                                     <Form.Item {...field} label="短视频ID" name={[field.name, "str_id"]} fieldKey={[field.fieldKey, "str_id"]}>
-                                                        <Input.Search placeholder="请输入短视频标题" onSearch={(e)=>{
-                                                            this.searchShortList(e,index)
+                                                        <Input.Search placeholder="请输入短视频标题" onSearch={(e) => {
+                                                            this.searchShortList(e, index)
                                                         }} />
                                                     </Form.Item>
                                                     <Form.Item {...field} label="短视频标题" name={[field.name, "title"]} fieldKey={[field.fieldKey, "title"]}>
-                                                        <Input placeholder="请输入短视频标题" style={{width:"300px"}} />
+                                                        <Input placeholder="请输入短视频标题" style={{ width: "300px" }} />
                                                     </Form.Item>
 
                                                     <MinusCircleOutlined onClick={() => { remove(field.name) }} />
@@ -167,7 +176,11 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
                                     )}
                                 </Form.List>
                             </Form.Item>
-
+                            <Form.Item label="封面配置" name="cover" rules={[{ required: true, message: '请上传封面配置' }]}>
+                                <MyImageUpload
+                                    getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem) }}
+                                    imageUrl={this.getUploadFileImageUrlByType('cover')} />
+                            </Form.Item>
 
                             <Form.Item {...this.state.tailLayout}>
                                 <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
@@ -194,29 +207,29 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
             this.getProgramlist()
         })
     }
-    searchShortList(keyword,index) {
+    searchShortList(keyword, index) {
         if (!keyword) return
         let params = {
             str_id: keyword,
         }
         searchShortList(params).then(res => {
-            console.log(res.data.data,"res.data")
-            if(res.data.data){
+            console.log(res.data.data, "res.data")
+            if (res.data.data) {
                 let arr = this.formRef.current.getFieldValue("videos")
-                console.log(arr,"arr")
+                console.log(arr, "arr")
                 let obj = res.data.data
                 let str = {
-                    str_id:obj.id,
-                    cover:obj.cover,
-                    source:obj.source,
-                    sort:arr[index].sort || 0,
-                    uploader:obj.uploader,
-                    likeCount:obj.likeCount,
-                    title:obj.title
+                    str_id: obj.id,
+                    cover: obj.cover,
+                    source: obj.source,
+                    sort: arr[index].sort || 0,
+                    uploader: obj.uploader,
+                    likeCount: obj.likeCount,
+                    title: obj.title
                 }
                 arr[index] = str
-                this.formRef.current.setFieldsValue({"videos":arr})
-            }else{
+                this.formRef.current.setFieldsValue({ "videos": arr })
+            } else {
                 message.error("没找到合适的短视频")
             }
         })
@@ -262,7 +275,7 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
             message.success("新增成功")
         })
     }
-    updateShortList(val){
+    updateShortList(val) {
         let params = {
             ...this.state.currentItem,
             ...val,
@@ -293,5 +306,26 @@ const { Option } = Select;export default class EarnIncentiveTask extends React.C
             message.success("删除成功")
             this.getShortList()
         })
+    }
+      //获取上传文件
+      getUploadFileUrl(type, file, newItem) {
+        let that = this;
+        let image_url = newItem.fileUrl;
+        let obj = {};
+        obj[type] = image_url;
+
+        that.formRef.current.setFieldsValue(obj);
+        that.forceUpdate();
+    }
+    //获取上传文件图片地址 
+    getUploadFileImageUrlByType(type) {
+        let that = this;
+        if (that.formRef.current) {
+            let image_url = that.formRef.current.getFieldValue(type);
+            return image_url ? image_url : '';
+        } else {
+            return null
+        }
+
     }
 }

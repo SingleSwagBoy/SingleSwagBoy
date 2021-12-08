@@ -275,7 +275,7 @@ export default class EarnIncentiveTask extends React.Component {
                                 <InputNumber placeholder="下发人数" style={{width:"200px"}} />
                             </Form.Item>
                             <Form.Item label="开机频率" name="frequencyDays" >
-                                <Input placeholder="开机频率" type="number" addonAfter={"天一次"} style={{width:"200px"}} />
+                                <Input placeholder="开机频率" min={0} type="number" addonAfter={"天一次"} style={{width:"200px"}} />
                             </Form.Item>
                             <Form.Item label="优先级" name="sortOrder" >
                                 <InputNumber placeholder="优先级" style={{width:"200px"}} />
@@ -368,6 +368,7 @@ export default class EarnIncentiveTask extends React.Component {
             startTime: parseInt(val.time[0].valueOf() / 1000),
             endTime: parseInt(val.time[1].valueOf() / 1000),
             enabled: val.enabled ? 1 : 2,
+            frequencyDays:Number(val.frequencyDays)
         }
         addEnterChannel(params).then(res => {
             this.getEnterChannel()
@@ -387,6 +388,7 @@ export default class EarnIncentiveTask extends React.Component {
                 startTime: parseInt(val.time[0].valueOf() / 1000),
                 endTime: parseInt(val.time[1].valueOf() / 1000),
                 enabled: val.enabled ? 1 : 2,
+                frequencyDays:Number(val.frequencyDays)
             }
         }
         // return console.log(params,"params")

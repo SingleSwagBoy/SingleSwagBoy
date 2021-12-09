@@ -417,6 +417,11 @@ export const delChannelSport = (params) => { return request2.get(`${baseUrl}/mms
 export const resetChannelSport = (params) => { return request2.get(`${baseUrl}/mms/channel/channelSport/svcResort`,{params:params}); };                 // 配置管理-体育频道视频集配置-重新生成排序序号
 export const syncChannelSport = (params) => { return request2.get(`${baseUrl}/mms/channel/channelSport/svcSyncCache`,{params:params}); };                 // 配置管理-体育频道视频集配置-数据同步
 export const sortChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcChangeSort`,params); };                 // 配置管理-体育频道视频集配置-排序
+
+
+
+//企业微信
+export const getQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/configs`,{params:params}); };                 // 获取登录、解锁二维码配置
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

@@ -289,6 +289,7 @@ export default class EarnIncentiveTask extends React.Component {
     resetChannelSport() { //重新排序
         resetChannelSport({}).then(res => {
             message.success("重新排序成功")
+            this.getChannelSport()
         })
     }
     sortChannelSport(val, row) { //重新排序

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getChannelSport, addChannelSport, resetChannelSport, delChannelSport, getShortList } from 'api'
+import { getChannelSport, addChannelSport, resetChannelSport, delChannelSport, getShortList, sortChannelSport } from 'api'
 import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -38,16 +38,23 @@ export default class EarnIncentiveTask extends React.Component {
             },
             visible: false,
             video_list: [],
+            activityIndex: null,
             columns: [
                 {
                     title: "排序",
                     dataIndex: "sort",
                     key: "sort",
-                    // render: (rowValue, row, index) => {
-                    //     return (
-                    //         <div>this.s</div>
-                    //     )
-                    // }
+                    render: (rowValue, row, index) => {
+                        return (
+                            this.state.activityIndex == index ?
+                                <div><InputNumber defaultValue={rowValue} step={10} min={0} onBlur={(e) => {
+                                    console.log(e)
+                                    this.sortChannelSport(e.target.value, row)
+                                }}></InputNumber></div>
+                                :
+                                <div style={{ color: "#1890ff" }} onClick={() => this.setState({ activityIndex: index })}>{rowValue}</div>
+                        )
+                    }
                 },
                 {
                     title: "短视频集ID",
@@ -218,11 +225,11 @@ export default class EarnIncentiveTask extends React.Component {
     }
     getChannelSport() {
         let params = {
-            page:{
+            page: {
                 currentPage: this.state.page, // (int)页码
                 pageSize: this.state.pageSize // (int)每页数量
             }
-           
+
         }
         getChannelSport(params).then(res => {
             this.setState({
@@ -239,7 +246,7 @@ export default class EarnIncentiveTask extends React.Component {
     addChannelSport(val) {
         let params = {
             ...val,
-            sort:1
+            sort: 1
         }
         addChannelSport(params).then(res => {
             this.getChannelSport()
@@ -280,8 +287,18 @@ export default class EarnIncentiveTask extends React.Component {
         })
     }
     resetChannelSport() { //重新排序
-        getShortList({}).then(res => {
-           message.success("重新排序成功")
+        resetChannelSport({}).then(res => {
+            message.success("重新排序成功")
+        })
+    }
+    sortChannelSport(val, row) { //重新排序
+        let params = {
+            id: row.id,
+            sort: Number(val)
+        }
+        sortChannelSport(params).then(res => {
+            this.setState({ activityIndex: null })
+            this.getChannelSport()
         })
     }
 }

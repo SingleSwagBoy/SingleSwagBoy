@@ -99,7 +99,7 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                 <Card title={
                     <div>
                         <Breadcrumb>
-                            <Breadcrumb.Item>节目单视频集配置</Breadcrumb.Item>
+                            <Breadcrumb.Item>短视频集配置</Breadcrumb.Item>
                         </Breadcrumb>
                     </div>
                 }

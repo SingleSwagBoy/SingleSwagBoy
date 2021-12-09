@@ -415,7 +415,7 @@ export const getChannelSport = (params) => { return request2.post(`${baseUrl}/mm
 export const addChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcAdd`,params); };                 // 配置管理-体育频道视频集配置-添加
 export const delChannelSport = (params) => { return request2.get(`${baseUrl}/mms/channel/channelSport/svcRemove`,{params:params}); };                 // 配置管理-体育频道视频集配置-移除
 export const resetChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcResort`,params); };                 // 配置管理-体育频道视频集配置-重新生成排序序号
-export const syncChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcSyncCache`,params); };                 // 配置管理-体育频道视频集配置-数据同步
+export const syncChannelSport = (params) => { return request2.get(`${baseUrl}/mms/channel/channelSport/svcSyncCache`,{params:params}); };                 // 配置管理-体育频道视频集配置-数据同步
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

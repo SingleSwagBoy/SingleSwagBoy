@@ -16,7 +16,7 @@ export default class EarnIncentiveTask extends React.Component {
         super(props);
         this.state = {
             page: 1,
-            pageSize: 20,
+            pageSize: 50,
             total: 0,
             loading: false,
             layout: {
@@ -43,6 +43,11 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "排序",
                     dataIndex: "sort",
                     key: "sort",
+                    // render: (rowValue, row, index) => {
+                    //     return (
+                    //         <div>this.s</div>
+                    //     )
+                    // }
                 },
                 {
                     title: "短视频集ID",
@@ -100,7 +105,7 @@ export default class EarnIncentiveTask extends React.Component {
                 <Card title={
                     <div>
                         <Breadcrumb>
-                            <Breadcrumb.Item>节目单视频集配置</Breadcrumb.Item>
+                            <Breadcrumb.Item>体育频道短视频集配置</Breadcrumb.Item>
                         </Breadcrumb>
                     </div>
                 }
@@ -121,6 +126,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     })
                                 }}
                             >新增</Button>
+                            <MySyncBtn type={21} name='同步缓存' />
                         </div>
                     }
                 >

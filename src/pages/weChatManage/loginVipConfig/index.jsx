@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { getQrcodeConfig, requestNewAdTagList, updateSource,} from 'api'
-import { Radio, Card,Breadcrumb, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'
+import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser } from 'api'
+import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'
 import { } from 'react-router-dom'
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
+import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
 import ImageUpload from "../../../components/ImageUpload/index" //图片组件
 import { MySyncBtn } from "@/components/views.js"
@@ -27,11 +27,12 @@ export default class EarnIncentiveTask extends React.Component {
                 wrapperCol: { span: 20 },
             },
             tailLayout: {
-                wrapperCol: { offset: 16, span: 48},
+                wrapperCol: { offset: 16, span: 48 },
             },
             lists: [],
             tagList: [],
             currentItem: "",
+            userEdit: false,
             selectProps: {
                 optionFilterProp: "children",
                 // filterOption(input, option){
@@ -41,30 +42,26 @@ export default class EarnIncentiveTask extends React.Component {
                     console.log('onSearch')
                 }
             },
+            allUserList: [],
+            myUserList: [],
             columns: [
                 {
-                    title: "名称",
-                    dataIndex: "name",
-                    key: "name",
-                    width: 200,
-                },
-                {
-                    title: "推荐频道",
-                    dataIndex: "type",
-                    key: "type",
+                    title: "位置",
+                    dataIndex: "position",
+                    key: "position",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{rowValue == 1 ? "推荐频道":rowValue == 2?"自动填充":"未知"}</div>
+                            <div>{rowValue == "login" ? "登陆" : rowValue == "exclusive" ? "专享解锁" : "未知"}</div>
                         )
                     }
                 },
                 {
-                    title: "用户标签",
-                    dataIndex: "tag",
-                    key: "tag",
+                    title: "功能",
+                    dataIndex: "code",
+                    key: "code",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{this.getTagsName(rowValue)}</div>
+                            <div>{rowValue == "loginmini" ? "小程序登录" : rowValue == "loginwechat" ? "公众号登录" : rowValue == "exclusivemini" ? "小程序解锁" : rowValue == "exclusivewechat" ? "关注公众号解锁" : "企业微信解锁"}</div>
                         )
                     }
                 },
@@ -72,53 +69,37 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "上线时间-下线时间",
                     dataIndex: "onlineTime",
                     key: "onlineTime",
-                    width: 400,
+                    width: 300,
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{util.formatTime(row.onlineTime * 1000, "")} - {util.formatTime(row.offlineTime * 1000, "")}</div>
+                            <div>{row.start != 0 ? util.formatTime(row.start, "") : "未知"} - {row.end != 0 ? util.formatTime(row.end, "") : "未知"}</div>
                         )
                     }
                 },
                 {
-                    title: "排序",
-                    dataIndex: "sortOrder",
-                    key: "sortOrder",
+                    title: "用户标签",
+                    dataIndex: "tagCode",
+                    key: "tagCode",
+                    render: (rowValue, row, index) => {
+                        return (
+                            <div>{this.getTagsName(rowValue)}</div>
+                        )
+                    }
                 },
                 {
-                    title: "状态",  //上下线状态(1上线2下线)
+                    title: "状态",
                     dataIndex: "status",
                     key: "status",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>
-                                {/* {rowValue === 1?"有效":"无效"} */}
-                                <Switch checkedChildren="有效" unCheckedChildren="无效" key={new Date().getTime()}
-                                    defaultChecked={rowValue == 1 ? true : false}
-                                    onChange={(val) => {
-                                        console.log(val)
-                                        let obj = JSON.parse(JSON.stringify(row))
-                                        obj.status = val ? 1 : 2
-                                        this.setState({
-                                            currentItem: "",
-                                        }, () => {
-                                            this.updateSource(obj, "change")
-                                        })
-
-                                    }}
-                                />
-                            </div>
+                            <div>{<Switch checkedChildren="有效" unCheckedChildren="无效" defaultChecked={rowValue === 1 ? true : false} />}</div>
                         )
                     }
                 },
                 {
-                    title: "备注",
-                    dataIndex: "remark",
-                    key: "remark",
-                },
-                {
                     title: "操作",
                     key: "action",
-                    fixed: 'right', width: 250,
+                    fixed: 'right', width: 100,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
@@ -146,20 +127,20 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     render() {
-        let {  lists, layout, loading, columns, entranceState, tagList } = this.state;
+        let { lists, layout, loading, columns, entranceState, tagList, allUserList, myUserList, userEdit } = this.state;
         return (
-            <div>
+            <div className="loginVip">
                 <Card title={
                     <div>
-                    <Breadcrumb>
-                        <Breadcrumb.Item>登陆(专享)配置</Breadcrumb.Item>
-                    </Breadcrumb>
-                </div>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>登陆(专享)配置</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </div>
                 }
                 >
                     <Table
                         dataSource={lists}
-                        scroll={{ x: 1500, y: '75vh' }}
+                        scroll={{ x: 1200, y: '75vh' }}
                         // rowKey={item=>item.indexId}
                         loading={loading}
                         columns={columns}
@@ -171,30 +152,40 @@ export default class EarnIncentiveTask extends React.Component {
                         }}
                     />
                 </Card>
-                <Modal title="编辑" centered visible={entranceState} onCancel={() => { 
+                <Modal title="编辑" centered visible={entranceState} onCancel={() => {
                     this.setState({ entranceState: false })
                     this.formRef.current.resetFields()
-                     }} footer={null} width={1200}>
+                }} footer={null} width={800}>
                     {
                         <Form {...layout}
                             name="taskForm"
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
-                            <Form.Item label="用户标签" name="tag">
+                            <Form.Item label="800客服联系人" name="tagCode">
+                                <div className="add_user" onClick={() => this.addUser()}><PlusOutlined />添加成员</div>
+                                <div className="user_box">
+                                    {
+                                        this.getMyUserList(1).map(r => {
+                                            return <div className="every_box"><img src={r.avatar} alt="" /> {r.name} <CloseOutlined /></div>
+                                        })
+                                    }
+                                </div>
+                            </Form.Item>
+                            <Form.Item label="200客服联系人" name="tagCode">
+                                <div className="add_user" onClick={() => this.addUser()}><PlusOutlined />添加成员</div>
+                                <div className="user_box">
+                                    {
+                                        this.getMyUserList(2).map(r => {
+                                            return <div className="every_box"><img src={r.avatar} alt="" /> {r.name} <CloseOutlined /></div>
+                                        })
+                                    }
+                                </div>
+                            </Form.Item>
+                            <Form.Item label="用户标签" name="tagCode">
                                 <Select
                                     placeholder="请输入用户标签"
                                     allowClear
                                     {...this.state.selectProps}
-                                // onSearch={(val) => {
-                                //     if (privateData.inputTimeOutVal) {
-                                //         clearTimeout(privateData.inputTimeOutVal);
-                                //         privateData.inputTimeOutVal = null;
-                                //     }
-                                //     privateData.inputTimeOutVal = setTimeout(() => {
-                                //         if (!privateData.inputTimeOutVal) return;
-                                //         this.getChannel(val)
-                                //     }, 1000)
-                                // }}
                                 >
                                     {
                                         tagList.map((r, i) => {
@@ -217,12 +208,60 @@ export default class EarnIncentiveTask extends React.Component {
                         </Form>
                     }
                 </Modal>
+                <Modal title="客服编辑" centered visible={userEdit} onCancel={() => {
+                    this.setState({ userEdit: false })
+                }} footer={null} width={800}>
+                    <div className="add_dialog">
+                        <div className="left">
+                            <Input.Search placeholder="请搜索你想要添加的客服" className="search_input" />
+                            <div className="list">
+                                <div className="every_list">
+                                    <img src="" alt="" />
+                                    <div>"name"</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="left">
+                            <div className="list">
+                                {
+                                    this.getMyUserList(1).map(r => {
+                                        return (
+                                            <div className="every_list">
+                                                <img src={r.avatar} alt="" />
+                                                <div>{r.name}</div>
+                                                <div><CloseOutlined /></div>
+                                            </div>
+                                        )
+                                    })
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
             </div>
         )
+    }
+    getMyUserList(type) {
+        let arr = this.state.myUserList.filter(item => item.type == type)
+        if (arr.length > 0) {
+            let h = arr[0].userids ? arr[0].userids.split(",") : []
+            let l = this.state.allUserList.filter(item => h.some(l => item.userid == l))
+            if (l.length > 0) {
+                console.log(l)
+                return l
+            } else {
+                return []
+            }
+        } else {
+            return []
+        }
     }
     componentDidMount() {
         this.getQrcodeConfig();
         this.requestNewAdTagList()
+        this.getWechatUser()
+        this.getMyWechatUser()
     }
     //获取标签信息
     requestNewAdTagList() {
@@ -244,7 +283,7 @@ export default class EarnIncentiveTask extends React.Component {
     submitForm(val) {   // 提交表单
         console.log(val, "val")
         // return
-        this.updateSource(val)
+        this.saveQrcodeConfig(val)
         this.closeModal()
     }
 
@@ -255,12 +294,26 @@ export default class EarnIncentiveTask extends React.Component {
             })
         })
     }
+    getWechatUser() {  //获取全部客服
+        getWechatUser({}).then(res => {
+            this.setState({
+                allUserList: res.data
+            })
+        })
+    }
+    getMyWechatUser() {  //获取全部客服
+        getMyWechatUser({}).then(res => {
+            this.setState({
+                myUserList: res.data
+            })
+        })
+    }
     closeModal() {
         this.setState({
             entranceState: false
         })
     }
-    updateSource(val, type) {
+    saveQrcodeConfig(val, type) {
         let params = ""
         if (type == "change") {
             params = {
@@ -273,7 +326,7 @@ export default class EarnIncentiveTask extends React.Component {
             }
         }
         // return console.log(params,"params")
-        updateSource(params).then(res => {
+        saveQrcodeConfig(params).then(res => {
             this.getQrcodeConfig()
             message.success("更新成功")
         })
@@ -285,5 +338,8 @@ export default class EarnIncentiveTask extends React.Component {
         } else {
             return ""
         }
+    }
+    addUser() {
+        this.setState({ userEdit: true })
     }
 }

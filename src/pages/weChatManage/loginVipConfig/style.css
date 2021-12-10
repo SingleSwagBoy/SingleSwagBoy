@@ -1,11 +1,57 @@
-.marsBox{
+
+.add_user{
+    width: fit-content;
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+.user_box{
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
+    align-content: flex-start;
+    margin-top: 10px;
 }
-.everyBody{
+.user_box .every_box{
+    width: fit-content;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.user_box .every_box img{
+    width: 20px;
+}
+.add_dialog{
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.add_dialog .left{
+    width: 50%;
+}
+.add_dialog .left .search_input{
+    width: 100%;
+    margin-bottom: 20px;
+}
+.add_dialog .left .list{
+    width: 90%;
+    margin: 0 auto;
+}
+.add_dialog .left .list .every_list{
+    width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
 }
+.add_dialog .left .list .every_list img{
+    width: 20px;
+}
+/* .add_dialog .left .list .every_list>div{
+    width: 20px;
+} */

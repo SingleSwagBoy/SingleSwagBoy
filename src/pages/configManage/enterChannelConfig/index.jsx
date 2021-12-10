@@ -388,7 +388,8 @@ export default class EarnIncentiveTask extends React.Component {
                 startTime: parseInt(val.time[0].valueOf() / 1000),
                 endTime: parseInt(val.time[1].valueOf() / 1000),
                 enabled: val.enabled ? 1 : 2,
-                frequencyDays:Number(val.frequencyDays)
+                frequencyDays:Number(val.frequencyDays),
+                tag:val.tag?val.tag:""
             }
         }
         // return console.log(params,"params")

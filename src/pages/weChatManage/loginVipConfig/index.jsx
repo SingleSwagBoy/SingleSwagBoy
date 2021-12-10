@@ -98,6 +98,7 @@ export default class EarnIncentiveTask extends React.Component {
                             <div>{<Switch
                                 checkedChildren="有效"
                                 unCheckedChildren="无效"
+                                disabled={index<2}
                                 defaultChecked={rowValue === 1 ? true : false}
                                 key={rowValue}
                                 onChange={(val) => {
@@ -116,24 +117,29 @@ export default class EarnIncentiveTask extends React.Component {
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                                <Button
-                                    style={{ margin: "0 10px" }}
-                                    size="small"
-                                    type="primary"
-                                    onClick={() => {
-                                        console.log(row)
-                                        this.setState({
-                                            entranceState: true,
-                                            currentItem: row,
-                                        }, () => {
-                                            let arr = JSON.parse(JSON.stringify(row))
-                                            arr.time = [arr.start ? moment(arr.start * 1000) : "", arr.end ? moment(arr.end * 1000) : ""]
-                                            arr.status = arr.status == 1 ? true : false
-                                            this.formRef.current.setFieldsValue(arr)
-                                            this.forceUpdate()
-                                        })
-                                    }}
-                                >编辑</Button>
+                               {
+                                    index >1
+                                    ?
+                                    <Button
+                                        style={{ margin: "0 10px" }}
+                                        size="small"
+                                        type="primary"
+                                        onClick={() => {
+                                            console.log(row)
+                                            this.setState({
+                                                entranceState: true,
+                                                currentItem: row,
+                                            }, () => {
+                                                let arr = JSON.parse(JSON.stringify(row))
+                                                arr.time = [arr.start ? moment(arr.start * 1000) : "", arr.end ? moment(arr.end * 1000) : ""]
+                                                arr.status = arr.status == 1 ? true : false
+                                                this.formRef.current.setFieldsValue(arr)
+                                                this.forceUpdate()
+                                            })
+                                        }}
+                                    >编辑</Button>
+                                    :""
+                               }
                             </div>
                         )
                     }
@@ -150,6 +156,12 @@ export default class EarnIncentiveTask extends React.Component {
                         <Breadcrumb>
                             <Breadcrumb.Item>登陆(专享)配置</Breadcrumb.Item>
                         </Breadcrumb>
+                    </div>
+                }
+                extra={
+                    <div>
+                        <MySyncBtn type={23} name='同步企业微信数据' />
+                        <MySyncBtn type={22} name='同步缓存' />
                     </div>
                 }
                 >

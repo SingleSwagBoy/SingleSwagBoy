@@ -223,19 +223,19 @@ export default class EarnIncentiveTask extends React.Component {
                                 this.formRef.current && this.formRef.current.getFieldValue("taskType") == 1
                                     ?
                                     <Form.Item label="累计时间" name="oneDayCount" rules={[{ required: true, message: '请输入累计时间' }]}>
-                                        <Input type="number" addonAfter={"分钟"} disabled={this.state.source == "edit"} />
+                                        <Input type="number" formatter={util.limitNumber} addonAfter={"分钟"} disabled={this.state.source == "edit"} />
                                     </Form.Item>
                                     :
 
                                     this.formRef.current && this.formRef.current.getFieldValue("taskType") == 2 ?
                                         <Form.Item label="观看频道数" name="oneDayCount" rules={[{ required: true, message: '请输入观看频道数' }]}>
-                                            <Input type="number" addonAfter={"个"} disabled={this.state.source == "edit"} />
+                                            <Input type="number" formatter={util.limitNumber}  addonAfter={"个"} disabled={this.state.source == "edit"} />
                                         </Form.Item>
                                         :
                                         ""
                             }
                             <Form.Item label="任务天数" name="taskDays" rules={[{ required: true, message: '请填写任务天数' }]}   >
-                                <InputNumber placeholder="请输入任务天数" min={0} disabled={this.state.source == "edit"} />
+                                <InputNumber placeholder="请输入任务天数" formatter={util.limitNumber}  min={0} disabled={this.state.source == "edit"} />
                             </Form.Item>
                             <Form.Item label="有效时间" name="time" rules={[{ required: true, message: '请选择有效时间' }]}>
                                 <RangePicker placeholder={['上线时间', '下线时间']}
@@ -270,7 +270,7 @@ export default class EarnIncentiveTask extends React.Component {
                                 this.formRef.current && this.formRef.current.getFieldValue("rewardType") == 1
                                     ?
                                     <Form.Item label="金币" name="rewardCount" rules={[{ required: true, message: '请输入金币' }]}>
-                                        <InputNumber min={0} disabled={this.state.source == "edit"} />
+                                        <InputNumber formatter={util.limitNumber}  min={0} disabled={this.state.source == "edit"} />
                                     </Form.Item>
                                     :
 

@@ -19,6 +19,8 @@
     border: 1px solid #ccc;
     cursor: pointer;
     margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
 }
 .user_box .every_box img{
     width: 20px;

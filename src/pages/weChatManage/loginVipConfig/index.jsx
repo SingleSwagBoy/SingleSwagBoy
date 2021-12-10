@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser } from 'api'
+import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
@@ -44,9 +44,9 @@ export default class EarnIncentiveTask extends React.Component {
             },
             allUserList: [],
             chooseUserList: [],
-            noSavebtn:[],
-            filterList:[],
-            userType:null,
+            noSavebtn: [],
+            filterList: [],
+            userType: null,
             columns: [
                 {
                     title: "位置",
@@ -72,7 +72,7 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "上线时间-下线时间",
                     dataIndex: "onlineTime",
                     key: "onlineTime",
-                    width: 300,
+                    width: 350,
                     render: (rowValue, row, index) => {
                         return (
                             <div>{row.start != 0 ? util.formatTime(row.start, "") : "未知"} - {row.end != 0 ? util.formatTime(row.end, "") : "未知"}</div>
@@ -95,7 +95,17 @@ export default class EarnIncentiveTask extends React.Component {
                     key: "status",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{<Switch checkedChildren="有效" unCheckedChildren="无效" defaultChecked={rowValue === 1 ? true : false} />}</div>
+                            <div>{<Switch
+                                checkedChildren="有效"
+                                unCheckedChildren="无效"
+                                defaultChecked={rowValue === 1 ? true : false}
+                                key={rowValue}
+                                onChange={(val) => {
+                                    let info = JSON.parse(JSON.stringify(row))
+                                    info.status = val?1:0
+                                    this.saveQrcodeConfig(info,"change")
+                                }}
+                            />}</div>
                         )
                     }
                 },
@@ -117,6 +127,8 @@ export default class EarnIncentiveTask extends React.Component {
                                             currentItem: row,
                                         }, () => {
                                             let arr = JSON.parse(JSON.stringify(row))
+                                            arr.time = [arr.start ? moment(arr.start * 1000) : "", arr.end ? moment(arr.end * 1000) : ""]
+                                            arr.status = arr.status == 1 ? true : false
                                             this.formRef.current.setFieldsValue(arr)
                                             this.forceUpdate()
                                         })
@@ -130,7 +142,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     render() {
-        let { lists, layout, loading, columns, entranceState, tagList, allUserList,userType, chooseUserList,noSavebtn, userEdit,filterList } = this.state;
+        let { lists, layout, loading, columns, entranceState, tagList, allUserList, userType, chooseUserList, noSavebtn, userEdit, filterList } = this.state;
         return (
             <div className="loginVip">
                 <Card title={
@@ -158,31 +170,42 @@ export default class EarnIncentiveTask extends React.Component {
                 <Modal title="编辑" centered visible={entranceState} onCancel={() => {
                     this.setState({ entranceState: false })
                     this.formRef.current.resetFields()
-                }} footer={null} width={800}>
+                }} footer={null} width={1000}>
                     {
                         <Form {...layout}
                             name="taskForm"
                             ref={this.formRef}
                             onFinish={this.submitForm.bind(this)}>
-                            <Form.Item label="800客服联系人" name="tagCode">
-                                <div className="add_user" onClick={() => this.addUser(1)}><PlusOutlined />添加成员</div>
-                                <div className="user_box">
-                                    {
-                                        this.getMyUserList(1).map(r => {
-                                            return <div className="every_box"><img src={r.avatar} alt="" /> {r.name} <CloseOutlined /></div>
-                                        })
-                                    }
-                                </div>
-                            </Form.Item>
-                            <Form.Item label="200客服联系人" name="tagCode">
-                                <div className="add_user" onClick={() => this.addUser(2)}><PlusOutlined />添加成员</div>
-                                <div className="user_box">
-                                    {
-                                        this.getMyUserList(2).map(r => {
-                                            return <div className="every_box"><img src={r.avatar} alt="" /> {r.name} <CloseOutlined /></div>
-                                        })
-                                    }
-                                </div>
+                            {
+                                this.formRef.current && this.formRef.current.getFieldValue("code") == "exclusiveworkwx"
+                                    ?
+
+                                    <>
+                                        <Form.Item label="800客服联系人">
+                                            <div className="add_user" onClick={() => this.addUser(1)}><PlusOutlined />添加成员</div>
+                                            <div className="user_box">
+                                                {
+                                                    this.getMyUserList(1).map(r => {
+                                                        return <div className="every_box"><img src={r.avatar} alt="" /> {r.name} </div>
+                                                    })
+                                                }
+                                            </div>
+                                        </Form.Item>
+                                        <Form.Item label="200客服联系人">
+                                            <div className="add_user" onClick={() => this.addUser(2)}><PlusOutlined />添加成员</div>
+                                            <div className="user_box">
+                                                {
+                                                    this.getMyUserList(2).map(r => {
+                                                        return <div className="every_box"><img src={r.avatar} alt="" /> {r.name} </div>
+                                                    })
+                                                }
+                                            </div>
+                                        </Form.Item>
+                                    </>
+                                    : ""
+                            }
+                            <Form.Item label="开始时间-结束时间" name="time">
+                                <RangePicker placeholder={['开始时间', '结束时间']} showTime ></RangePicker>
                             </Form.Item>
                             <Form.Item label="用户标签" name="tagCode">
                                 <Select
@@ -198,9 +221,9 @@ export default class EarnIncentiveTask extends React.Component {
 
                                 </Select>
                             </Form.Item>
-                            {/* <Form.Item label="状态" name="status" valuePropName="checked">
+                            <Form.Item label="状态" name="status" valuePropName="checked">
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
-                            </Form.Item> */}
+                            </Form.Item>
 
                             <Form.Item {...this.state.tailLayout}>
                                 <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
@@ -211,44 +234,44 @@ export default class EarnIncentiveTask extends React.Component {
                         </Form>
                     }
                 </Modal>
-                <Modal title="客服编辑" centered visible={userEdit} onCancel={() => {
-                    this.setState({ userEdit: false,noSavebtn:chooseUserList})
-                }} footer={null} width={800}>
+                <Modal title="客服编辑" centered visible={userEdit} onCancel={() => { this.closeUserEdit() }} footer={null} width={800}>
                     <div className="add_dialog">
                         <div className="left">
-                            <Input placeholder="请搜索你想要添加的客服" className="search_input" allowClear 
-                            onChange={(e)=>{ //过滤搜索
-                                let list = this.state.allUserList.filter(item=>item.name.includes(e.target.value))
-                                if(list.length>0){
-                                    this.setState({filterList:list})
-                                }else{
-                                    this.setState({filterList:[]})
-                                }
-                            }}
+                            <Input placeholder="请搜索你想要添加的客服" className="search_input" allowClear
+                                onChange={(e) => { //过滤搜索
+                                    let list = this.state.allUserList.filter(item => item.name.includes(e.target.value))
+                                    if (list.length > 0) {
+                                        this.setState({ filterList: list })
+                                    } else {
+                                        this.setState({ filterList: [] })
+                                    }
+                                }}
                             />
                             <div>全部成员</div>
                             <div className="list">
                                 {
-                                    filterList.map((r,i) => {
+                                    filterList.map((r, i) => {
                                         return (
-                                            <div className={`every_list ${this.getSplitArr(userType,r)?'activityClass':''}`}
-                                            key={i}
-                                            onClick={()=>{
-                                                let arr = noSavebtn.filter(item => item.type == userType)
-                                                if(arr.length>0){
-                                                    let list = arr[0].userids?arr[0].userids.split(","):[]
-                                                    let info = list.filter(l=>l == r.userid)
-                                                    if(info.length == 0){ //增加
-                                                        list.push(r.userid)
-                                                        arr[0].userids = list.join(",")
-                                                    }else{ //删除
-                                                        let h = list.filter(l=>l != r.userid)
-                                                        arr[0].userids = h.join(",")
+                                            <div className={`every_list ${this.getSplitArr(userType, r) ? 'activityClass' : ''}`}
+                                                key={i}
+                                                onClick={() => {
+                                                    let arr = this.state.noSavebtn.filter(item => item.type == userType)
+                                                    if (arr.length > 0) {
+                                                        let list = arr[0].userids ? arr[0].userids.split(",") : []
+                                                        let info = list.filter(l => l == r.userid)
+                                                        if (info.length == 0) { //增加
+                                                            list.push(r.userid)
+                                                            arr[0].userids = list.join(",")
+                                                        } else { //删除
+                                                            let h = list.filter(l => l != r.userid)
+                                                            arr[0].userids = h.join(",")
+                                                        }
+                                                        console.log(arr, this.state.noSavebtn, this.state.chooseUserList)
+                                                        this.setState({ noSavebtn: this.state.noSavebtn }, () => {
+                                                            // console.log(this.state.noSavebtn)
+                                                        })
                                                     }
-                                                    console.log(111)
-                                                    this.setState({noSavebtn:arr})
-                                                }
-                                            }}
+                                                }}
                                             >
                                                 <img src={r.avatar} alt="" />
                                                 <div>{r.name}</div>
@@ -260,15 +283,20 @@ export default class EarnIncentiveTask extends React.Component {
                             </div>
                         </div>
                         <div className="left">
-                            <div className="list" key={noSavebtn.length}>
+                            <div className="list" key={this.state.noSavebtn.length}>
                                 <div>已选客服</div>
                                 {
-                                    this.getMyUserList(userType,1).map((r,i) => {
+                                    this.getMyUserList(userType, 1).map((r, i) => {
                                         return (
                                             <div className="every_list" key={i}>
                                                 <img src={r.avatar} alt="" />
                                                 <div>{r.name}</div>
-                                                <div><CloseOutlined /></div>
+                                                <div>
+                                                    <CloseOutlined onClick={() => {
+                                                        // let list = 
+                                                        this.delChoose(userType, r)
+                                                    }} />
+                                                </div>
                                             </div>
                                         )
                                     })
@@ -277,34 +305,48 @@ export default class EarnIncentiveTask extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="user_btn"><Button>取消</Button><Button type="primary" onClick={()=>{
-                        console.log(this.getMyUserList(userType))
-                    }}>确定</Button></div>
+                    <div className="user_btn">
+                        <Button onClick={() => this.closeUserEdit()}>取消</Button>
+                        <Button type="primary" onClick={() => {
+                            console.log(this.getMyUserList(userType, 1))
+                            this.saveMyWechatUser()
+                        }}>确定</Button></div>
                 </Modal>
             </div>
         )
     }
-    getSplitArr(type,r){ //匹配哪些已经被选择了
+    delChoose(type, r) {
         let arr = this.state.noSavebtn.filter(item => item.type == type)
-        if(arr.length>0){
-            let list = arr[0].userids?arr[0].userids.split(","):[]
-            if(list.length>0){
-                let info = list.filter(item=>item == r.userid)
-                if(info.length>0){
+        if (arr.length > 0) {
+            let list = arr[0].userids ? arr[0].userids.split(",") : []
+            let info = list.filter(item => item != r.userid)
+            if (info.length > 0) {
+                arr[0].userids = info.join(",")
+                this.setState({ noSavebtn: this.state.noSavebtn })
+            }
+        }
+    }
+    getSplitArr(type, r) { //匹配哪些已经被选择了
+        let arr = this.state.noSavebtn.filter(item => item.type == type)
+        if (arr.length > 0) {
+            let list = arr[0].userids ? arr[0].userids.split(",") : []
+            if (list.length > 0) {
+                let info = list.filter(item => item == r.userid)
+                if (info.length > 0) {
                     return true
-                }else{
+                } else {
                     return false
                 }
-            }else{
+            } else {
                 return false
             }
-        }else{
+        } else {
             return false
         }
-        
+
     }
-    getMyUserList(type,source) { //匹配初始选中的客服
-        let arr = (source== 1?this.state.noSavebtn:this.state.chooseUserList).filter(item => item.type == type)
+    getMyUserList(type, source) { //匹配初始选中的客服
+        let arr = (source == 1 ? this.state.noSavebtn : this.state.chooseUserList).filter(item => item.type == type)
         if (arr.length > 0) {
             let h = arr[0].userids ? arr[0].userids.split(",") : []
             let l = this.state.allUserList.filter(item => h.some(l => item.userid == l))
@@ -317,6 +359,12 @@ export default class EarnIncentiveTask extends React.Component {
         } else {
             return []
         }
+    }
+    closeUserEdit() {
+        this.setState({
+            userEdit: false,
+            noSavebtn: JSON.parse(JSON.stringify(this.state.chooseUserList))
+        })
     }
     componentDidMount() {
         this.getQrcodeConfig();
@@ -359,7 +407,7 @@ export default class EarnIncentiveTask extends React.Component {
         getWechatUser({}).then(res => {
             this.setState({
                 allUserList: res.data,
-                filterList:res.data
+                filterList: res.data
             })
         })
     }
@@ -368,9 +416,9 @@ export default class EarnIncentiveTask extends React.Component {
             let info = res.data
             this.setState({
                 chooseUserList: info,
-            },()=>{
+            }, () => {
                 this.setState({
-                    noSavebtn:JSON.parse(JSON.stringify(this.state.chooseUserList))
+                    noSavebtn: JSON.parse(JSON.stringify(this.state.chooseUserList))
                 })
             })
         })
@@ -389,7 +437,10 @@ export default class EarnIncentiveTask extends React.Component {
         } else {
             params = {
                 ...this.state.currentItem,
-                ...val
+                ...val,
+                start: parseInt(val.time[0].valueOf() / 1000),
+                end: parseInt(val.time[1].valueOf() / 1000),
+                status: val.status ? 1 : 0
             }
         }
         // return console.log(params,"params")
@@ -407,6 +458,34 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     addUser(type) {
-        this.setState({ userEdit: true,userType:type,noSavebtn:this.state.chooseUserList })
+        this.setState({
+            userEdit: true,
+            userType: type,
+            noSavebtn: JSON.parse(JSON.stringify(this.state.chooseUserList))
+        })
+    }
+    saveMyWechatUser() {
+        let arr = this.state.chooseUserList.filter(item => item.type == this.state.userType)
+        let list = this.getMyUserList(this.state.userType, 1)
+        let userids = []
+        list.forEach(r => {
+            userids.push(r.userid)
+        })
+        let postInfo = {
+            ...arr[0],
+            userids: userids.join(",")
+        }
+        let params = [postInfo]
+        // return console.log(params)
+
+        saveMyWechatUser(params).then(res => {
+            message.success("添加成功")
+            this.setState({
+                chooseUserList: this.state.noSavebtn,
+                userEdit: false
+            }, () => {
+                console.log(this.state.noSavebtn)
+            })
+        })
     }
 }

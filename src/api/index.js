@@ -425,6 +425,7 @@ export const getQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mms
 export const saveQrcodeConfig = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/saveconfig`,params); };                 // 保存登录、解锁二维码配置
 export const getWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/qywechatuser`,{params:params}); };                 // 企业微信客服列表
 export const getMyWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/listreluser`,{params:params}); };                 // 易添加企业微信客服列表
+export const saveMyWechatUser = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/savereluser`,params); };                 // 易添加企业微信客服列表更新
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

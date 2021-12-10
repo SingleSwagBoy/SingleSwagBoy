@@ -33,12 +33,16 @@
     width: 50%;
 }
 .add_dialog .left .search_input{
-    width: 100%;
-    margin-bottom: 20px;
+    width: 90%;
+    margin: 0 5% 20px 5%;
+    /* margin-bottom: 20px; */
 }
 .add_dialog .left .list{
     width: 90%;
     margin: 0 auto;
+    min-height: 50vh;
+    max-height: 50vh;
+    overflow: scroll;
 }
 .add_dialog .left .list .every_list{
     width: 100%;
@@ -52,6 +56,18 @@
 .add_dialog .left .list .every_list img{
     width: 20px;
 }
-/* .add_dialog .left .list .every_list>div{
-    width: 20px;
-} */
+.add_dialog .left .list .activityClass{
+    background-color: #1890ff;
+    color: #fff;
+}
+.user_btn{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+}
+.user_btn>button{
+    margin: 0 10px;
+    
+}

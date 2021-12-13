@@ -193,7 +193,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     ?
 
                                     <>
-                                        <Form.Item label="800客服联系人">
+                                        <Form.Item label="200客服联系人">
                                             <div className="add_user" onClick={() => this.addUser(1)}><PlusOutlined />添加成员</div>
                                             <div className="user_box">
                                                 {
@@ -203,7 +203,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                 }
                                             </div>
                                         </Form.Item>
-                                        <Form.Item label="200客服联系人">
+                                        <Form.Item label="800客服联系人">
                                             <div className="add_user" onClick={() => this.addUser(2)}><PlusOutlined />添加成员</div>
                                             <div className="user_box">
                                                 {

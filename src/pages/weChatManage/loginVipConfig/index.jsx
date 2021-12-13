@@ -198,7 +198,7 @@ export default class EarnIncentiveTask extends React.Component {
                                             <div className="user_box">
                                                 {
                                                     this.getMyUserList(1).map(r => {
-                                                        return <div className="every_box"><img src={r.avatar} alt="" /> {r.name} </div>
+                                                        return <div className="every_box"><img src={r.avatar} alt="" /> {r.name}</div>
                                                     })
                                                 }
                                             </div>
@@ -329,11 +329,15 @@ export default class EarnIncentiveTask extends React.Component {
     }
     delChoose(type, r) {
         let arr = this.state.noSavebtn.filter(item => item.type == type)
+        console.log(this.state.noSavebtn,r,arr)
         if (arr.length > 0) {
             let list = arr[0].userids ? arr[0].userids.split(",") : []
             let info = list.filter(item => item != r.userid)
             if (info.length > 0) {
                 arr[0].userids = info.join(",")
+                this.setState({ noSavebtn: this.state.noSavebtn })
+            }else{
+                arr[0].userids = ""
                 this.setState({ noSavebtn: this.state.noSavebtn })
             }
         }

@@ -37,6 +37,15 @@ export default class EarnIncentiveTask extends React.Component {
                 { level: 3, name: "黄金" },
                 { level: 4, name: "钻石" },
             ],
+            selectProps: {
+                optionFilterProp: "children",
+                // filterOption(input, option){
+                //   return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                // },
+                showSearch() {
+                    console.log('onSearch')
+                }
+            },
             columns: [
                 {
                     title: "提现商品名称",
@@ -247,6 +256,23 @@ export default class EarnIncentiveTask extends React.Component {
                                         />
                                         <Form.Item {...this.state.tailLayout}>
                                             <Button danger onClick={this.getNewNum.bind(this)}>重新计算</Button>
+                                        </Form.Item>
+                                        <Form.Item  label="用户标签" name="tagCode">
+                                            <Select style={{ width: "200px" }}
+                                               {...this.state.selectProps}
+                                               allowClear
+                                               onChange={(e)=>{
+                                                   console.log(e)
+                                                   this.formRef.current.setFieldsValue({tagCode:e||""})
+                                               }}
+                                            >
+                                                {
+                                                    tagList.map((r, i) => {
+                                                        return <Option value={r.code} key={i}>{r.name}</Option>
+                                                    })
+                                                }
+
+                                            </Select>
                                         </Form.Item>
                                     </>
 
@@ -633,9 +659,9 @@ export default class EarnIncentiveTask extends React.Component {
         }
         rsZzItemList(params).then(res => {
             console.log(res.data)
-            let arr = val 
-            if(Array.isArray(arr.setting) && arr.setting.length>0 && arr.type == 1){
-                arr.setting.forEach(r=>{
+            let arr = val
+            if (Array.isArray(arr.setting) && arr.setting.length > 0 && arr.type == 1) {
+                arr.setting.forEach(r => {
                     r.num = res.data[arr.code].setting1[`level:${r.level}`]
                 })
             }
@@ -647,16 +673,16 @@ export default class EarnIncentiveTask extends React.Component {
         if (!this.formRef.current.getFieldValue("stock")) return message.error("请先输入库存")
         let arr = this.formRef.current.getFieldValue("setting")
         arr.forEach(r => {
-            if(r){
+            if (r) {
                 r.num = Math.floor(r.ratio * this.formRef.current.getFieldValue("stock") / 100)
             }
         })
         let info = this.state.currentItem
         info.changeStock = true
         this.setState({
-            currentItem:info
+            currentItem: info
         })
-        this.formRef.current.setFieldsValue({ "setting": arr})
+        this.formRef.current.setFieldsValue({ "setting": arr })
         this.forceUpdate()
     }
 }

@@ -258,7 +258,7 @@ export default class EarnIncentiveTask extends React.Component {
                                             <Button danger onClick={this.getNewNum.bind(this)}>重新计算</Button>
                                         </Form.Item>
                                         <Form.Item  label="用户标签" name="tagCode">
-                                            <Select style={{ width: "200px" }}
+                                            <Select style={{ width: "400px" }}
                                                {...this.state.selectProps}
                                                allowClear
                                                onChange={(e)=>{

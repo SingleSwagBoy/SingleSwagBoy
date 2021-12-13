@@ -157,7 +157,7 @@ const adminRoutes = [
     { name: '微信菜单', icon: UnorderedListOutlined, path: '/mms/wx/wechatMenu', component: WechatMenu, code: "WeChatManage", sub_code: 'wechatMenu' },
     { name: '粉丝标签', icon: UnorderedListOutlined, path: '/mms/wx/fansTag', component: FansTag, code: "WeChatManage", sub_code: 'fansTag' },
     { name: '个性化群发', icon: UnorderedListOutlined, path: '/mms/wx/personalSend', component: PersonalSend, code: "WeChatManage", sub_code: 'personalSend' },
-    { name: '登陆(专享)配置', icon: UnorderedListOutlined, path: '/mms/wx/loginVipConfig', component: LoginVipConfig, code: "WeChatManage", sub_code: 'loginVipConfig' },
+    { name: '登录(专享)配置', icon: UnorderedListOutlined, path: '/mms/wx/loginVipConfig', component: LoginVipConfig, code: "WeChatManage", sub_code: 'loginVipConfig' },
 
     //  赚赚管理
     { name: '赚赚激励任务', icon: UnorderedListOutlined, path: '/mms/earnManage/earnIncentiveTask', component: EarnIncentiveTask, code: "earnManage", sub_code: 'earnIncentiveTask' },

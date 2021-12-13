@@ -54,7 +54,7 @@ export default class EarnIncentiveTask extends React.Component {
                     key: "position",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{rowValue == "login" ? "登陆" : rowValue == "exclusive" ? "专享解锁" : "未知"}</div>
+                            <div>{rowValue == "login" ? "登录" : rowValue == "exclusive" ? "专享解锁" : "未知"}</div>
                         )
                     }
                 },
@@ -154,7 +154,7 @@ export default class EarnIncentiveTask extends React.Component {
                 <Card title={
                     <div>
                         <Breadcrumb>
-                            <Breadcrumb.Item>登陆(专享)配置</Breadcrumb.Item>
+                            <Breadcrumb.Item>登录(专享)配置</Breadcrumb.Item>
                         </Breadcrumb>
                     </div>
                 }

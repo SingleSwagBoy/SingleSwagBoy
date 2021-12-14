@@ -609,6 +609,7 @@ export default class WxReplyModal extends Component {
                             }
                         }
                     } else {
+                        console.log(2)
                         replyActivity = JSON.parse(replyActivity);
                         replyActivity.isOpen = true;
                     }

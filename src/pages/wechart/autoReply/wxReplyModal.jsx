@@ -408,6 +408,9 @@ export default class WxReplyModal extends Component {
         let that = this;
         that.titleFormRef.current.resetFields();
         that.replyFormRef.current.resetFields();
+        if(that.state.activity_ref){
+            that.state.activity_ref.activityFormRef.current.resetFields();
+        }
         if (!datas || datas.length <= 0) {
             that.setState({
                 tags: [],
@@ -583,7 +586,6 @@ export default class WxReplyModal extends Component {
             }, () => {
                 that.replyFormRef.current.setFieldsValue(reply[reply_select_id]);
                 that.titleFormRef.current.setFieldsValue(item);
-
                 //关键字类型  活动控件数据配置
                 if (menu_type === 'keywords' || menu_type === 'other') {
                     let replyActivity = item.replyActivity;
@@ -599,7 +601,8 @@ export default class WxReplyModal extends Component {
                             }
                         }
 
-                        if (isEmpty || menu_type === 'other') {
+                        // if (isEmpty || menu_type === 'other') {
+                        if (isEmpty) {
                             replyActivity = {
                                 isOpen: false,          //是否开启
                                 activityType: 0,        //1.vip活动
@@ -609,7 +612,6 @@ export default class WxReplyModal extends Component {
                             }
                         }
                     } else {
-                        console.log(2)
                         replyActivity = JSON.parse(replyActivity);
                         replyActivity.isOpen = true;
                     }

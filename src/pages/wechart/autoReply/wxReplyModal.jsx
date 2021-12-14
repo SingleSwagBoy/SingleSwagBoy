@@ -1083,7 +1083,7 @@ export default class WxReplyModal extends Component {
         }
 
         //获取推送活动数据
-        if (menu_type === 'keywords') {
+        if (menu_type === 'keywords' || menu_type === 'other') {
             let activity_ref = that.state.activity_ref;
             let activity_ref_data = activity_ref.getDatas();
             if (activity_ref_data) {

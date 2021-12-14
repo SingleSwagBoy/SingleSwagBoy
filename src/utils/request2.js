@@ -21,7 +21,7 @@ let isTestMode = true;
 
 let request = axios.create({
     // baseURL: "http://test.cms.tvplus.club",
-    timeout: 8000,
+    timeout: 60000,
 })
 
 // request拦截器

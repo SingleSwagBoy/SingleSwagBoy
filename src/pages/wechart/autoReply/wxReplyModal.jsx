@@ -181,7 +181,7 @@ export default class WxReplyModal extends Component {
 
                                 </Form>
                                 {
-                                    menu_type === 'keywords' &&
+                                    (menu_type === 'keywords' || menu_type === 'other') &&
                                     <WxReplyModalActivity onRef={(val) => {
                                         that.setState({ activity_ref: val, }, () => {
                                         })
@@ -585,7 +585,7 @@ export default class WxReplyModal extends Component {
                 that.titleFormRef.current.setFieldsValue(item);
 
                 //关键字类型  活动控件数据配置
-                if (menu_type === 'keywords') {
+                if (menu_type === 'keywords' || menu_type === 'other') {
                     let replyActivity = item.replyActivity;
                     if (!replyActivity) {
                         //判断当前组件 是否存在，取出组件内数据
@@ -599,7 +599,7 @@ export default class WxReplyModal extends Component {
                             }
                         }
 
-                        if (isEmpty) {
+                        if (isEmpty || menu_type === 'other') {
                             replyActivity = {
                                 isOpen: false,          //是否开启
                                 activityType: 0,        //1.vip活动

@@ -19,7 +19,7 @@ import {
     requestConfigMenuImageEidt,                         //菜单栏配置 编辑
     requestConfigMenuImageDelete,                       //菜单栏配置 删除
     requestConfigMenuImageChangeState,                  //菜单栏配置 修改状态
-    requestNewAdTagList,                                   //用户设备标签
+    requestAdTagList,                                   //用户设备标签
 } from 'api';
 
 let { TextArea } = Input;
@@ -80,8 +80,8 @@ export default class MenuImagePage extends Component {
                         <Button onClick={() => that.onModalConfirmClick()} >确定</Button>
                     ]}
                 >
-                    {/* <MyTagTypes is_old_tag_resouce={true} tag_name='tag' union_type="union_type" delivery_name="delivery_name"  onRef={(ref) => that.onTagTypesRefCallback(ref)} /> */}
-                    <MyTagTypes is_old_tag_resouce={false} tag_name='tag'  onRef={(ref) => that.onTagTypesRefCallback(ref)} />
+                    <MyTagTypes is_old_tag_resouce={true} tag_name='tag' union_type="union_type" delivery_name="delivery_name"  onRef={(ref) => that.onTagTypesRefCallback(ref)} />
+                    {/* <MyTagTypes is_old_tag_resouce={false} tag_name='tag'  onRef={(ref) => that.onTagTypesRefCallback(ref)} /> */}
 
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
                         {
@@ -215,18 +215,18 @@ export default class MenuImagePage extends Component {
                 currentPage:1
             }
         }
-        requestNewAdTagList(params).then(res => {
+        requestAdTagList(params).then(res => {
             console.log(res)
             let datas = res.data;
-            // let tags = [];
-            // tags.push({ id: -1, code: 'default', name: '默认', });
-            // for (let i = 0, len = datas.length; i < len; i++) {
-            //     let item = datas[i];
-            //     tags.push(item);
-            // }
+            let tags = [];
+            tags.push({ id: -1, code: 'default', name: '默认', });
+            for (let i = 0, len = datas.length; i < len; i++) {
+                let item = datas[i];
+                tags.push(item);
+            }
 
             that.setState({
-                dict_user_tags: datas
+                dict_user_tags: tags
             }, () => {
                 that.initTitle();
             });
@@ -312,12 +312,19 @@ export default class MenuImagePage extends Component {
 
     }
     getTag(val){
-        let arr = this.state.dict_user_tags.filter(item=> item.code == val[0])
-        if(arr.length>0){
-            return arr[0].name
+        if(val.length>0){
+            let arr = this.state.dict_user_tags.filter(item=>val.some(l=>l==item.code) )
+            if(arr.length>0){
+                let name = []
+                arr.forEach(r=>{name.push(r.name)})
+                return name.join(",")
+            }else{
+                return "未配置"
+            }
         }else{
             return "未配置"
         }
+       
     }
 
     refreshList() {

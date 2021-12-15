@@ -408,6 +408,9 @@ export default class WxReplyModal extends Component {
         let that = this;
         that.titleFormRef.current.resetFields();
         that.replyFormRef.current.resetFields();
+        if(that.state.activity_ref){
+            that.state.activity_ref.activityFormRef.current.resetFields();
+        }
         if (!datas || datas.length <= 0) {
             that.setState({
                 tags: [],

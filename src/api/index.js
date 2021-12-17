@@ -1,5 +1,6 @@
 import request from 'utils/request.js'
 import request2 from 'utils/request2.js'
+import hookRequest from "utils/hookRequest";
 let baseUrl = ""
 console.log(window.location.host, "api")
 if (window.location.host.includes("localhost") || window.location.host.includes("test")) {
@@ -427,7 +428,11 @@ export const getWechatUser = (params) => { return request2.get(`${baseUrl}/mms/w
 export const getMyWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/listreluser`,{params:params}); };                 // 易添加企业微信客服列表
 export const syncMyWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/syncconfig`,{params:params}); };                 // 易添加企业微信客服列表sync
 export const syncQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/syncusers`,{params:params}); };                 // 同步企业微信数据到我们的库中
-export const saveMyWechatUser = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/savereluser`,params); };                 // 易添加企业微信客服列表更新
+export const saveMyWechatUser = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/savereluser`,params); }; 
+
+
+// 易添加企业微信客服列表更新
+export const getWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/listwelcome`,params); };                 // 易添加企业微信客服列表更新
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

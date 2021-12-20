@@ -433,6 +433,8 @@ export const saveMyWechatUser = (params) => { return request2.post(`${baseUrl}/m
 
 // 易添加企业微信客服列表更新
 export const getWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/listwelcome`,params); };                 // 易添加企业微信客服列表更新
+export const saveWelcome = (params) => { return request2.post(`${baseUrl}/mms/wx/qywechat/savewelcome`,{params:params}); };                 // 易添加企业微信客服列表更新
+export const delWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/delwelcome`,params); };                 // 易添加企业微信客服列表更新
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

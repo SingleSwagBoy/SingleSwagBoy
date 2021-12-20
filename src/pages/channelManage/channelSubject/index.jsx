@@ -43,11 +43,12 @@ export default class SportsProgram extends Component {
                 { key: 2, value: '无效' },
             ],
             columns: [
-                { title: "专题 ID", dataIndex: "ID", key: "ID", },
+                { title: "专题 ID", dataIndex: "ID", key: "ID", width:100,},
                 { title: "标题", dataIndex: "title", key: "title", },
-                { title: "排序", dataIndex: "column", key: "column", },
+                { title: "排序", dataIndex: "column", key: "column",width:100, },
                 {
                     title: "时间", dataIndex: "time", key: "time",
+                    width:420,
                     render: (rowValue, row, index) => {
                         let dateFormat = 'YYYY-MM-DD HH:mm:ss';
                         let time = [];
@@ -94,6 +95,7 @@ export default class SportsProgram extends Component {
                 },
                 {
                     title: "操作", key: "action",
+                    fixed: 'right', width: 210,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
@@ -219,7 +221,9 @@ export default class SportsProgram extends Component {
                         dataSource={this.state.lists}
                         // rowKey={item=>item.indexId}
                         loading={this.state.loading}
-                        columns={this.state.columns} />
+                        columns={this.state.columns} 
+                        scroll={{ x: 1200, y: '75vh' }}
+                        />
                 </Card>
             </div>
         )

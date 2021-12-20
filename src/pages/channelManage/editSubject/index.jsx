@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 
 import { baseUrl, searchVideo, getMyProduct, updateChannelTopic, addChannelTopic, Getchannels, requestAdTagList, listProgramByChannelId, ChannelTopic } from 'api'
-import { Breadcrumb, Card, DatePicker, Button, Tooltip, Modal, message, Input, Form, Select, InputNumber, Upload } from 'antd'
+import { Breadcrumb, Card, DatePicker, Button, Tooltip, Modal, message, Input, Form, Select, InputNumber, Upload, Divider, Space, Radio } from 'antd'
 import { } from 'react-router-dom'
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"
+import { LoadingOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons"
 import ImageUpload from "../../../components/ImageUpload/index" //图片组件
 import Address from "../../../components/address/index" //地域组件
 import { Link } from 'react-router-dom'
@@ -331,98 +331,101 @@ export default class SportsProgram extends Component {
                 }>
 
                     <Form name="subjectForm" ref={this.formRef}  {...this.state.layout} onFinish={this.submitForm.bind(this)}>
-                        <Form.Item label="专题名称" name="title" rules={[{ required: true, message: '请填写标题' }]}>
-                            <Input className="base-input-wrapper" laceholder="请填写标题" />
-                        </Form.Item>
-                        <Form.Item label="tab文字图片" name="headerImage" valuePropName="fileList"
-                            // 如果没有下面这一句会报错
-                            getValueFromEvent={normFile}
-                        >
-                            <div className='upload-delete'>
-                                <ImageUpload getUploadFileUrl={this.getUploadFileUrlHeader.bind(this)}
-                                    imageUrl={this.state.headerImage}
-                                />
-                                {/* <Button type="primary" style={{margin:"0 20px"}}>删除</Button> */}
-                                {
-                                    this.state.headerImage != '' &&
-                                    <div className='button-form-div'>
-                                        <Button type="primary" onClick={this.deleteHeaderImage.bind(this)}>删除</Button>
-                                    </div>
-                                }
-
-                            </div>
-                        </Form.Item>
-
-                        <Form.Item label="排序" name="column" rules={[{ required: true, message: '请填写排序' }]}>
-                            <InputNumber min={1} className="base-input-wrapper" />
-                        </Form.Item>
-
-
-                        <Form.Item label="专题状态" name="status" rules={[{ required: true, message: '请填写专题状态' }]}>
-                            <Select className="base-input-wrapper" showSearch placeholder='请选择状态'>
-                                {dict_status.map((item, index) => {
-                                    return <Option key={index} value={item.key}>{item.value}</Option>
-                                })}
-                            </Select>
-                        </Form.Item>
-
-                        <Tooltip title='如果不选择时间，表示该专题为永久展示' placement="top" color={'blue'}>
-                            <Form.Item label="有效时间" name="time" >
-                                <RangePicker className="base-input-wrapper" showTime allowClear />
+                        {/* 基础配置 */}
+                        <Divider>基础配置</Divider>
+                        <>
+                            <Form.Item label="专题名称" name="title" rules={[{ required: true, message: '请填写标题' }]}>
+                                <Input className="base-input-wrapper" laceholder="请填写标题" />
                             </Form.Item>
-                        </Tooltip>
+                            <Form.Item label="tab文字图片" name="headerImage" valuePropName="fileList"
+                                // 如果没有下面这一句会报错
+                                getValueFromEvent={normFile}
+                            >
+                                <div className='upload-delete'>
+                                    <ImageUpload getUploadFileUrl={this.getUploadFileUrlHeader.bind(this)}
+                                        imageUrl={this.state.headerImage}
+                                    />
+                                    {/* <Button type="primary" style={{margin:"0 20px"}}>删除</Button> */}
+                                    {
+                                        this.state.headerImage != '' &&
+                                        <div className='button-form-div'>
+                                            <Button type="primary" onClick={this.deleteHeaderImage.bind(this)}>删除</Button>
+                                        </div>
+                                    }
+
+                                </div>
+                            </Form.Item>
+
+                            <Form.Item label="排序" name="column" rules={[{ required: true, message: '请填写排序' }]}>
+                                <InputNumber min={1} className="base-input-wrapper" />
+                            </Form.Item>
 
 
-                        <Form.Item label="关联h5地址" name="h5Url" rules={[{ required: true, message: '请填写地址' }]}>
-                            <Input className="base-input-wrapper" placeholder="请填写H5地址" />
-                        </Form.Item>
-                        <Form.Item label="背景色" name="bgColor" rules={[{ required: true, message: '请填写背景色' }]}>
-                            <Input className="base-input-wrapper" placeholder="请填写背景色" />
-                        </Form.Item>
-                        <Form.Item label="专题编码(拼音)" name="IdKey" rules={[{ required: true, message: '请填写专题编码' }]}>
-                            {
-                                this.state.isAdd == true &&
-                                <Input className="base-input-wrapper" placeholder="请填写专题编码" /> ||
-                                <Input className="base-input-wrapper" placeholder="请填写专题编码" disabled />
-                            }
-                        </Form.Item>
+                            <Form.Item label="专题状态" name="status" rules={[{ required: true, message: '请填写专题状态' }]}>
+                                <Select className="base-input-wrapper" showSearch placeholder='请选择状态'>
+                                    {dict_status.map((item, index) => {
+                                        return <Option key={index} value={item.key}>{item.value}</Option>
+                                    })}
+                                </Select>
+                            </Form.Item>
 
-                        <Form.Item label="背景图" name="backImage" valuePropName="fileList"
-                            // 如果没有下面这一句会报错
-                            getValueFromEvent={normFile}
-                        >
-                            <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this)}
-                                imageUrl={this.state.backImage}
-                            // this.formRef.current ? this.formRef.current.getFieldValue("backImage") : ""
-                            />
-                        </Form.Item>
-                        <Form.Item label="预告片" name="svIds" rules={[{ required: true, message: '请填写预告片ID' }]}>
-                            {/* <Select placeholder="请选择视频">
+                            <Tooltip title='如果不选择时间，表示该专题为永久展示' placement="top" color={'blue'}>
+                                <Form.Item label="有效时间" name="time" >
+                                    <RangePicker className="base-input-wrapper" showTime allowClear />
+                                </Form.Item>
+                            </Tooltip>
+
+
+                            <Form.Item label="关联h5地址" name="h5Url" rules={[{ required: true, message: '请填写地址' }]}>
+                                <Input className="base-input-wrapper" placeholder="请填写H5地址" />
+                            </Form.Item>
+                            <Form.Item label="背景色" name="bgColor" rules={[{ required: true, message: '请填写背景色' }]}>
+                                <Input className="base-input-wrapper" placeholder="请填写背景色" />
+                            </Form.Item>
+                            <Form.Item label="专题编码(拼音)" name="IdKey" rules={[{ required: true, message: '请填写专题编码' }]}>
+                                {
+                                    this.state.isAdd == true &&
+                                    <Input className="base-input-wrapper" placeholder="请填写专题编码" /> ||
+                                    <Input className="base-input-wrapper" placeholder="请填写专题编码" disabled />
+                                }
+                            </Form.Item>
+
+                            <Form.Item label="背景图" name="backImage" valuePropName="fileList"
+                                // 如果没有下面这一句会报错
+                                getValueFromEvent={normFile}
+                            >
+                                <ImageUpload getUploadFileUrl={this.getUploadFileUrl.bind(this)}
+                                    imageUrl={this.state.backImage}
+                                // this.formRef.current ? this.formRef.current.getFieldValue("backImage") : ""
+                                />
+                            </Form.Item>
+                            <Form.Item label="预告片" name="svIds" rules={[{ required: true, message: '请填写预告片ID' }]}>
+                                {/* <Select placeholder="请选择视频">
                                 {this.state.videoLists.map((item, index) => {
                                     return <Option value={item.value} key={index}> {item.value}</Option>
                                 })}
                             </Select> */}
-                            <Input className="base-input-wrapper" placeholder="请填写预告片ID" />
-                        </Form.Item>
+                                <Input className="base-input-wrapper" placeholder="请填写预告片ID" />
+                            </Form.Item>
 
-                        <Form.Item label="预告片标题" name="svName" rules={[{ required: true, message: '请填写预告片标题' }]}>
-                            <Input className="base-input-wrapper" placeholder="请填写预告片标题" />
-                        </Form.Item>
+                            <Form.Item label="预告片标题" name="svName" rules={[{ required: true, message: '请填写预告片标题' }]}>
+                                <Input className="base-input-wrapper" placeholder="请填写预告片标题" />
+                            </Form.Item>
 
 
-                        <Form.Item label="用户分群" name="tags" >
-                            <Select className="base-input-wrapper" placeholder="请选择用户分群" mode="multiple" allowClear>
-                                {
-                                    this.state.tagList.map(r => {
-                                        return (
-                                            <Option value={r.code.toString()} key={r.code}>{r.name}</Option>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
+                            <Form.Item label="用户分群" name="tags" >
+                                <Select className="base-input-wrapper" placeholder="请选择用户分群" mode="multiple" allowClear>
+                                    {
+                                        this.state.tagList.map(r => {
+                                            return (
+                                                <Option value={r.code.toString()} key={r.code}>{r.name}</Option>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
 
-                        {/* <Form.Item label="频道" name="channelId" >
+                            {/* <Form.Item label="频道" name="channelId" >
                             <Select placeholder="请选择频道" allowClear onChange={(val,name)=>{
                                 console.log('---------',name.children)
                                 this.setState({
@@ -452,13 +455,13 @@ export default class SportsProgram extends Component {
                             </Select>
                         </Form.Item> */}
 
-                        <Form.Item label="地域" name="area">
-                            <Address defaultAddress={this.state.defaultAddress} onCheckAddress={this.onCheckAddress.bind(this)} />
-                        </Form.Item>
+                            <Form.Item label="地域" name="area">
+                                <Address defaultAddress={this.state.defaultAddress} onCheckAddress={this.onCheckAddress.bind(this)} />
+                            </Form.Item>
 
-                        <Form.Item label="白名单" name="whiteList">
-                            <Input className="base-input-wrapper" placeholder="请填写白名单" />
-                            {/* <Select placeholder="请选择白名单" mode="multiple" allowClear>
+                            <Form.Item label="白名单" name="whiteList">
+                                <Input className="base-input-wrapper" placeholder="请填写白名单" />
+                                {/* <Select placeholder="请选择白名单" mode="multiple" allowClear>
                             {
                                 this.state.productList.map(r => {
                                     return (
@@ -467,7 +470,117 @@ export default class SportsProgram extends Component {
                                 })
                             }
                             </Select> */}
+                            </Form.Item>
+                        </>
+
+
+
+                        {/* 内容配置 */}
+                        <Divider>内容配置</Divider>
+
+                        <Form.Item label="播放器标题" name="title" rules={[{ required: true, message: '请填写播放器标题' }]}>
+                            <Input className="base-input-wrapper" laceholder="请填写播放器标题" />
                         </Form.Item>
+                        <Form.Item
+                            label="播放器内容"
+                        // name="voters"
+                        // rules={[{ required: true, message: '投票选项' }]}
+                        >
+                            <Form.List name="voters">
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map((field, index) => (
+                                            <Space key={field.key} align="baseline">
+                                                <Form.Item {...field} label="" name={[field.name, 'votes1']} fieldKey={[field.fieldKey, 'votes1']}>
+                                                    <Select style={{ width: "300px" }} placeholder="请选择播放器播放类型">
+                                                        <Option value={1} key={1}>频道</Option>
+                                                        <Option value={2} key={2}>视频</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                                <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
+                                                    <Select style={{ width: "300px" }} placeholder="请选择">
+                                                        <Option value={1} key={1}>频道</Option>
+                                                        <Option value={2} key={2}>视频</Option>
+                                                    </Select>
+                                                </Form.Item>
+
+                                                <MinusCircleOutlined onClick={() => remove(field.name)} />
+                                            </Space>
+                                        ))}
+
+                                        <Form.Item>
+                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                新建播放器内容
+                                            </Button>
+                                        </Form.Item>
+                                    </>
+                                )}
+                            </Form.List>
+                        </Form.Item>
+                        <Form.Item label="是否开启目录" name="title" rules={[{ required: true, message: '请选择是否开启目录' }]}>
+                            <Radio.Group>
+                                <Radio value={true}>开启</Radio>
+                                <Radio value={false}>关闭</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item
+                            label="内容板块"
+                        // name="voters"
+                        // rules={[{ required: true, message: '投票选项' }]}
+                        >
+                            <Form.List name="voters">
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map((field, index) => (
+                                            <Space key={field.key} align="baseline" style={{flexWrap:"wrap"}}>
+                                                <Form.Item {...field} label="标题" name={[field.name, 'votes1']} fieldKey={[field.fieldKey, 'votes1']}>
+                                                    <Select style={{ width: "300px" }} placeholder="请选择播放器播放类型">
+                                                        <Option value={1} key={1}>频道</Option>
+                                                        <Option value={2} key={2}>视频</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                                <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
+                                                    <Input placeholder="请填写标题" style={{ width: "300px" }} />
+                                                </Form.Item>
+                                                <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']} style={{width:"100%"}}>
+                                                    <Radio.Group>
+                                                        <Radio value={true}>横排列表</Radio>
+                                                        <Radio value={false}>双纵列表</Radio>
+                                                    </Radio.Group>
+                                                </Form.Item>
+                                                <Form.Item {...field} label="内容" name={[field.name, 'votes1']} fieldKey={[field.fieldKey, 'votes1']}>
+                                                    <Select style={{ width: "300px" }} placeholder="请选择播放器播放类型">
+                                                        <Option value={1} key={1}>频道</Option>
+                                                        <Option value={2} key={2}>视频</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                                <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
+                                                    <Select style={{ width: "300px" }} placeholder="请选择">
+                                                        <Option value={1} key={1}>频道</Option>
+                                                        <Option value={2} key={2}>视频</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                                <MinusCircleOutlined onClick={() => remove(field.name)} />
+                                            </Space>
+                                        ))}
+
+                                        <Form.Item>
+                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                新建播放器内容
+                                            </Button>
+                                        </Form.Item>
+                                    </>
+                                )}
+                            </Form.List>
+                        </Form.Item>
+
+
+
+
+
+
+
+
 
                         <Form.Item {...this.state.tailLayout}>
                             <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>

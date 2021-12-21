@@ -33,6 +33,7 @@ import {
     syncMyWechatUser,                   //企业微信
     syncQrcodeConfig,                   //企业微信同步到我们库
     syncPowerBoot,                   //开启启动图配置
+    syncHkCategory,                   //好看分类
 } from 'api'
 
 
@@ -77,6 +78,7 @@ export default class SyncBtn extends Component {
         if (type === 22) return syncMyWechatUser();                                 //企业微信
         if (type === 23) return syncQrcodeConfig();                                 //企业微信同步到我们库
         if (type === 24) return syncPowerBoot();                                 //开启启动图配置
+        if (type === 25) return syncHkCategory();                                 //好看分类
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

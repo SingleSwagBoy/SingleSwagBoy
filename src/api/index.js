@@ -419,6 +419,16 @@ export const changePowerBoot = (params) => { return request2.get(`${baseUrl}/mms
 export const syncPowerBoot = (params) => { return request2.get(`${baseUrl}/mms/tv/powerBoot/syncCache`,{params:params}); };                 // 开机启动-列表
 
 
+//好看分类
+export const getHkCategory = (params) => { return request2.post(`${baseUrl}/mms/tv/hkCategory/list`,params); };                 // 开机启动-列表
+export const addHkCategory = (params) => { return request2.post(`${baseUrl}/mms/tv/hkCategory/create`,params); };                 // 开机启动-列表
+export const editHkCategory = (params) => { return request2.post(`${baseUrl}/mms/tv/hkCategory/edit`,params); };                 // 开机启动-列表
+export const delHkCategory = (params) => { return request2.get(`${baseUrl}/mms/tv/hkCategory/deleteItem`,{params:params}); };                 // 开机启动-列表
+export const changeHkCategory = (params) => { return request2.get(`${baseUrl}/mms/tv/hkCategory/changeState`,{params:params}); };                 // 开机启动-列表
+export const switchHkCategory = (params) => { return request2.get(`${baseUrl}/mms/tv/hkCategory/switch`,{params:params}); };                 // 开机启动-列表
+export const syncHkCategory = (params) => { return request2.get(`${baseUrl}/mms/tv/hkCategory/syncCache`,{params:params}); };                 // 开机启动-列表
+
+
 
 //体育频道视频集配置
 export const getChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcList`,params); };                 // 配置管理-体育频道视频集配置-列表

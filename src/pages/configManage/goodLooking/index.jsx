@@ -1,3 +1,10 @@
+/*
+ * @Author: yzc
+ * @Date: 2021-12-21 10:48:36
+ * @LastEditors: yzc
+ * @LastEditTime: 2021-12-21 10:57:49
+ * @Description: 创建@映射src 例如：引入控件可使用 MySyncBtn
+ */
 import React, { Component } from 'react'
 import { getHkCategory, editHkCategory, addHkCategory, delHkCategory, changeHkCategory, getChannel,switchHkCategory } from 'api'
 import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'

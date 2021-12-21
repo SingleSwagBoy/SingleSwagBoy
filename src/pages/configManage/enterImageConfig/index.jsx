@@ -1,3 +1,10 @@
+/*
+ * @Author: yzc
+ * @Date: 2021-12-20 10:48:36
+ * @LastEditors: yzc
+ * @LastEditTime: 2021-12-20 10:57:49
+ * @Description: 创建@映射src 例如：引入控件可使用 MySyncBtn
+ */
 import React, { Component } from 'react'
 import { getPowerBoot, requestNewAdTagList, editPowerBoot, addPowerBoot, delPowerBoot, changePowerBoot } from 'api'
 import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'

@@ -273,6 +273,8 @@ function App2() {
                         <Button type="primary" onClick={() => {
                             setOpen(true)
                             setSource("add")
+                            formRef.setFieldsValue({"qywechatCode":qywechatCode})
+                            getWechatUserList(qywechatCode)
                         }}>新建</Button>
                     </div>
                 }
@@ -297,12 +299,12 @@ function App2() {
                             form={formRef}
                             onFinish={(e) => submitForm(e)}>
                             <Form.Item label="企业微信" name="qywechatCode">
-                                <Select allowClear style={{ width: "100%" }} placeholder="请选择电视家用户标签" disabled={source=="edit"} 
-                                onChange={()=>{
-                                    setReplyInfos([])
-                                    formRef.setFieldsValue({"userids":[]})
-                                    getWechatUserList(formRef.getFieldValue("qywechatCode"))
-                                }}
+                                <Select allowClear style={{ width: "100%" }} placeholder="请选择电视家用户标签" disabled
+                                // onChange={()=>{
+                                //     setReplyInfos([])
+                                //     formRef.setFieldsValue({"userids":[]})
+                                //     getWechatUserList(formRef.getFieldValue("qywechatCode"))
+                                // }}
                                 >
                                     {
                                         getWechat.map(r => {
@@ -377,7 +379,7 @@ function App2() {
                                                     replyInfos[i].msgType === 'text' &&
                                                     <div>
                                                         <Form.Item label='文字回复'>
-                                                            <TextArea style={{ width: "100%" }} rows={5} placeholder='请输入文字回复' defaultValue={replyInfos[i].content}
+                                                            <TextArea style={{ width: "100%" }} rows={5} placeholder='请输入文字回复，请输入#NICKNAME#替换用户昵称' defaultValue={replyInfos[i].content}
                                                                 onChange={(e) => {
                                                                     replyInfos[i].content = e.target.value
                                                                 }}

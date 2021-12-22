@@ -430,6 +430,7 @@ export const syncMyWechatUser = (params) => { return request2.get(`${baseUrl}/mm
 export const syncQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/syncusers`,{params:params}); };                 // 同步企业微信数据到我们的库中
 export const saveMyWechatUser = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/savereluser`,params); }; 
 export const getWechatList = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/codes`,{params:params}); };  //获取企业微信列表
+export const getCount = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/listrelcount`,{params:params}); };  //企业微信客服解锁使用次数
 
 
 // 易添加企业微信客服列表更新

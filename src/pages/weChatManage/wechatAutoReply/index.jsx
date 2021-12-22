@@ -15,7 +15,7 @@ function App2() {
     const [pageSize, setPageSize] = useState(10)
     const [total, setTotal] = useState(0)
     const [lists, setLists] = useState([])
-    const [getWechatUserList, setWechatUserList] = useState([])
+    const [wechatUserList, setWechatUserList] = useState([])
     const [getWechat, setWechat] = useState([])
     const [dict_wx_program, setMiniPro] = useState([])
     const [layout] = useState({ labelCol: { span: 4 }, wrapperCol: { span: 20 } })
@@ -82,6 +82,7 @@ function App2() {
                                 setActiveKey(0)
                                 formRef.setFieldsValue(arr)
                                 setSource("edit")
+                                getWechatUserList(arr.qywechatCode)
                             }}
                         >编辑</Button>
                         <Button danger size="small" onClick={() => delItem(row)}>删除</Button>
@@ -91,13 +92,9 @@ function App2() {
         }
     ])
     useEffect(async () => {
-        // const getWelcomeList = await getWelcome({})
-
-        const getWechatUserList = await getWechatUser({})
         const getMiniPro = await requestWxProgramList({})
         const getWechat = await getWechatList({})
         setWechat(getWechat.data)
-        setWechatUserList(getWechatUserList.data)
         setMiniPro(getMiniPro.data)
         getWelcomeFunc(getWechat.data)
     }, [])
@@ -106,6 +103,11 @@ function App2() {
     // }, [replyInfos])
     const changeSize = (e) => {
         console.log(e)
+    }
+    const getWechatUserList = (val)=>{
+        getWechatUser({qywechatCode:val}).then(res => {
+            setWechatUserList(res.data)
+        })
     }
     const submitForm = (e) => {//表单提交
         console.log(e)
@@ -295,7 +297,13 @@ function App2() {
                             form={formRef}
                             onFinish={(e) => submitForm(e)}>
                             <Form.Item label="企业微信" name="qywechatCode">
-                                <Select allowClear style={{ width: "100%" }} placeholder="请选择电视家用户标签" disabled={source=="edit"}>
+                                <Select allowClear style={{ width: "100%" }} placeholder="请选择电视家用户标签" disabled={source=="edit"} 
+                                onChange={()=>{
+                                    setReplyInfos([])
+                                    formRef.setFieldsValue({"userids":[]})
+                                    getWechatUserList(formRef.getFieldValue("qywechatCode"))
+                                }}
+                                >
                                     {
                                         getWechat.map(r => {
                                             return (
@@ -314,7 +322,7 @@ function App2() {
                                     filterOption={(input, option) =>option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                     {
-                                        getWechatUserList.map(r => {
+                                        wechatUserList.map(r => {
                                             return (
                                                 <Option value={r.userid} key={r.userid}>
                                                     <img src={r.avatar} alt="" style={{ width: "20px" }} />

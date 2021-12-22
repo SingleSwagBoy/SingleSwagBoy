@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser } from 'api'
+import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser, getWechatList } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
@@ -46,6 +46,7 @@ export default class EarnIncentiveTask extends React.Component {
             chooseUserList: [],
             noSavebtn: [],
             filterList: [],
+            wechatList: [],
             userType: null,
             columns: [
                 {
@@ -98,13 +99,13 @@ export default class EarnIncentiveTask extends React.Component {
                             <div>{<Switch
                                 checkedChildren="有效"
                                 unCheckedChildren="无效"
-                                disabled={index<2}
+                                disabled={index < 2}
                                 defaultChecked={rowValue === 1 ? true : false}
                                 key={rowValue}
                                 onChange={(val) => {
                                     let info = JSON.parse(JSON.stringify(row))
-                                    info.status = val?1:0
-                                    this.saveQrcodeConfig(info,"change")
+                                    info.status = val ? 1 : 0
+                                    this.saveQrcodeConfig(info, "change")
                                 }}
                             />}</div>
                         )
@@ -117,29 +118,30 @@ export default class EarnIncentiveTask extends React.Component {
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                               {
-                                    index >1
-                                    ?
-                                    <Button
-                                        style={{ margin: "0 10px" }}
-                                        size="small"
-                                        type="primary"
-                                        onClick={() => {
-                                            console.log(row)
-                                            this.setState({
-                                                entranceState: true,
-                                                currentItem: row,
-                                            }, () => {
-                                                let arr = JSON.parse(JSON.stringify(row))
-                                                arr.time = [arr.start ? moment(arr.start * 1000) : "", arr.end ? moment(arr.end * 1000) : ""]
-                                                arr.status = arr.status == 1 ? true : false
-                                                this.formRef.current.setFieldsValue(arr)
-                                                this.forceUpdate()
-                                            })
-                                        }}
-                                    >编辑</Button>
-                                    :""
-                               }
+                                {
+                                    index > 1
+                                        ?
+                                        <Button
+                                            style={{ margin: "0 10px" }}
+                                            size="small"
+                                            type="primary"
+                                            onClick={() => {
+                                                console.log(row)
+                                                this.setState({
+                                                    entranceState: true,
+                                                    currentItem: row,
+                                                }, () => {
+                                                    let arr = JSON.parse(JSON.stringify(row))
+                                                    arr.time = [arr.start ? moment(arr.start * 1000) : "", arr.end ? moment(arr.end * 1000) : ""]
+                                                    arr.status = arr.status == 1 ? true : false
+                                                    arr.qywechatCode = this.state.wechatList.length>0?this.state.wechatList[0].code:null
+                                                    this.formRef.current.setFieldsValue(arr)
+                                                    this.forceUpdate()
+                                                })
+                                            }}
+                                        >编辑</Button>
+                                        : ""
+                                }
                             </div>
                         )
                     }
@@ -158,12 +160,12 @@ export default class EarnIncentiveTask extends React.Component {
                         </Breadcrumb>
                     </div>
                 }
-                extra={
-                    <div>
-                        <MySyncBtn type={23} name='同步企业微信数据' />
-                        <MySyncBtn type={22} name='同步缓存' />
-                    </div>
-                }
+                    extra={
+                        <div>
+                            <MySyncBtn type={23} name='同步企业微信数据' />
+                            <MySyncBtn type={22} name='同步缓存' />
+                        </div>
+                    }
                 >
                     <Table
                         dataSource={lists}
@@ -193,6 +195,20 @@ export default class EarnIncentiveTask extends React.Component {
                                     ?
 
                                     <>
+                                        <Form.Item label="企业微信" name="qywechatCode">
+                                            <Select
+                                                placeholder="请输入用户标签"
+                                                allowClear
+                                                {...this.state.selectProps}
+                                            >
+                                                {
+                                                    this.state.wechatList.map((r, i) => {
+                                                        return <Option value={r.code} key={i}>{r.name}</Option>
+                                                    })
+                                                }
+
+                                            </Select>
+                                        </Form.Item>
                                         <Form.Item label="200客服联系人">
                                             <div className="add_user" onClick={() => this.addUser(1)}><PlusOutlined />添加成员</div>
                                             <div className="user_box">
@@ -329,14 +345,14 @@ export default class EarnIncentiveTask extends React.Component {
     }
     delChoose(type, r) {
         let arr = this.state.noSavebtn.filter(item => item.type == type)
-        console.log(this.state.noSavebtn,r,arr)
+        console.log(this.state.noSavebtn, r, arr)
         if (arr.length > 0) {
             let list = arr[0].userids ? arr[0].userids.split(",") : []
             let info = list.filter(item => item != r.userid)
             if (info.length > 0) {
                 arr[0].userids = info.join(",")
                 this.setState({ noSavebtn: this.state.noSavebtn })
-            }else{
+            } else {
                 arr[0].userids = ""
                 this.setState({ noSavebtn: this.state.noSavebtn })
             }
@@ -387,6 +403,7 @@ export default class EarnIncentiveTask extends React.Component {
         this.requestNewAdTagList()
         this.getWechatUser()
         this.getMyWechatUser()
+        this.getWechatList()
     }
     //获取标签信息
     requestNewAdTagList() {
@@ -412,6 +429,14 @@ export default class EarnIncentiveTask extends React.Component {
         this.closeModal()
     }
 
+    getWechatList() {
+        getWechatList({}).then(res => {
+            console.log(res.data)
+            this.setState({
+                wechatList: res.data
+            })
+        })
+    }
     getQrcodeConfig() {
         getQrcodeConfig({}).then(res => {
             this.setState({

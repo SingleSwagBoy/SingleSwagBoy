@@ -294,7 +294,7 @@ function App2() {
                             form={formRef}
                             onFinish={(e) => submitForm(e)}>
                             <Form.Item label="企业微信" name="qywechatCode">
-                                <Select allowClear style={{ width: "100%" }} placeholder="请选择电视家用户标签">
+                                <Select allowClear style={{ width: "100%" }} placeholder="请选择电视家用户标签" disabled={source=="edit"}>
                                     {
                                         getWechat.map(r => {
                                             return (

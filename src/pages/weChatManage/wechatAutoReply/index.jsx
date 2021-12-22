@@ -159,6 +159,7 @@ function App2() {
     }
     const add = () => {
         if (!formRef.getFieldValue("qywechatCode")) return message.error("请先选择企业微信")
+        if(replyInfos.length ==3)return message.error("配置已达上限")
         let index = replyInfos.length
         let item = { title: `第${index}条`, key: index }
         setReplyInfos(replyInfos => [...replyInfos, item])

@@ -429,12 +429,16 @@ export const getMyWechatUser = (params) => { return request2.get(`${baseUrl}/mms
 export const syncMyWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/syncconfig`,{params:params}); };                 // 易添加企业微信客服列表sync
 export const syncQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/syncusers`,{params:params}); };                 // 同步企业微信数据到我们的库中
 export const saveMyWechatUser = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/savereluser`,params); }; 
+export const getWechatList = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/codes`,{params:params}); };  //获取企业微信列表
 
 
 // 易添加企业微信客服列表更新
-export const getWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/listwelcome`,params); };                 // 易添加企业微信客服列表更新
-export const saveWelcome = (params) => { return request2.post(`${baseUrl}/mms/wx/qywechat/savewelcome`,{params:params}); };                 // 易添加企业微信客服列表更新
-export const delWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/delwelcome`,params); };                 // 易添加企业微信客服列表更新
+export const getWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/listwelcome`,{params:params}); };                 // 易添加企业微信客服列表更新
+export const addWelcome = (params) => { return request2.post(`${baseUrl}/mms/wx/qywechat/addwelcome`,params); };                 // 易添加企业微信客服列表新增
+export const saveWelcome = (params) => { return request2.post(`${baseUrl}/mms/wx/qywechat/savewelcome`,params); };                 // 易添加企业微信客服列表更新
+export const delWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/delwelcome`,{params:params}); };                 // 易添加企业微信客服列表更新
+export const changeWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/welcomestatus`,{params:params}); };                 // 易添加企业微信客服列表状态改变
+export const uploadImage = (params,form,header) => { return request2.post(`${baseUrl}/mms/wx/qywechat/uploadimg?qywechatCode=${params.qywechatCode}`,form,{headers: header}); };                 // 上传图片
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

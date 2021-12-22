@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { getWelcome, getWechatUser, requestWxProgramList, saveWelcome, delWelcome } from 'api'
+import { getWelcome, getWechatUser, requestWxProgramList, saveWelcome, delWelcome, getWechatList, uploadImage, addWelcome, changeWelcome } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, Switch, Space } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
@@ -16,6 +16,7 @@ function App2() {
     const [total, setTotal] = useState(0)
     const [lists, setLists] = useState([])
     const [getWechatUserList, setWechatUserList] = useState([])
+    const [getWechat, setWechat] = useState([])
     const [dict_wx_program, setMiniPro] = useState([])
     const [layout] = useState({ labelCol: { span: 4 }, wrapperCol: { span: 20 } })
     const [formRef] = Form.useForm()
@@ -25,6 +26,8 @@ function App2() {
     const [activeKey, setActiveKey] = useState(0)
     const [replyInfos, setReplyInfos] = useState([])
     const [currentItem, setCurrent] = useState({})
+    const [source, setSource] = useState("")
+    const [qywechatCode, setQywechatCode] = useState("")
     const [dict_msg_type] = useState([
         { key: 'text', value: '文字' },
         { key: 'image', value: '图片' },
@@ -45,13 +48,12 @@ function App2() {
                     <div>{<Switch
                         checkedChildren="有效"
                         unCheckedChildren="无效"
-                        disabled={index < 2}
                         defaultChecked={rowValue === 1 ? true : false}
                         key={rowValue}
                         onChange={(val) => {
                             let info = JSON.parse(JSON.stringify(row))
                             info.status = val ? 1 : 0
-                            // this.saveQrcodeConfig(info,"change")
+                            changeWelcomeAPi(info)
 
                         }}
                     />}</div>
@@ -79,7 +81,7 @@ function App2() {
                                 setOpen(true)
                                 setActiveKey(0)
                                 formRef.setFieldsValue(arr)
-
+                                setSource("edit")
                             }}
                         >编辑</Button>
                         <Button danger size="small" onClick={() => delItem(row)}>删除</Button>
@@ -90,12 +92,14 @@ function App2() {
     ])
     useEffect(async () => {
         // const getWelcomeList = await getWelcome({})
-        getWelcomeFunc()
+
         const getWechatUserList = await getWechatUser({})
         const getMiniPro = await requestWxProgramList({})
-        // setLists(getWelcomeList.data)
+        const getWechat = await getWechatList({})
+        setWechat(getWechat.data)
         setWechatUserList(getWechatUserList.data)
         setMiniPro(getMiniPro.data)
+        getWelcomeFunc(getWechat.data)
     }, [])
     // useEffect(async () => {
     //     setActiveKey(setActiveKey)
@@ -105,21 +109,56 @@ function App2() {
     }
     const submitForm = (e) => {//表单提交
         console.log(e)
-        let params = {
-            ...currentItem,
-            ...e,
-            userids: Array.isArray(e.userids) ? e.userids.join(",") : e.userids,
-            replyInfos: replyInfos
+        if (source == "add") {
+            let params = {
+                ...e,
+                userids: Array.isArray(e.userids) ? e.userids.join(",") : e.userids,
+                sourceTag: e.sourceTag ? 1 : 0,
+                replyInfos: replyInfos ? replyInfos : []
+            }
+            addWelcomeApi(params)
+        } else {
+            let params = {
+                ...currentItem,
+                ...e,
+                userids: Array.isArray(e.userids) ? e.userids.join(",") : e.userids,
+                sourceTag: e.sourceTag ? 1 : 0,
+                replyInfos: replyInfos ? replyInfos : []
+            }
+            saveWelcomeApi(params)
         }
-        saveWelcome(params)
+        closeDialog()
     }
-    const saveWelcome = (params) => {
-        return console.log(params, "params")
+    const addWelcomeApi = (params) => {
+        addWelcome(params).then(res => {
+            message.success("新增成功")
+            getWelcomeFunc(params.qywechatCode)
+        })
+    }
+    const closeDialog = () => {
+        formRef.resetFields()
+        setOpen(false)
+        setReplyInfos([])
+    }
+    const saveWelcomeApi = (params) => {
         saveWelcome(params).then(res => {
-
+            message.success("更新成功")
+            getWelcomeFunc(params.qywechatCode)
+        })
+    }
+    const changeWelcomeAPi = (val) => {
+        console.log(val)
+        let params = {
+            id: val.id,
+            status: val.status
+        }
+        changeWelcome(params).then(res => {
+            message.success("操作成功")
+            // getWelcomeFunc(val.qywechatCode)
         })
     }
     const add = () => {
+        if (!formRef.getFieldValue("qywechatCode")) return message.error("请先选择企业微信")
         let index = replyInfos.length
         let item = { title: `第${index}条`, key: index }
         setReplyInfos(replyInfos => [...replyInfos, item])
@@ -143,17 +182,21 @@ function App2() {
         item.imageUrl = newItem
         if (item.msgType == "miniprogram") {
             item.dsjMediaId = newItem
-
         }
         let arr = [...replyInfos]
         setReplyInfos(arr)
+    }
+    //获取上传文件
+    const getUploadFile = (file) => {
+        console.log(file)
+        // uploadMiniImage(file)
     }
     const delItem = (row) => {
         Modal.confirm({
             title: `确认删除该条数据吗？`,
             // content: '确认删除？',
             onOk: () => {
-                delWelcome(row)
+                deleteItem(row)
             },
             onCancel: () => {
             }
@@ -161,27 +204,73 @@ function App2() {
     }
     const deleteItem = (item) => {
         delWelcome({ id: item.id }).then(res => {
-            getWelcomeFunc()
+            getWelcomeFunc(item.qywechatCode)
         })
     }
-    const getWelcomeFunc = () => {
-        getWelcome({}).then(res => {
+    const getWelcomeFunc = (data) => {
+        let param = {
+            qywechatCode: Array.isArray(data) ? data[0].code : data
+        }
+        getWelcome(param).then(res => {
             setLists(res.data)
+            setQywechatCode(param.qywechatCode)
         })
+    }
+    const strToBinary = (str) => {
+        var result = [];
+        var list = str.split("");
+        for (var i = 0; i < list.length; i++) {
+            if (i != 0) {
+                result.push(" ");
+            }
+            var item = list[i];
+            var binartStr = item.charCodeAt().toString(2);
+            result.push(binartStr);
+        }
+        return result.join("");
     }
     // const [values, setFieldValues] = useForm()
+    const uploadMiniImage = (item) => {
+        console.log(item)
+        let formData = new FormData();
+        formData.append('file', JSON.stringify(item))
+        console.log(formData)
+        let info = strToBinary(item)
+        let parmas = { qywechatCode: formRef.getFieldValue("qywechatCode") }
+        let header = {
+            "Content-Type": "multipart/form-data",
+            // "Content-Type":"application/x-www-form-urlencoded"
+        }
+        uploadImage(parmas, formData, header).then(res => {
+
+        })
+    }
     return (
         <div className="loginVip">
             <Card title={
                 <div>
-                    <Breadcrumb>
-                        <Breadcrumb.Item>登录(专享)配置</Breadcrumb.Item>
-                    </Breadcrumb>
+                    {/* <Breadcrumb>
+                        <Breadcrumb.Item>企业自动回复</Breadcrumb.Item>
+                    </Breadcrumb> */}
+                    <Select allowClear style={{ width: "40%" }} key={qywechatCode} defaultValue={qywechatCode} placeholder="请选择电视家用户标签" onChange={(e) => {
+                        getWelcomeFunc(e)
+                    }}>
+                        {
+                            getWechat.map(r => {
+                                return (
+                                    <Option value={r.code} key={r.id}>{r.name}</Option>
+                                )
+                            })
+                        }
+                    </Select>
                 </div>
             }
                 extra={
                     <div>
-                        <Button type="primary">新建</Button>
+                        <Button type="primary" onClick={() => {
+                            setOpen(true)
+                            setSource("add")
+                        }}>新建</Button>
                     </div>
                 }
             >
@@ -198,17 +287,31 @@ function App2() {
                         onChange: changeSize
                     }}
                 />
-                <Modal title="编辑" centered visible={openDailog} onCancel={() => { setOpen(false) }} footer={null} width={1000}>
+                <Modal title="编辑" centered visible={openDailog} onCancel={() => closeDialog()} footer={null} width={1000}>
                     {
                         <Form {...layout}
                             name="taskForm"
                             form={formRef}
                             onFinish={(e) => submitForm(e)}>
+                            <Form.Item label="企业微信" name="qywechatCode">
+                                <Select allowClear style={{ width: "100%" }} placeholder="请选择电视家用户标签">
+                                    {
+                                        getWechat.map(r => {
+                                            return (
+                                                <Option value={r.code} key={r.id}>{r.name}</Option>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
                             <Form.Item label="名称" name="name">
                                 <Input placeholder="请输入名称" />
                             </Form.Item>
                             <Form.Item label="客服联系人" name="userids">
-                                <Select allowClear mode="multiple" style={{ width: "100%" }} placeholder="请选择电视家用户标签">
+                                <Select allowClear mode="multiple" style={{ width: "100%" }} placeholder="请选择电视家用户标签" showSearch
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
                                     {
                                         getWechatUserList.map(r => {
                                             return (
@@ -274,12 +377,13 @@ function App2() {
                                                     </div>
                                                 }
                                                 {
-                                                    // 文字回复
+                                                    // 图片回复
                                                     replyInfos[i].msgType === 'image' &&
                                                     <div>
                                                         <Form.Item label='图片回复'>
                                                             <MyImageUpload
-                                                                postUrl={"/mms/wx/qywechat/uploadimg"} //上传地址
+                                                                postUrl={`/mms/wx/qywechat/uploadimg?qywechatCode=${formRef.getFieldValue("qywechatCode")}`} //上传地址
+                                                                // params={{qywechatCode:formRef.getFieldValue("qywechatCode")}}
                                                                 getUploadFileUrl={(file, newItem) => { getUploadFileUrl('imageUrl', file, newItem, replyInfos[i]) }}
                                                                 imageUrl={replyInfos[i].imageUrl} />
                                                         </Form.Item>
@@ -290,7 +394,10 @@ function App2() {
                                                     replyInfos[i].msgType === 'miniprogram' &&
                                                     <div>
                                                         <Form.Item label='卡片标题'>
-                                                            <Input style={{ width: "100%" }} placeholder='请输入小程序标题' defaultValue={replyInfos[i].title} />
+                                                            <Input style={{ width: "100%" }} placeholder='请输入小程序标题' defaultValue={replyInfos[i].title}
+                                                                onChange={(e) => {
+                                                                    replyInfos[i].title = e.target.value
+                                                                }} />
                                                         </Form.Item>
                                                         <Form.Item label='小程序'>
                                                             <Select style={{ width: "100%" }} placeholder='请选择小程序'
@@ -319,6 +426,8 @@ function App2() {
                                                         <Form.Item label='小程序路径'>
                                                             <MyImageUpload
                                                                 postUrl={"/mms/wx/qywechat/uploadmedia"} //上传地址
+                                                                getUploadFile={(file) => getUploadFile(file)}
+                                                                needAgain={true}
                                                                 getUploadFileUrl={(file, newItem) => { getUploadFileUrl('imageUrl', file, newItem, replyInfos[i]) }}
                                                                 imageUrl={replyInfos[i].imageUrl} />
                                                         </Form.Item>
@@ -330,7 +439,7 @@ function App2() {
                                 </Tabs>
                             </Form.Item>
                             <Form.Item {...tailLayout}>
-                                <Button onClick={() => setOpen(false)}>取消</Button>
+                                <Button onClick={() => closeDialog()}>取消</Button>
                                 <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
                                     确定
                                 </Button>

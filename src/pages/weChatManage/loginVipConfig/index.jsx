@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser, getWechatList,getCount } from 'api'
-import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Divider } from 'antd'
+import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser, getWechatList, getCount } from 'api'
+import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Divider, Tabs } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons"
 import moment from 'moment';
@@ -10,6 +10,7 @@ import util from 'utils'
 import "./style.css"
 const { Option } = Select;
 let { RangePicker } = DatePicker;
+const { TabPane } = Tabs;
 let privateData = {
     inputTimeOutVal: null
 };
@@ -48,6 +49,7 @@ export default class EarnIncentiveTask extends React.Component {
             filterList: [],
             wechatList: [],
             userType: null,
+            activityCode:"",//当前激活的哪一个qywechatCode
             columns: [
                 {
                     title: "位置",
@@ -131,16 +133,20 @@ export default class EarnIncentiveTask extends React.Component {
                                                 this.setState({
                                                     entranceState: true,
                                                     currentItem: row,
-                                                }, () => {
+                                                }, async () => {
                                                     let arr = JSON.parse(JSON.stringify(row))
                                                     arr.time = [arr.start ? moment(arr.start * 1000) : "", arr.end ? moment(arr.end * 1000) : ""]
                                                     arr.status = arr.status == 1 ? true : false
                                                     arr.qywechatCode = this.state.wechatList.length > 0 ? this.state.wechatList[0].code : null
+                                                    this.setState({
+                                                        activityCode:arr.qywechatCode
+                                                    })
                                                     this.formRef.current.setFieldsValue(arr)
                                                     this.forceUpdate()
-                                                    this.getWechatUser(arr.qywechatCode)
-                                                    this.getMyWechatUser(arr.qywechatCode)
-                                                    this.getCount(arr.qywechatCode)
+                                                    await this.getCount(arr.qywechatCode)
+                                                    await this.getWechatUser(arr.qywechatCode)
+                                                    await this.getMyWechatUser(arr.qywechatCode)
+
                                                 })
                                             }}
                                         >编辑</Button>
@@ -189,6 +195,7 @@ export default class EarnIncentiveTask extends React.Component {
                     this.setState({ entranceState: false })
                     this.formRef.current.resetFields()
                 }} footer={null} width={1000}>
+
                     {
                         <Form {...layout}
                             name="taskForm"
@@ -199,81 +206,83 @@ export default class EarnIncentiveTask extends React.Component {
                                     ?
 
                                     <>
-                                        <Form.Item label="企业微信" name="qywechatCode">
-                                            <Select
-                                                placeholder="请输入用户标签"
-                                                allowClear
-                                                {...this.state.selectProps}
-                                                onChange={(e) => {
-                                                    this.getWechatUser(e)
-                                                    this.getMyWechatUser(e)
-                                                    this.getCount(e)
-                                                }}
-                                            >
-                                                {
-                                                    this.state.wechatList.map((r, i) => {
-                                                        return <Option value={r.code} key={i}>{r.name}</Option>
-                                                    })
-                                                }
+                                        <Tabs defaultActiveKey="0" centered onChange={(e) => {
+                                            console.log(e)
+                                            let code = this.state.wechatList[e].code
+                                            this.getWechatUser(code)
+                                            this.getMyWechatUser(code)
+                                            this.getCount(code)
+                                            // this.forceUpdate()
+                                            this.setState({
+                                                activityCode:code
+                                            })
+                                        }}>
+                                            {
+                                                this.state.wechatList.map((r, i) => {
+                                                    return (
+                                                        <TabPane tab={r.name} key={i}>
+                                                            <Form.Item label="选择客服联系人">
+                                                                <Form.List name="userList">
+                                                                    {(fields, { add, remove }) => (
+                                                                        <>
+                                                                            {fields.map((field, index) => (
+                                                                                <Space key={field.key} align="baseline" style={{ width: "100%", display: "flex", "flexWrap": "wrap", alignItems: "center", borderBottom: "1px dashed #ccc", marginBottom: "10px" }}>
 
-                                            </Select>
-                                        </Form.Item>
-                                        <Form.Item label="选择客服联系人">
-                                            <Form.List name="userList">
-                                                {(fields, { add, remove }) => (
-                                                    <>
-                                                        {fields.map((field, index) => (
-                                                            <Space key={field.key} align="baseline" style={{ width: "100%", display: "flex", "flexWrap": "wrap", alignItems: "center",borderBottom:"1px dashed #ccc",marginBottom:"10px" }}>
+                                                                                    {/* <div key={field.key} > */}
+                                                                                    {/* <Divider>第{index + 1}条</Divider> */}
+                                                                                    <Form.Item  {...field} label="出二维码次数" name={[field.name, 'showLimit']} fieldKey={[field.fieldKey, 'showLimit']}
+                                                                                        rules={[{ required: true, message: '出二维码次数' }]}
+                                                                                    >
+                                                                                        <InputNumber min={0} />
+                                                                                    </Form.Item>
 
-                                                                {/* <div key={field.key} > */}
-                                                                    {/* <Divider>第{index + 1}条</Divider> */}
-                                                                    <Form.Item  {...field} label="出二维码次数" name={[field.name, 'showLimit']}  fieldKey={[field.fieldKey, 'showLimit']}
-                                                                    rules={[{ required: true, message: '出二维码次数' }]}
-                                                                    >
-                                                                        <InputNumber min={0} />
-                                                                    </Form.Item>
+                                                                                    <Form.Item  {...field} label="客服联系人" name={[field.name, 'userId']} fieldKey={[field.fieldKey, 'userId']}
+                                                                                        rules={[{ required: true, message: '客服联系人' }]}
+                                                                                        style={{ width: "600px" }}
+                                                                                    >
+                                                                                        <Select
+                                                                                            placeholder="请输入用户标签"
+                                                                                            allowClear
+                                                                                            mode="multiple"
+                                                                                            {...this.state.selectProps}
+                                                                                        >
+                                                                                            {
+                                                                                                this.state.allUserList.map((r, i) => {
+                                                                                                    return (
+                                                                                                        <Option value={r.userid} key={i}>
+                                                                                                            <img src={r.avatar} alt="" style={{ width: "20px" }} />
+                                                                                                            {r.name}
+                                                                                                        </Option>
+                                                                                                    )
 
-                                                                    <Form.Item  {...field} label="客服联系人" name={[field.name, 'userId']} fieldKey={[field.fieldKey, 'userId']}
-                                                                        rules={[{ required: true, message: '客服联系人' }]}
-                                                                        style={{ width: "600px" }}
-                                                                    >
-                                                                        <Select
-                                                                            placeholder="请输入用户标签"
-                                                                            allowClear
-                                                                            mode="multiple"
-                                                                            {...this.state.selectProps}
-                                                                        >
-                                                                            {
-                                                                                this.state.allUserList.map((r, i) => {
-                                                                                    return (
-                                                                                        <Option value={r.userid} key={i}>
-                                                                                            <img src={r.avatar} alt="" style={{ width: "20px" }} />
-                                                                                            {r.name}
-                                                                                        </Option>
-                                                                                    )
+                                                                                                })
+                                                                                            }
 
-                                                                                })
-                                                                            }
+                                                                                        </Select>
+                                                                                    </Form.Item>
+                                                                                    <Button type="dashed" style={{ marginBottom: "28px" }} onClick={() => remove(field.name)} icon={<MinusCircleOutlined />}>
+                                                                                        删除
+                                                                                    </Button>
 
-                                                                        </Select>
-                                                                    </Form.Item>
-                                                                    <Button type="dashed"  style={{ marginBottom: "28px" }} onClick={() => remove(field.name)} icon={<MinusCircleOutlined />}>
-                                                                        删除
-                                                                    </Button>
+                                                                                    {/* </div> */}
 
-                                                                {/* </div> */}
+                                                                                </Space>
+                                                                            ))}
+                                                                            <Form.Item style={{ marginTop: "20px" }}>
+                                                                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                                                    新建客服联系人
+                                                                                </Button>
+                                                                            </Form.Item>
+                                                                        </>
+                                                                    )}
+                                                                </Form.List>
+                                                            </Form.Item>
+                                                        </TabPane>
+                                                    )
+                                                })
 
-                                                            </Space>
-                                                        ))}
-                                                        <Form.Item style={{ marginTop: "20px" }}>
-                                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                                新建客服联系人
-                                                            </Button>
-                                                        </Form.Item>
-                                                    </>
-                                                )}
-                                            </Form.List>
-                                        </Form.Item>
+                                            }
+                                        </Tabs>
                                     </>
                                     : ""
                             }
@@ -306,12 +315,18 @@ export default class EarnIncentiveTask extends React.Component {
                             </Form.Item>
                         </Form>
                     }
+
+
+
+
+
+
                 </Modal>
-               
+
             </div>
         )
     }
-   
+
     componentDidMount() {
         this.getQrcodeConfig();
         this.requestNewAdTagList()
@@ -376,7 +391,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     getCount(val) {  //获取选中客服次数
         getCount({ qywechatCode: val }).then(res => {
-            
+
         })
     }
     closeModal() {
@@ -396,7 +411,8 @@ export default class EarnIncentiveTask extends React.Component {
                 ...val,
                 start: parseInt(val.time[0].valueOf() / 1000),
                 end: parseInt(val.time[1].valueOf() / 1000),
-                status: val.status ? 1 : 0
+                status: val.status ? 1 : 0,
+                // qywechatCode:this.state.activityCode
             }
             delete params.userList
         }
@@ -417,9 +433,9 @@ export default class EarnIncentiveTask extends React.Component {
     saveMyWechatUser(val) {
         let info = val.userList
         let arr = []
-        info.forEach(r=>{
+        info.forEach(r => {
             arr.push({
-                "qywechatCode": r.qywechatCode?r.qywechatCode:val.qywechatCode,   //企业微信code码
+                "qywechatCode": this.state.activityCode,   //企业微信code码
                 "userids": r.userId.join(","),   //企业微信客服列表里面的userid
                 "showLimit": r.showLimit   // 二维码次数限制
             })

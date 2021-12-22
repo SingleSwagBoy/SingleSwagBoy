@@ -436,7 +436,7 @@ function App2() {
                                                         </Form.Item>
                                                         <Form.Item label='小程序路径'>
                                                             <MyImageUpload
-                                                                postUrl={`/mms/wx/qywechat/uploadimg?qywechatCode=${formRef.getFieldValue("qywechatCode")}`} //上传地址
+                                                                postUrl={`/mms/wx/qywechat/uploadmedia?qywechatCode=${formRef.getFieldValue("qywechatCode")}`} //上传地址
                                                                 getUploadFile={(file) => getUploadFile(file)}
                                                                 needAgain={true}
                                                                 getUploadFileUrl={(file, newItem) => { getUploadFileUrl('imageUrl', file, newItem, replyInfos[i]) }}

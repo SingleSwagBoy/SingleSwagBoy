@@ -256,7 +256,10 @@ export default class EarnIncentiveTask extends React.Component {
 
                                                                                         </Select>
                                                                                     </Form.Item>
-                                                                                    <Button type="dashed" style={{ marginBottom: "28px" }} onClick={() => remove(field.name)} icon={<MinusCircleOutlined />}>
+                                                                                    <Button type="dashed" style={{ marginBottom: "28px" }} onClick={() => {
+                                                                                        if(this.formRef.current.getFieldValue("userList").length==1)return message.error("请保留至少一条")
+                                                                                        remove(field.name)
+                                                                                    }} icon={<MinusCircleOutlined />}>
                                                                                         删除
                                                                                     </Button>
 

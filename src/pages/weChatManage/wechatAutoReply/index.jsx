@@ -219,32 +219,19 @@ function App2() {
             setQywechatCode(param.qywechatCode)
         })
     }
-    const strToBinary = (str) => {
-        var result = [];
-        var list = str.split("");
-        for (var i = 0; i < list.length; i++) {
-            if (i != 0) {
-                result.push(" ");
-            }
-            var item = list[i];
-            var binartStr = item.charCodeAt().toString(2);
-            result.push(binartStr);
-        }
-        return result.join("");
-    }
     // const [values, setFieldValues] = useForm()
     const uploadMiniImage = (item) => {
         console.log(item)
+        // let info = JSON.stringify(item)
         let formData = new FormData();
-        formData.append('file', JSON.stringify(item))
+        formData.append('file', item)
         console.log(formData)
-        let info = strToBinary(item)
         let parmas = { qywechatCode: formRef.getFieldValue("qywechatCode") }
         let header = {
             "Content-Type": "multipart/form-data",
             // "Content-Type":"application/x-www-form-urlencoded"
         }
-        uploadImage(parmas, formData, header).then(res => {
+        uploadImage(parmas, JSON.stringify(formData), header).then(res => {
 
         })
     }

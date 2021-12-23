@@ -3,7 +3,7 @@ import { getConfig, setConfig, delMpConfig } from 'api'
 import { Card, Breadcrumb, Button, message, Table, Modal, Form, Input, Image, Space } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
-import { MyImageUpload } from '@/components/views.js';
+import { MyImageUpload,MySyncBtn } from '@/components/views.js';
 import util from 'utils'
 import "./style.css"
 export default class AddressNews extends Component {
@@ -75,6 +75,7 @@ export default class AddressNews extends Component {
                                     this.formRef.current.resetFields()
                                 })
                             }}>新建</Button>
+                            <MySyncBtn type={3} name='同步数据' params={{key:this.state.key}} />
                         </div>
                     }
                 >

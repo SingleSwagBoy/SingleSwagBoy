@@ -140,7 +140,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                     this.forceUpdate()
                                                     await this.getWechatUser(arr.qywechatCode)
                                                     await this.getMyWechatUser(arr.qywechatCode)
-                                                    // await this.getCount(arr.qywechatCode)
+                                                    await this.getCount(arr.qywechatCode)
 
                                                 })
                                             }}
@@ -201,12 +201,12 @@ export default class EarnIncentiveTask extends React.Component {
                                     ?
 
                                     <>
-                                        <Tabs defaultActiveKey="0" centered onChange={(e) => {
+                                        <Tabs defaultActiveKey="0" centered onChange={async(e) => {
                                             console.log(e)
                                             let code = this.state.wechatList[e].code
-                                            this.getWechatUser(code)
+                                            await this.getWechatUser(code)
                                             this.getMyWechatUser(code)
-                                            // this.getCount(code)
+                                            this.getCount(code)
                                             // this.forceUpdate()
                                             this.setState({
                                                 activityCode:code
@@ -368,12 +368,12 @@ export default class EarnIncentiveTask extends React.Component {
             })
         })
     }
-    getWechatUser(val) {  //获取全部客服
-        getWechatUser({ qywechatCode: val }).then(res => {
+    async getWechatUser(val) {  //获取全部客服
+        await getWechatUser({ qywechatCode: val }).then(res => {
             this.setState({
                 allUserList: res.data
             },()=>{
-                this.getCount(val)
+                // this.getCount(val)
             })
         })
     }

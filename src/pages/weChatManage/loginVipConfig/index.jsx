@@ -33,7 +33,6 @@ export default class EarnIncentiveTask extends React.Component {
             lists: [],
             tagList: [],
             currentItem: "",
-            userEdit: false,
             selectProps: {
                 optionFilterProp: "children",
                 // filterOption(input, option){
@@ -44,11 +43,7 @@ export default class EarnIncentiveTask extends React.Component {
                 }
             },
             allUserList: [],
-            chooseUserList: [],
-            noSavebtn: [],
-            filterList: [],
             wechatList: [],
-            userType: null,
             activityCode:"",//当前激活的哪一个qywechatCode
             columns: [
                 {
@@ -143,9 +138,9 @@ export default class EarnIncentiveTask extends React.Component {
                                                     })
                                                     this.formRef.current.setFieldsValue(arr)
                                                     this.forceUpdate()
-                                                    await this.getCount(arr.qywechatCode)
                                                     await this.getWechatUser(arr.qywechatCode)
                                                     await this.getMyWechatUser(arr.qywechatCode)
+                                                    // await this.getCount(arr.qywechatCode)
 
                                                 })
                                             }}
@@ -160,7 +155,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     render() {
-        let { lists, layout, loading, columns, entranceState, tagList, allUserList, userType, chooseUserList, noSavebtn, userEdit, filterList } = this.state;
+        let { lists, layout, loading, columns, entranceState, tagList, allUserList } = this.state;
         return (
             <div className="loginVip">
                 <Card title={
@@ -211,7 +206,7 @@ export default class EarnIncentiveTask extends React.Component {
                                             let code = this.state.wechatList[e].code
                                             this.getWechatUser(code)
                                             this.getMyWechatUser(code)
-                                            this.getCount(code)
+                                            // this.getCount(code)
                                             // this.forceUpdate()
                                             this.setState({
                                                 activityCode:code
@@ -241,17 +236,18 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                         style={{ width: "600px" }}
                                                                                     >
                                                                                         <Select
-                                                                                            placeholder="请输入用户标签"
+                                                                                            placeholder="请输入客服联系人"
                                                                                             allowClear
                                                                                             mode="multiple"
                                                                                             {...this.state.selectProps}
                                                                                         >
                                                                                             {
-                                                                                                this.state.allUserList.map((r, i) => {
+                                                                                                allUserList.map((r, i) => {
                                                                                                     return (
                                                                                                         <Option value={r.userid} key={i}>
                                                                                                             <img src={r.avatar} alt="" style={{ width: "20px" }} />
                                                                                                             {r.name}
+                                                                                                            {r.limit?"---"+r.limit:""}
                                                                                                         </Option>
                                                                                                     )
 
@@ -375,8 +371,9 @@ export default class EarnIncentiveTask extends React.Component {
     getWechatUser(val) {  //获取全部客服
         getWechatUser({ qywechatCode: val }).then(res => {
             this.setState({
-                allUserList: res.data,
-                filterList: res.data
+                allUserList: res.data
+            },()=>{
+                this.getCount(val)
             })
         })
     }
@@ -391,7 +388,17 @@ export default class EarnIncentiveTask extends React.Component {
     }
     getCount(val) {  //获取选中客服次数
         getCount({ qywechatCode: val }).then(res => {
-
+            console.log(this.state.allUserList,"allUserList")
+            let keys = Object.keys(res.data)
+            let arr = this.state.allUserList
+            keys.forEach(r=>{
+                arr.forEach(l=>{
+                    if(r == l.userid){
+                        l.limit = res.data[r]
+                    }
+                })
+            })
+            this.setState({allUserList:arr})
         })
     }
     closeModal() {

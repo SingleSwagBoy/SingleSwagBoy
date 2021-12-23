@@ -6,7 +6,7 @@
  * @Description: 创建@映射src 例如：引入控件可使用 MySyncBtn
  */
 import React, { Component } from 'react'
-import { getHkCategory, editHkCategory, addHkCategory, delHkCategory, changeHkCategory, getChannel,switchHkCategory } from 'api'
+import { getHkCategory, editHkCategory, addHkCategory, delHkCategory, changeHkCategory, getChannel, switchHkCategory } from 'api'
 import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -59,7 +59,7 @@ export default class EarnIncentiveTask extends React.Component {
                 { key: 4, name: "频道" },
                 { key: 5, name: "其他H5链接" },
                 { key: 6, name: "体育赛程" },
-                { key: 7, name: "生活服务" },
+                // { key: 7, name: "生活服务" },
             ],
             columns: [
                 {
@@ -87,6 +87,7 @@ export default class EarnIncentiveTask extends React.Component {
                                 {/* {rowValue === 1?"有效":"无效"} */}
                                 <Switch checkedChildren="开" unCheckedChildren="关" key={new Date().getTime()}
                                     defaultChecked={rowValue == 1 ? true : false}
+                                    disabled={row.jumpType == 3 || row.jumpType == 6}
                                     onChange={(val) => {
                                         console.log(val)
                                         let obj = JSON.parse(JSON.stringify(row))
@@ -220,8 +221,8 @@ export default class EarnIncentiveTask extends React.Component {
                                     allowClear
                                     {...this.state.selectProps}
                                     onChange={(e) => {
-                                        if (e == 4) {this.getChannel()}
-                                        this.formRef.current.setFieldsValue({"jumpType":e,"jumpValue":null})
+                                        if (e == 4) { this.getChannel() }
+                                        this.formRef.current.setFieldsValue({ "jumpType": e, "jumpValue": null })
                                         this.forceUpdate()
                                     }}
                                 >
@@ -259,7 +260,7 @@ export default class EarnIncentiveTask extends React.Component {
                                 </Form.Item>
                             }
                             {
-                                this.formRef.current && (this.formRef.current.getFieldValue("jumpType") == 5 || this.formRef.current.getFieldValue("jumpType") == 6)  &&
+                                this.formRef.current && (this.formRef.current.getFieldValue("jumpType") == 5 || this.formRef.current.getFieldValue("jumpType") == 6) &&
                                 <Form.Item label="跳转地址" name="jumpValue">
                                     <Input placeholder="跳转地址" />
                                 </Form.Item>

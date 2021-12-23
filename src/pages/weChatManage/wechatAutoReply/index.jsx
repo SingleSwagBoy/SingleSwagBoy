@@ -190,9 +190,9 @@ function App2() {
         setReplyInfos(arr)
     }
     //获取上传文件
-    const getUploadFile = (file) => {
+    const getUploadFile = (file,item) => {
         console.log(file)
-        // uploadMiniImage(file)
+        uploadMiniImage(file,item)
     }
     const delItem = (row) => {
         Modal.confirm({
@@ -220,19 +220,21 @@ function App2() {
         })
     }
     // const [values, setFieldValues] = useForm()
-    const uploadMiniImage = (item) => {
-        console.log(item)
-        // let info = JSON.stringify(item)
+    const uploadMiniImage = (file,item) => {
+        console.log(file)
         let formData = new FormData();
-        formData.append('file', item)
+        formData.append('file', file)
         console.log(formData)
         let parmas = { qywechatCode: formRef.getFieldValue("qywechatCode") }
         let header = {
             "Content-Type": "multipart/form-data",
             // "Content-Type":"application/x-www-form-urlencoded"
         }
-        uploadImage(parmas, JSON.stringify(formData), header).then(res => {
-
+        uploadImage(parmas, formData,header).then(res => {
+            console.log(res.data,"图片地址")
+            item.imageUrl = res.data
+            let arr = [...replyInfos]
+            setReplyInfos(arr)
         })
     }
     return (
@@ -424,7 +426,7 @@ function App2() {
                                                         <Form.Item label='小程序路径'>
                                                             <MyImageUpload
                                                                 postUrl={`/mms/wx/qywechat/uploadmedia?qywechatCode=${formRef.getFieldValue("qywechatCode")}`} //上传地址
-                                                                getUploadFile={(file) => getUploadFile(file)}
+                                                                getUploadFile={(file) => getUploadFile(file,replyInfos[i])}
                                                                 needAgain={true}
                                                                 getUploadFileUrl={(file, newItem) => { getUploadFileUrl('imageUrl', file, newItem, replyInfos[i]) }}
                                                                 imageUrl={replyInfos[i].imageUrl} />

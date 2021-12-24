@@ -510,7 +510,7 @@ export default class SportsProgram extends Component {
 
                                         <Form.Item>
                                             <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                新建播放器内容
+                                                新增播放器内容
                                             </Button>
                                         </Form.Item>
                                     </>
@@ -532,41 +532,80 @@ export default class SportsProgram extends Component {
                                 {(fields, { add, remove }) => (
                                     <>
                                         {fields.map((field, index) => (
-                                            <Space key={field.key} align="baseline" style={{flexWrap:"wrap"}}>
-                                                <Form.Item {...field} label="标题" name={[field.name, 'votes1']} fieldKey={[field.fieldKey, 'votes1']}>
-                                                    <Select style={{ width: "300px" }} placeholder="请选择播放器播放类型">
-                                                        <Option value={1} key={1}>频道</Option>
-                                                        <Option value={2} key={2}>视频</Option>
-                                                    </Select>
-                                                </Form.Item>
-                                                <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
-                                                    <Input placeholder="请填写标题" style={{ width: "300px" }} />
-                                                </Form.Item>
-                                                <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']} style={{width:"100%"}}>
-                                                    <Radio.Group>
-                                                        <Radio value={true}>横排列表</Radio>
-                                                        <Radio value={false}>双纵列表</Radio>
-                                                    </Radio.Group>
-                                                </Form.Item>
-                                                <Form.Item {...field} label="内容" name={[field.name, 'votes1']} fieldKey={[field.fieldKey, 'votes1']}>
-                                                    <Select style={{ width: "300px" }} placeholder="请选择播放器播放类型">
-                                                        <Option value={1} key={1}>频道</Option>
-                                                        <Option value={2} key={2}>视频</Option>
-                                                    </Select>
-                                                </Form.Item>
-                                                <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
-                                                    <Select style={{ width: "300px" }} placeholder="请选择">
-                                                        <Option value={1} key={1}>频道</Option>
-                                                        <Option value={2} key={2}>视频</Option>
-                                                    </Select>
-                                                </Form.Item>
-                                                <MinusCircleOutlined onClick={() => remove(field.name)} />
-                                            </Space>
+                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                                                <Space key={field.key} align="baseline" style={{ flexWrap: "wrap" }}>
+                                                    <Form.Item {...field} label="标题" name={[field.name, 'votes1']} fieldKey={[field.fieldKey, 'votes1']}>
+                                                        <Select style={{ width: "200px" }} placeholder="请选择播放器播放类型">
+                                                            <Option value={1} key={1}>频道</Option>
+                                                            <Option value={2} key={2}>视频</Option>
+                                                        </Select>
+                                                    </Form.Item>
+                                                    <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
+                                                        <Input placeholder="请填写标题" style={{ width: "200px" }} />
+                                                    </Form.Item>
+                                                    <div style={{ width: "700px" }}>
+                                                        <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
+                                                            <Radio.Group>
+                                                                <Radio value={true}>横排列表</Radio>
+                                                                <Radio value={false}>双纵列表</Radio>
+                                                            </Radio.Group>
+                                                        </Form.Item>
+                                                    </div>
+
+                                                    <Form.Item
+                                                        label="内容"
+                                                        style={{ width: "700px" }}
+                                                    // rules={[{ required: true, message: '投票选项' }]}
+                                                    >
+                                                        <Form.List name={[field.name, 'content']}>
+                                                            {(fieldsCont, { add, remove }) => (
+                                                                <>
+                                                                    {fieldsCont.map((fieldItem, index) => (
+                                                                        <Space key={fieldItem.key} align="baseline">
+                                                                            <Form.Item {...fieldItem} label="" name={[fieldItem.name, 'votes1']} fieldKey={[fieldItem.fieldKey, 'votes1']}>
+                                                                                <Select style={{ width: "200px" }} placeholder="请选择播放器播放类型">
+                                                                                    <Option value={1} key={1}>频道</Option>
+                                                                                    <Option value={2} key={2}>视频</Option>
+                                                                                </Select>
+                                                                            </Form.Item>
+                                                                            <Form.Item {...fieldItem} label="" name={[fieldItem.name, 'votes']} fieldKey={[fieldItem.fieldKey, 'votes']}>
+                                                                                <Select style={{ width: "200px" }} placeholder="请选择">
+                                                                                    <Option value={1} key={1}>频道</Option>
+                                                                                    <Option value={2} key={2}>视频</Option>
+                                                                                </Select>
+                                                                            </Form.Item>
+
+                                                                            <div style={{ margin: "0 40px" }}>
+                                                                                <Button danger onClick={() => remove(fieldItem.name)} block icon={<MinusCircleOutlined />}>
+                                                                                    删除内容
+                                                                                </Button>
+                                                                            </div>
+                                                                        </Space>
+                                                                    ))}
+
+                                                                    <Form.Item>
+                                                                        <Button type="primary" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                                            新增内容
+                                                                        </Button>
+                                                                    </Form.Item>
+                                                                </>
+                                                            )}
+                                                        </Form.List>
+                                                    </Form.Item>
+
+                                                </Space>
+                                                <div>
+                                                    <Button danger onClick={() => remove(field.name)} block icon={<MinusCircleOutlined />}>
+                                                        删除内容板块
+                                                    </Button>
+                                                </div>
+                                            </div>
+
                                         ))}
 
                                         <Form.Item>
                                             <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                新建播放器内容
+                                                新增内容板块
                                             </Button>
                                         </Form.Item>
                                     </>
@@ -577,7 +616,43 @@ export default class SportsProgram extends Component {
 
 
 
+                        <Form.Item
+                            label="banner设置"
+                        // name="voters"
+                        // rules={[{ required: true, message: '投票选项' }]}
+                        >
+                            <Form.List name="banner">
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map((field, index) => (
 
+                                            <Space key={field.key} align="baseline">
+
+                                                <Form.Item {...field} label="标题" name={[field.name, 'votes1']} fieldKey={[field.fieldKey, 'votes1']}>
+                                                    <Select style={{ width: "200px" }} placeholder="请选择播放器播放类型">
+                                                        <Option value={1} key={1}>频道</Option>
+                                                        <Option value={2} key={2}>视频</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                                <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
+                                                    <Input placeholder="请填写标题" style={{ width: "200px" }} />
+                                                </Form.Item>
+
+                                                <Button danger onClick={() => remove(field.name)} icon={<MinusCircleOutlined />}>
+                                                    删除banner
+                                                </Button>
+                                            </Space>
+                                        ))}
+
+                                        <Form.Item>
+                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                新增banner
+                                            </Button>
+                                        </Form.Item>
+                                    </>
+                                )}
+                            </Form.List>
+                        </Form.Item>
 
 
 

@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-12-23 14:43:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-12-24 18:20:07
+ * @LastEditTime: 2021-12-24 18:27:23
  * @Description: tv推荐配置
  */
 
@@ -60,8 +60,8 @@ export default class tvRecommendConfig extends Component {
                             <Row  >
 
                                 {record.content.map((item, index) => {
-                                    let titleSpan = 6;
-                                    let contentSpan = 18;
+                                    let titleSpan =7;
+                                    let contentSpan = 17;
                                     return (
                                         <div style={{ flex: 1 }}>
                                             <Row>
@@ -73,19 +73,19 @@ export default class tvRecommendConfig extends Component {
                                                 <Col span={contentSpan}>{item.channelId}</Col>
                                             </Row>
                                             <Row>
-                                                <Col span={titleSpan}>频道推荐列表id:</Col>
-                                                <Col span={contentSpan}>{item.tvCVId}</Col>
-                                            </Row>
-                                            <Row>
                                                 <Col span={titleSpan}>推荐节目id:</Col>
                                                 <Col span={contentSpan}>{item.programId}</Col>
                                             </Row>
                                             <Row>
-                                                <Col span={titleSpan}>自定义标题:</Col>
+                                                <Col span={titleSpan}>推荐列表id:</Col>
+                                                <Col span={contentSpan}>{item.tvCVId}</Col>
+                                            </Row>
+                                            <Row>
+                                                <Col span={titleSpan}>标题:</Col>
                                                 <Col span={contentSpan}>{item.title}</Col>
                                             </Row>
                                             <Row>
-                                                <Col span={titleSpan}>自定义封面图:</Col>
+                                                <Col span={titleSpan}>封面图:</Col>
                                                 <Col span={contentSpan}>
                                                     <Image src={item.cover} />
                                                 </Col>

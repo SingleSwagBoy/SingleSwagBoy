@@ -172,6 +172,16 @@ export const requestOperateApk = (params) => { return request2.post(`${baseUrl}/
 // export const removeOperateApk = params => { return axios.post(`${base}/mms/offline/apk/del`, params); };
 
 
+//========== tv推荐配置 ==========
+export const requestChannelRecommendList = (params) => { return request2.post(`${baseUrl}/mms/tv/channelRecommend/list`, params); };                                    //频道管理-列表
+export const requestChannelRecommendSearchChannel = (params) => { return request2.get(`${baseUrl}/mms/tv/channelRecommend/searchChannel`, { params: params }); };       //频道管理-下拉搜索频道
+export const requestChannelRecommendSearchProgram = (params) => { return request2.get(`${baseUrl}/mms/tv/channelRecommend/searchProgram`, { params: params }); };       //频道推荐-下拉搜索节目视频
+export const requestChannelRecommendCreate = (params) => { return request2.post(`${baseUrl}/mms/tv/channelRecommend/create`, params); };                                //频道推荐-新增
+export const requestChannelRecommendEdit = (params) => { return request2.post(`${baseUrl}/mms/tv/channelRecommend/edit`, params); };                                    //频道推荐-编辑
+export const requestChannelRecommendDelete = (params) => { return request2.get(`${baseUrl}/mms/tv/channelRecommend/deleteItem`, { params: params }); };                 //频道推荐-删除
+export const requestChannelRecommendChangeState = (params) => { return request2.get(`${baseUrl}/mms/tv/channelRecommend/changeState`, { params: params }); };           //频道推荐-修改状态
+export const requestChannelRecommendChannel = (params) => { return request2.post(`${baseUrl}/mms/channel/get`, params) };                                               //频道推荐-展示频道
+
 //========== 微信管理 ==========
 export const requestWxReply = (params) => { return request2.post(`${baseUrl}/mms/wxReply/get`, params); };                                                                                  //获取微信回复
 export const requestWxReplyTypes = (params) => { return request2.post(`${baseUrl}/mms/wx/public/get`, params); };                                                                           //获取回复公众号的类型
@@ -225,6 +235,7 @@ export const syncWeChat = (params) => { return request2.get(`${baseUrl}/mms/sync
 export const syncMenuImage = (params) => { return request2.get(`${baseUrl}/mms/config/menu/image/syncCache`, { params: params }); };                                                        //广告菜单栏目录配置
 export const syncWxTemplateMsgConfig = (params) => { return request2.get(`${baseUrl}/mms/tmpl/message/config/sync`, { params: params }); };                                                 //微信模板消息 同步
 export const syncAdNewTagSync = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/sync`, { params: params }); };                                                                 //广告新标签 数据同步
+export const syncChannelRecommend = (params) => { return request2.get(`${baseUrl}/mms/tv/channelRecommend/syncCache`, { params: params }); };                                               //频道推荐-数据同步
 
 
 
@@ -262,10 +273,10 @@ export const adListSync = (params) => { return request2.post(`${baseUrl}/mms/ad/
 export const adRightKeyUpdate = (params) => { return request2.post(`${baseUrl}/mms/ad/adRightKey/update`, params) };                                                                        //更新右键运营为
 export const screenUpdate = (params) => { return request2.post(`${baseUrl}/mms/ad/screen/update`, params) };                                                                                //更新屏显素材
 export const screenDel = (params) => { return request2.post(`${baseUrl}/mms/ad/screen/del`, params) };                                                                                      //删除屏显素材
-export const adRightKeyDel = (params) => { return request2.delete(`${baseUrl}/mms/ad/adRightKey/del`,  { params: params }) };                                                               //删除屏显素材
-export const adRightKeySync = (params) => { return request2.post(`${baseUrl}/mms/ad/adRightKey/sync`,  params) };                                                             //素材混村
-export const screenCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/screen/copy`,  params) };                                                             //素材混村
-export const adRightKeyCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/adRightKey/copy`,  params) };                                                             //素材混村
+export const adRightKeyDel = (params) => { return request2.delete(`${baseUrl}/mms/ad/adRightKey/del`, { params: params }) };                                                               //删除屏显素材
+export const adRightKeySync = (params) => { return request2.post(`${baseUrl}/mms/ad/adRightKey/sync`, params) };                                                             //素材混村
+export const screenCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/screen/copy`, params) };                                                             //素材混村
+export const adRightKeyCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/adRightKey/copy`, params) };                                                             //素材混村
 
 
 //  转转管理------赚赚激励气泡
@@ -289,9 +300,9 @@ export const addRefresh = (params) => { return request2.post(`${baseUrl}/mms/zzI
 export const changeRefresh = (params) => { return request2.get(`${baseUrl}/mms/zzItemTicker/changeState`, { params: params }) };          // 编辑和新增库存列表
 export const delRefresh = (params) => { return request2.get(`${baseUrl}/mms/zzItemTicker/deleteItem`, { params: params }) };          // 编辑和新增库存列表
 //赚赚管理 ---随机提现配置 
-export const getZZShow = (params) => { return request2.get(`${baseUrl}/mms/zz/show`, { params: params }) }; 
-export const saveZZShow = (params,header) => { return request2.post(`${baseUrl}/mms/zz/store?key=${header.key}`, params) }; 
-export const syncZZShow = (params) => { return request2.get(`${baseUrl}/mms/zz/syncCache`, { params: params }) }; 
+export const getZZShow = (params) => { return request2.get(`${baseUrl}/mms/zz/show`, { params: params }) };
+export const saveZZShow = (params, header) => { return request2.post(`${baseUrl}/mms/zz/store?key=${header.key}`, params) };
+export const syncZZShow = (params) => { return request2.get(`${baseUrl}/mms/zz/syncCache`, { params: params }) };
 
 
 //白名单配置
@@ -310,13 +321,13 @@ export const getPActivityList = (params) => { return request.get(`${baseUrl}/mms
 export const updatePActivity = (params) => { return request.post(`${baseUrl}/mms/activity/truntable/update`, params); };                  // 修改活动
 export const updatePActivityStatus = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/status`, { params: params }); }; // 上下线活动
 export const addPActivity = (params) => { return request.post(`${baseUrl}/mms/activity/truntable/add`, params); };                        // 新增
-export const removePActivity = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/del`, { params: params } ); };         // 删除
-export const goodsRealStock = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/realStock`, { params: params } ); };    // 对应的商品实时库存
-export const syncPActivity = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/sync`, { params: params } ); };          // 同步缓存
+export const removePActivity = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/del`, { params: params }); };         // 删除
+export const goodsRealStock = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/realStock`, { params: params }); };    // 对应的商品实时库存
+export const syncPActivity = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/sync`, { params: params }); };          // 同步缓存
 
 // 商品配置
-export const getPProductList = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/goods`, { params: params } ); };       // 商品列表
-export const delgoodsList = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/delgoods`, { params: params } ); };       // 删除商品
+export const getPProductList = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/goods`, { params: params }); };       // 商品列表
+export const delgoodsList = (params) => { return request.get(`${baseUrl}/mms/activity/truntable/delgoods`, { params: params }); };       // 删除商品
 export const addPActivityGoods = (params) => { return request.post(`${baseUrl}/mms/activity/truntable/addgoods`, params); };              // 新增商品
 export const updateGoods = (params) => { return request.post(`${baseUrl}/mms/activity/truntable/updategoods`, params); };                 // 编辑商品
 
@@ -327,7 +338,7 @@ export const getSource = (params) => { return request.post(`${baseUrl}/mms/chann
 export const addSource = (params) => { return request.post(`${baseUrl}/mms/channel/sourceInvalidRecommend/add`, params); };                 // 新增源失效推荐
 export const updateSource = (params) => { return request.post(`${baseUrl}/mms/channel/sourceInvalidRecommend/update`, params); };                 // 更新源失效推荐
 export const delSource = (params) => { return request.post(`${baseUrl}/mms/channel/sourceInvalidRecommend/del`, params); };                 // 删除源失效推荐
-export const syncSource = (params) => { return request.get(`${baseUrl}/mms/channel/sourceInvalidRecommend/sync`, {params:params}); };                 // 同步缓存-源失效推荐
+export const syncSource = (params) => { return request.get(`${baseUrl}/mms/channel/sourceInvalidRecommend/sync`, { params: params }); };                 // 同步缓存-源失效推荐
 export const copySource = (params) => { return request.post(`${baseUrl}/mms/channel/sourceInvalidRecommend/copy`, params); };                 // 复制源失效推荐
 
 
@@ -344,90 +355,90 @@ export const delProgramList = (params) => { return request.get(`${baseUrl}/mms/c
 export const syncProgramList = (params) => { return request.get(`${baseUrl}/mms/channel/svcollection/programsync`, { params: params }); };                 // 同步
 export const addShortList = (params) => { return request.post(`${baseUrl}/mms/channel/svcollection/add`, params); };                 // 同步
 export const searchShortList = (params) => { return request.get(`${baseUrl}/mms/shortVideo/searchbyid`, { params: params }); };                 // 同步
-export const updateShortList = (params) => { return request.post(`${baseUrl}/mms/channel/svcollection/update`,params); };                 // 同步
-export const delShortList = (params) => { return request.get(`${baseUrl}/mms/channel/svcollection/del`,{ params: params }); };                 // 同步
-export const getSuggest = (params) => { return request.get(`${baseUrl}/mms/channel/home/suggest/list`,{ params: params }); };                 // 首页为你推荐列表
-export const addSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/add`,params); };                 // 首页为你推荐列表
-export const updateSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/update`,params); };                 // 首页为你推荐列表
-export const syncSuggest = (params) => { return request.get(`${baseUrl}/mms/channel/home/suggest/sync`,{ params: params }); };                 // 首页为你推荐列表同步
+export const updateShortList = (params) => { return request.post(`${baseUrl}/mms/channel/svcollection/update`, params); };                 // 同步
+export const delShortList = (params) => { return request.get(`${baseUrl}/mms/channel/svcollection/del`, { params: params }); };                 // 同步
+export const getSuggest = (params) => { return request.get(`${baseUrl}/mms/channel/home/suggest/list`, { params: params }); };                 // 首页为你推荐列表
+export const addSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/add`, params); };                 // 首页为你推荐列表
+export const updateSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/update`, params); };                 // 首页为你推荐列表
+export const syncSuggest = (params) => { return request.get(`${baseUrl}/mms/channel/home/suggest/sync`, { params: params }); };                 // 首页为你推荐列表同步
 
 //首页文字轮播配置
-export const getWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/list`,{ params: params }); };                 // 首页文字轮播配置列表
-export const uploadWordsConfig = (params) => { return request.post(`${baseUrl}/mms/channel/home/text/update`,params); };                 // 首页文字轮播配置列表
-export const addWordsConfig = (params) => { return request.post(`${baseUrl}/mms/channel/home/text/add`,params); };                 // 首页文字轮播配置列表
-export const delWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/del`,{ params: params }); };                 // 首页文字轮播配置列表
-export const getImageWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/image`,{ params: params }); };                 // 首页文字轮播配置列表
-export const setImageWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/uploadimage`,{ params: params }); };                 // 首页文字轮播配置列表
-export const syncWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/sync`,{ params: params }); };                 // 首页文字轮播配置列表
+export const getWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/list`, { params: params }); };                 // 首页文字轮播配置列表
+export const uploadWordsConfig = (params) => { return request.post(`${baseUrl}/mms/channel/home/text/update`, params); };                 // 首页文字轮播配置列表
+export const addWordsConfig = (params) => { return request.post(`${baseUrl}/mms/channel/home/text/add`, params); };                 // 首页文字轮播配置列表
+export const delWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/del`, { params: params }); };                 // 首页文字轮播配置列表
+export const getImageWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/image`, { params: params }); };                 // 首页文字轮播配置列表
+export const setImageWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/uploadimage`, { params: params }); };                 // 首页文字轮播配置列表
+export const syncWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/sync`, { params: params }); };                 // 首页文字轮播配置列表
 
 
 //首页直播配置
-export const getHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/list`,{ params: params }); };                 // 首页直播配置列表
-export const uploadHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/update`,{ params: params }); };                 // 首页直播配置列表
-export const getStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/status`,{ params: params }); };                 // 首页直播配置列表
-export const setStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/setstatus`,{ params: params }); };                 // 首页直播配置列表
-export const syncHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/sync`,{ params: params }); };                 // 首页直播配置列表
+export const getHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/list`, { params: params }); };                 // 首页直播配置列表
+export const uploadHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/update`, { params: params }); };                 // 首页直播配置列表
+export const getStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/status`, { params: params }); };                 // 首页直播配置列表
+export const setStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/setstatus`, { params: params }); };                 // 首页直播配置列表
+export const syncHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/sync`, { params: params }); };                 // 首页直播配置列表
 
 
 //微信菜单
-export const addWechatMenu = (params) => { return request.post(`${baseUrl}/mms/wx/menu/new/add`,params); };                 // 创建菜单
-export const getWechatMenu = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/get`,{ params: params }); };                 // 获取菜单
-export const delWechatMenu = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/delete`,{ params: params }); };                 // 删除菜单
-export const getWxlist = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/wxlist`,{ params: params }); };                 // 获取菜单
-export const setMenuState = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/status`,{ params: params }); };                 // 设置菜单状态
-export const uploadWechatMenu = (params) => { return request.post(`${baseUrl}/mms/wx/menu/new/update`,params); };           // 编辑菜单
+export const addWechatMenu = (params) => { return request.post(`${baseUrl}/mms/wx/menu/new/add`, params); };                 // 创建菜单
+export const getWechatMenu = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/get`, { params: params }); };                 // 获取菜单
+export const delWechatMenu = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/delete`, { params: params }); };                 // 删除菜单
+export const getWxlist = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/wxlist`, { params: params }); };                 // 获取菜单
+export const setMenuState = (params) => { return request2.get(`${baseUrl}/mms/wx/menu/new/status`, { params: params }); };                 // 设置菜单状态
+export const uploadWechatMenu = (params) => { return request.post(`${baseUrl}/mms/wx/menu/new/update`, params); };           // 编辑菜单
 
 //微信个性化群发
-export const preSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/preview`,params); };           // 微信群发预览
-export const addSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/add`,params); };           // 新建微信群发
-export const materialSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/material`,params); };           // 获取微信图文素材
-export const getSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/list`,{ params: params }); };           // 群发列表
-export const everySend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/data`,{ params: params }); };           // 微信群发结束后的统计结果
-export const cancelSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/cancel`,{ params: params }); };           // 取消预约推送
-export const reSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/resend`,{ params: params }); };           // 取消推送重发
+export const preSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/preview`, params); };           // 微信群发预览
+export const addSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/add`, params); };           // 新建微信群发
+export const materialSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/material`, params); };           // 获取微信图文素材
+export const getSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/list`, { params: params }); };           // 群发列表
+export const everySend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/data`, { params: params }); };           // 微信群发结束后的统计结果
+export const cancelSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/cancel`, { params: params }); };           // 取消预约推送
+export const reSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/resend`, { params: params }); };           // 取消推送重发
 
 
 //微信粉丝
-export const getFansTagList = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/list`,params); };           // 获取微信标签详情列表
-export const addFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/add`,params); };           // 新增粉丝标签
-export const updateFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/update`,params); };           // 更新粉丝标签
-export const delFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/del`,params); };           // 删除粉丝标签
-export const getFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/get`,params); };           // 粉丝标签列表
+export const getFansTagList = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/list`, params); };           // 获取微信标签详情列表
+export const addFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/add`, params); };           // 新增粉丝标签
+export const updateFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/update`, params); };           // 更新粉丝标签
+export const delFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/del`, params); };           // 删除粉丝标签
+export const getFansTag = (params) => { return request2.post(`${baseUrl}/mms/wx/fansTag/get`, params); };           // 粉丝标签列表
 
 
 //火星开机进入 
-export const getMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/marsStartup/get`,{ params: params }); };                 // 获取
-export const addMarsList = (params) => { return request2.post(`${baseUrl}/mms/ad/marsStartup/add`,params); };                 // 获取
-export const uploadMarsList = (params) => { return request2.post(`${baseUrl}/mms/ad/marsStartup/update`,params); };                 // 获取
-export const delMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/marsStartup/del`,{ params: params }); };                 // 获取
+export const getMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/marsStartup/get`, { params: params }); };                 // 获取
+export const addMarsList = (params) => { return request2.post(`${baseUrl}/mms/ad/marsStartup/add`, params); };                 // 获取
+export const uploadMarsList = (params) => { return request2.post(`${baseUrl}/mms/ad/marsStartup/update`, params); };                 // 获取
+export const delMarsList = (params) => { return request.get(`${baseUrl}/mms/ad/marsStartup/del`, { params: params }); };                 // 获取
 
 
 
 //赚赚限时任务
-export const addEnterChannel = (params) => { return request2.post(`${baseUrl}/mms/config/vipBootChannelConfig/add`,params); };                 // 添加会员开机进入频道配置
-export const getEnterChannel = (params) => { return request2.post(`${baseUrl}/mms/config/vipBootChannelConfig/get`,params); };                 // 查询会员开机进入频道配置
-export const delEnterChannel = (params) => { return request2.delete(`${baseUrl}/mms/config/vipBootChannelConfig/del`,{params:params}); };                 // 会员开机进入频道配置 - 删除
-export const uploadEnterChannel = (params) => { return request2.put(`${baseUrl}/mms/config/vipBootChannelConfig/update`,params); };                 // 更新会员开机进入频道配置
-export const syncEnterChannel = (params) => { return request2.get(`${baseUrl}/mms/config/vipBootChannelConfig/sync`,{params:params}); };                 // 同步会员开机进入频道配置
+export const addEnterChannel = (params) => { return request2.post(`${baseUrl}/mms/config/vipBootChannelConfig/add`, params); };                 // 添加会员开机进入频道配置
+export const getEnterChannel = (params) => { return request2.post(`${baseUrl}/mms/config/vipBootChannelConfig/get`, params); };                 // 查询会员开机进入频道配置
+export const delEnterChannel = (params) => { return request2.delete(`${baseUrl}/mms/config/vipBootChannelConfig/del`, { params: params }); };                 // 会员开机进入频道配置 - 删除
+export const uploadEnterChannel = (params) => { return request2.put(`${baseUrl}/mms/config/vipBootChannelConfig/update`, params); };                 // 更新会员开机进入频道配置
+export const syncEnterChannel = (params) => { return request2.get(`${baseUrl}/mms/config/vipBootChannelConfig/sync`, { params: params }); };                 // 同步会员开机进入频道配置
 
 //体育频道视频集配置
-export const getChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcList`,params); };                 // 配置管理-体育频道视频集配置-列表
-export const addChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcAdd`,params); };                 // 配置管理-体育频道视频集配置-添加
-export const delChannelSport = (params) => { return request2.get(`${baseUrl}/mms/channel/channelSport/svcRemove`,{params:params}); };                 // 配置管理-体育频道视频集配置-移除
-export const resetChannelSport = (params) => { return request2.get(`${baseUrl}/mms/channel/channelSport/svcResort`,{params:params}); };                 // 配置管理-体育频道视频集配置-重新生成排序序号
-export const syncChannelSport = (params) => { return request2.get(`${baseUrl}/mms/channel/channelSport/svcSyncCache`,{params:params}); };                 // 配置管理-体育频道视频集配置-数据同步
-export const sortChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcChangeSort`,params); };                 // 配置管理-体育频道视频集配置-排序
+export const getChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcList`, params); };                 // 配置管理-体育频道视频集配置-列表
+export const addChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcAdd`, params); };                 // 配置管理-体育频道视频集配置-添加
+export const delChannelSport = (params) => { return request2.get(`${baseUrl}/mms/channel/channelSport/svcRemove`, { params: params }); };                 // 配置管理-体育频道视频集配置-移除
+export const resetChannelSport = (params) => { return request2.get(`${baseUrl}/mms/channel/channelSport/svcResort`, { params: params }); };                 // 配置管理-体育频道视频集配置-重新生成排序序号
+export const syncChannelSport = (params) => { return request2.get(`${baseUrl}/mms/channel/channelSport/svcSyncCache`, { params: params }); };                 // 配置管理-体育频道视频集配置-数据同步
+export const sortChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcChangeSort`, params); };                 // 配置管理-体育频道视频集配置-排序
 
 
 
 //企业微信
-export const getQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/configs`,{params:params}); };                 // 获取登录、解锁二维码配置
-export const saveQrcodeConfig = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/saveconfig`,params); };                 // 保存登录、解锁二维码配置
-export const getWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/qywechatuser`,{params:params}); };                 // 企业微信客服列表
-export const getMyWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/listreluser`,{params:params}); };                 // 易添加企业微信客服列表
-export const syncMyWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/syncconfig`,{params:params}); };                 // 易添加企业微信客服列表sync
-export const syncQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/syncusers`,{params:params}); };                 // 同步企业微信数据到我们的库中
-export const saveMyWechatUser = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/savereluser`,params); };                 // 易添加企业微信客服列表更新
+export const getQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/configs`, { params: params }); };                 // 获取登录、解锁二维码配置
+export const saveQrcodeConfig = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/saveconfig`, params); };                 // 保存登录、解锁二维码配置
+export const getWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/qywechatuser`, { params: params }); };                 // 企业微信客服列表
+export const getMyWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/listreluser`, { params: params }); };                 // 易添加企业微信客服列表
+export const syncMyWechatUser = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/syncconfig`, { params: params }); };                 // 易添加企业微信客服列表sync
+export const syncQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/syncusers`, { params: params }); };                 // 同步企业微信数据到我们的库中
+export const saveMyWechatUser = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/savereluser`, params); };                 // 易添加企业微信客服列表更新
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

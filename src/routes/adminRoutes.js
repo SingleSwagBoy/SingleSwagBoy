@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-11-02 19:22:36
+ * @LastEditTime: 2021-12-23 14:42:56
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -34,8 +34,8 @@ const ChannelLock = lazy(() => import('pages/channelManage/channelLock/index.jsx
 const LivePreview = lazy(() => import('pages/channelManage/livePreview/index.jsx'))
 const AddressNews = lazy(() => import('pages/configManage/addressNews/index.jsx'))
 const ChannelSubject = lazy(() => import('pages/channelManage/channelSubject/index.jsx'))
-const MarsBootIn= lazy(() => import('pages/channelManage/marsBootIn/index.jsx'))
-const SourceFailure= lazy(() => import('pages/channelManage/sourceFailure/index.jsx'))
+const MarsBootIn = lazy(() => import('pages/channelManage/marsBootIn/index.jsx'))
+const SourceFailure = lazy(() => import('pages/channelManage/sourceFailure/index.jsx'))
 const EditSubject = lazy(() => import('pages/channelManage/editSubject/index.jsx'))
 const ConfigDoc = lazy(() => import('pages/config/doc.jsx'));
 const WxReply = lazy(() => import('pages/wechart/autoReply/wxReply.jsx'));
@@ -68,9 +68,10 @@ const RecommendConfig = lazy(() => import('pages/configManage/recommendConfig/in
 const WordsSwiperConfig = lazy(() => import('pages/configManage/wordsSwiperConfig/index.jsx'));
 const HomeBroadcast = lazy(() => import('pages/configManage/homeBroadcast/index.jsx'));
 const EnterChannelConfig = lazy(() => import('pages/configManage/enterChannelConfig/index.jsx'));
+const TvRecommendConfig = lazy(() => import('pages/configManage/tvRecommendConfig/tvRecommendConfig.jsx'))      //Tv推荐配置
 const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
-const LuckyDraw=lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
-const GoodsConfig=lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
+const LuckyDraw = lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
+const GoodsConfig = lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
 // const VipCombo = lazy(() => import('pages/comboManage/vipCombo/index.jsx')); 
 
 
@@ -147,6 +148,7 @@ const adminRoutes = [
     { name: '文字轮播配置', icon: UnorderedListOutlined, path: '/mms/config/wordsSwiperConfig', component: WordsSwiperConfig, code: "configManage", sub_code: 'wordsSwiperConfig' },
     { name: '首页直播配置', icon: UnorderedListOutlined, path: '/mms/config/homeBroadcast', component: HomeBroadcast, code: "configManage", sub_code: 'homeBroadcast' },
     { name: '开机进入频道配置', icon: UnorderedListOutlined, path: '/mms/config/enterChannelConfig', component: EnterChannelConfig, code: "configManage", sub_code: 'enterChannelConfig' },
+    { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/config/tvRecommendConfig', component: TvRecommendConfig, code: "configManage", sub_code: 'tvRecommendConfig' },
 
 
 

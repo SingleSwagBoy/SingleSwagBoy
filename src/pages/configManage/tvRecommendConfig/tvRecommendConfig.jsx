@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-12-23 14:43:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-12-24 16:16:49
+ * @LastEditTime: 2021-12-24 18:08:21
  * @Description: tv推荐配置
  */
 
@@ -138,8 +138,8 @@ export default class tvRecommendConfig extends Component {
                 render: (rowValue, row, index) => {
                     return (
                         <div>
-                            <div>{row.startAt}</div>
-                            <div>{row.endAt}</div>
+                            <div>{that.converTimeByMoment(row.startAt)}</div>
+                            <div>{that.converTimeByMoment(row.endAt)}</div>
                         </div>
                     )
                 }
@@ -284,5 +284,17 @@ export default class tvRecommendConfig extends Component {
 
         // requestChannelRecommendCreate,                          //频道管理-新增
         //     requestChannelRecommendEdit,                            //频道管理-编辑
+    }
+
+    //转换时间
+    converTimeByMoment(time) {
+        try {
+            let dateFormat = 'YYYY-MM-DD HH:mm:ss';
+            return moment(time).format(dateFormat)
+
+        } catch (error) {
+
+        }
+        return '';
     }
 }

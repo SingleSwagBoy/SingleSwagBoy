@@ -206,7 +206,7 @@ export default class recommendModal extends Component {
                                                                 </Form.Item>
                                                             }
 
-                                                            <Image width={200} height={50} src={'http://test.cdn.dianshihome.com/static/ad/3b020cdfbadda3e1e97a0b4beadfbb5b.png'}></Image>
+                                                            {/* <Image width={200} height={50} src={'http://test.cdn.dianshihome.com/static/ad/3b020cdfbadda3e1e97a0b4beadfbb5b.png'}></Image> */}
 
 
                                                             <Form.Item name={[field.name, 'cover']}>
@@ -218,8 +218,8 @@ export default class recommendModal extends Component {
                                                                         }
                                                                     }}
                                                                     imageUrl={
-                                                                        "http://test.cdn.dianshihome.com/static/ad/3b020cdfbadda3e1e97a0b4beadfbb5b.png"
-                                                                        // form[index] ? form[index].cover : ''
+                                                                        // "http://test.cdn.dianshihome.com/static/ad/3b020cdfbadda3e1e97a0b4beadfbb5b.png"
+                                                                        form[index] ? form[index].cover : ''
                                                                     } />
                                                             </Form.Item>
                                                             <Form.Item name={[field.name, 'title']}>
@@ -514,47 +514,47 @@ export default class recommendModal extends Component {
         //     message.error("请选择时间范围")
         //     return;
         // } else {
-        //     try {
-        //         obj.startAt = obj.time[0].valueOf();
-        //         obj.endAt = obj.time[1].valueOf();
-        //         delete obj.time;
-        //     } catch (error) {
-        //     }
+            try {
+                obj.startAt = obj.time[0].valueOf();
+                obj.endAt = obj.time[1].valueOf();
+                delete obj.time;
+            } catch (error) {
+            }
         // }
 
-        // let contentData = contentBox.data;
-        // if (contentData.length <= 0) {
-        //     message.error("请新建推荐关联");
-        //     return;
-        // }
+        let contentData = obj.content;
+        if (contentData.length <= 0) {
+            message.error("请新建推荐关联");
+            return;
+        }
 
-        // for (let i = 0, ilen = contentData.length; i < ilen; i++) {
-        //     let item = contentData[i];
-        //     if (!item.type) {
-        //         message.error(`请修改第${i + 1}条推荐关联数据的[类型]`);
-        //         return;
-        //     }
-        //     if (item.type === 10 && !item.programId) {
-        //         message.error(`请修改第${i + 1}条推荐关联数据的[推荐频道]`);
-        //         return;
-        //     }
-        //     if (item.type === 20 && !item.channelId) {
-        //         message.error(`请修改第${i + 1}条推荐关联数据的[推荐视频]`);
-        //         return;
-        //     }
-        //     if (!item.cover) {
-        //         message.error(`请修改第${i + 1}条推荐关联数据的[封面图]`);
-        //         return;
-        //     }
-        //     if (!item.title) {
-        //         message.error(`请修改第${i + 1}条推荐关联数据的[标题]`);
-        //         return;
-        //     }
-        //     //重排序
-        //     if (!item.sort) item.sort = 1
-        // }
+        for (let i = 0, ilen = contentData.length; i < ilen; i++) {
+            let item = contentData[i];
+            if (!item.type) {
+                message.error(`请修改第${i + 1}条推荐关联数据的[类型]`);
+                return;
+            }
+            if (item.type === 10 && !item.programId) {
+                message.error(`请修改第${i + 1}条推荐关联数据的[推荐频道]`);
+                return;
+            }
+            if (item.type === 20 && !item.channelId) {
+                message.error(`请修改第${i + 1}条推荐关联数据的[推荐视频]`);
+                return;
+            }
+            if (!item.cover) {
+                message.error(`请修改第${i + 1}条推荐关联数据的[封面图]`);
+                return;
+            }
+            if (!item.title) {
+                message.error(`请修改第${i + 1}条推荐关联数据的[标题]`);
+                return;
+            }
+            //重排序
+            if (!item.sort) item.sort = 1
+        }
         // //整合关联关系
-        // obj.content = JSON.stringify(contentData);
+        obj.content = JSON.stringify(contentData);
 
 
         for (let key in obj) {

@@ -51,6 +51,12 @@ class ImageUpload extends Component {
     return (
       <>
         <Upload {...this.state.updateProps}
+            beforeUpload={(info)=>{
+              console.log(info,"beforeUpload")
+              if(this.props.needAgain){
+                this.props.getUploadFile(info)
+              }
+            }}
             onChange = {(info)=>{
               // 监控上传状态的回调
                   if (info.file.status !== 'uploading') {

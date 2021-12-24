@@ -137,7 +137,7 @@ export default class WxReply extends Component {
             requestAdTagList().then(res => {
                 let datas = res.data;
                 let tags = [];
-                tags.push({ id: -1, code: 'default', name: '默认', });
+                tags.push({ id: -1, code: 'default', name: '默认', },{ id: -2, code: 'nouserid', name: '无userid用户', });
 
                 for (let i = 0, len = datas.length; i < len; i++) {
                     let item = datas[i];

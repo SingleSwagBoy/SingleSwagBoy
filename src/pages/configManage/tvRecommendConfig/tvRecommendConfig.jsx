@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-12-23 14:43:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-12-24 18:08:21
+ * @LastEditTime: 2021-12-24 18:20:07
  * @Description: tv推荐配置
  */
 
@@ -57,12 +57,13 @@ export default class tvRecommendConfig extends Component {
                 <Table columns={recommendBox.title} dataSource={recommendBox.data} pagination={false} scroll={{ x: 1500, y: '75vh' }}
                     expandable={{
                         expandedRowRender: record =>
-                            <div>
+                            <Row  >
+
                                 {record.content.map((item, index) => {
-                                    let titleSpan = 3;
-                                    let contentSpan = 6;
+                                    let titleSpan = 6;
+                                    let contentSpan = 18;
                                     return (
-                                        <div>
+                                        <div style={{ flex: 1 }}>
                                             <Row>
                                                 <Col span={titleSpan}>类型:</Col>
                                                 <Col span={contentSpan}>{item.type == '10' ? '推荐视频' : '推荐频道'}</Col>
@@ -92,7 +93,7 @@ export default class tvRecommendConfig extends Component {
                                         </div>
                                     )
                                 })}
-                            </div>
+                            </Row>
                         ,
                         rowExpandable: record => record.name !== 'Not Expandable',
                     }}

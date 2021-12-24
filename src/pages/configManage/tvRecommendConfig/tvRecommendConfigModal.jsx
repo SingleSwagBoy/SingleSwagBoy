@@ -263,7 +263,7 @@ export default class recommendModal extends Component {
                                             }
 
                                             <Form.Item>
-                                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                <Button type="dashed" onClick={() => add({ cover: '', sort: 1 })} block icon={<PlusOutlined />}>
                                                     新建投票选项
                                                 </Button>
                                             </Form.Item>
@@ -514,12 +514,12 @@ export default class recommendModal extends Component {
         //     message.error("请选择时间范围")
         //     return;
         // } else {
-            try {
-                obj.startAt = obj.time[0].valueOf();
-                obj.endAt = obj.time[1].valueOf();
-                delete obj.time;
-            } catch (error) {
-            }
+        try {
+            obj.startAt = obj.time[0].valueOf();
+            obj.endAt = obj.time[1].valueOf();
+            delete obj.time;
+        } catch (error) {
+        }
         // }
 
         let contentData = obj.content;

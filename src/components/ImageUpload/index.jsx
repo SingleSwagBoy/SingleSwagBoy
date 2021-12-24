@@ -51,6 +51,12 @@ class ImageUpload extends Component {
     return (
       <>
         <Upload {...this.state.updateProps}
+            beforeUpload={(info)=>{
+              console.log(info,"beforeUpload")
+              if(this.props.needAgain){
+                this.props.getUploadFile(info)
+              }
+            }}
             onChange = {(info)=>{
               // 监控上传状态的回调
                   if (info.file.status !== 'uploading') {
@@ -60,9 +66,6 @@ class ImageUpload extends Component {
                     console.log(info)
                     if(info.file.response.errCode === 0){
                       this.props.getUploadFileUrl(info.file.response.data.fileUrl,info.file.response.data)
-                      if(this.props.needAgain){
-                        this.props.getUploadFile(info.fileList[0])
-                      }
                       this.setState({ loading: false });
                       message.success(`上传成功`);
                     }else{

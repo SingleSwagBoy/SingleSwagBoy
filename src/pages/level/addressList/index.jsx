@@ -31,6 +31,7 @@ export default class WinningNews extends Component {
       activityType:[
         {id:1,name:"秒杀活动"},
         {id:2,name:"抽奖活动"},
+        {id:3,name:"拼团实物套餐"},
       ],
       screen:{}, //筛选对象
       layout: {
@@ -52,8 +53,9 @@ export default class WinningNews extends Component {
           title: "活动类别",
           dataIndex: "activityType",
           key: "activityType",
-          render:(owValue,row,index)=>{
-            return <span>{owValue==1?'秒杀活动':'抽奖活动'}</span>
+          width:130,
+          render:(RowValue,row,index)=>{
+            return <span>{RowValue==1?'秒杀活动':RowValue==2?'抽奖活动':RowValue==3?"拼团实物套餐":"未知"}</span>
           }
         },
         {
@@ -124,7 +126,7 @@ export default class WinningNews extends Component {
           title: "物流单号",
           dataIndex: "shippingCode",
           key: "shippingCode",
-          width:500,
+          width:250,
         },
         {
           title: "物流公司",
@@ -294,10 +296,7 @@ export default class WinningNews extends Component {
         >
           <Table 
               dataSource={this.state.lists}
-              scroll={{
-                // y: 300,
-                x: '100vw',
-              }}
+              scroll={{ x: 2500, y: '75vh' }}
               pagination={{
                 current:this.state.page,
                 pageSize: this.state.pageSize,

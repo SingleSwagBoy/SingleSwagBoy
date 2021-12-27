@@ -360,15 +360,22 @@ export const delWordsConfig = (params) => { return request.get(`${baseUrl}/mms/c
 export const getImageWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/image`,{ params: params }); };                 // 首页文字轮播配置列表
 export const setImageWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/uploadimage`,{ params: params }); };                 // 首页文字轮播配置列表
 export const syncWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/sync`,{ params: params }); };                 // 首页文字轮播配置列表
-export const addTab = (params) => { return request2.post(`${baseUrl}/mms/channel/home/channel/newBaseInfo`,params); };                 // 首页直播新增加tab
+
 
 
 //首页直播配置
 export const getHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/list`,{ params: params }); };                 // 首页直播配置列表
-export const uploadHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/update`,{ params: params }); };                 // 首页直播配置列表
+export const uploadHomeList = (params) => { return request2.post(`${baseUrl}/mms/channel/home/channel/update`,params); };                 // 首页直播配置列表
+export const addHomeList = (params) => { return request2.post(`${baseUrl}/mms/channel/home/channel/add`,params); };                 // 首页直播配置列表新增
+export const delHomeList = (params) => { return request2.get(`${baseUrl}/mms/channel/home/channel/del`,{params:params}); };                 // 首页直播配置列表新增
 export const getStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/status`,{ params: params }); };                 // 首页直播配置列表
 export const setStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/setstatus`,{ params: params }); };                 // 首页直播配置列表
 export const syncHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/sync`,{ params: params }); };                 // 首页直播配置列表
+// export const getHomeBaseInfo = (params) => { return request2.get(`${baseUrl}/mms/channel/home/suggest/getBaseInfo`,{ params: params }); };                 // 首页为你推荐基本信息获取
+export const getHomeBaseInfo = (params) => { return request2.get(`${baseUrl}/mms/channel/home/channel/getBaseInfo`,{ params: params }); };                 // 首页为你推荐基本信息获取
+export const getAllBaseInfo = (params) => { return request2.get(`${baseUrl}/mms/channel/home/channel/getAllBaseInfo`,{ params: params }); };                 // 首页全部直播基本信息获取
+export const addTab = (params) => { return request2.post(`${baseUrl}/mms/channel/home/channel/newBaseInfo`,params); };                 // 首页直播新增加tab
+export const setHomeBaseInfo = (params) => { return request2.post(`${baseUrl}/mms/channel/home/channel/setBaseInfo`,params); };                 // 首页直播基本信息配置(原只状态设置）
 
 
 //微信菜单

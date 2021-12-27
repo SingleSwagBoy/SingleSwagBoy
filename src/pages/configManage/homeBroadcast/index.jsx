@@ -1,6 +1,13 @@
+/*
+ * @Author: yzc
+ * @Date: 2021-12-27 18:41:39
+ * @LastEditors: yzc
+ * @LastEditTime: 2021-12-27 13:34:43
+ * @Description: 首页改版优化移动端3.0.0版本
+ */
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getHomeList, uploadHomeList,getStateHomeList,setStateHomeList } from 'api'
+import { getHomeList, uploadHomeList, getStateHomeList, setStateHomeList,addTab } from 'api'
 import { Card, Breadcrumb, Button, message, Tabs, Table, InputNumber, Switch } from 'antd'
 import request from 'utils/request.js'
 import { } from 'react-router-dom'
@@ -31,7 +38,8 @@ export default class AddressNews extends Component {
             currentSort: 0,
             editIndex: null,
             tabIndex: 1,
-            tabState:false,
+            tabState: false,
+            activeKey:0,
             columns: [
                 {
                     title: "序号",
@@ -112,15 +120,27 @@ export default class AddressNews extends Component {
         return (
             <div className="address_page">
                 {/* <div style={{fontSize:"20px"}}>首页直播配置</div> */}
-                <Card >
+                <Card  >
 
-                    <Tabs defaultActiveKey="0" tabPosition={"top"} centered={true}
+                    <Tabs
+                        // defaultActiveKey="0"
+                        tabPosition={"top"}
+                        centered={true}
+                        type="editable-card"
+                        activeKey={this.state.activeKey.toString()}
+                        onEdit={(targetKey,action)=>{
+                            console.log(targetKey,action)
+                            if(action == "add"){
+                                this.addTab()
+                            }
+                        }}
                         onChange={(val) => {
                             console.log(val)
                             this.setState({
                                 loading: true,
-                                editIndex:null,
-                                tabIndex: Number(val) + 1
+                                editIndex: null,
+                                tabIndex: Number(val) + 1,
+                                activeKey:val
                             }, () => {
                                 this.getHomeList(this.state.tabIndex)
                                 this.getStateHomeList()
@@ -130,15 +150,15 @@ export default class AddressNews extends Component {
                     >
                         {
                             addressList.map((r, i) => (
-                                <TabPane tab={r} key={i}>
-                                    <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" ,alignItems:"center"}}>
+                                <TabPane tab={r} key={i}  closable={false}>
+                                    <div style={{ width: "100%", display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
                                         <Switch checkedChildren="已开启" unCheckedChildren="已关闭" key={new Date().getTime()}
-                                            defaultChecked={this.state.tabState == 1?true:false}
-                                            onChange={(e)=>{
+                                            defaultChecked={this.state.tabState == 1 ? true : false}
+                                            onChange={(e) => {
                                                 this.setStateHomeList(e)
                                             }}
                                         />
-                                        <MySyncBtn type={18} name='同步缓存' params={{"channelType":this.state.tabIndex}} />
+                                        <MySyncBtn type={18} name='同步缓存' params={{ "channelType": this.state.tabIndex }} />
                                     </div>
                                     <Table
                                         dataSource={this.state.lists}
@@ -157,8 +177,8 @@ export default class AddressNews extends Component {
     componentDidMount() {
         this.setState({
             loading: true,
-            tabIndex:1
-        },()=>{
+            tabIndex: 1
+        }, () => {
             this.getHomeList(this.state.tabIndex)
             this.getStateHomeList()
         })
@@ -185,25 +205,30 @@ export default class AddressNews extends Component {
     }
     getStateHomeList() {
         let params = {
-            channelType:this.state.tabIndex
+            channelType: this.state.tabIndex
         }
         getStateHomeList(params).then(res => {
             console.log(res.data)
             this.setState({
-                tabState:res.data.data.status
+                tabState: res.data.data.status
             })
             // this.getHomeList(this.state.tabIndex)
         })
     }
     setStateHomeList(val) {
         let params = {
-            channelType:this.state.tabIndex,
-            status:val?1:0
+            channelType: this.state.tabIndex,
+            status: val ? 1 : 0
         }
         setStateHomeList(params).then(res => {
             console.log(res.data)
             message.success("修改成功")
         })
+    } 
+    //新增
+    addTab(){
+        addTab({}).then(res=>{
+            console.log(res)
+        })
     }
-
 }

@@ -360,6 +360,7 @@ export const delWordsConfig = (params) => { return request.get(`${baseUrl}/mms/c
 export const getImageWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/image`,{ params: params }); };                 // 首页文字轮播配置列表
 export const setImageWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/uploadimage`,{ params: params }); };                 // 首页文字轮播配置列表
 export const syncWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/sync`,{ params: params }); };                 // 首页文字轮播配置列表
+export const addTab = (params) => { return request2.post(`${baseUrl}/mms/channel/home/channel/newBaseInfo`,params); };                 // 首页直播新增加tab
 
 
 //首页直播配置

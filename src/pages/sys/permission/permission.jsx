@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-28 11:34:45
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-25 11:48:37
+ * @LastEditTime: 2021-12-27 13:58:59
  * @Description: 权限列表
  */
 
@@ -62,9 +62,14 @@ export default class SysPermission extends Component {
 
         return (
             <div>
-
                 <Radio.Group value={filter_box.roleId} onChange={(val) => {
                     let currId = val.target.value;
+                    let { table_box } = that.state;
+                    table_box.table_pages = {
+                        currentPage: 1,
+                        pageSize: 100,
+                    }
+
                     if (currId === 'all') {
                         filter_box.roleId = 'all';
                     } else {
@@ -75,6 +80,7 @@ export default class SysPermission extends Component {
                     }
 
                     that.setState({
+                        table_box: table_box,
                         filter_box: filter_box,
                     }, () => {
                         that.refreshList();
@@ -363,13 +369,8 @@ export default class SysPermission extends Component {
         }
         let { modal_box } = that.state;
 
-        // modal_box: {
-        //     is_show: false,
-        //     title: '',
-        // },
-
         let id = value.id;
-        (id ? requestSysUserRolePermissionUpdate(value) : requestSysUserRolePermissionCreate()).then(res => {
+        (id ? requestSysUserRolePermissionUpdate(value) : requestSysUserRolePermissionCreate(value)).then(res => {
             modal_box.is_show = false;
             that.setState({
                 modal_box: modal_box,

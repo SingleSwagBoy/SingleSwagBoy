@@ -107,9 +107,7 @@ export default class recommendModal extends Component {
             <div>
                 <Modal className="modal-box" visible={modalBox.isShow} title="配置管理" width={1200} transitionName="" onCancel={() => { that.onCloseClick() }} forceRender={true}
                     footer={[
-                        <Button onClick={() => {
-                            that.onCloseClick()
-                        }}>取消</Button>
+                        <Button onClick={() => { that.onCloseClick() }}>取消</Button>
                         ,
                         <Button type="primary" loading={modalBox.isLoading} onClick={() => that.onConfirmClick()}>确定</Button>,
                     ]}>
@@ -227,7 +225,7 @@ export default class recommendModal extends Component {
                                                             </Form.Item>
 
                                                             <Form.Item name={[field.name, 'sort']}>
-                                                                <InputNumber min={1} />
+                                                                <InputNumber min={1} placeholder='请输入排序' />
                                                             </Form.Item>
 
                                                             <MinusCircleOutlined onClick={() => remove(field.name)} />

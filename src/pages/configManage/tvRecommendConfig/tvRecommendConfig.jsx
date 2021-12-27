@@ -2,12 +2,12 @@
  * @Author: HuangQS
  * @Date: 2021-12-23 14:43:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-12-24 18:27:23
+ * @LastEditTime: 2021-12-27 11:09:39
  * @Description: tv推荐配置
  */
 
 import React, { Component } from 'react';
-import { Input, Form, DatePicker, Alert, Button, Table, Row, Col, Select, Image, Pagination, message } from 'antd';
+import { Alert, Button, Table, Row, Col, Select, Image, Pagination, message } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
 import TvConfigModal from './tvRecommendConfigModal';
@@ -57,10 +57,9 @@ export default class tvRecommendConfig extends Component {
                 <Table columns={recommendBox.title} dataSource={recommendBox.data} pagination={false} scroll={{ x: 1500, y: '75vh' }}
                     expandable={{
                         expandedRowRender: record =>
-                            <Row  >
-
+                            <Row>
                                 {record.content.map((item, index) => {
-                                    let titleSpan =7;
+                                    let titleSpan = 7;
                                     let contentSpan = 17;
                                     return (
                                         <div style={{ flex: 1 }}>

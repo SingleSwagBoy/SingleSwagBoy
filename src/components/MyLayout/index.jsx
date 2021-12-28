@@ -1,19 +1,23 @@
 import React, { Component } from 'react'
-import { getMenu } from "../../api/index"
-import { Layout, Menu, Avatar, Dropdown, message, Badge } from 'antd';
+import { Layout, Menu, Avatar, Select, Dropdown, message, Badge } from 'antd';
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
     UserOutlined,
     UnorderedListOutlined
 } from '@ant-design/icons';
+import {
+    getMenu,
+    requestSysMenu,
+} from "../../api/index"
 
 import './style.css'
-// import adminRoutes from '../../routes/adminRoutes.js'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logout } from '../../store/user/actionCreators'
-import admintRouter from "../../routes/adminRoutes"
+import adminRoutes from "../../routes/adminRoutes"
+
+let { Option } = Select;
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 const mapStateToProps = (state) => {
@@ -35,7 +39,8 @@ const mapDispatchToProps = (dispatch) => {
 class MyLayout extends Component {
     state = {
         collapsed: false,
-        navRoutes: []
+        navRoutes: [],
+        searchRouters: [],  //用于快捷搜索的路由列表
     };
 
     toggle = () => {
@@ -44,28 +49,40 @@ class MyLayout extends Component {
         });
     };
     componentDidMount() {
+        let that = this;
+
+        //使用本地路由地址
         if (window.localStorage.getItem("routesList_tmp")) {
             let router = JSON.parse(window.localStorage.getItem("routesList_tmp"))
-            this.setState({
-                navRoutes: this.getLocalMenu(router)
+            let localRouter = that.getLocalMenu(router);
+
+            that.setState({
+                navRoutes: localRouter
+            }, () => {
+                that.parseSearchRouterList(localRouter);
             })
-        } else {
-            this.getMenu()
+        }
+        //使用
+        else {
+            that.getMenu()
         }
     }
     getLocalMenu(arr) { //获取本地存在的路径
         let localList = []
-        admintRouter.filter(item => item.code).forEach(r => {
+        adminRoutes.filter(item => item.code).forEach(r => {
             localList.push(r.code)
         })
         let array = [...new Set(localList)]
         let newRouter = arr.filter(x => array.some(y => y === x.code))
         newRouter.forEach(r => { //过滤已存在的一级菜单下面的老二级菜单
-            r.children = r.children.filter(x => admintRouter.some(y => y.path === x.path))
+            r.children = r.children.filter(x => adminRoutes.some(y => y.path === x.path))
         })
+        console.log('=-===============')
+        console.log(newRouter)
         return newRouter
     }
     getMenu() {
+        let that = this;
         let base = "http://" + window.location.host;
         let id = 1
         if (base.indexOf("localhost") !== -1) {
@@ -106,27 +123,56 @@ class MyLayout extends Component {
                 }
                 console.log(list, "list")
                 window.localStorage.setItem("routesList_tmp", JSON.stringify(list))
-                this.setState({
-                    navRoutes: this.getLocalMenu(list)
+                that.setState({
+                    navRoutes: that.getLocalMenu(list)
                 })
             }
         })
+        console.log("------->!!!!!!!!1111")
+        requestSysMenu().then(res => {
+            console.log("------->requestSysMenurequestSysMenu")
+            console.log(res)
+
+        })
+
     }
     render() {
+        let that = this;
+        let { searchRouters } = that.state;
+
         const menu = (
             <Menu>
                 <Menu.Item onClick={() => {
-                    this.props.history.push('/mms/transition')
+                    that.props.history.push('/mms/transition')
                 }}>首页</Menu.Item>
-                <Menu.Item onClick={this.clearStore}>清除缓存</Menu.Item>
-                <Menu.Item onClick={this.loginOut}>退出登录</Menu.Item>
+                <Menu.Item onClick={that.clearStore}>清除缓存</Menu.Item>
+                <Menu.Item onClick={that.loginOut}>退出登录</Menu.Item>
             </Menu>
         );
         return (
             <div id="admin">
                 <Layout>
-                    <Sider trigger={null} collapsible collapsed={this.state.collapsed}   >
+                    <Sider trigger={null} collapsible collapsed={that.state.collapsed}   >
                         <div className="logo">电视家CMS</div>
+
+                        {/* 路径的快速跳转入口 */}
+                        <Select style={{ width: '100%' }} placeholder='快速搜索' showSearch onChange={(val) => that.props.history.push(val)}
+                            filterOption={(input, option) => {
+                                if (!input) return true;
+                                let children = option.children;
+                                if (children) {
+                                    let key = children[1];
+                                    let isFind = false;
+                                    isFind = `${key}`.indexOf(`${input}`) >= 0;
+                                    return isFind;
+                                }
+                            }}>
+                            {
+                                searchRouters.map((item, index) => {
+                                    return <Option value={item.path} key={item.path} >  {item.name}</Option>
+                                })
+                            }
+                        </Select>
                         {/*  点击导航跳转 */}
                         <Menu theme="dark" mode="inline"
                             onClick={({ key }) => {
@@ -165,6 +211,8 @@ class MyLayout extends Component {
                                 className: 'trigger',
                                 onClick: this.toggle,
                             })}
+
+
                             <div style={{ float: 'right', marginRight: 50 }}>
                                 <Badge count={0}>
                                     <Dropdown overlay={menu}>
@@ -177,15 +225,62 @@ class MyLayout extends Component {
                             </div>
                         </Header>
                         <Content className="site-layout-background" style={{ margin: '24px 16px', padding: 24, minHeight: 280, height: "88vh", overflowY: "auto", position: "relative" }}   >
-                            <div key ='children'> {this.props.children}</div>
+                            <div key='children'> {this.props.children}</div>
                         </Content>
                     </Layout>
                 </Layout>
             </div>
         )
     }
-    clearStore=()=>{
-        
+
+    //解析搜索路由列表
+    parseSearchRouterList(router) {
+        let that = this;
+        let newRouter = [...router];
+
+
+        //过滤筛选出 本地路由地址
+        let locRouters = [];
+        for (let path in newRouter) {
+            let item = newRouter[path];
+            let children = item.children;
+            if (children) {
+                for (let cpath in children) {
+                    let childrenItem = children[cpath];
+                    locRouters.push(childrenItem);
+                }
+            }
+            // delete item.children;
+            locRouters.push(item);
+        }
+
+        //和来着网络的权限列表比对 过滤出真实存在的路由
+        let netRouters = [...adminRoutes];
+        let searchRouters = [];
+        for (let i = 0, ilen = locRouters.length; i < ilen; i++) {
+            let currLocRouter = locRouters[i];
+            let locPath = currLocRouter.path;
+
+            for (let j = 0, jlen = netRouters.length; j < jlen; j++) {
+                let currNetRouter = netRouters[j];
+
+                let netPath = currNetRouter.path;
+                if (locPath == netPath) {
+                    searchRouters.push(currLocRouter);
+                    break;
+                }
+            }
+        }
+
+        that.setState({
+            searchRouters: searchRouters,
+        })
+
+
+    }
+
+    clearStore = () => {
+
     }
 
     loginOut = () => {

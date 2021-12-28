@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-09-28 11:34:45
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-26 14:00:06
+ * @LastEditTime: 2021-12-27 14:05:06
  * @Description: 菜单列表
  */
 
@@ -64,7 +64,7 @@ export default class SysMenu extends Component {
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
                     footer={[
                         <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
-                        <Button onClick={() => that.onModalConfirmClick()} >确定</Button>
+                        <Button onClick={() => that.onModalConfirmClick()}>确定</Button>
                     ]}>
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef}>
                         {

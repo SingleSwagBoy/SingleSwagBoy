@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-12-23 14:43:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-12-27 11:09:39
+ * @LastEditTime: 2021-12-28 15:08:15
  * @Description: tv推荐配置
  */
 
@@ -11,7 +11,7 @@ import { Alert, Button, Table, Row, Col, Select, Image, Pagination, message } fr
 import moment from 'moment';
 import '@/style/base.css';
 import TvConfigModal from './tvRecommendConfigModal';
-
+import './tvRecommendConfig.css'
 
 import {
     requestChannelRecommendList,                            //频道管理-列表
@@ -57,42 +57,40 @@ export default class tvRecommendConfig extends Component {
                 <Table columns={recommendBox.title} dataSource={recommendBox.data} pagination={false} scroll={{ x: 1500, y: '75vh' }}
                     expandable={{
                         expandedRowRender: record =>
-                            <Row>
+                            <div className='expandedWrapper'>
                                 {record.content.map((item, index) => {
-                                    let titleSpan = 7;
-                                    let contentSpan = 17;
                                     return (
-                                        <div style={{ flex: 1 }}>
-                                            <Row>
-                                                <Col span={titleSpan}>类型:</Col>
-                                                <Col span={contentSpan}>{item.type == '10' ? '推荐视频' : '推荐频道'}</Col>
-                                            </Row>
-                                            <Row>
-                                                <Col span={titleSpan}>推荐渠道id:</Col>
-                                                <Col span={contentSpan}>{item.channelId}</Col>
-                                            </Row>
-                                            <Row>
-                                                <Col span={titleSpan}>推荐节目id:</Col>
-                                                <Col span={contentSpan}>{item.programId}</Col>
-                                            </Row>
-                                            <Row>
-                                                <Col span={titleSpan}>推荐列表id:</Col>
-                                                <Col span={contentSpan}>{item.tvCVId}</Col>
-                                            </Row>
-                                            <Row>
-                                                <Col span={titleSpan}>标题:</Col>
-                                                <Col span={contentSpan}>{item.title}</Col>
-                                            </Row>
-                                            <Row>
-                                                <Col span={titleSpan}>封面图:</Col>
-                                                <Col span={contentSpan}>
-                                                    <Image src={item.cover} />
-                                                </Col>
-                                            </Row>
+                                        <div className='expandedBox'>
+                                            <div className='expandedBoxLine'>
+                                                <div className='expandedBoxTitle' >类型:</div>
+                                                <div className='expandedBoxContent'>{item.type == '10' ? '推荐视频' : '推荐频道'}</div>
+                                            </div>
+                                            <div className='expandedBoxLine'>
+                                                <div className='expandedBoxTitle'>推荐渠道id:</div>
+                                                <div className='expandedBoxContent'>{item.channelId}</div>
+                                            </div>
+                                            <div className='expandedBoxLine'>
+                                                <div className='expandedBoxTitle'>推荐节目id:</div>
+                                                <div className='expandedBoxContent'>{item.programId}</div>
+                                            </div>
+                                            <div className='expandedBoxLine'>
+                                                <div className='expandedBoxTitle'>推荐列表id:</div>
+                                                <div className='expandedBoxContent'>{item.tvCVId}</div>
+                                            </div>
+                                            <div className='expandedBoxLine'>
+                                                <div className='expandedBoxTitle'>标题:</div>
+                                                <div className='expandedBoxContent'>{item.title}</div>
+                                            </div>
+                                            <div className='expandedBoxLine'>
+                                                <div className='expandedBoxTitle'>封面图:</div>
+                                                <div className='expandedBoxContent'>
+                                                    <Image width={60} src={item.cover} />
+                                                </div>
+                                            </div>
                                         </div>
                                     )
                                 })}
-                            </Row>
+                            </div>
                         ,
                         rowExpandable: record => record.name !== 'Not Expandable',
                     }}
@@ -121,11 +119,23 @@ export default class tvRecommendConfig extends Component {
         let that = this;
         let { recommendBox, dictState } = that.state;
         let title = [
-            { title: '列表id', dataIndex: 'id', key: 'id', width: 80, },
+            // { title: '列表id', dataIndex: 'id', key: 'id', width: 80, },
             // { title: '频道id', dataIndex: 'channelId', key: 'channelId', width: 100, },
             // { title: '用户标签', dataIndex: 'tagCode', key: 'tagCode', width: 100, },
             { title: '推荐标题', dataIndex: 'title', key: 'title', width: 100, },
-            { title: '频道Id', dataIndex: 'channelId', key: 'channelId', width: 100, },
+            { title: '频道', dataIndex: 'channelId', key: 'channelId', width: 100, },
+            {
+                title: '关联频道视频', width: 100,
+                render: (rowValue, row, index) => {
+                    // return <div>请展开列表</div>
+
+                    return (
+                        row.content.map((item, index) => {
+                            return (<div> {`${item.type == '10' ? '视频' : '频道'}:${item.type == '10' ? item.programId : item.channelId}`}  </div>)
+                        })
+                    )
+                }
+            },
 
             {
                 title: '是否长期', dataIndex: 'isTimeless', key: 'isTimeless', width: 100,

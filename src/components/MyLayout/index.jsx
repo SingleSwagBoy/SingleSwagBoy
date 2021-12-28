@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons';
 import {
     getMenu,
-    requestSysMenu,
 } from "../../api/index"
 
 import './style.css'
@@ -121,19 +120,18 @@ class MyLayout extends Component {
                         }
                     }
                 }
+
+                let localRouter = that.getLocalMenu(list);
                 console.log(list, "list")
                 window.localStorage.setItem("routesList_tmp", JSON.stringify(list))
                 that.setState({
-                    navRoutes: that.getLocalMenu(list)
+                    navRoutes: localRouter
+                } ,()=>{
+                    that.parseSearchRouterList(localRouter);
                 })
             }
         })
-        console.log("------->!!!!!!!!1111")
-        requestSysMenu().then(res => {
-            console.log("------->requestSysMenurequestSysMenu")
-            console.log(res)
-
-        })
+       
 
     }
     render() {

@@ -6,7 +6,7 @@
  * @Description: 创建@映射src 例如：引入控件可使用 MySyncBtn
  */
 import React, { Component } from 'react'
-import { getHkCategory, editHkCategory, addHkCategory, delHkCategory, changeHkCategory, getChannel, switchHkCategory } from 'api'
+import { getHkCategory, editHkCategory, addHkCategory, delHkCategory, changeHkCategory, getChannel, switchHkCategory, requestNewAdTagList } from 'api'
 import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -42,6 +42,7 @@ export default class EarnIncentiveTask extends React.Component {
             source: "",
             searchWord: {},
             channelList: [],
+            dict_user_tags: [],
             selectProps: {
                 optionFilterProp: "children",
                 // filterOption(input, option){
@@ -188,7 +189,7 @@ export default class EarnIncentiveTask extends React.Component {
                 >
                     <Table
                         dataSource={lists}
-                        scroll={{ x: 1500, y: '75vh' }}
+                        scroll={{ x: 1200, y: '75vh' }}
                         // rowKey={item=>item.indexId}
                         loading={loading}
                         columns={columns}
@@ -217,7 +218,7 @@ export default class EarnIncentiveTask extends React.Component {
                             </Form.Item>
                             <Form.Item label="跳转类型" name="jumpType">
                                 <Select
-                                    placeholder="请输入用户标签"
+                                    placeholder="请选择跳转类型"
                                     allowClear
                                     {...this.state.selectProps}
                                     onChange={(e) => {
@@ -268,6 +269,28 @@ export default class EarnIncentiveTask extends React.Component {
                             <Form.Item label="排序" name="sort" >
                                 <InputNumber placeholder="数字从小到大，越小优先级越高" style={{ width: "100%" }} />
                             </Form.Item>
+                            <Form.Item label='用户标签' name="tagCode" >
+                                <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择用户设备标签"
+                                    filterOption={(input, option) => {
+                                        if (!input) return true;
+                                        let children = option.children;
+                                        if (children) {
+                                            let key = children[2];
+                                            let isFind = false;
+                                            isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                            if (!isFind) {
+                                                let code = children[0];
+                                                isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                            }
+
+                                            return isFind;
+                                        }
+                                    }}>
+                                    {this.state.dict_user_tags.map((item, index) => (
+                                        <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
                             <Form.Item label="状态" name="state" valuePropName="checked">
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                             </Form.Item>
@@ -286,6 +309,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     componentDidMount() {
         this.getHkCategory();
+        this.requestNewAdTagList()
     }
     changeSize = (page, pageSize) => {   // 分页
         this.setState({
@@ -398,4 +422,15 @@ export default class EarnIncentiveTask extends React.Component {
             }
         })
     }
+    // 获取用户标签
+    requestNewAdTagList() {
+        requestNewAdTagList({ currentPage: 1, pageSize: 999999, }).then(res => {
+            this.setState({
+                dict_user_tags: res.data,
+            }, () => {
+                this.forceUpdate();
+            });
+        })
+    }
+
 }

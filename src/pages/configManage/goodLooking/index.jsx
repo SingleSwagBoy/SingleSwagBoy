@@ -36,7 +36,6 @@ export default class EarnIncentiveTask extends React.Component {
             },
             lists: [],
             visible: false,
-            tagList: [],
             channelList: [],
             currentItem: "",
             source: "",
@@ -77,6 +76,17 @@ export default class EarnIncentiveTask extends React.Component {
                     title: "排序",
                     dataIndex: "sort",
                     key: "sort",
+                    width:100,
+                },
+                {
+                    title: "用户标签",
+                    dataIndex: "tagCode",
+                    key: "tagCode",
+                    render: (rowValue, row, index) => {
+                        return (
+                            <div>{this.getTagsName(rowValue)}</div>
+                        )
+                    }
                 },
                 {
                     title: "按上键进入频道",  //上下线状态(1上线2下线)
@@ -432,5 +442,12 @@ export default class EarnIncentiveTask extends React.Component {
             });
         })
     }
-
+    getTagsName(val) {
+        let arr = this.state.dict_user_tags.filter(r => r.code == val)
+        if (arr.length > 0) {
+            return arr[0].name
+        } else {
+            return ""
+        }
+    }
 }

@@ -60,7 +60,7 @@ export default class EarnIncentiveTask extends React.Component {
                 { key: 4, name: "频道" },
                 { key: 5, name: "其他H5链接" },
                 { key: 6, name: "体育赛程" },
-                // { key: 7, name: "生活服务" },
+                { key: 7, name: "生活服务" },
             ],
             columns: [
                 {

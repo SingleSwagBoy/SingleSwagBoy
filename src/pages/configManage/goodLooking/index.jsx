@@ -271,7 +271,7 @@ export default class EarnIncentiveTask extends React.Component {
                                 </Form.Item>
                             }
                             {
-                                this.formRef.current && (this.formRef.current.getFieldValue("jumpType") == 5 || this.formRef.current.getFieldValue("jumpType") == 6) &&
+                                this.formRef.current && (this.formRef.current.getFieldValue("jumpType") == 5 || this.formRef.current.getFieldValue("jumpType") == 6  || this.formRef.current.getFieldValue("jumpType") == 7) &&
                                 <Form.Item label="跳转地址" name="jumpValue">
                                     <Input placeholder="跳转地址" />
                                 </Form.Item>

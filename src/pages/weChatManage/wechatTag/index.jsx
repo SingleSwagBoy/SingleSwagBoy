@@ -68,11 +68,11 @@ export default class EarnIncentiveTask extends React.Component {
                     dataIndex: "qyTagName",
                     key: "qyTagName",
                 },
-                {
-                    title: "标签人数",
-                    dataIndex: "sucNum",
-                    key: "sucNum",
-                },
+                // {
+                //     title: "标签人数",
+                //     dataIndex: "sucNum",
+                //     key: "sucNum",
+                // },
                 {
                     title: "公司",
                     dataIndex: "qywechatCode",
@@ -241,9 +241,9 @@ export default class EarnIncentiveTask extends React.Component {
                                 </Select>
                             </Form.Item>
 
-                            <Form.Item label="客服联系人" name="userids">
+                            <Form.Item label="客服联系人" name="userids" rules={[{ required: true, message: '请选择客服联系人' }]}>
                                 <Select
-                                    placeholder="请输入客服联系人"
+                                    placeholder="请选择客服联系人"
                                     allowClear
                                     mode="multiple"
                                     {...this.state.selectProps}

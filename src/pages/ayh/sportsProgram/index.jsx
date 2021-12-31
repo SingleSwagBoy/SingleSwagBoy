@@ -1,38 +1,43 @@
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getPlace ,addList,getList,getConfig,setConfig,getProgramsList,deleteConfig,updateList,syn_config,syn_slice} from 'api'
-import { Card, Breadcrumb, Button, Table, Modal, message,Input, Form,Select,Tree} from 'antd'
-import {  } from 'react-router-dom'
+import { getPlace, addList, getList, getConfig, setConfig, getProgramsList, deleteConfig, updateList, syn_config, syn_slice } from 'api'
+import { Card, Breadcrumb, Button, Table, Modal, message, Input, Form, Select, Tree, DatePicker } from 'antd'
+import { } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
-import  util from 'utils'
+import util from 'utils'
 import "./style.css"
+import moment from 'moment';
 const { confirm } = Modal
 const { Option } = Select;
+let { RangePicker } = DatePicker;
+
 let privateData = {
   inputTimeOutVal: null
 };
 export default class SportsProgram extends Component {
-  constructor(){
+  formRef = React.createRef();
+  constructor() {
     super();
     this.state = {
       page: 1,
       pageSize: 10,
       total: 0,
       data: [],
-      loading:false,
-      dataLoading:false,
-      programGrounp:[],
-      defaultProgram:"",
+      loading: false,
+      dataLoading: false,
+      programGrounp: [],
+      defaultProgram: "",
       lists: [],
-      currentId:{indexId:null},//编辑行的id
+      currentId: { indexId: null },//编辑行的id
       layout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
       },
       tailLayout: {
-        wrapperCol: { offset: 4, span: 20 },
+        wrapperCol: { offset: 12, span: 12 },
       },
-      treeData:[],
+      treeData: [],
+      qzDialog: false, //权重弹窗
       columns: [
         {
           title: "ID",
@@ -43,6 +48,7 @@ export default class SportsProgram extends Component {
           title: "开始时间",
           dataIndex: "startTime",
           key: "startTime",
+          width: 250,
           sorter: {
             compare: (a, b) => a.startTime - b.startTime,
             multiple: 1,
@@ -50,7 +56,7 @@ export default class SportsProgram extends Component {
           render: (rowValue, row, index) => {
             return (
               <span>
-                {util.formatTime(row.startTime*1000,"",1) || "-"}
+                {util.formatTime(row.startTime * 1000, "", 1) || "-"}
               </span>
             )
           }
@@ -64,18 +70,18 @@ export default class SportsProgram extends Component {
           title: "场次",
           dataIndex: "stage",
           key: "stage",
-          render: (rowValue, row, index)=>{
+          render: (rowValue, row, index) => {
             return (
               <div>
                 {
-                  this.state.currentId.indexId == row.indexId?
-                  <Input placeholder={row.stage} defaultValue={row.stage} onChange={(val)=>{
-                    this.state.currentId.stage = val.target.value
-                    this.setState({
-                      currentId:this.state.currentId
-                    })
-                  }}  />
-                  :row.stage||"-"
+                  this.state.currentId.indexId == row.indexId ?
+                    <Input placeholder={row.stage} defaultValue={row.stage} onChange={(val) => {
+                      this.state.currentId.stage = val.target.value
+                      this.setState({
+                        currentId: this.state.currentId
+                      })
+                    }} />
+                    : row.stage || "-"
                 }
               </div>
             )
@@ -85,18 +91,18 @@ export default class SportsProgram extends Component {
           title: "赛事类型",
           dataIndex: "cateName",
           key: "cateName",
-          render: (rowValue, row, index)=>{
+          render: (rowValue, row, index) => {
             return (
               <div>
                 {
-                  this.state.currentId.indexId == row.indexId?
-                  <Input placeholder={row.cateName} defaultValue={row.cateName} onChange={(val)=>{
-                    this.state.currentId.cateName = val.target.value
-                    this.setState({
-                      currentId:this.state.currentId
-                    })
-                  }}  />
-                  :row.cateName||"-"
+                  this.state.currentId.indexId == row.indexId ?
+                    <Input placeholder={row.cateName} defaultValue={row.cateName} onChange={(val) => {
+                      this.state.currentId.cateName = val.target.value
+                      this.setState({
+                        currentId: this.state.currentId
+                      })
+                    }} />
+                    : row.cateName || "-"
                 }
               </div>
             )
@@ -111,18 +117,18 @@ export default class SportsProgram extends Component {
           title: "标签",
           dataIndex: "tag",
           key: "tag",
-          render: (rowValue, row, index)=>{
+          render: (rowValue, row, index) => {
             return (
               <div>
                 {
-                  this.state.currentId.indexId == row.indexId?
-                  <Input placeholder={row.tag} defaultValue={row.tag} onChange={(val)=>{
-                    this.state.currentId.tag = val.target.value
-                    this.setState({
-                      currentId:this.state.currentId
-                    })
-                  }} />
-                  :row.tag||"-"
+                  this.state.currentId.indexId == row.indexId ?
+                    <Input placeholder={row.tag} defaultValue={row.tag} onChange={(val) => {
+                      this.state.currentId.tag = val.target.value
+                      this.setState({
+                        currentId: this.state.currentId
+                      })
+                    }} />
+                    : row.tag || "-"
                 }
               </div>
             )
@@ -132,66 +138,96 @@ export default class SportsProgram extends Component {
           title: "节目信息",
           dataIndex: "name",
           key: "name",
-          render: (rowValue, row, index)=>{
+          width: 300,
+          render: (rowValue, row, index) => {
             return (
               <div>
                 {
-                  this.state.currentId.indexId == row.indexId?
-                  <Input placeholder={row.name} defaultValue={row.name} onChange={(val)=>{
-                    this.state.currentId.name = val.target.value
-                    this.setState({
-                      currentId:this.state.currentId
-                    })
-                  }}  />
-                  :row.name||"-"
+                  this.state.currentId.indexId == row.indexId ?
+                    <Input placeholder={row.name} defaultValue={row.name} onChange={(val) => {
+                      this.state.currentId.name = val.target.value
+                      this.setState({
+                        currentId: this.state.currentId
+                      })
+                    }} />
+                    : row.name || "-"
                 }
               </div>
             )
           }
         },
         {
+          title: "权重",
+          dataIndex: "indexEndTime",
+          key: "indexEndTime",
+          width: 300,
+          render: (rowValue, row, index) => {
+            return (
+              <span>
+                {row.indexStartTime ? util.formatTime(row.indexStartTime * 1000, "", 1) : "未知"} - {row.indexEndTime ? util.formatTime(row.indexEndTime * 1000, "", 1) : "未知"}({row.index})
+              </span>
+            )
+          }
+        },
+        {
           title: "操作",
           key: "action",
-          render: (rowValue, row, index)=>{
+          fixed: 'right', width: 250,
+          render: (rowValue, row, index) => {
             return (
               <div>
                 {
-                  this.state.currentId.indexId===row.indexId?
-                  <div>
-                    <Button 
-                     style={{margin:"0 10px"}}
-                    size="small"
-                    type="primary"
-                    onClick={()=>{
-                      this.updateList()
-                    }}
-                    >确认</Button>
-                    <Button 
-                      size="small"
-                      danger
-                      onClick={()=>{
-                        this.setState({
-                          currentId:{id:null}
-                        })
-                      }}
-                      >取消</Button>
-                  </div>:
+                  this.state.currentId.indexId === row.indexId ?
                     <div>
-                      <Button 
-                      style={{margin:"0 10px"}}
-                      size="small"
-                      type="primary"
-                      onClick={()=>{
-                        this.setState({
-                          currentId:row
-                        })
-                      }}
-                      >编辑</Button>
-                      <Button 
+                      <Button
+                        style={{ margin: "0 10px" }}
+                        size="small"
+                        type="primary"
+                        onClick={() => {
+                          this.updateList()
+                        }}
+                      >确认</Button>
+                      <Button
                         size="small"
                         danger
-                        onClick={()=>{this.delArt(row.indexId)}}
-                        >删除</Button>
+                        onClick={() => {
+                          this.setState({
+                            currentId: { id: null }
+                          })
+                        }}
+                      >取消</Button>
+                    </div> :
+                    <div>
+                      <Button
+
+                        size="small"
+                        type="primary"
+                        onClick={() => {
+                          this.setState({
+                            currentId: row
+                          })
+                        }}
+                      >编辑</Button>
+                      <Button
+                        size="small"
+                        style={{ margin: "0 10px" }}
+                        danger
+                        onClick={() => { this.delArt(row.indexId) }}
+                      >删除</Button>
+                      <Button
+                        size="small"
+                        onClick={() =>
+                          this.setState({
+                            qzDialog: true,
+                            currentId:row
+                          },()=>{
+                            let info = JSON.parse(JSON.stringify(row))
+                            info.time = [info.indexStartTime ? moment(info.indexStartTime * 1000) : "", info.indexEndTime ? moment(info.indexEndTime * 1000) : ""]
+                            this.formRef.current.resetFields()
+                            this.formRef.current.setFieldsValue(info)
+                          })
+                        }
+                      >权重配置</Button>
                     </div>
                 }
               </div>
@@ -199,25 +235,25 @@ export default class SportsProgram extends Component {
           }
         }
       ],
-      visible:false,
-      addressVisible:false,
-      selectProps:{
-        optionFilterProp:"children",
-        filterOption(input, option){
+      visible: false,
+      addressVisible: false,
+      selectProps: {
+        optionFilterProp: "children",
+        filterOption(input, option) {
           return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         },
-        showSearch(){
+        showSearch() {
           console.log('onSearch')
         }
       },
-      allAddress:"",
-      entranceUrl:"",
-      thirdJumpUrl:"",
-      ip:"1",
-      area:""
+      allAddress: "",
+      entranceUrl: "",
+      thirdJumpUrl: "",
+      ip: "1",
+      area: ""
     }
   }
-  
+
   render() {
     return (
       <div>
@@ -226,193 +262,236 @@ export default class SportsProgram extends Component {
             <Breadcrumb.Item>体育节目</Breadcrumb.Item>
           </Breadcrumb>
         }
-        extra={
-          <div>
-           <Button type="primary"
-            onClick={()=>{
-              this.setState({visible:true})
-            }}
-            >新增</Button>
-             <Button type="primary"
-             style={{margin:"0 20px"}}
-            onClick={()=>{
-              this.setState({addressVisible:true})
-            }}
-            >地域配置</Button>
-             <Button type="primary"
-              style={{margin:"0 0 0 0px"}}
-              loading={this.state.dataLoading}
-              onClick={()=>{
-                this.setState({
-                  dataLoading:true
-                })
-                this.syn_config(["OLYMPIC.H5.ENTRANCE","OLYMPIC.THIRD.JUMP.URL","OLYMPIC.IP.WHITELIST","OLYMPIC.AREA.CODE"])
-                this.syn_slice("OLYMPIC.PROGRAMS")
-              }}
-            >数据同步</Button>
-          </div> 
-        }
+          extra={
+            <div>
+              <Button type="primary"
+                onClick={() => {
+                  this.setState({ visible: true })
+                }}
+              >新增</Button>
+              <Button type="primary"
+                style={{ margin: "0 20px" }}
+                onClick={() => {
+                  this.setState({ addressVisible: true })
+                }}
+              >地域配置</Button>
+              <Button type="primary"
+                style={{ margin: "0 0 0 0px" }}
+                loading={this.state.dataLoading}
+                onClick={() => {
+                  this.setState({
+                    dataLoading: true
+                  })
+                  this.syn_config(["OLYMPIC.H5.ENTRANCE", "OLYMPIC.THIRD.JUMP.URL", "OLYMPIC.IP.WHITELIST", "OLYMPIC.AREA.CODE"])
+                  this.syn_slice("OLYMPIC.PROGRAMS")
+                }}
+              >数据同步</Button>
+            </div>
+          }
         >
-          <Table 
-              dataSource={this.state.lists}
-              loading={this.state.loading}
-              rowKey={record => record.indexId}
-              pagination={{
-                pageSize: this.state.pageSize,
-                total: this.state.total,
-                onChange: this.changeSize
-              }}
-              columns={this.state.columns} />
-         
+          <Table
+            dataSource={this.state.lists}
+            loading={this.state.loading}
+            scroll={{ x: 1800, y: '75vh' }}
+            rowKey={record => record.indexId}
+            pagination={{
+              pageSize: this.state.pageSize,
+              total: this.state.total,
+              onChange: this.changeSize
+            }}
+            columns={this.state.columns} />
+
         </Card>
         <Modal
-            title="新增体育节目"
-            centered
-            visible={this.state.visible}
-            onCancel={() => {this.closeModel(1)}}
-            footer={null}
-            width={1000}
-          >
-            {
-              <Form
-                {...this.state.layout}
-                name="basic"
-                onFinish={this.submitForm.bind(this,1)}
+          title="新增体育节目"
+          centered
+          visible={this.state.visible}
+          onCancel={() => { this.closeModel(1) }}
+          footer={null}
+          width={1000}
+        >
+          {
+            <Form
+              {...this.state.layout}
+              name="basic"
+              onFinish={this.submitForm.bind(this, 1)}
+            >
+              <Form.Item
+                label="节目信息"
+                name="value"
+                rules={[{ required: true, message: '请填写节目信息' }]}
               >
-                <Form.Item
-                  label="节目信息"
-                  name="value"
-                  rules={[{ required: true, message: '请填写节目信息' }]}
-                >
-                 <Select
-                   placeholder="请输入节目信息"
-                   {...this.state.selectProps}
-                   allowClear
-                   onSearch={(val)=>{
+                <Select
+                  placeholder="请输入节目信息"
+                  {...this.state.selectProps}
+                  allowClear
+                  onSearch={(val) => {
                     console.log(val)
-                    if(privateData.inputTimeOutVal) {
-                     clearTimeout(privateData.inputTimeOutVal);
-                     privateData.inputTimeOutVal = null;
-                     }
-                     privateData.inputTimeOutVal = setTimeout(() => {
-                         if(!privateData.inputTimeOutVal) return;
-                         this.getProgramsList(val)
-                     }, 1000)
+                    if (privateData.inputTimeOutVal) {
+                      clearTimeout(privateData.inputTimeOutVal);
+                      privateData.inputTimeOutVal = null;
+                    }
+                    privateData.inputTimeOutVal = setTimeout(() => {
+                      if (!privateData.inputTimeOutVal) return;
+                      this.getProgramsList(val)
+                    }, 1000)
                   }}
-                 >
-                   {
-                    this.state.programGrounp.map((r,i)=>{
-                      return(
+                >
+                  {
+                    this.state.programGrounp.map((r, i) => {
+                      return (
                         <Option value={r.value} key={r.value}>{r.label}</Option>
                       )
                     })
-                   }
-                 </Select>
-                </Form.Item>
-                <Form.Item
-                  label="专题key"
-                  name="topicKey"
-                  rules={[{ required: true, message: '请填写专题key' }]}
-                >
-                 <Input placeholder="请填写专题key" />
-                </Form.Item>
-                <Form.Item {...this.state.tailLayout}>
-                  <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
-                    确定
-                  </Button>
-                </Form.Item>
-              </Form> 
-            }
-          </Modal>
-          <Modal
-            title="地域配置"
-            centered
-            visible={this.state.addressVisible}
-            onCancel={() => {this.closeModel(2)}}
-            footer={null}
-          >
-            {
-              <Form
-                {...this.state.layout}
-                name="basic"
-                onFinish={this.submitForm.bind(this,2)}
-                initialValues={
-                  {entranceUrl:this.state.entranceUrl,ip:this.state.ip,thirdJumpUrl:this.state.thirdJumpUrl}
-                }
+                  }
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="专题key"
+                name="topicKey"
+                rules={[{ required: true, message: '请填写专题key' }]}
               >
-                <Form.Item
-                  label="支持地域"
-                  name="area"
+                <Input placeholder="请填写专题key" />
+              </Form.Item>
+              <Form.Item {...this.state.tailLayout}>
+                <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                  确定
+                </Button>
+              </Form.Item>
+            </Form>
+          }
+        </Modal>
+        <Modal
+          title="地域配置"
+          centered
+          visible={this.state.addressVisible}
+          onCancel={() => { this.closeModel(2) }}
+          footer={null}
+        >
+          {
+            <Form
+              {...this.state.layout}
+              name="basic"
+              onFinish={this.submitForm.bind(this, 2)}
+              initialValues={
+                { entranceUrl: this.state.entranceUrl, ip: this.state.ip, thirdJumpUrl: this.state.thirdJumpUrl }
+              }
+            >
+              <Form.Item
+                label="支持地域"
+                name="area"
+              >
+                <Tree
+                  height={250}
+                  checkable
+                  onCheck={this.onCheckAddress.bind(this)}
+                  checkedKeys={this.state.area}
+                  onSelect={this.onSelectAddress.bind(this)}
+                  // defaultSelectedKeys={this.state.area}
+                  treeData={this.state.treeData}
+                />
+              </Form.Item>
+              <Form.Item
+                label="入口H5"
+                name="entranceUrl"
+                rules={[{ required: true, message: '请输入入口H5地址' }]}
+              >
+                <Input placeholder="请输入入口H5地址" defaultValue={this.state.entranceUrl} />
+              </Form.Item>
+              <Form.Item
+                label="预约H5"
+                name="thirdJumpUrl"
+                rules={[{ required: true, message: '请输入预约H5地址' }]}
+              >
+                <Input placeholder="请输入预约H5地址" defaultValue={this.state.thirdJumpUrl} />
+              </Form.Item>
+              <Form.Item
+                label="白名单"
+                name="ip"
+              >
+                <Input placeholder="请输入白名单" defaultValue={this.state.ip} />
+              </Form.Item>
+              <Form.Item {...this.state.tailLayout}>
+                <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                  确定
+                </Button>
+              </Form.Item>
+            </Form>
+          }
+        </Modal>
+        <Modal
+          title="权重配置"
+          centered
+          visible={this.state.qzDialog}
+          onCancel={() => { this.setState({ qzDialog: false,currentId: { id: null }, }) }}
+          footer={null}
+          width={800}
+        >
+          {
+            <Form
+              {...this.state.layout}
+              name="basic"
+              onFinish={this.updateList.bind(this)}
+              ref={this.formRef}
+            >
+              <Form.Item
+                label="位置"
+                name="index"
+              >
+                <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择位置"
                 >
-                  <Tree
-                    height={250}
-                    checkable
-                    onCheck={this.onCheckAddress.bind(this)}
-                    checkedKeys={this.state.area}
-                    onSelect={this.onSelectAddress.bind(this)}
-                    // defaultSelectedKeys={this.state.area}
-                    treeData={this.state.treeData}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="入口H5"
-                  name="entranceUrl"
-                  rules={[{ required: true, message: '请输入入口H5地址' }]}
-                >
-                 <Input placeholder="请输入入口H5地址" defaultValue={this.state.entranceUrl} />
-                </Form.Item>
-                <Form.Item
-                  label="预约H5"
-                  name="thirdJumpUrl"
-                  rules={[{ required: true, message: '请输入预约H5地址' }]}
-                >
-                 <Input  placeholder="请输入预约H5地址" defaultValue={this.state.thirdJumpUrl} />
-                </Form.Item>
-                <Form.Item
-                  label="白名单"
-                  name="ip"
-                >
-                 <Input placeholder="请输入白名单" defaultValue={this.state.ip} />
-                </Form.Item>
-                <Form.Item {...this.state.tailLayout}>
-                  <Button htmlType="submit" type="primary" style={{margin:"0 20px"}}>
-                    确定
-                  </Button>
-                </Form.Item>
-              </Form> 
-            }
-          </Modal>
+                  <Option value={1} key={1}>1</Option>
+                  <Option value={2} key={2}>2</Option>
+                  <Option value={3} key={3}>3</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item label="开始时间-结束时间" name="time">
+                <RangePicker placeholder={['开始时间', '结束时间']} showTime ></RangePicker>
+              </Form.Item>
+              <Form.Item {...this.state.tailLayout}>
+                <Button  danger style={{ margin: "0 20px" }} onClick={()=>{
+                  this.setState({
+                    currentId: { id: null },
+                    qzDialog:false
+                  })
+                }}>取消</Button>
+                <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                  确定
+                </Button>
+              </Form.Item>
+            </Form>
+          }
+        </Modal>
       </div>
     )
   }
-  componentDidMount(){
+  componentDidMount() {
     this.getPlace()
     this.getList()
     this.getConfig()
   }
-  onSearch(e){
-    console.log(e,"e")
+  onSearch(e) {
+    console.log(e, "e")
   }
-  closeModel(type){
-    if(type === 1){
+  closeModel(type) {
+    if (type === 1) {
       this.setState({
-        visible:false
+        visible: false
       })
-    }else{
+    } else {
       this.setState({
-        addressVisible:false
+        addressVisible: false
       })
     }
   }
   // 新增
-  submitForm(type,params){
+  submitForm(type, params) {
     console.log(params)
-    if(type === 1){
+    if (type === 1) {
       this.addList(params)
-    }else{
+    } else {
       this.setConfig(params)
     }
-   
     this.closeModel(type)
   }
   // 删除文章
@@ -420,10 +499,10 @@ export default class SportsProgram extends Component {
     Modal.confirm({
       title: '删除此节目',
       content: '确认删除？',
-      onOk: ()=>{
+      onOk: () => {
         this.deleteConfig(id)
       },
-      onCancel: ()=>{
+      onCancel: () => {
 
       }
     })
@@ -436,71 +515,71 @@ export default class SportsProgram extends Component {
     })
   }
   //获取国家地区
-  getPlace(){
-    let params={
-      page:{isPage:9}
+  getPlace() {
+    let params = {
+      page: { isPage: 9 }
     }
-    getPlace(params).then(res=>{
-      let address = Object.assign([],res.data.data)
-      let arr = address.filter(item=>item.parentCode === "CN")
-      arr.forEach(r=>{
+    getPlace(params).then(res => {
+      let address = Object.assign([], res.data.data)
+      let arr = address.filter(item => item.parentCode === "CN")
+      arr.forEach(r => {
         r.title = r.name
         r.key = r.code + "-"
-        r.children =[]
-        address.forEach(h=>{
-          if(r.code === h.parentCode){
-            r.children.push({title:h.name,key:h.code})
+        r.children = []
+        address.forEach(h => {
+          if (r.code === h.parentCode) {
+            r.children.push({ title: h.name, key: h.code })
           }
         })
       })
-      let tree =[
-        {title:"全选",key:"all",children:arr}
+      let tree = [
+        { title: "全选", key: "all", children: arr }
       ]
       this.setState({
-        treeData:tree
+        treeData: tree
       })
     })
   }
-  onSelectAddress(val){
+  onSelectAddress(val) {
     console.log(val)
   }
-  onCheckAddress(val){
+  onCheckAddress(val) {
     console.log(val)
-    let postAddress = val.filter(item=>item !== "all")
+    let postAddress = val.filter(item => item !== "all")
     let arr = []
-    postAddress.forEach(r=>{
-      if(r.indexOf("-") !== -1){
-        arr.push(r.replace("-",""))
-      }else{
+    postAddress.forEach(r => {
+      if (r.indexOf("-") !== -1) {
+        arr.push(r.replace("-", ""))
+      } else {
         arr.push(r)
       }
     })
     this.setState({
-      area:arr,
-      allAddress:arr.join(",")
+      area: arr,
+      allAddress: arr.join(",")
     })
   }
-  getList(){
-    getList({key:"OLYMPIC.PROGRAMS"}).then(res=>{
-      if(res.data.errCode == 0){
+  getList() {
+    getList({ key: "OLYMPIC.PROGRAMS" }).then(res => {
+      if (res.data.errCode == 0) {
         this.setState({
-          lists:res.data.data
+          lists: res.data.data
         })
       }
     })
   }
-  addList(val){
+  addList(val) {
     console.log(val)
     let a = this.state.defaultProgram[val.value]
     console.log(a)
-    let params={
+    let params = {
       ...a,
-      topicKey:val.topicKey,
-      competitionName:a.competition_name,
-      channelName:a.channel_name,
-      startTime:a.start_time,
-      endTime:a.end_time,
-      channelId:a.channel_id
+      topicKey: val.topicKey,
+      competitionName: a.competition_name,
+      channelName: a.channel_name,
+      startTime: a.start_time,
+      endTime: a.end_time,
+      channelId: a.channel_id
       // "date": "",
       // "startTime": this.state.defaultProgram[val.value].start_time,
       // "channelName": this.state.defaultProgram[val.value].channel_id,
@@ -513,149 +592,160 @@ export default class SportsProgram extends Component {
       // "tag": "",
       // "endTime": this.state.defaultProgram[val.value].end_time
     }
-    addList({key:"OLYMPIC.PROGRAMS"},params).then(res=>{
-      if(res.data.errCode == 0){
+    addList({ key: "OLYMPIC.PROGRAMS" }, params).then(res => {
+      if (res.data.errCode == 0) {
         message.success("新增成功")
         this.getList()
-      }else{
+      } else {
         message.error("新增失败")
       }
     })
   }
-  getProgramsList(val){
-    if(!val)return
-    let param={
-      keyword:val,
-      channelId:4
+  getProgramsList(val) {
+    if (!val) return
+    let param = {
+      keyword: val,
+      channelId: 4
     }
-    getProgramsList(param).then(res=>{
-      if(res.data.errCode === 0 ){
+    getProgramsList(param).then(res => {
+      if (res.data.errCode === 0) {
         let a = Object.entries(res.data.data)
-        console.log(a,"a")
+        console.log(a, "a")
         let b = []
         for (const [key, value] of a) {
-          b.push({label: util.formatTime(value.start_time,"",2)  +  " " +value.name  + " " + value.channel_id, value: key})
+          b.push({ label: util.formatTime(value.start_time, "", 2) + " " + value.name + " " + value.channel_id, value: key })
         }
         this.setState({
-          programGrounp:b,
-          defaultProgram:res.data.data
+          programGrounp: b,
+          defaultProgram: res.data.data
         })
       }
     })
   }
-  getConfig(){
-    let a = ["OLYMPIC.H5.ENTRANCE","OLYMPIC.THIRD.JUMP.URL","OLYMPIC.IP.WHITELIST","OLYMPIC.AREA.CODE"]
-    a.forEach((r,i)=>{
-      getConfig({key:r}).then(res=>{
-        if(res.data.errCode === 0){
-          if(i === 0){
+  getConfig() {
+    let a = ["OLYMPIC.H5.ENTRANCE", "OLYMPIC.THIRD.JUMP.URL", "OLYMPIC.IP.WHITELIST", "OLYMPIC.AREA.CODE"]
+    a.forEach((r, i) => {
+      getConfig({ key: r }).then(res => {
+        if (res.data.errCode === 0) {
+          if (i === 0) {
             this.setState({
-              entranceUrl:res.data.data.entranceUrl
+              entranceUrl: res.data.data.entranceUrl
             })
-          }else if(i === 1){
+          } else if (i === 1) {
             this.setState({
-              thirdJumpUrl:res.data.data.thirdJumpUrl
+              thirdJumpUrl: res.data.data.thirdJumpUrl
             })
-          }else if(i === 2){
+          } else if (i === 2) {
             this.setState({
-              ip:res.data.data.ip
+              ip: res.data.data.ip
             })
-          }else{
+          } else {
             this.setState({
-              area:res.data.data.area.split(",")
+              area: res.data.data.area.split(",")
             })
           }
         }
       })
     })
   }
-  setConfig(val){
-    let a = ["OLYMPIC.H5.ENTRANCE","OLYMPIC.THIRD.JUMP.URL","OLYMPIC.IP.WHITELIST","OLYMPIC.AREA.CODE"]
-    a.forEach((r,i)=>{
-      let params={}
-      if(i === 0){
-        params.entranceUrl = val.entranceUrl?val.entranceUrl:this.state.entranceUrl
-      }else if(i === 1){
-        params.thirdJumpUrl = val.thirdJumpUrl?val.thirdJumpUrl:this.state.thirdJumpUrl
-      }else if(i === 2){
-        params.ip = val.ip?val.ip:this.state.ip
-      }else{
-        params.area =this.state.area.join(",")
+  setConfig(val) {
+    let a = ["OLYMPIC.H5.ENTRANCE", "OLYMPIC.THIRD.JUMP.URL", "OLYMPIC.IP.WHITELIST", "OLYMPIC.AREA.CODE"]
+    a.forEach((r, i) => {
+      let params = {}
+      if (i === 0) {
+        params.entranceUrl = val.entranceUrl ? val.entranceUrl : this.state.entranceUrl
+      } else if (i === 1) {
+        params.thirdJumpUrl = val.thirdJumpUrl ? val.thirdJumpUrl : this.state.thirdJumpUrl
+      } else if (i === 2) {
+        params.ip = val.ip ? val.ip : this.state.ip
+      } else {
+        params.area = this.state.area.join(",")
       }
-      
-      setConfig({key:r},params).then(res=>{
-        if(res.data.errCode === 0){
-          if(i === 0){
-           
-          }else if(i === 1){
-            
-          }else if(i === 2){
-            
-          }else{
-            
+
+      setConfig({ key: r }, params).then(res => {
+        if (res.data.errCode === 0) {
+          if (i === 0) {
+
+          } else if (i === 1) {
+
+          } else if (i === 2) {
+
+          } else {
+
           }
         }
       })
     })
   }
-  deleteConfig(id){
-    deleteConfig({key:"OLYMPIC.PROGRAMS","id":id}).then(res=>{
-      if(res.data.errCode === 0){
+  deleteConfig(id) {
+    deleteConfig({ key: "OLYMPIC.PROGRAMS", "id": id }).then(res => {
+      if (res.data.errCode === 0) {
         message.success("删除成功")
         this.getList()
-      }else{
+      } else {
         message.error("删除失败")
       }
     })
   }
-  updateList(){
-    let obj = this.state.lists.filter(item=>item.indexId === this.state.currentId.indexId)
-    let body={
-      ...obj[0]
+  updateList(val) {
+    let body={}
+    console.log(val)
+    if(val){
+      body = {
+        ...this.state.currentId,
+        ...val,
+        indexEndTime: parseInt(val.time[1].valueOf() / 1000),
+        indexStartTime: parseInt(val.time[0].valueOf() / 1000),
+      }
+    }else{
+      let obj = this.state.lists.filter(item => item.indexId === this.state.currentId.indexId)
+      body = {
+        ...obj[0]
+      }
     }
-    console.log(body)
-    updateList({key:"OLYMPIC.PROGRAMS","id":this.state.currentId.indexId},body).then(res=>{
-      if(res.data.errCode === 0){
+    updateList({ key: "OLYMPIC.PROGRAMS", "id": this.state.currentId.indexId }, body).then(res => {
+      if (res.data.errCode === 0) {
         message.success("更新成功")
         this.setState({
-          currentId:{indexId:null}
+          currentId: { indexId: null }
         })
         this.getList()
-      }else{
+      } else {
         message.error("更新失败")
       }
+      this.setState({qzDialog:false})
     })
   }
-  syn_config(key){
-    if(Array.isArray(key)){
-      key.forEach(r=>{
-        syn_config({key:r}).then(res=>{
-          if(res.data.errCode === 0){
+  syn_config(key) {
+    if (Array.isArray(key)) {
+      key.forEach(r => {
+        syn_config({ key: r }).then(res => {
+          if (res.data.errCode === 0) {
             // message.success("同步成功")
-          }else{
+          } else {
             // message.error("同步失败")
           }
         })
       })
-    }else{
-      syn_config({key:key}).then(res=>{
-        if(res.data.errCode === 0){
+    } else {
+      syn_config({ key: key }).then(res => {
+        if (res.data.errCode === 0) {
           // message.success("同步成功")
-        }else{
+        } else {
           // message.error("同步失败")
         }
       })
     }
   }
-  syn_slice(key){
-    syn_slice({key:key}).then(res=>{
-      if(res.data.errCode === 0){
+  syn_slice(key) {
+    syn_slice({ key: key }).then(res => {
+      if (res.data.errCode === 0) {
         message.success("同步成功")
-      }else{
+      } else {
         message.error("同步失败")
       }
       this.setState({
-        dataLoading:false
+        dataLoading: false
       })
     })
   }

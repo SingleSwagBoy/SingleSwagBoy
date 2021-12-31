@@ -460,6 +460,18 @@ export const saveWelcome = (params) => { return request2.post(`${baseUrl}/mms/wx
 export const delWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/delwelcome`,{params:params}); };                 // 易添加企业微信客服列表更新
 export const changeWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/welcomestatus`,{params:params}); };                 // 易添加企业微信客服列表状态改变
 export const uploadImage = (params,form,header) => { return request2.post(`${baseUrl}/mms/wx/qywechat/uploadimg?qywechatCode=${params.qywechatCode}`,form,{headers: header}); };                 // 上传图片
+
+//企微标签
+export const synctags = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/synctags`,{params:params}); };          //同步企业微信企业标签
+export const corptags = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/corptags`,{params:params}); };          //获取企业微信标签
+export const addcorptagtask = (params) => { return request2.post(`${baseUrl}/mms/wx/qywechat/addcorptagtask`,params); };          //同步企业微信企业标签
+export const corptagtasks = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/corptagtasks`,{params:params}); };          //企业微信标签任务列表
+export const corptagtaskstatus = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/corptagtaskstatus`,{params:params}); };          //企业微信标签任务上下线
+export const delcorptagtask = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/delcorptagtask`,{params:params}); };          //企业微信标签删除
+
+
+
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

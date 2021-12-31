@@ -171,7 +171,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     })
                                 }}
                             >新增</Button>
-                            <MySyncBtn type={26} name='同步企业微信标签' />
+                            <MySyncBtn type={27} name='同步企业微信标签' />
                         </div>
                     }
                 >

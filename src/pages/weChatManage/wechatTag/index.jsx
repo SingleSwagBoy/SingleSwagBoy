@@ -113,7 +113,7 @@ export default class EarnIncentiveTask extends React.Component {
                         return (
                             <div>
                                 {/* 0-未开始；1-进行中；2-已完成 */}
-                                {rowValue === 1 ? "未开始" : rowValue === 2 ? "进行中" : rowValue === 3 ? "已完成" : "未知"}
+                                {rowValue === 0 ? "未开始" : rowValue === 1 ? "进行中" : rowValue === 2 ? "已完成" : "未知"}
                                 {/* <Switch checkedChildren="有效" unCheckedChildren="无效" key={new Date().getTime()}
                                     defaultChecked={rowValue == 1 ? true : false}
                                     onChange={(val) => {

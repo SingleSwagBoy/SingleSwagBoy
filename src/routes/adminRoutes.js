@@ -51,6 +51,7 @@ const FansTag = lazy(() => import('pages/weChatManage/fansTag/index.jsx'))
 const PersonalSend = lazy(() => import('pages/weChatManage/personalSend/index.jsx'))
 const LoginVipConfig = lazy(() => import('pages/weChatManage/loginVipConfig/index.jsx'))
 const WechatAutoReply = lazy(() => import('pages/weChatManage/wechatAutoReply/index.jsx'))
+const WechatTag = lazy(() => import('pages/weChatManage/wechatTag/index.jsx'))
 
 const EarnIncentiveTask = lazy(() => import('pages/earnManage/earnIncentiveTask/index.jsx'))
 const WithdrawalGoodsList = lazy(() => import('pages/earnManage/withdrawalGoodsList/index.jsx'))
@@ -166,6 +167,7 @@ const adminRoutes = [
     { name: '个性化群发', icon: UnorderedListOutlined, path: '/mms/wx/personalSend', component: PersonalSend, code: "WeChatManage", sub_code: 'personalSend' },
     { name: '登录(专享)配置', icon: UnorderedListOutlined, path: '/mms/wx/loginVipConfig', component: LoginVipConfig, code: "WeChatManage", sub_code: 'loginVipConfig' },
     { name: '企业自动回复', icon: UnorderedListOutlined, path: '/mms/wx/wechatAutoReply', component: WechatAutoReply, code: "WeChatManage", sub_code: 'wechatAutoReply' },
+    { name: '企微标签', icon: UnorderedListOutlined, path: '/mms/wx/wechatTag', component: WechatTag, code: "WeChatManage", sub_code: 'wechatTag' },
 
     //  赚赚管理
     { name: '赚赚激励任务', icon: UnorderedListOutlined, path: '/mms/earnManage/earnIncentiveTask', component: EarnIncentiveTask, code: "earnManage", sub_code: 'earnIncentiveTask' },

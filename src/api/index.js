@@ -419,6 +419,26 @@ export const delEnterChannel = (params) => { return request2.delete(`${baseUrl}/
 export const uploadEnterChannel = (params) => { return request2.put(`${baseUrl}/mms/config/vipBootChannelConfig/update`,params); };                 // 更新会员开机进入频道配置
 export const syncEnterChannel = (params) => { return request2.get(`${baseUrl}/mms/config/vipBootChannelConfig/sync`,{params:params}); };                 // 同步会员开机进入频道配置
 
+//开机启动图配置
+export const getPowerBoot = (params) => { return request2.post(`${baseUrl}/mms/tv/powerBoot/list`,params); };                 // 开机启动-列表
+export const addPowerBoot = (params) => { return request2.post(`${baseUrl}/mms/tv/powerBoot/create`,params); };                 // 开机启动-列表
+export const editPowerBoot = (params) => { return request2.post(`${baseUrl}/mms/tv/powerBoot/edit`,params); };                 // 开机启动-列表
+export const delPowerBoot = (params) => { return request2.get(`${baseUrl}/mms/tv/powerBoot/deleteItem`,{params:params}); };                 // 开机启动-列表
+export const changePowerBoot = (params) => { return request2.get(`${baseUrl}/mms/tv/powerBoot/changeState`,{params:params}); };                 // 开机启动-列表
+export const syncPowerBoot = (params) => { return request2.get(`${baseUrl}/mms/tv/powerBoot/syncCache`,{params:params}); };                 // 开机启动-列表
+
+
+//好看分类
+export const getHkCategory = (params) => { return request2.post(`${baseUrl}/mms/tv/hkCategory/list`,params); };                 // 开机启动-列表
+export const addHkCategory = (params) => { return request2.post(`${baseUrl}/mms/tv/hkCategory/create`,params); };                 // 开机启动-列表
+export const editHkCategory = (params) => { return request2.post(`${baseUrl}/mms/tv/hkCategory/edit`,params); };                 // 开机启动-列表
+export const delHkCategory = (params) => { return request2.get(`${baseUrl}/mms/tv/hkCategory/deleteItem`,{params:params}); };                 // 开机启动-列表
+export const changeHkCategory = (params) => { return request2.get(`${baseUrl}/mms/tv/hkCategory/changeState`,{params:params}); };                 // 开机启动-列表
+export const switchHkCategory = (params) => { return request2.get(`${baseUrl}/mms/tv/hkCategory/switch`,{params:params}); };                 // 开机启动-列表
+export const syncHkCategory = (params) => { return request2.get(`${baseUrl}/mms/tv/hkCategory/syncCache`,{params:params}); };                 // 开机启动-列表
+
+
+
 //体育频道视频集配置
 export const getChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcList`,params); };                 // 配置管理-体育频道视频集配置-列表
 export const addChannelSport = (params) => { return request2.post(`${baseUrl}/mms/channel/channelSport/svcAdd`,params); };                 // 配置管理-体育频道视频集配置-添加
@@ -448,6 +468,18 @@ export const saveWelcome = (params) => { return request2.post(`${baseUrl}/mms/wx
 export const delWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/delwelcome`,{params:params}); };                 // 易添加企业微信客服列表更新
 export const changeWelcome = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/welcomestatus`,{params:params}); };                 // 易添加企业微信客服列表状态改变
 export const uploadImage = (params,form,header) => { return request2.post(`${baseUrl}/mms/wx/qywechat/uploadimg?qywechatCode=${params.qywechatCode}`,form,{headers: header}); };                 // 上传图片
+
+//企微标签
+export const synctags = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/synctags`,{params:params}); };          //同步企业微信企业标签
+export const corptags = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/corptags`,{params:params}); };          //获取企业微信标签
+export const addcorptagtask = (params) => { return request2.post(`${baseUrl}/mms/wx/qywechat/addcorptagtask`,params); };          //同步企业微信企业标签
+export const corptagtasks = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/corptagtasks`,{params:params}); };          //企业微信标签任务列表
+export const corptagtaskstatus = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/corptagtaskstatus`,{params:params}); };          //企业微信标签任务上下线
+export const delcorptagtask = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/delcorptagtask`,{params:params}); };          //企业微信标签删除
+
+
+
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

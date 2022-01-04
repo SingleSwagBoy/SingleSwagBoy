@@ -51,6 +51,7 @@ const FansTag = lazy(() => import('pages/weChatManage/fansTag/index.jsx'))
 const PersonalSend = lazy(() => import('pages/weChatManage/personalSend/index.jsx'))
 const LoginVipConfig = lazy(() => import('pages/weChatManage/loginVipConfig/index.jsx'))
 const WechatAutoReply = lazy(() => import('pages/weChatManage/wechatAutoReply/index.jsx'))
+const WechatTag = lazy(() => import('pages/weChatManage/wechatTag/index.jsx'))
 
 const EarnIncentiveTask = lazy(() => import('pages/earnManage/earnIncentiveTask/index.jsx'))
 const WithdrawalGoodsList = lazy(() => import('pages/earnManage/withdrawalGoodsList/index.jsx'))
@@ -69,6 +70,8 @@ const RecommendConfig = lazy(() => import('pages/configManage/recommendConfig/in
 const WordsSwiperConfig = lazy(() => import('pages/configManage/wordsSwiperConfig/index.jsx'));
 const HomeBroadcast = lazy(() => import('pages/configManage/homeBroadcast/index.jsx'));
 const EnterChannelConfig = lazy(() => import('pages/configManage/enterChannelConfig/index.jsx'));
+const EnterImageConfig = lazy(() => import('pages/configManage/enterImageConfig/index.jsx'));
+const GoodLooking = lazy(() => import('pages/configManage/goodLooking/index.jsx'));
 const PuzzleRobot = lazy(() => import('pages/configManage/puzzleRobot/index.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
 const LuckyDraw=lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
@@ -149,6 +152,8 @@ const adminRoutes = [
     { name: '文字轮播配置', icon: UnorderedListOutlined, path: '/mms/config/wordsSwiperConfig', component: WordsSwiperConfig, code: "configManage", sub_code: 'wordsSwiperConfig' },
     { name: '首页直播配置', icon: UnorderedListOutlined, path: '/mms/config/homeBroadcast', component: HomeBroadcast, code: "configManage", sub_code: 'homeBroadcast' },
     { name: '开机进入频道配置', icon: UnorderedListOutlined, path: '/mms/config/enterChannelConfig', component: EnterChannelConfig, code: "configManage", sub_code: 'enterChannelConfig' },
+    { name: '开机启动图配置', icon: UnorderedListOutlined, path: '/mms/config/enterImageConfig', component: EnterImageConfig, code: "configManage", sub_code: 'enterImageConfig' },
+    { name: '好看分类', icon: UnorderedListOutlined, path: '/mms/config/goodLooking', component: GoodLooking, code: "configManage", sub_code: 'goodLooking' },
     { name: '拼团机器人', icon: UnorderedListOutlined, path: '/mms/config/puzzleRobot', component: PuzzleRobot, code: "configManage", sub_code: 'puzzleRobot' },
 
 
@@ -162,6 +167,7 @@ const adminRoutes = [
     { name: '个性化群发', icon: UnorderedListOutlined, path: '/mms/wx/personalSend', component: PersonalSend, code: "WeChatManage", sub_code: 'personalSend' },
     { name: '登录(专享)配置', icon: UnorderedListOutlined, path: '/mms/wx/loginVipConfig', component: LoginVipConfig, code: "WeChatManage", sub_code: 'loginVipConfig' },
     { name: '企业自动回复', icon: UnorderedListOutlined, path: '/mms/wx/wechatAutoReply', component: WechatAutoReply, code: "WeChatManage", sub_code: 'wechatAutoReply' },
+    { name: '企微标签', icon: UnorderedListOutlined, path: '/mms/wx/wechatTag', component: WechatTag, code: "WeChatManage", sub_code: 'wechatTag' },
 
     //  赚赚管理
     { name: '赚赚激励任务', icon: UnorderedListOutlined, path: '/mms/earnManage/earnIncentiveTask', component: EarnIncentiveTask, code: "earnManage", sub_code: 'earnIncentiveTask' },

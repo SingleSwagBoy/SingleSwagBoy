@@ -180,11 +180,11 @@ export default class SportsProgram extends Component {
         ChannelTopic(params).then(res => {
             if (res.data.errCode === 0) {
                 this.setState({
-                    lists: res.data.data.dataList
+                    lists: res.data.data.data
                 })
-                for (let i = 0; i < res.data.data.dataList.length; i++) {
-                    if (res.data.data.dataList[i].ID == this.state.parentId) {
-                        let _obj = res.data.data.dataList[i];
+                for (let i = 0; i < res.data.data.data.length; i++) {
+                    if (res.data.data.data[i].id == this.state.parentId) {
+                        let _obj = res.data.data.data[i];
                         if (_obj.tags != '') {
                             _obj.tags = _obj.tags.split(",")
                         } else {
@@ -200,13 +200,13 @@ export default class SportsProgram extends Component {
 
 
                         this.formRef.current.setFieldsValue(_obj)
-                        this.getDetail(res.data.data.dataList[i].channelId)
+                        this.getDetail(res.data.data.data[i].channelId)
                         this.setState({
-                            currentObj: res.data.data.dataList[i],
-                            currentItem: res.data.data.dataList[i],
-                            defaultAddress: (res.data.data.dataList[i].area && res.data.data.dataList[i].area.includes(",")) ? res.data.data.dataList[i].area.split(",") : res.data.data.dataList[i].area,
-                            backImage: res.data.data.dataList[i].backImage,
-                            headerImage: res.data.data.dataList[i].headerImage
+                            currentObj: res.data.data.data[i],
+                            currentItem: res.data.data.data[i],
+                            defaultAddress: (res.data.data.data[i].area && res.data.data.data[i].area.includes(",")) ? res.data.data.data[i].area.split(",") : res.data.data.data[i].area,
+                            backImage: res.data.data.data[i].backImage,
+                            headerImage: res.data.data.data[i].headerImage
                         }, () => {
                             console.log(this.state.defaultAddress)
                         })
@@ -265,7 +265,7 @@ export default class SportsProgram extends Component {
             backImage: this.state.backImage,
             headerImage: this.state.headerImage,
             //channelName:this.state.channelName,
-            ID: this.state.parentId * 1 || 0
+            id: this.state.parentId * 1 || 0
         }
         //更新时间
         let time = params.time;
@@ -382,7 +382,7 @@ export default class SportsProgram extends Component {
                             <Form.Item label="背景色" name="bgColor" rules={[{ required: true, message: '请填写背景色' }]}>
                                 <Input className="base-input-wrapper" placeholder="请填写背景色" />
                             </Form.Item>
-                            <Form.Item label="专题编码(拼音)" name="IdKey" rules={[{ required: true, message: '请填写专题编码' }]}>
+                            {/* <Form.Item label="专题编码(拼音)" name="IdKey" rules={[{ required: true, message: '请填写专题编码' }]}>
                                 {
                                     this.state.isAdd == true &&
                                     <Input className="base-input-wrapper" placeholder="请填写专题编码" /> ||
@@ -404,13 +404,13 @@ export default class SportsProgram extends Component {
                                 {this.state.videoLists.map((item, index) => {
                                     return <Option value={item.value} key={index}> {item.value}</Option>
                                 })}
-                            </Select> */}
+                            </Select> *
                                 <Input className="base-input-wrapper" placeholder="请填写预告片ID" />
                             </Form.Item>
 
                             <Form.Item label="预告片标题" name="svName" rules={[{ required: true, message: '请填写预告片标题' }]}>
                                 <Input className="base-input-wrapper" placeholder="请填写预告片标题" />
-                            </Form.Item>
+                            </Form.Item> */}
 
 
                             <Form.Item label="用户分群" name="tags" >
@@ -472,190 +472,6 @@ export default class SportsProgram extends Component {
                             </Select> */}
                             </Form.Item>
                         </>
-
-
-
-                        {/* 内容配置 */}
-                        <Divider>内容配置</Divider>
-
-                        <Form.Item label="播放器标题" name="title" rules={[{ required: true, message: '请填写播放器标题' }]}>
-                            <Input className="base-input-wrapper" laceholder="请填写播放器标题" />
-                        </Form.Item>
-                        <Form.Item
-                            label="播放器内容"
-                        // name="voters"
-                        // rules={[{ required: true, message: '投票选项' }]}
-                        >
-                            <Form.List name="voters">
-                                {(fields, { add, remove }) => (
-                                    <>
-                                        {fields.map((field, index) => (
-                                            <Space key={field.key} align="baseline">
-                                                <Form.Item {...field} label="" name={[field.name, 'votes1']} fieldKey={[field.fieldKey, 'votes1']}>
-                                                    <Select style={{ width: "300px" }} placeholder="请选择播放器播放类型">
-                                                        <Option value={1} key={1}>频道</Option>
-                                                        <Option value={2} key={2}>视频</Option>
-                                                    </Select>
-                                                </Form.Item>
-                                                <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
-                                                    <Select style={{ width: "300px" }} placeholder="请选择">
-                                                        <Option value={1} key={1}>频道</Option>
-                                                        <Option value={2} key={2}>视频</Option>
-                                                    </Select>
-                                                </Form.Item>
-
-                                                <MinusCircleOutlined onClick={() => remove(field.name)} />
-                                            </Space>
-                                        ))}
-
-                                        <Form.Item>
-                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                新增播放器内容
-                                            </Button>
-                                        </Form.Item>
-                                    </>
-                                )}
-                            </Form.List>
-                        </Form.Item>
-                        <Form.Item label="是否开启目录" name="title" rules={[{ required: true, message: '请选择是否开启目录' }]}>
-                            <Radio.Group>
-                                <Radio value={true}>开启</Radio>
-                                <Radio value={false}>关闭</Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            label="内容板块"
-                        // name="voters"
-                        // rules={[{ required: true, message: '投票选项' }]}
-                        >
-                            <Form.List name="voters">
-                                {(fields, { add, remove }) => (
-                                    <>
-                                        {fields.map((field, index) => (
-                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
-                                                <Space key={field.key} align="baseline" style={{ flexWrap: "wrap" }}>
-                                                    <Form.Item {...field} label="标题" name={[field.name, 'votes1']} fieldKey={[field.fieldKey, 'votes1']}>
-                                                        <Select style={{ width: "200px" }} placeholder="请选择播放器播放类型">
-                                                            <Option value={1} key={1}>频道</Option>
-                                                            <Option value={2} key={2}>视频</Option>
-                                                        </Select>
-                                                    </Form.Item>
-                                                    <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
-                                                        <Input placeholder="请填写标题" style={{ width: "200px" }} />
-                                                    </Form.Item>
-                                                    <div style={{ width: "700px" }}>
-                                                        <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
-                                                            <Radio.Group>
-                                                                <Radio value={true}>横排列表</Radio>
-                                                                <Radio value={false}>双纵列表</Radio>
-                                                            </Radio.Group>
-                                                        </Form.Item>
-                                                    </div>
-
-                                                    <Form.Item
-                                                        label="内容"
-                                                        style={{ width: "700px" }}
-                                                    // rules={[{ required: true, message: '投票选项' }]}
-                                                    >
-                                                        <Form.List name={[field.name, 'content']}>
-                                                            {(fieldsCont, { add, remove }) => (
-                                                                <>
-                                                                    {fieldsCont.map((fieldItem, index) => (
-                                                                        <Space key={fieldItem.key} align="baseline">
-                                                                            <Form.Item {...fieldItem} label="" name={[fieldItem.name, 'votes1']} fieldKey={[fieldItem.fieldKey, 'votes1']}>
-                                                                                <Select style={{ width: "200px" }} placeholder="请选择播放器播放类型">
-                                                                                    <Option value={1} key={1}>频道</Option>
-                                                                                    <Option value={2} key={2}>视频</Option>
-                                                                                </Select>
-                                                                            </Form.Item>
-                                                                            <Form.Item {...fieldItem} label="" name={[fieldItem.name, 'votes']} fieldKey={[fieldItem.fieldKey, 'votes']}>
-                                                                                <Select style={{ width: "200px" }} placeholder="请选择">
-                                                                                    <Option value={1} key={1}>频道</Option>
-                                                                                    <Option value={2} key={2}>视频</Option>
-                                                                                </Select>
-                                                                            </Form.Item>
-
-                                                                            <div style={{ margin: "0 40px" }}>
-                                                                                <Button danger onClick={() => remove(fieldItem.name)} block icon={<MinusCircleOutlined />}>
-                                                                                    删除内容
-                                                                                </Button>
-                                                                            </div>
-                                                                        </Space>
-                                                                    ))}
-
-                                                                    <Form.Item>
-                                                                        <Button type="primary" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                                            新增内容
-                                                                        </Button>
-                                                                    </Form.Item>
-                                                                </>
-                                                            )}
-                                                        </Form.List>
-                                                    </Form.Item>
-
-                                                </Space>
-                                                <div>
-                                                    <Button danger onClick={() => remove(field.name)} block icon={<MinusCircleOutlined />}>
-                                                        删除内容板块
-                                                    </Button>
-                                                </div>
-                                            </div>
-
-                                        ))}
-
-                                        <Form.Item>
-                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                新增内容板块
-                                            </Button>
-                                        </Form.Item>
-                                    </>
-                                )}
-                            </Form.List>
-                        </Form.Item>
-
-
-
-
-                        <Form.Item
-                            label="banner设置"
-                        // name="voters"
-                        // rules={[{ required: true, message: '投票选项' }]}
-                        >
-                            <Form.List name="banner">
-                                {(fields, { add, remove }) => (
-                                    <>
-                                        {fields.map((field, index) => (
-
-                                            <Space key={field.key} align="baseline">
-
-                                                <Form.Item {...field} label="标题" name={[field.name, 'votes1']} fieldKey={[field.fieldKey, 'votes1']}>
-                                                    <Select style={{ width: "200px" }} placeholder="请选择播放器播放类型">
-                                                        <Option value={1} key={1}>频道</Option>
-                                                        <Option value={2} key={2}>视频</Option>
-                                                    </Select>
-                                                </Form.Item>
-                                                <Form.Item {...field} label="" name={[field.name, 'votes']} fieldKey={[field.fieldKey, 'votes']}>
-                                                    <Input placeholder="请填写标题" style={{ width: "200px" }} />
-                                                </Form.Item>
-
-                                                <Button danger onClick={() => remove(field.name)} icon={<MinusCircleOutlined />}>
-                                                    删除banner
-                                                </Button>
-                                            </Space>
-                                        ))}
-
-                                        <Form.Item>
-                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                新增banner
-                                            </Button>
-                                        </Form.Item>
-                                    </>
-                                )}
-                            </Form.List>
-                        </Form.Item>
-
-
-
 
                         <Form.Item {...this.state.tailLayout}>
                             <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>

@@ -482,6 +482,13 @@ export const delcorptagtask = (params) => { return request2.get(`${baseUrl}/mms/
 
 
 
+//移动端节目单屏蔽
+export const getShieldList = (params) => { return request2.get(`${baseUrl}/mms/channel/programs/listAllPrograms`,{params:params}); };          //查询节目单
+export const delShieldList = (params) => { return request2.post(`${baseUrl}/mms/channel/programs/delBlackProgram`,params); };                  //删除黑名单节目
+export const addShieldList = (params) => { return request2.post(`${baseUrl}/mms/channel/programs/addBlackProgram`,params); };          //添加节目到黑名单
+
+
+
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

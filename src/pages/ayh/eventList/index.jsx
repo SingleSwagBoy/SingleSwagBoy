@@ -4,7 +4,7 @@ import { getGameSchedule, updateGameSchedule, getConfig, setConfig, deleteGameSc
 import { Card, Breadcrumb, Button, Table, Modal, message, Input, Form, Select, DatePicker, TimePicker, Tree } from 'antd'
 import { } from 'react-router-dom'
 import { LeftOutlined } from "@ant-design/icons"
-import { MyAddress } from '@/components/views.js';
+import { MyAddress,MySyncBtn } from '@/components/views.js';
 import util from 'utils'
 import "./style.css"
 import moment from 'moment';
@@ -283,7 +283,7 @@ export default class SportsProgram extends Component {
                   this.refreshSpider()
                 }}
               >更新</Button>
-
+               <MySyncBtn type={3} name='同步地域缓存' params={{key:"olympic.game.config"}} />
             </div>
           }
         >

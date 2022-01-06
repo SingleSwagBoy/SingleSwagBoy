@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react'
 // import request from 'utils/request'
-import { getHomeList, uploadHomeList, searchVideo, addTab, getHomeBaseInfo, addHomeList, getAllBaseInfo, getChannel, getProgramlist, delHomeList, setHomeBaseInfo } from 'api'
+import { getHomeList, uploadHomeList, searchVideo, addTab, getHomeBaseInfo, addHomeList, getAllBaseInfo, getChannel, getShortList, delHomeList, setHomeBaseInfo } from 'api'
 import { Input, Card, Breadcrumb, Form, DatePicker, Tabs, Button, Table, Modal, Alert, Select, Radio, Divider, Image, message, Switch, InputNumber } from 'antd'
 import request from 'utils/request.js'
 import { } from 'react-router-dom'
@@ -65,14 +65,26 @@ export default class AddressNews extends Component {
                             <div>
                                 {
                                     index == this.state.editIndex ?
-                                        <InputNumber min={0} step={10} defaultValue={rowValue} onChange={(e) => {
+                                        <InputNumber min={0} step={10} defaultValue={rowValue}
+                                        onBlur={(e)=>{
                                             console.log(e)
                                             this.setState({
-                                                currentSort: e
+                                                editIndex:null,
+                                                currentItem: row,
+                                            },()=>{
+                                                let arr = JSON.parse(JSON.stringify(row))
+                                                arr.time = arr.startTime ? [moment(arr.startTime * 1000), moment(arr.endTime * 1000)] : 0
+                                                arr.sort = Number(e.target.value)
+                                                this.uploadHomeList(arr)
                                             })
-                                        }} />
+                                        }}
+                                        />
                                         :
-                                        <div>{rowValue}</div>
+                                        <div style={{color:"#1890ff",cursor:"pointer"}} onClick={()=>{
+                                            this.setState({
+                                                editIndex:index
+                                            })
+                                        }}>{rowValue}</div>
                                 }
 
                             </div>
@@ -146,7 +158,7 @@ export default class AddressNews extends Component {
                                                 } else if (arr.type == 2) {
                                                     this.searchVideo(arr.channelName)
                                                 } else {
-                                                    this.getProgramlist()
+                                                    this.getShortList()
                                                 }
                                             })
                                         }}
@@ -205,7 +217,7 @@ export default class AddressNews extends Component {
                                                 this.setHomeBaseInfo(info)
                                             }}
                                         />
-                                        <Button type="primary" style={{ margin: "0 10px" }}
+                                        <Button type="primary" style={{ margin: "0 10px" }} disabled={r.channelType == 1 || r.channelType == 2}
                                             onClick={() => {
                                                 this.setState({
                                                     titleShow: true,
@@ -272,14 +284,14 @@ export default class AddressNews extends Component {
                                                 } else if (index == 2) {
                                                     this.searchVideo(this.formRef.current && this.formRef.current.getFieldValue("channelId"))
                                                 } else {
-                                                    this.getProgramlist()
+                                                    this.getShortList()
                                                 }
                                                 this.formRef.current.setFieldsValue({ "channelId": null })
                                             }}>
                                                 {/* 1频道,2视频,3视频集 */}
                                                 <Radio value={1} key={1}>频道</Radio>
-                                                <Radio value={2} key={2}>视频</Radio>
-                                                <Radio value={3} key={3}>视频集</Radio>
+                                                <Radio value={2} key={2} disabled={this.formRef.current && (this.formRef.current.getFieldValue("channelType") == 1 || this.formRef.current.getFieldValue("channelType") == 2)}>视频</Radio>
+                                                <Radio value={3} key={3} disabled={this.formRef.current && (this.formRef.current.getFieldValue("channelType") == 1 || this.formRef.current.getFieldValue("channelType") == 2)}>视频集</Radio>
                                             </Radio.Group>
                                         </Form.Item>
                                         <Form.Item
@@ -318,8 +330,8 @@ export default class AddressNews extends Component {
                                                 }
                                                 {
                                                     this.formRef.current && this.formRef.current.getFieldValue("type") == 3 &&
-                                                    programlist.map((r, index) => {
-                                                        return <Option value={r.programId} key={index} >{r.programTitle}</Option>
+                                                    programlist.map((r, i) => {
+                                                        return <Option value={r.id.toString()} key={i}>{r.title}</Option>
                                                     })
                                                 }
                                             </Select>
@@ -518,8 +530,8 @@ export default class AddressNews extends Component {
             arr = this.state.shortList.filter(item => item.id == val.channelId)
             val.channelName = arr.length > 0 ? arr[0].title : ""
         } else {
-            arr = this.state.programlist.filter(item => item.programId == val.channelId)
-            val.channelName = arr.length > 0 ? arr[0].programTitle : ""
+            arr = this.state.programlist.filter(item => item.id == val.channelId)
+            val.channelName = arr.length > 0 ? arr[0].title : ""
         }
         if (this.state.source == "add") {
             this.addHomeList(val)
@@ -555,12 +567,12 @@ export default class AddressNews extends Component {
             })
         })
     }
-    getProgramlist() {
+    getShortList() {
         let params = {
             currentPage: 1, // (int)页码
             pageSize: 9999 // (int)每页数量
         }
-        getProgramlist(params).then(res => {
+        getShortList(params).then(res => {
             this.setState({
                 programlist: res.data.data
             })

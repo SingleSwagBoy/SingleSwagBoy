@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { baseUrl, searchVideo, getMyProduct, updateChannelTopicOld, addChannelTopicOld, Getchannels, requestAdTagList, listProgramByChannelId, ChannelTopicOld } from 'api'
+import { baseUrl, searchVideo, getMyProduct, updateChannelTopic, addChannelTopic, Getchannels, requestAdTagList, listProgramByChannelId, ChannelTopic } from 'api'
 import { Breadcrumb, Card, DatePicker, Button, Tooltip, Modal, message, Input, Form, Select, InputNumber, Upload, Divider, Space, Radio } from 'antd'
 import { } from 'react-router-dom'
 import { LoadingOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -88,7 +88,7 @@ export default class SportsProgram extends Component {
                 isAdd: true
             })
         } else if (this.props.match.params && this.props.match.params.id != "add") {
-            this.ChannelTopicOld();
+            this.ChannelTopic();
             this.setState({
                 parentId: this.props.match.params.id,
                 isAdd: false
@@ -173,18 +173,18 @@ export default class SportsProgram extends Component {
             }
         })
     }
-    ChannelTopicOld() {
+    ChannelTopic() {
         let params = {
             // name:keyWord || ""
         }
-        ChannelTopicOld(params).then(res => {
+        ChannelTopic(params).then(res => {
             if (res.data.errCode === 0) {
                 this.setState({
-                    lists: res.data.data.dataList
+                    lists: res.data.data.data
                 })
-                for (let i = 0; i < res.data.data.dataList.length; i++) {
-                    if (res.data.data.dataList[i].ID == this.state.parentId) {
-                        let _obj = res.data.data.dataList[i];
+                for (let i = 0; i < res.data.data.data.length; i++) {
+                    if (res.data.data.data[i].id == this.state.parentId) {
+                        let _obj = res.data.data.data[i];
                         if (_obj.tags != '') {
                             _obj.tags = _obj.tags.split(",")
                         } else {
@@ -200,13 +200,13 @@ export default class SportsProgram extends Component {
 
 
                         this.formRef.current.setFieldsValue(_obj)
-                        this.getDetail(res.data.data.dataList[i].channelId)
+                        this.getDetail(res.data.data.data[i].channelId)
                         this.setState({
-                            currentObj: res.data.data.dataList[i],
-                            currentItem: res.data.data.dataList[i],
-                            defaultAddress: (res.data.data.dataList[i].area && res.data.data.dataList[i].area.includes(",")) ? res.data.data.dataList[i].area.split(",") : res.data.data.dataList[i].area,
-                            backImage: res.data.data.dataList[i].backImage,
-                            headerImage: res.data.data.dataList[i].headerImage
+                            currentObj: res.data.data.data[i],
+                            currentItem: res.data.data.data[i],
+                            defaultAddress: (res.data.data.data[i].area && res.data.data.data[i].area.includes(",")) ? res.data.data.data[i].area.split(",") : res.data.data.data[i].area,
+                            backImage: res.data.data.data[i].backImage,
+                            headerImage: res.data.data.data[i].headerImage
                         }, () => {
                             console.log(this.state.defaultAddress)
                         })
@@ -265,7 +265,7 @@ export default class SportsProgram extends Component {
             backImage: this.state.backImage,
             headerImage: this.state.headerImage,
             //channelName:this.state.channelName,
-            ID: this.state.parentId * 1 || 0
+            id: this.state.parentId * 1 || 0
         }
         //更新时间
         let time = params.time;
@@ -279,7 +279,7 @@ export default class SportsProgram extends Component {
         delete params.time;
 
         if (this.state.isAdd == true) {  // 新增
-            addChannelTopicOld(params).then(res => {
+            addChannelTopic(params).then(res => {
                 if (res.data.errCode == 0) {
                     message.success("添加成功")
                     setTimeout(() => {
@@ -290,7 +290,7 @@ export default class SportsProgram extends Component {
                 }
             })
         } else {
-            updateChannelTopicOld(params).then(res => {
+            updateChannelTopic(params).then(res => {
                 if (res.data.errCode == 0) {
                     message.success("修改成功")
                     setTimeout(() => {
@@ -317,7 +317,7 @@ export default class SportsProgram extends Component {
                     <div>
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <Link to="/mms/channelManage/channelSubject">频道专题</Link>
+                                <Link to="/mms/channelManage/channelSubjectNew">频道专题</Link>
                             </Breadcrumb.Item>
                             {
                                 this.state.isAdd == true &&

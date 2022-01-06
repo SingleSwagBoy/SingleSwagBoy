@@ -66,23 +66,23 @@ export default class AddressNews extends Component {
                                 {
                                     index == this.state.editIndex ?
                                         <InputNumber min={0} step={10} defaultValue={rowValue}
-                                        onBlur={(e)=>{
-                                            console.log(e)
-                                            this.setState({
-                                                editIndex:null,
-                                                currentItem: row,
-                                            },()=>{
-                                                let arr = JSON.parse(JSON.stringify(row))
-                                                arr.time = arr.startTime ? [moment(arr.startTime * 1000), moment(arr.endTime * 1000)] : 0
-                                                arr.sort = Number(e.target.value)
-                                                this.uploadHomeList(arr)
-                                            })
-                                        }}
+                                            onBlur={(e) => {
+                                                console.log(e)
+                                                this.setState({
+                                                    editIndex: null,
+                                                    currentItem: row,
+                                                }, () => {
+                                                    let arr = JSON.parse(JSON.stringify(row))
+                                                    arr.time = arr.startTime ? [moment(arr.startTime * 1000), moment(arr.endTime * 1000)] : 0
+                                                    arr.sort = Number(e.target.value)
+                                                    this.uploadHomeList(arr)
+                                                })
+                                            }}
                                         />
                                         :
-                                        <div style={{color:"#1890ff",cursor:"pointer"}} onClick={()=>{
+                                        <div style={{ color: "#1890ff", cursor: "pointer" }} onClick={() => {
                                             this.setState({
-                                                editIndex:index
+                                                editIndex: index
                                             })
                                         }}>{rowValue}</div>
                                 }
@@ -319,7 +319,7 @@ export default class AddressNews extends Component {
                                                 {
                                                     this.formRef.current && this.formRef.current.getFieldValue("type") == 1 &&
                                                     channelList.map((r, index) => {
-                                                        return <Option value={r.code} key={index} >{r.name}</Option>
+                                                        return <Option value={r.code} key={r.id}>{r.name + "----" + r.code}</Option>
                                                     })
                                                 }
                                                 {
@@ -350,6 +350,12 @@ export default class AddressNews extends Component {
                                             <MyImageUpload
                                                 getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem, this.formRef) }}
                                                 imageUrl={this.formRef.current && this.formRef.current.getFieldValue("cover")} />
+                                            <Button onClick={() =>{
+                                                 this.formRef.current.setFieldsValue({cover:""})
+                                                 this.forceUpdate()
+                                            }} style={{ margin: "0 20px" }}>
+                                                删除
+                                            </Button>
                                         </Form.Item>
                                         <Form.Item label="有效时间" name="time" >
                                             <RangePicker className="base-input-wrapper" showTime allowClear placeholder={['开始时间', '结束时间']} />

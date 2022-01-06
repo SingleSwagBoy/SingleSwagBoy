@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { ChannelTopic, deleteChannelTopic, syncChannel,changeChannelTopic } from 'api'
+import { ChannelTopic, deleteChannelTopic, syncChannelNew,changeChannelTopic } from 'api'
 import { Breadcrumb, Card, Image, Button, Table, Modal, message, DatePicker, Input, Form, Select, InputNumber,Switch } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
@@ -186,12 +186,12 @@ export default class SportsProgram extends Component {
             }
         })
     }
-    syncChannel() {
+    syncChannelNew() {
         console.log("数据同步")
         this.setState({
             btnLoading: true
         })
-        syncChannel().then((res) => {
+        syncChannelNew().then((res) => {
             console.log(res);
             if (res.data.errCode == 0) {
                 message.success("数据同步成功")
@@ -251,7 +251,7 @@ export default class SportsProgram extends Component {
                                 loading={this.state.btnLoading}
                                 style={{ margin: "0 10px" }}
                                 onClick={() => {
-                                    this.syncChannel()
+                                    this.syncChannelNew()
                                 }}
                             >数据同步</Button>
                         </div>

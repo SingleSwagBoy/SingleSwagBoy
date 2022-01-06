@@ -116,6 +116,7 @@ export const addChannelTopic = params => { return request.post(`${baseUrl}/mms/c
 export const deleteChannelTopic = params => { return request.get(`${baseUrl}/mms/channelTopicNew/deleteItem`, {params:params}) };                                                                  //删除专题列表
 export const listProgramByChannelId = params => { return request.get(`${baseUrl}/mms/channel/programs/listByChannelId`, { params: params }) };                                              //获取专题详情
 export const syncChannel = params => { return request.get(`${baseUrl}/mms/channel/topic/sync`, { params: params }); };                                                                      //频道专题同步接口
+export const syncChannelNew = params => { return request.get(`${baseUrl}/mms/channelTopicNew/syncCache`, { params: params }); };                                                                      //频道专题同步接口
 export const changeChannelTopic = params => { return request.get(`${baseUrl}/mms/channelTopicNew/changeState`, { params: params }); };                                                                      //频道专题同步接口
 export const showConfChannel= params => { return request2.get(`${baseUrl}/mms/channelTopicNew/showConf`, { params: params }); };                                                                      //新频道专题-查看内容配置
 export const saveConfChannel= params => { return request2.post(`${baseUrl}/mms/channelTopicNew/saveConf`,params); };   

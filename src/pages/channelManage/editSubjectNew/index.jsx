@@ -388,7 +388,7 @@ export default class SportsProgram extends Component {
                                     <Input className="base-input-wrapper" placeholder="请填写专题编码" /> ||
                                     <Input className="base-input-wrapper" placeholder="请填写专题编码" disabled />
                                 }
-                            </Form.Item>
+                            </Form.Item>*/}
 
                             <Form.Item label="背景图" name="backImage" valuePropName="fileList"
                                 // 如果没有下面这一句会报错
@@ -399,8 +399,8 @@ export default class SportsProgram extends Component {
                                 // this.formRef.current ? this.formRef.current.getFieldValue("backImage") : ""
                                 />
                             </Form.Item>
-                            <Form.Item label="预告片" name="svIds" rules={[{ required: true, message: '请填写预告片ID' }]}>
-                                {/* <Select placeholder="请选择视频">
+                            {/*<Form.Item label="预告片" name="svIds" rules={[{ required: true, message: '请填写预告片ID' }]}>
+                                 <Select placeholder="请选择视频">
                                 {this.state.videoLists.map((item, index) => {
                                     return <Option value={item.value} key={index}> {item.value}</Option>
                                 })}

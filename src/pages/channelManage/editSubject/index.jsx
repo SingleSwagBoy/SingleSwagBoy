@@ -382,7 +382,7 @@ export default class SportsProgram extends Component {
                             <Form.Item label="背景色" name="bgColor" rules={[{ required: true, message: '请填写背景色' }]}>
                                 <Input className="base-input-wrapper" placeholder="请填写背景色" />
                             </Form.Item>
-                            {/* <Form.Item label="专题编码(拼音)" name="IdKey" rules={[{ required: true, message: '请填写专题编码' }]}>
+                            <Form.Item label="专题编码(拼音)" name="IdKey" rules={[{ required: true, message: '请填写专题编码' }]}>
                                 {
                                     this.state.isAdd == true &&
                                     <Input className="base-input-wrapper" placeholder="请填写专题编码" /> ||
@@ -404,13 +404,13 @@ export default class SportsProgram extends Component {
                                 {this.state.videoLists.map((item, index) => {
                                     return <Option value={item.value} key={index}> {item.value}</Option>
                                 })}
-                            </Select> *
+                            </Select> */}
                                 <Input className="base-input-wrapper" placeholder="请填写预告片ID" />
                             </Form.Item>
 
                             <Form.Item label="预告片标题" name="svName" rules={[{ required: true, message: '请填写预告片标题' }]}>
                                 <Input className="base-input-wrapper" placeholder="请填写预告片标题" />
-                            </Form.Item> */}
+                            </Form.Item>
 
 
                             <Form.Item label="用户分群" name="tags" >
@@ -472,6 +472,15 @@ export default class SportsProgram extends Component {
                             </Select> */}
                             </Form.Item>
                         </>
+
+
+
+
+
+
+
+
+
 
                         <Form.Item {...this.state.tailLayout}>
                             <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>

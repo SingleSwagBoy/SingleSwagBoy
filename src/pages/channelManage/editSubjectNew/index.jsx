@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { baseUrl, searchVideo, getMyProduct, updateChannelTopic, addChannelTopic, Getchannels, requestAdTagList, listProgramByChannelId, ChannelTopic } from 'api'
+import { baseUrl, searchVideo, getMyProduct, updateChannelTopic, addChannelTopic, Getchannels, requestNewAdTagList, listProgramByChannelId, ChannelTopic } from 'api'
 import { Breadcrumb, Card, DatePicker, Button, Tooltip, Modal, message, Input, Form, Select, InputNumber, Upload, Divider, Space, Radio } from 'antd'
 import { } from 'react-router-dom'
 import { LoadingOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -113,7 +113,7 @@ export default class SportsProgram extends Component {
         })
     }
     getInfo() {
-        requestAdTagList().then(res => {
+        requestNewAdTagList().then(res => {
             let _list = res.data.map(item => {  //  this.tagOptions 
                 return { label: item.name, value: item.code }
             })
@@ -414,7 +414,7 @@ export default class SportsProgram extends Component {
 
 
                             <Form.Item label="用户分群" name="tags" >
-                                <Select className="base-input-wrapper" placeholder="请选择用户分群" mode="multiple" allowClear>
+                                <Select className="base-input-wrapper" placeholder="请选择用户分群" allowClear>
                                     {
                                         this.state.tagList.map(r => {
                                             return (

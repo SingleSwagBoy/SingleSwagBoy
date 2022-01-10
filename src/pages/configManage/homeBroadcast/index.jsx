@@ -301,6 +301,17 @@ export default class AddressNews extends Component {
                                         >
                                             <Select allowClear placeholder="请选择类型"
                                                 showSearch
+                                                onChange={(e)=>{
+                                                    let arr = ""
+                                                    if (this.formRef.current.getFieldValue("type") == 1){
+                                                        arr = channelList.filter(item => item.code == e)
+                                                        this.formRef.current.setFieldsValue({ "cover": arr[0].posterUrl })
+                                                    }else if (this.formRef.current.getFieldValue("type") == 2){
+                                                        arr = shortList.filter(item => item.id == e)
+                                                        this.formRef.current.setFieldsValue({ "cover": arr[0].cover })
+                                                    }
+                                                    this.forceUpdate()
+                                                }}
                                                 onSearch={(e) => {
                                                     if (privateData.inputTimeOutVal) {
                                                         clearTimeout(privateData.inputTimeOutVal);

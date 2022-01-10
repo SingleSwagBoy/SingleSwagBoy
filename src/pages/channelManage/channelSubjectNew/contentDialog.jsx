@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { showConfChannel, getChannel, searchVideo, getShortList, getLockList,saveConfChannel } from 'api'
+import { showConfChannel, getChannel, searchVideo, getShortList, getLockList, saveConfChannel } from 'api'
 import { Image, Button, Table, Modal, message, DatePicker, Input, Form, Select, InputNumber, Space, Radio, Divider } from 'antd'
 import { } from 'react-router-dom'
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -39,7 +39,7 @@ export default class SportsProgram extends Component {
             shortVideoList: [],//短视频
             shortList: [],//短视频集
             channelGroupList: [],//频道组
-            channelTopicNewId:"",
+            channelTopicNewId: "",
         }
     }
     componentDidMount() {
@@ -56,22 +56,22 @@ export default class SportsProgram extends Component {
     closeDialog() {
         this.props.onCloseDialog()
     }
-    saveConfChannel(val){
-        let params={
+    saveConfChannel(val) {
+        let params = {
             ...val,
-            channelTopicNewId:this.state.channelTopicNewId,
-            player:{
-                title:val.playerTitle,
-                params:val.playerParams
+            channelTopicNewId: this.state.channelTopicNewId,
+            player: {
+                title: val.playerTitle,
+                params: val.playerParams
             }
         }
-        saveConfChannel(params).then(res=>{
+        saveConfChannel(params).then(res => {
             message.success("保存成功")
             this.closeDialog()
         })
     }
     showConfChannel(id) {
-        this.setState({channelTopicNewId:id})
+        this.setState({ channelTopicNewId: id })
         let params = { channelTopicNewId: id }
         showConfChannel(params).then(res => {
             let info = JSON.parse(JSON.stringify(res.data))
@@ -112,9 +112,9 @@ export default class SportsProgram extends Component {
         if (arr == "content") {
             obj[index].params[i][type] = image_url
         } else {
-            if(obj[index]){
+            if (obj[index]) {
                 obj[index][type] = image_url;
-            }else{
+            } else {
                 obj[index] = {}
                 obj[index][type] = image_url;
             }
@@ -148,6 +148,19 @@ export default class SportsProgram extends Component {
             })
         })
     }
+    getImageAndTitle(index, i, source, e, list,par) {
+        let arr = list.filter(item => item[par] == e)
+        if (this.formRef.current &&
+            this.formRef.current.getFieldValue("content")[index] &&
+            this.formRef.current.getFieldValue("content")[index].params[i]) {
+            console.log(arr[0].posterUrl)
+            let obj = this.formRef.current.getFieldValue("content")
+            obj[index].params[i].subCover = arr[0][source]
+            obj[index].params[i].subTitle = arr[0].name || arr[0].title
+            this.formRef.current.setFieldsValue({ "content": obj })
+            this.forceUpdate()
+        }
+    }
     render() {
         let { channelList, shortVideoList, shortList, channelGroupList } = this.state
         let { isShow } = this.props
@@ -174,7 +187,7 @@ export default class SportsProgram extends Component {
                                     {fields.map((field, index) => (
                                         <Space key={field.key} align="baseline">
                                             <Form.Item {...field} label="" name={[field.name, 'type']} fieldKey={[field.fieldKey, 'type']}>
-                                                <Select style={{ width: "350px" }} placeholder="请选择播放器播放类型" onChange={()=>this.forceUpdate()}>
+                                                <Select style={{ width: "350px" }} placeholder="请选择播放器播放类型" onChange={() => this.forceUpdate()}>
                                                     {/* :10=短视频;20=频道 */}
                                                     <Option value={10} key={10}>短视频</Option>
                                                     <Option value={20} key={20}>频道</Option>
@@ -189,7 +202,7 @@ export default class SportsProgram extends Component {
                                                     <Select
                                                         style={{ width: "350px" }}
                                                         placeholder="请选择频道配置"
-                                                        
+
                                                         allowClear
                                                         {...this.state.selectProps}
                                                         onSearch={(val) => {
@@ -272,134 +285,103 @@ export default class SportsProgram extends Component {
                         <Form.List name="content" rules={[{ required: true, message: '内容板块' }]}>
                             {(fields, { add, remove }) => (
                                 <>
+
                                     {fields.map((field, index) => (
-                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
-                                            <Space key={field.key} align="baseline" style={{ flexWrap: "wrap" }}>
-                                                <Form.Item {...field} label="标题" name={[field.name, 'type']} fieldKey={[field.fieldKey, 'type']}>
-                                                    <Select style={{ width: "200px" }} placeholder="请选择内容类型"
-                                                        onChange={() => this.forceUpdate()}
-                                                    >
-                                                        <Option value={10} key={10}>文字</Option>
-                                                        <Option value={20} key={20}>图片</Option>
-                                                    </Select>
-                                                </Form.Item>
-                                                {
-                                                    this.formRef.current &&
-                                                        this.formRef.current.getFieldValue("content") &&  this.formRef.current.getFieldValue("content")[index]
-                                                        ?
-                                                        this.formRef.current.getFieldValue("content")[index].type == 10
+                                        <>
+                                            <Divider >内容板块{index + 1}</Divider>
+                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                                                <Space key={field.key} align="baseline" style={{ flexWrap: "wrap" }}>
+                                                    <Form.Item {...field} label="标题" name={[field.name, 'type']} fieldKey={[field.fieldKey, 'type']}>
+                                                        <Select style={{ width: "200px" }} placeholder="请选择内容类型"
+                                                            onChange={() => this.forceUpdate()}
+                                                        >
+                                                            <Option value={10} key={10}>文字</Option>
+                                                            <Option value={20} key={20}>图片</Option>
+                                                        </Select>
+                                                    </Form.Item>
+                                                    {
+                                                        this.formRef.current &&
+                                                            this.formRef.current.getFieldValue("content") && this.formRef.current.getFieldValue("content")[index]
                                                             ?
-                                                            <Form.Item {...field} label="" name={[field.name, 'value']} fieldKey={[field.fieldKey, 'value']}>
-                                                                <Input placeholder="请填写标题" style={{ width: "200px" }} />
-                                                            </Form.Item>
-                                                            :
-                                                            this.formRef.current.getFieldValue("content")[index].type == 20 ?
+                                                            this.formRef.current.getFieldValue("content")[index].type == 10
+                                                                ?
                                                                 <Form.Item {...field} label="" name={[field.name, 'value']} fieldKey={[field.fieldKey, 'value']}>
-                                                                    <MyImageUpload
-                                                                        getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('value', file, newItem, "content_value", index) }}
-                                                                        imageUrl={
-                                                                            this.formRef.current &&
-                                                                            this.formRef.current.getFieldValue("content") &&
-                                                                            this.formRef.current.getFieldValue("content")[index] &&
-                                                                            this.formRef.current.getFieldValue("content")[index].value} />
+                                                                    <Input placeholder="请填写标题" style={{ width: "200px" }} />
                                                                 </Form.Item>
                                                                 :
-                                                                ""
-                                                        :
-                                                        ""
-                                                }
+                                                                this.formRef.current.getFieldValue("content")[index].type == 20 ?
+                                                                    <Form.Item {...field} label="" name={[field.name, 'value']} fieldKey={[field.fieldKey, 'value']}>
+                                                                        <MyImageUpload
+                                                                            getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('value', file, newItem, "content_value", index) }}
+                                                                            imageUrl={
+                                                                                this.formRef.current &&
+                                                                                this.formRef.current.getFieldValue("content") &&
+                                                                                this.formRef.current.getFieldValue("content")[index] &&
+                                                                                this.formRef.current.getFieldValue("content")[index].value} />
+                                                                    </Form.Item>
+                                                                    :
+                                                                    ""
+                                                            :
+                                                            ""
+                                                    }
 
-                                                <div style={{ width: "700px" }}>
-                                                    <Form.Item {...field} label="" name={[field.name, 'arrangement']} fieldKey={[field.fieldKey, 'arrangement']}>
-                                                        <Radio.Group>
-                                                            {/* 1=横排;2=双纵;3=首位高权重 */}
-                                                            <Radio value={1}>横排列表</Radio>
-                                                            <Radio value={2}>双纵列表</Radio>
-                                                            {
-                                                                this.formRef.current &&
-                                                                this.formRef.current.getFieldValue("content") &&
-                                                                this.formRef.current.getFieldValue("content")[index] &&
-                                                                this.formRef.current.getFieldValue("content")[index].type == 10 &&
-                                                                <Radio value={3}>首位高权重</Radio>
-                                                            }
+                                                    <div style={{ width: "700px" }}>
+                                                        <Form.Item {...field} label="" name={[field.name, 'arrangement']} fieldKey={[field.fieldKey, 'arrangement']}>
+                                                            <Radio.Group>
+                                                                {/* 1=横排;2=双纵;3=首位高权重 */}
+                                                                <Radio value={1}>横排列表</Radio>
+                                                                <Radio value={2}>双纵列表</Radio>
+                                                                {
+                                                                    this.formRef.current &&
+                                                                    this.formRef.current.getFieldValue("content") &&
+                                                                    this.formRef.current.getFieldValue("content")[index] &&
+                                                                    this.formRef.current.getFieldValue("content")[index].type == 10 &&
+                                                                    <Radio value={3}>首位高权重</Radio>
+                                                                }
 
-                                                        </Radio.Group>
-                                                    </Form.Item>
-                                                </div>
+                                                            </Radio.Group>
+                                                        </Form.Item>
+                                                    </div>
 
-                                                <Form.Item
-                                                    label="内容"
-                                                // style={{ width: "700px" }}
-                                                // rules={[{ required: true, message: '投票选项' }]}
-                                                >
-                                                    <Form.List name={[field.name, 'params']}>
-                                                        {(fieldsCont, { add, remove }) => (
-                                                            <>
-                                                                {fieldsCont.map((fieldItem, i) => (
-                                                                    <Space key={fieldItem.key} align="baseline" wrap="false" direction="horizontal">
-                                                                        <Form.Item {...fieldItem} label="" name={[fieldItem.name, 'subType']} fieldKey={[fieldItem.fieldKey, 'subType']}>
-                                                                            <Select style={{ width: "100px" }} placeholder="请选择类型" onChange={(e) => {
-                                                                                let content = this.formRef.current.getFieldValue("content")
-                                                                                content[index].params[i].subType = e
-                                                                                content[index].params[i].subValue = undefined
-                                                                                this.formRef.current.setFieldsValue({ "content": content })
-                                                                            }}>
-                                                                                {/* 10=短视频;11=短视频集;20=频道 */}
-                                                                                <Option value={10} key={10}>短视频</Option>
-                                                                                <Option value={11} key={11}>短视频集</Option>
-                                                                                <Option value={20} key={20}>频道</Option>
-                                                                            </Select>
-                                                                        </Form.Item>
-                                                                        <Form.Item {...fieldItem} label="" name={[fieldItem.name, 'subValue']} fieldKey={[fieldItem.fieldKey, 'subValue']}>
-                                                                            {
-                                                                                (this.formRef.current &&
-                                                                                    this.formRef.current.getFieldValue("content")[index] &&
-                                                                                    this.formRef.current.getFieldValue("content")[index].params[i])
-                                                                                    ?
-                                                                                    this.formRef.current.getFieldValue("content")[index].params[i].subType == 10
+                                                    <Form.Item
+                                                        label="内容"
+                                                    // style={{ width: "700px" }}
+                                                    // rules={[{ required: true, message: '投票选项' }]}
+                                                    >
+                                                        <Form.List name={[field.name, 'params']}>
+                                                            {(fieldsCont, { add, remove }) => (
+                                                                <>
+                                                                    {fieldsCont.map((fieldItem, i) => (
+                                                                        <Space key={fieldItem.key} align="baseline" wrap="false" direction="horizontal">
+                                                                            <Form.Item {...fieldItem} label="" name={[fieldItem.name, 'subType']} fieldKey={[fieldItem.fieldKey, 'subType']}>
+                                                                                <Select style={{ width: "100px" }} placeholder="请选择类型" onChange={(e) => {
+                                                                                    let content = this.formRef.current.getFieldValue("content")
+                                                                                    content[index].params[i].subType = e
+                                                                                    content[index].params[i].subValue = undefined
+                                                                                    this.formRef.current.setFieldsValue({ "content": content })
+                                                                                }}>
+                                                                                    {/* 10=短视频;11=短视频集;20=频道 */}
+                                                                                    <Option value={10} key={10}>短视频</Option>
+                                                                                    <Option value={11} key={11}>短视频集</Option>
+                                                                                    <Option value={20} key={20}>频道</Option>
+                                                                                </Select>
+                                                                            </Form.Item>
+                                                                            <Form.Item {...fieldItem} label="" name={[fieldItem.name, 'subValue']} fieldKey={[fieldItem.fieldKey, 'subValue']}>
+                                                                                {
+                                                                                    (this.formRef.current &&
+                                                                                        this.formRef.current.getFieldValue("content")[index] &&
+                                                                                        this.formRef.current.getFieldValue("content")[index].params[i])
                                                                                         ?
-                                                                                        <Select
-                                                                                            style={{ width: "200px" }}
-                                                                                            placeholder="请输入短视频ID"
-                                                                                            allowClear
-                                                                                            {...this.state.selectProps}
-                                                                                            onSearch={(val) => {
-                                                                                                console.log(val)
-                                                                                                if (privateData.inputTimeOutVal) {
-                                                                                                    clearTimeout(privateData.inputTimeOutVal);
-                                                                                                    privateData.inputTimeOutVal = null;
-                                                                                                }
-                                                                                                privateData.inputTimeOutVal = setTimeout(() => {
-                                                                                                    if (!privateData.inputTimeOutVal) return;
-                                                                                                    this.searchVideo(val)
-                                                                                                }, 800)
-                                                                                            }}>
-                                                                                            {
-                                                                                                shortVideoList.map((r, i) => {
-                                                                                                    return <Option value={r.id} key={i}>{r.title}</Option>
-                                                                                                })
-                                                                                            }
-                                                                                        </Select>
-                                                                                        :
-                                                                                        this.formRef.current.getFieldValue("content")[index].params[i].subType == 11
+                                                                                        this.formRef.current.getFieldValue("content")[index].params[i].subType == 10
                                                                                             ?
                                                                                             <Select
-                                                                                                style={{ width: "300px" }}
-                                                                                                placeholder="请选择短视频集"
-                                                                                                allowClear
-                                                                                                {...this.state.selectProps}>
-                                                                                                {
-                                                                                                    shortList.map((r, i) => {
-                                                                                                        return <Option value={r.id.toString()} key={i}>{r.title}</Option>
-                                                                                                    })
-                                                                                                }
-                                                                                            </Select>
-                                                                                            :
-                                                                                            <Select
-                                                                                                style={{ width: "300px" }}
-                                                                                                placeholder="请选择频道配置"
+                                                                                                style={{ width: "200px" }}
+                                                                                                placeholder="请输入短视频ID"
                                                                                                 allowClear
                                                                                                 {...this.state.selectProps}
+                                                                                                onChange={(e) => {
+                                                                                                    this.getImageAndTitle(index, i, "cover", e, shortVideoList,"id")
+                                                                                                }}
                                                                                                 onSearch={(val) => {
                                                                                                     console.log(val)
                                                                                                     if (privateData.inputTimeOutVal) {
@@ -408,68 +390,110 @@ export default class SportsProgram extends Component {
                                                                                                     }
                                                                                                     privateData.inputTimeOutVal = setTimeout(() => {
                                                                                                         if (!privateData.inputTimeOutVal) return;
-                                                                                                        this.getChannel(val)
+                                                                                                        this.searchVideo(val)
                                                                                                     }, 800)
                                                                                                 }}>
                                                                                                 {
-                                                                                                    channelList.map((r, i) => {
-                                                                                                        return <Option value={r.code} key={r.id}>{r.name + "----" + r.code}</Option>
+                                                                                                    shortVideoList.map((r, i) => {
+                                                                                                        return <Option value={r.id} key={i}>{r.title}</Option>
                                                                                                     })
                                                                                                 }
                                                                                             </Select>
-                                                                                    :
-                                                                                    ""
+                                                                                            :
+                                                                                            this.formRef.current.getFieldValue("content")[index].params[i].subType == 11
+                                                                                                ?
+                                                                                                <Select
+                                                                                                    style={{ width: "200px" }}
+                                                                                                    placeholder="请选择短视频集"
+                                                                                                    allowClear
+                                                                                                    {...this.state.selectProps}>
+                                                                                                    {
+                                                                                                        shortList.map((r, i) => {
+                                                                                                            return <Option value={r.id.toString()} key={i}>{r.title}</Option>
+                                                                                                        })
+                                                                                                    }
+                                                                                                </Select>
+                                                                                                :
+                                                                                                <Select
+                                                                                                    style={{ width: "200px" }}
+                                                                                                    placeholder="请选择频道配置"
+                                                                                                    allowClear
+                                                                                                    {...this.state.selectProps}
+                                                                                                    onChange={(e) => {
+                                                                                                        this.getImageAndTitle(index, i, "posterUrl", e, channelList,"code")
+                                                                                                    }}
+                                                                                                    onSearch={(val) => {
+                                                                                                        console.log(val)
+                                                                                                        if (privateData.inputTimeOutVal) {
+                                                                                                            clearTimeout(privateData.inputTimeOutVal);
+                                                                                                            privateData.inputTimeOutVal = null;
+                                                                                                        }
+                                                                                                        privateData.inputTimeOutVal = setTimeout(() => {
+                                                                                                            if (!privateData.inputTimeOutVal) return;
+                                                                                                            this.getChannel(val)
+                                                                                                        }, 800)
+                                                                                                    }}>
+                                                                                                    {
+                                                                                                        channelList.map((r, i) => {
+                                                                                                            return <Option value={r.code} key={r.id}>{r.name + "----" + r.code}</Option>
+                                                                                                        })
+                                                                                                    }
+                                                                                                </Select>
+                                                                                        :
+                                                                                        ""
 
+                                                                                }
+                                                                            </Form.Item>
+                                                                            {
+                                                                                this.formRef.current &&
+                                                                                this.formRef.current.getFieldValue("content")[index] &&
+                                                                                this.formRef.current.getFieldValue("content")[index].params[i] &&
+                                                                                this.formRef.current.getFieldValue("content")[index].params[i].subType != 11 &&
+                                                                                <>
+                                                                                    <Form.Item {...fieldItem} label="封面" name={[fieldItem.name, 'subCover']} fieldKey={[fieldItem.fieldKey, 'subCover']}>
+                                                                                        <MyImageUpload
+                                                                                            getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('subCover', file, newItem, "content", index, i) }}
+                                                                                            imageUrl={
+                                                                                                this.formRef.current &&
+                                                                                                this.formRef.current.getFieldValue("content")[index] &&
+                                                                                                this.formRef.current.getFieldValue("content")[index].params[i] &&
+                                                                                                this.formRef.current.getFieldValue("content")[index].params[i].subCover
+                                                                                            } />
+                                                                                    </Form.Item>
+                                                                                    <Form.Item {...fieldItem} label="标题" name={[fieldItem.name, 'subTitle']} fieldKey={[fieldItem.fieldKey, 'subTitle']}>
+                                                                                        <Input.TextArea style={{ width: "130px" }} />
+                                                                                    </Form.Item>
+                                                                                </>
                                                                             }
-                                                                        </Form.Item>
-                                                                        {
-                                                                            this.formRef.current &&
-                                                                            this.formRef.current.getFieldValue("content")[index] &&
-                                                                            this.formRef.current.getFieldValue("content")[index].params[i] &&
-                                                                            this.formRef.current.getFieldValue("content")[index].params[i].subType != 11 &&
-                                                                            <>
-                                                                                <Form.Item {...fieldItem} label="封面" name={[fieldItem.name, 'subCover']} fieldKey={[fieldItem.fieldKey, 'subCover']}>
-                                                                                    <MyImageUpload
-                                                                                        getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('subCover', file, newItem, "content", index, i) }}
-                                                                                        imageUrl={
-                                                                                            this.formRef.current &&
-                                                                                            this.formRef.current.getFieldValue("content")[index] &&
-                                                                                            this.formRef.current.getFieldValue("content")[index].params[i] &&
-                                                                                            this.formRef.current.getFieldValue("content")[index].params[i].subCover
-                                                                                        } />
-                                                                                </Form.Item>
-                                                                                <Form.Item {...fieldItem} label="标题" name={[fieldItem.name, 'subTitle']} fieldKey={[fieldItem.fieldKey, 'subTitle']}>
-                                                                                    <Input style={{ width: "130px" }} />
-                                                                                </Form.Item>
-                                                                            </>
-                                                                        }
 
 
-                                                                        <div style={{ margin: "0 0 0 40px" }}>
-                                                                            <Button danger onClick={() => remove(fieldItem.name)} block icon={<MinusCircleOutlined />}>
-                                                                                删除内容
-                                                                            </Button>
-                                                                        </div>
-                                                                    </Space>
-                                                                ))}
+                                                                            <div style={{ margin: "0 0 0 40px" }}>
+                                                                                <Button danger onClick={() => remove(fieldItem.name)} block icon={<MinusCircleOutlined />}>
+                                                                                    删除内容
+                                                                                </Button>
+                                                                            </div>
+                                                                        </Space>
+                                                                    ))}
 
-                                                                <Form.Item>
-                                                                    <Button type="primary" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                                        新增内容
-                                                                    </Button>
-                                                                </Form.Item>
-                                                            </>
-                                                        )}
-                                                    </Form.List>
-                                                </Form.Item>
+                                                                    <Form.Item>
+                                                                        <Button type="primary" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                                            新增内容
+                                                                        </Button>
+                                                                    </Form.Item>
+                                                                </>
+                                                            )}
+                                                        </Form.List>
+                                                    </Form.Item>
 
-                                            </Space>
-                                            <div>
-                                                <Button danger onClick={() => remove(field.name)} block icon={<MinusCircleOutlined />}>
-                                                    删除内容板块
-                                                </Button>
+                                                </Space>
+                                                <div>
+                                                    <Button danger onClick={() => remove(field.name)} block icon={<MinusCircleOutlined />}>
+                                                        删除内容板块
+                                                    </Button>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </>
+
 
                                     ))}
 
@@ -486,7 +510,7 @@ export default class SportsProgram extends Component {
 
 
 
-                    <Form.Item
+                    {/* <Form.Item
                         label="banner设置"
                     // name="voters"
                     // rules={[{ required: true, message: '投票选项' }]}
@@ -506,7 +530,6 @@ export default class SportsProgram extends Component {
                                                         this.formRef.current.getFieldValue("banner")[index] &&
                                                         this.formRef.current.getFieldValue("banner")[index].cover} />
                                             </Form.Item>
-                                            {/* (int)跳转类型:5=其他H5;6=专题页;10=短视频;11=短视频集;20=频道;21=频道组 */}
                                             <Form.Item {...field} label="标题" name={[field.name, 'jumpType']} fieldKey={[field.fieldKey, 'jumpType']}>
                                                 <Select style={{ width: "200px" }} placeholder="请选择播放器播放类型"
                                                     onChange={() => {
@@ -642,7 +665,7 @@ export default class SportsProgram extends Component {
                                 </>
                             )}
                         </Form.List>
-                    </Form.Item>
+                    </Form.Item> */}
 
 
 

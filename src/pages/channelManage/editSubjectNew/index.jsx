@@ -382,13 +382,13 @@ export default class SportsProgram extends Component {
                             <Form.Item label="背景色" name="bgColor" rules={[{ required: true, message: '请填写背景色' }]}>
                                 <Input className="base-input-wrapper" placeholder="请填写背景色" />
                             </Form.Item>
-                            {/* <Form.Item label="专题编码(拼音)" name="IdKey" rules={[{ required: true, message: '请填写专题编码' }]}>
+                            <Form.Item label="专题编码(拼音)" name="IdKey" rules={[{ required: true, message: '请填写专题编码' }]}>
                                 {
                                     this.state.isAdd == true &&
                                     <Input className="base-input-wrapper" placeholder="请填写专题编码" /> ||
                                     <Input className="base-input-wrapper" placeholder="请填写专题编码" disabled />
                                 }
-                            </Form.Item>*/}
+                            </Form.Item>
 
                             <Form.Item label="背景图" name="backImage" valuePropName="fileList"
                                 // 如果没有下面这一句会报错
@@ -455,9 +455,9 @@ export default class SportsProgram extends Component {
                             </Select>
                         </Form.Item> */}
 
-                            <Form.Item label="地域" name="area">
+                            {/* <Form.Item label="地域" name="area">
                                 <Address defaultAddress={this.state.defaultAddress} onCheckAddress={this.onCheckAddress.bind(this)} />
-                            </Form.Item>
+                            </Form.Item> */}
 
                             <Form.Item label="白名单" name="whiteList">
                                 <Input className="base-input-wrapper" placeholder="请填写白名单" />

@@ -244,7 +244,7 @@ export default class SportsProgram extends Component {
                         <div>
                             <Button type="primary"
                                 onClick={() => {
-                                    this.props.history.push(`/mms/channelManage/editSubject/add`)
+                                    this.props.history.push(`/mms/channelManage/editSubjectNew/add`)
                                 }}
                             >新增专题</Button>
                             <Button type="primary"

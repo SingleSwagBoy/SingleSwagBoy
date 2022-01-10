@@ -55,8 +55,8 @@ request.interceptors.request.use(config => {
         if (JSON.parse(user).authorization) {
             config.headers.authorization = JSON.parse(user).authorization
         }
+        config.headers.userid = JSON.parse(user).userInfo.id
     }
-    config.headers.Cookie = document.cookie
     return config;
 }, function (error) {
     // hide();

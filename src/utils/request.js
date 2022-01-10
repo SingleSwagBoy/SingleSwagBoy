@@ -20,7 +20,7 @@ request.interceptors.request.use(function (config) {
       config.headers.authorization = JSON.parse(user).authorization
     }
   }
-  
+  config.headers.Cookie = document.cookie
   // hide()
   return config;
 }, function (error) {

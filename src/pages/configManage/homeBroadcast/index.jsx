@@ -309,6 +309,10 @@ export default class AddressNews extends Component {
                                                     }else if (this.formRef.current.getFieldValue("type") == 2){
                                                         arr = shortList.filter(item => item.id == e)
                                                         this.formRef.current.setFieldsValue({ "cover": arr[0].cover })
+                                                        this.formRef.current.setFieldsValue({ "channelName": arr[0].title })
+                                                    }else if (this.formRef.current.getFieldValue("type") == 3){
+                                                        arr = programlist.filter(item => item.id == e)
+                                                        this.formRef.current.setFieldsValue({ "cover": arr[0].cover })
                                                     }
                                                     this.forceUpdate()
                                                 }}
@@ -347,6 +351,16 @@ export default class AddressNews extends Component {
                                                 }
                                             </Select>
                                         </Form.Item>
+                                        {
+                                            this.formRef.current && this.formRef.current.getFieldValue("type") == 2 &&
+                                            <Form.Item
+                                                label="标题"
+                                                name="channelName"
+                                            // rules={[{ required: true, message: '请填写配置' }]}
+                                            >
+                                                <Input placeholder="请填写短视频" />
+                                            </Form.Item>
+                                        }
                                         <Form.Item
                                             label="描述"
                                             name="desc"
@@ -545,7 +559,7 @@ export default class AddressNews extends Component {
             val.channelName = arr.length > 0 ? arr[0].name : ""
         } else if (val.type == 2) {
             arr = this.state.shortList.filter(item => item.id == val.channelId)
-            val.channelName = arr.length > 0 ? arr[0].title : ""
+            // val.channelName = arr.length > 0 ? arr[0].title : ""
         } else {
             arr = this.state.programlist.filter(item => item.id == val.channelId)
             val.channelName = arr.length > 0 ? arr[0].title : ""

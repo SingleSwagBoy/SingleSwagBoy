@@ -379,8 +379,8 @@ export default class AddressNews extends Component {
                                                 let arr = ""
                                                 let e = this.formRef.current.getFieldValue("channelId")
                                                 if (this.formRef.current.getFieldValue("type") == 1){
-                                                    arr = channelList.filter(item => item.code == e)
-                                                    this.formRef.current.setFieldsValue({ "cover": arr[0].posterUrl })
+                                                    // arr = channelList.filter(item => item.code == e)
+                                                    this.formRef.current.setFieldsValue({ "cover": "" })
                                                 }else if (this.formRef.current.getFieldValue("type") == 2){
                                                     arr = shortList.filter(item => item.id == e)
                                                     this.formRef.current.setFieldsValue({ "cover": arr[0].cover })

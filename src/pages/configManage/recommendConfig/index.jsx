@@ -258,11 +258,12 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                                     getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem, this.formRef) }}
                                     imageUrl={this.formRef.current && this.formRef.current.getFieldValue("cover")} />
                                 <Button danger onClick={() => {
-                                    let e = this.formRef.current.getFieldValue("channelId")
-                                    let arr = channel_list.filter(item => item.code == e)
-                                    this.formRef.current.setFieldsValue({ "cover": arr[0].posterUrl })
+                                    // let e = this.formRef.current.getFieldValue("channelId")
+                                    // let arr = channel_list.filter(item => item.code == e)
+                                    // this.formRef.current.setFieldsValue({ "cover": arr[0].posterUrl })
+                                    this.formRef.current.setFieldsValue({ "cover": "" })
                                     this.forceUpdate()
-                                }}>恢复初始图片</Button>
+                                }}>删除</Button>
                             </Form.Item>
                             <Form.Item {...this.state.tailLayout}>
                                 <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>

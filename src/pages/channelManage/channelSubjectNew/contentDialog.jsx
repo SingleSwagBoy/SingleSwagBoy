@@ -71,6 +71,7 @@ export default class SportsProgram extends Component {
         })
     }
     showConfChannel(id) {
+        console.log(id,"id================>")
         this.setState({ channelTopicNewId: id })
         let params = { channelTopicNewId: id }
         showConfChannel(params).then(res => {
@@ -132,6 +133,8 @@ export default class SportsProgram extends Component {
             if (res.data.errCode === 0) {
                 this.setState({
                     shortVideoList: res.data.data
+                },()=>{
+                    console.log(this.state.shortVideoList)
                 })
             }
         })
@@ -236,7 +239,6 @@ export default class SportsProgram extends Component {
                                                         allowClear
                                                         {...this.state.selectProps}
                                                         onSearch={(val) => {
-                                                            console.log(val)
                                                             if (privateData.inputTimeOutVal) {
                                                                 clearTimeout(privateData.inputTimeOutVal);
                                                                 privateData.inputTimeOutVal = null;

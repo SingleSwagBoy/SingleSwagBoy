@@ -376,8 +376,20 @@ export default class AddressNews extends Component {
                                                 getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem, this.formRef) }}
                                                 imageUrl={this.formRef.current && this.formRef.current.getFieldValue("cover")} />
                                             <Button onClick={() =>{
-                                                 this.formRef.current.setFieldsValue({cover:""})
-                                                 this.forceUpdate()
+                                                let arr = ""
+                                                let e = this.formRef.current.getFieldValue("channelId")
+                                                if (this.formRef.current.getFieldValue("type") == 1){
+                                                    arr = channelList.filter(item => item.code == e)
+                                                    this.formRef.current.setFieldsValue({ "cover": arr[0].posterUrl })
+                                                }else if (this.formRef.current.getFieldValue("type") == 2){
+                                                    arr = shortList.filter(item => item.id == e)
+                                                    this.formRef.current.setFieldsValue({ "cover": arr[0].cover })
+                                                    this.formRef.current.setFieldsValue({ "channelName": arr[0].title })
+                                                }else if (this.formRef.current.getFieldValue("type") == 3){
+                                                    arr = programlist.filter(item => item.id == e)
+                                                    this.formRef.current.setFieldsValue({ "cover": arr[0].cover })
+                                                }
+                                                this.forceUpdate()
                                             }} style={{ margin: "0 20px" }}>
                                                 删除
                                             </Button>

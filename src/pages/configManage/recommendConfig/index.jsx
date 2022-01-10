@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { searchShortList, getSuggest, addSuggest, updateSuggest, getChannel,getSuggestInfo,setSuggestInfo } from 'api'
-import { Breadcrumb, Card,Input, TimePicker,Radio, Button, message, Table, Modal, DatePicker, Form, Select, Checkbox, InputNumber, Image } from 'antd'
+import { searchShortList, getSuggest, addSuggest, updateSuggest, getChannel, getSuggestInfo, setSuggestInfo } from 'api'
+import { Breadcrumb, Card, Input, TimePicker, Radio, Button, message, Table, Modal, DatePicker, Form, Select, Checkbox, InputNumber, Image } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import { MySyncBtn, MyImageUpload } from "@/components/views.js"
@@ -126,12 +126,12 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                     }
                 }
             ],
-            titleInfo:{},
-            titleShow:false
+            titleInfo: {},
+            titleShow: false
         }
     }
     render() {
-        let { lists, layout, loading, columns, entranceState, channel_list,titleShow } = this.state;
+        let { lists, layout, loading, columns, entranceState, channel_list, titleShow } = this.state;
         return (
             <div>
                 <Card title={
@@ -143,7 +143,7 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                 }
                     extra={
                         <div>
-                             <Button type="primary" style={{ margin: "0 10px" }}
+                            <Button type="primary" style={{ margin: "0 10px" }}
                                 onClick={() => {
                                     this.setState({
                                         titleShow: true,
@@ -181,7 +181,7 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                         }}
                     />
                 </Card>
-                <Modal title="新增任务" centered visible={entranceState} onCancel={() => { this.setState({ entranceState: false }) }} footer={null} width={1200}>
+                <Modal title="配置" centered visible={entranceState} onCancel={() => { this.setState({ entranceState: false }) }} footer={null} width={1200}>
                     {
                         <Form {...layout}
                             name="taskForm"
@@ -197,6 +197,11 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                                     // mode="multiple"
                                     allowClear
                                     {...this.state.selectProps}
+                                    onChange={(e) => {
+                                        let arr = channel_list.filter(item => item.code == e)
+                                        this.formRef.current.setFieldsValue({ "cover": arr[0].posterUrl })
+                                        this.forceUpdate()
+                                    }}
                                     onSearch={(val) => {
                                         console.log(val)
                                         if (privateData.inputTimeOutVal) {
@@ -252,6 +257,12 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                                 <MyImageUpload
                                     getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('cover', file, newItem, this.formRef) }}
                                     imageUrl={this.formRef.current && this.formRef.current.getFieldValue("cover")} />
+                                <Button danger onClick={() => {
+                                    let e = this.formRef.current.getFieldValue("channelId")
+                                    let arr = channel_list.filter(item => item.code == e)
+                                    this.formRef.current.setFieldsValue({ "cover": arr[0].posterUrl })
+                                    this.forceUpdate()
+                                }}>恢复初始图片</Button>
                             </Form.Item>
                             <Form.Item {...this.state.tailLayout}>
                                 <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
@@ -266,61 +277,61 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
 
 
                 {/* 标题设置 */}
-                <Modal title="新增任务" centered visible={titleShow} onCancel={() => { this.setState({ titleShow: false }) }} footer={null}>
+                <Modal title="标题设置" centered visible={titleShow} onCancel={() => { this.setState({ titleShow: false }) }} footer={null}>
                     {
                         <Form
-                        {...this.state.layout}
-                        name=""
-                        ref={this.formRefTitle}
-                        onFinish={this.submitTitleForm.bind(this)}
-                    >
-                        <Form.Item
-                            label="内容类型"
-                            name="type"
-                            rules={[{ required: true, message: '请选择类型' }]}
+                            {...this.state.layout}
+                            name=""
+                            ref={this.formRefTitle}
+                            onFinish={this.submitTitleForm.bind(this)}
                         >
-                            <Radio.Group className="base-input-wrapper"
-                                onChange={(e) => {
-                                    this.formRefTitle.current.setFieldsValue({ "type": e.target.value })
-                                    this.forceUpdate()
-                                }}
-                            >
-                                <Radio value={1} key={1}>文字</Radio>
-                                <Radio value={2} key={2}>图片</Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        {
-                            this.formRefTitle.current && this.formRefTitle.current.getFieldValue("type") == 1 &&
                             <Form.Item
-                                label="标题名称"
-                                name="title"
-                            // rules={[{ required: true, message: '请填写配置' }]}
+                                label="内容类型"
+                                name="type"
+                                rules={[{ required: true, message: '请选择类型' }]}
                             >
-                                <Input placeholder="请填写标题名称" />
+                                <Radio.Group className="base-input-wrapper"
+                                    onChange={(e) => {
+                                        this.formRefTitle.current.setFieldsValue({ "type": e.target.value })
+                                        this.forceUpdate()
+                                    }}
+                                >
+                                    <Radio value={1} key={1}>文字</Radio>
+                                    <Radio value={2} key={2}>图片</Radio>
+                                </Radio.Group>
                             </Form.Item>
-                        }
-                        {
-                            this.formRefTitle.current && this.formRefTitle.current.getFieldValue("type") == 2 &&
-                            <Form.Item
-                                label="图片"
-                                name="title"
-                            >
-                                <MyImageUpload
-                                    getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('title', file, newItem, this.formRefTitle) }}
-                                    imageUrl={this.formRefTitle.current && this.formRefTitle.current.getFieldValue("title")} />
+                            {
+                                this.formRefTitle.current && this.formRefTitle.current.getFieldValue("type") == 1 &&
+                                <Form.Item
+                                    label="标题名称"
+                                    name="title"
+                                // rules={[{ required: true, message: '请填写配置' }]}
+                                >
+                                    <Input placeholder="请填写标题名称" />
+                                </Form.Item>
+                            }
+                            {
+                                this.formRefTitle.current && this.formRefTitle.current.getFieldValue("type") == 2 &&
+                                <Form.Item
+                                    label="图片"
+                                    name="title"
+                                >
+                                    <MyImageUpload
+                                        getUploadFileUrl={(file, newItem) => { this.getUploadFileUrl('title', file, newItem, this.formRefTitle) }}
+                                        imageUrl={this.formRefTitle.current && this.formRefTitle.current.getFieldValue("title")} />
+                                </Form.Item>
+                            }
+                            <Form.Item {...this.state.tailLayoutTitle}>
+                                <Button onClick={() => this.setState({ titleShow: false })} style={{ margin: "0 20px" }}>
+                                    取消
+                                </Button>
+                                <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                                    提交
+                                </Button>
                             </Form.Item>
-                        }
-                        <Form.Item {...this.state.tailLayoutTitle}>
-                            <Button onClick={() => this.setState({titleShow:false})} style={{ margin: "0 20px" }}>
-                                取消
-                            </Button>
-                            <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
-                                提交
-                            </Button>
-                        </Form.Item>
 
 
-                    </Form>
+                        </Form>
                     }
                 </Modal>
             </div>
@@ -475,19 +486,19 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
 
 
     //标题设置
-    getSuggestInfo(){
-        getSuggestInfo().then(res=>{
+    getSuggestInfo() {
+        getSuggestInfo().then(res => {
             this.setState({
-                titleInfo:res.data
+                titleInfo: res.data
             })
         })
     }
-    submitTitleForm(val){
+    submitTitleForm(val) {
         this.setSuggestInfo(val)
         // this.closeDialog(this.formRefTitle, "titleShow")
-        this.setState({titleShow:false})
+        this.setState({ titleShow: false })
     }
-    setSuggestInfo(val){
+    setSuggestInfo(val) {
         let params = {
             ...this.formRefTitle.current.getFieldValue(),
             ...val

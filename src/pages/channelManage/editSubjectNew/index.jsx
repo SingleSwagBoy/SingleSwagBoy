@@ -382,7 +382,7 @@ export default class SportsProgram extends Component {
                             <Form.Item label="背景色" name="bgColor" rules={[{ required: true, message: '请填写背景色' }]}>
                                 <Input className="base-input-wrapper" placeholder="请填写背景色" />
                             </Form.Item>
-                            <Form.Item label="专题编码(拼音)" name="IdKey" rules={[{ required: true, message: '请填写专题编码' }]}>
+                            <Form.Item label="专题编码(拼音)" name="idKey" rules={[{ required: true, message: '请填写专题编码' }]}>
                                 {
                                     this.state.isAdd == true &&
                                     <Input className="base-input-wrapper" placeholder="请填写专题编码" /> ||

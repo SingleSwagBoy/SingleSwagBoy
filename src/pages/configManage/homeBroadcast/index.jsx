@@ -286,7 +286,8 @@ export default class AddressNews extends Component {
                                                 } else {
                                                     this.getShortList()
                                                 }
-                                                this.formRef.current.setFieldsValue({ "channelId": null })
+                                                this.formRef.current.setFieldsValue({ "channelId": null,"cover": "","channelName":""  })
+                                                this.forceUpdate()
                                             }}>
                                                 {/* 1频道,2视频,3视频集 */}
                                                 <Radio value={1} key={1}>频道</Radio>
@@ -323,7 +324,11 @@ export default class AddressNews extends Component {
                                                     }
                                                     privateData.inputTimeOutVal = setTimeout(() => {
                                                         if (!privateData.inputTimeOutVal) return;
-                                                        this.searchVideo(e)
+                                                        if (this.formRef.current.getFieldValue("type") == 1){
+                                                            this.getChannel(e)
+                                                        }else if (this.formRef.current.getFieldValue("type") == 2){
+                                                            this.searchVideo(e)
+                                                        }
                                                     }, 1000)
                                                 }}
                                                 optionFilterProp="children"

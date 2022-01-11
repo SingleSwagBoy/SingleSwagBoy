@@ -198,9 +198,9 @@ const { Option } = Select; export default class EarnIncentiveTask extends React.
                                     allowClear
                                     {...this.state.selectProps}
                                     onChange={(e) => {
-                                        let arr = channel_list.filter(item => item.code == e)
-                                        this.formRef.current.setFieldsValue({ "cover": arr[0].posterUrl })
-                                        this.forceUpdate()
+                                        // let arr = channel_list.filter(item => item.code == e)
+                                        // this.formRef.current.setFieldsValue({ "cover": arr[0].posterUrl })
+                                        // this.forceUpdate()
                                     }}
                                     onSearch={(val) => {
                                         console.log(val)

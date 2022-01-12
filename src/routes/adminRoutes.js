@@ -34,9 +34,11 @@ const ChannelLock = lazy(() => import('pages/channelManage/channelLock/index.jsx
 const LivePreview = lazy(() => import('pages/channelManage/livePreview/index.jsx'))
 const AddressNews = lazy(() => import('pages/configManage/addressNews/index.jsx'))
 const ChannelSubject = lazy(() => import('pages/channelManage/channelSubject/index.jsx'))
+const ChannelSubjectNew = lazy(() => import('pages/channelManage/channelSubjectNew/index.jsx'))
 const MarsBootIn= lazy(() => import('pages/channelManage/marsBootIn/index.jsx'))
 const SourceFailure= lazy(() => import('pages/channelManage/sourceFailure/index.jsx'))
 const EditSubject = lazy(() => import('pages/channelManage/editSubject/index.jsx'))
+const EditSubjectNew = lazy(() => import('pages/channelManage/editSubjectNew/index.jsx'))
 const ConfigDoc = lazy(() => import('pages/config/doc.jsx'));
 const WxReply = lazy(() => import('pages/wechart/autoReply/wxReply.jsx'));
 const wxTemplateMsg = lazy(() => import('pages/wechart/templateMsg/wxTemplateMsg.jsx'));
@@ -73,6 +75,7 @@ const EnterChannelConfig = lazy(() => import('pages/configManage/enterChannelCon
 const EnterImageConfig = lazy(() => import('pages/configManage/enterImageConfig/index.jsx'));
 const GoodLooking = lazy(() => import('pages/configManage/goodLooking/index.jsx'));
 const PuzzleRobot = lazy(() => import('pages/configManage/puzzleRobot/index.jsx'));
+const ChannelShield = lazy(() => import('pages/configManage/channelShield/index.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
 const LuckyDraw=lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
 const GoodsConfig=lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
@@ -115,12 +118,14 @@ const adminRoutes = [
     { name: '抽奖活动', icon: UnorderedListOutlined, path: '/mms/activeManagement/luckyDraw', component: LuckyDraw, code: "ActiveManagement", sub_code: 'LuckyDraw' },
     { name: '商品配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/goodsConfig', component: GoodsConfig, code: "ActiveManagement", sub_code: 'GoodsConfig' },
     //频道管理
-    { name: '专享台解锁', icon: UnorderedListOutlined, path: '/mms/channelManage/channelLock', component: ChannelLock, code: "channelManage", sub_code: 'ChannelLock' },
+    { name: '专享台解锁', icon: UnorderedListOutlined, path: '/mms/channelManage/channelLock', component: ChannelLock, code: "channelManage", sub_code: 'channelLock' },
     { name: '直播预告', icon: UnorderedListOutlined, path: '/mms/channel/livePreview', component: LivePreview, code: "channelManage", sub_code: 'livePreview' },
-    { name: '频道专题', icon: UnorderedListOutlined, path: '/mms/channelManage/channelSubject', component: ChannelSubject, code: "channelManage", sub_code: 'ChannelSubject' },
+    { name: '频道专题', icon: UnorderedListOutlined, path: '/mms/channelManage/channelSubject', component: ChannelSubject, code: "channelManage", sub_code: 'channelSubject' },
+    { name: '新频道专题', icon: UnorderedListOutlined, path: '/mms/channelManage/channelSubjectNew', component: ChannelSubjectNew, code: "channelManage", sub_code: 'channelSubjectNew' },
     { name: '火星开机进入', icon: UnorderedListOutlined, path: '/mms/channelManage/marsBootIn', component: MarsBootIn, code: "channelManage", sub_code: 'marsBootIn' },
     { name: '源失效推荐', icon: UnorderedListOutlined, path: '/mms/channelManage/sourceFailure', component: SourceFailure, code: "channelManage", sub_code: 'sourceFailure' },
     { name: '编辑专题', icon: UnorderedListOutlined, path: '/mms/channelManage/editSubject/:id', component: EditSubject, code: "channelManage" }, //频道专题二级页面
+    { name: '新编辑专题', icon: UnorderedListOutlined, path: '/mms/channelManage/editSubjectNew/:id', component: EditSubjectNew, code: "channelManage" }, //频道专题二级页面
 
     //广告管理
     { name: '尝鲜版', component: Recommend, path: '/mms/adManage/recommend', icon: UnorderedListOutlined, code: "adManage", sub_code: 'Recommend' },
@@ -155,6 +160,7 @@ const adminRoutes = [
     { name: '开机启动图配置', icon: UnorderedListOutlined, path: '/mms/config/enterImageConfig', component: EnterImageConfig, code: "configManage", sub_code: 'enterImageConfig' },
     { name: '好看分类', icon: UnorderedListOutlined, path: '/mms/config/goodLooking', component: GoodLooking, code: "configManage", sub_code: 'goodLooking' },
     { name: '拼团机器人', icon: UnorderedListOutlined, path: '/mms/config/puzzleRobot', component: PuzzleRobot, code: "configManage", sub_code: 'puzzleRobot' },
+    { name: '移动端节目单屏蔽', icon: UnorderedListOutlined, path: '/mms/config/channelShield', component: ChannelShield, code: "configManage", sub_code: 'channelShield' },
 
 
 

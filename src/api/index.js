@@ -110,12 +110,20 @@ export const syncCacheTvTry = (params) => { return request.post(`${baseUrl}/mms/
 
 // 频道专题
 export const Getchannels = (params) => { return request.post(`${baseUrl}/mms/channel/programCover/channels`, params) };                                                                     //获取频道节目
-export const ChannelTopic = (params) => { return request.get(`${baseUrl}/mms/channel/topic`, { params }) };                                                                                 //获取专题列表
-export const updateChannelTopic = params => { return request.put(`${baseUrl}/mms/channel/topic`, params) };                                                                                 //修改专题列表
-export const addChannelTopic = params => { return request.post(`${baseUrl}/mms/channel/topic`, params) };                                                                                   //新增专题列表
-export const deleteChannelTopic = params => { return request.delete(`${baseUrl}/mms/channel/topic`, { params: params }) };                                                                  //删除专题列表
+export const ChannelTopic = (params) => { return request.post(`${baseUrl}/mms/channelTopicNew/list`, params) };                                                                                 //获取专题列表
+export const updateChannelTopic = params => { return request.post(`${baseUrl}/mms/channelTopicNew/edit`, params) };                                                                                 //修改专题列表
+export const addChannelTopic = params => { return request.post(`${baseUrl}/mms/channelTopicNew/create`, params) };                                                                                   //新增专题列表
+export const deleteChannelTopic = params => { return request.get(`${baseUrl}/mms/channelTopicNew/deleteItem`, {params:params}) };                                                                  //删除专题列表
 export const listProgramByChannelId = params => { return request.get(`${baseUrl}/mms/channel/programs/listByChannelId`, { params: params }) };                                              //获取专题详情
 export const syncChannel = params => { return request.get(`${baseUrl}/mms/channel/topic/sync`, { params: params }); };                                                                      //频道专题同步接口
+export const syncChannelNew = params => { return request.get(`${baseUrl}/mms/channelTopicNew/syncCache`, { params: params }); };                                                                      //频道专题同步接口
+export const changeChannelTopic = params => { return request.get(`${baseUrl}/mms/channelTopicNew/changeState`, { params: params }); };                                                                      //频道专题同步接口
+export const showConfChannel= params => { return request2.get(`${baseUrl}/mms/channelTopicNew/showConf`, { params: params }); };                                                                      //新频道专题-查看内容配置
+export const saveConfChannel= params => { return request2.post(`${baseUrl}/mms/channelTopicNew/saveConf`,params); };   
+export const ChannelTopicOld = (params) => { return request.get(`${baseUrl}/mms/channel/topic`, { params }) };                                                                                 //获取专题列表
+export const updateChannelTopicOld = params => { return request.put(`${baseUrl}/mms/channel/topic`, params) };                                                                                 //修改专题列表
+export const addChannelTopicOld = params => { return request.post(`${baseUrl}/mms/channel/topic`, params) };                                                                                   //新增专题列表
+export const deleteChannelTopicOld = params => { return request.delete(`${baseUrl}/mms/channel/topic`, { params: params }) };                                                                   //新频道专题-查看内容配置
 
 
 //微信公众号管理
@@ -348,10 +356,11 @@ export const searchShortList = (params) => { return request.get(`${baseUrl}/mms/
 export const updateShortList = (params) => { return request.post(`${baseUrl}/mms/channel/svcollection/update`,params); };                 // 同步
 export const delShortList = (params) => { return request.get(`${baseUrl}/mms/channel/svcollection/del`,{ params: params }); };                 // 同步
 export const getSuggest = (params) => { return request.get(`${baseUrl}/mms/channel/home/suggest/list`,{ params: params }); };                 // 首页为你推荐列表
-export const addSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/add`,params); };                 // 首页为你推荐列表
-export const updateSuggest = (params) => { return request.post(`${baseUrl}/mms/channel/home/suggest/update`,params); };                 // 首页为你推荐列表
+export const addSuggest = (params) => { return request2.post(`${baseUrl}/mms/channel/home/suggest/add`,params); };                 // 首页为你推荐列表
+export const updateSuggest = (params) => { return request2.post(`${baseUrl}/mms/channel/home/suggest/update`,params); };                 // 首页为你推荐列表
 export const syncSuggest = (params) => { return request.get(`${baseUrl}/mms/channel/home/suggest/sync`,{ params: params }); };                 // 首页为你推荐列表同步
-
+export const getSuggestInfo = (params) => { return request2.get(`${baseUrl}/mms/channel/home/suggest/getBaseInfo`,{ params: params }); };                 // 首页为你推荐基本信息获取
+export const setSuggestInfo = (params) => { return request2.post(`${baseUrl}/mms/channel/home/suggest/setBaseInfo`,params); };                 // 首页为你推荐基本信息获取
 //首页文字轮播配置
 export const getWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/list`,{ params: params }); };                 // 首页文字轮播配置列表
 export const uploadWordsConfig = (params) => { return request.post(`${baseUrl}/mms/channel/home/text/update`,params); };                 // 首页文字轮播配置列表
@@ -362,12 +371,19 @@ export const setImageWordsConfig = (params) => { return request.get(`${baseUrl}/
 export const syncWordsConfig = (params) => { return request.get(`${baseUrl}/mms/channel/home/text/sync`,{ params: params }); };                 // 首页文字轮播配置列表
 
 
+
 //首页直播配置
 export const getHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/list`,{ params: params }); };                 // 首页直播配置列表
-export const uploadHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/update`,{ params: params }); };                 // 首页直播配置列表
+export const uploadHomeList = (params) => { return request2.post(`${baseUrl}/mms/channel/home/channel/update`,params); };                 // 首页直播配置列表
+export const addHomeList = (params) => { return request2.post(`${baseUrl}/mms/channel/home/channel/add`,params); };                 // 首页直播配置列表新增
+export const delHomeList = (params) => { return request2.get(`${baseUrl}/mms/channel/home/channel/del`,{params:params}); };                 // 首页直播配置列表新增
 export const getStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/status`,{ params: params }); };                 // 首页直播配置列表
 export const setStateHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/setstatus`,{ params: params }); };                 // 首页直播配置列表
 export const syncHomeList = (params) => { return request.get(`${baseUrl}/mms/channel/home/channel/sync`,{ params: params }); };                 // 首页直播配置列表
+export const getHomeBaseInfo = (params) => { return request2.get(`${baseUrl}/mms/channel/home/channel/getBaseInfo`,{ params: params }); };                 // 首页为你推荐基本信息获取
+export const getAllBaseInfo = (params) => { return request2.get(`${baseUrl}/mms/channel/home/channel/getAllBaseInfo`,{ params: params }); };                 // 首页全部直播基本信息获取
+export const addTab = (params) => { return request2.post(`${baseUrl}/mms/channel/home/channel/newBaseInfo`,params); };                 // 首页直播新增加tab
+export const setHomeBaseInfo = (params) => { return request2.post(`${baseUrl}/mms/channel/home/channel/setBaseInfo`,params); };                 // 首页直播基本信息配置(原只状态设置）
 
 
 //微信菜单
@@ -469,6 +485,13 @@ export const addcorptagtask = (params) => { return request2.post(`${baseUrl}/mms
 export const corptagtasks = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/corptagtasks`,{params:params}); };          //企业微信标签任务列表
 export const corptagtaskstatus = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/corptagtaskstatus`,{params:params}); };          //企业微信标签任务上下线
 export const delcorptagtask = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/delcorptagtask`,{params:params}); };          //企业微信标签删除
+
+
+
+//移动端节目单屏蔽
+export const getShieldList = (params) => { return request2.get(`${baseUrl}/mms/channel/programs/listAllPrograms`,{params:params}); };          //查询节目单
+export const delShieldList = (params) => { return request2.post(`${baseUrl}/mms/channel/programs/delBlackProgram`,params); };                  //删除黑名单节目
+export const addShieldList = (params) => { return request2.post(`${baseUrl}/mms/channel/programs/addBlackProgram`,params); };          //添加节目到黑名单
 
 
 

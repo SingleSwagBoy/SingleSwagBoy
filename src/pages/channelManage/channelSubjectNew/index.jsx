@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 
-import { ChannelTopicOld, deleteChannelTopicOld, syncChannel } from 'api'
+import { ChannelTopic, deleteChannelTopic, syncChannelNew,changeChannelTopic } from 'api'
 import { Breadcrumb, Card, Image, Button, Table, Modal, message, DatePicker, Input, Form, Select, InputNumber,Switch } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
+import ContentDialog from "./contentDialog"
 import util from 'utils'
 import moment from 'moment';
 import "./style.css"
@@ -37,13 +38,14 @@ export default class SportsProgram extends Component {
             },
             dataSource: [],
             visible: false,
+            isShow:false,//内容配置
             //专题状态
             dict_status: [
                 { key: 1, value: '有效' },
                 { key: 2, value: '无效' },
             ],
             columns: [
-                { title: "专题 ID", dataIndex: "ID", key: "ID", width:100,},
+                { title: "专题 id", dataIndex: "id", key: "id", width:100,},
                 { title: "标题", dataIndex: "title", key: "title", },
                 { title: "排序", dataIndex: "column", key: "column",width:100, },
                 {
@@ -67,11 +69,21 @@ export default class SportsProgram extends Component {
                     title: '状态', dataIndex: 'status', key: 'status',
                     render: (rowValue, row, index) => {
                         return (
-                            <Select className="base-input-wrapper" value={rowValue} disabled placeholder='请选择状态'>
-                                {this.state.dict_status.map((item, index) => {
-                                    return <Option key={index} value={item.key}>{item.value}</Option>
-                                })}
-                            </Select>
+                            // <Select className="base-input-wrapper" value={rowValue} disabled placeholder='请选择状态'>
+                            //     {this.state.dict_status.map((item, index) => {
+                            //         return <Option key={index} value={item.key}>{item.value}</Option>
+                            //     })}
+                            // </Select>
+                            // <div>{rowValue==1?"有效":rowValue==2?"无效":"未知"}</div>
+                            <Switch checkedChildren="有效" unCheckedChildren="无效" key={new Date().getTime()}
+                            defaultChecked={rowValue == 1 ? true : false}
+                            onChange={(val) => {
+                                console.log(val)
+                                let obj = JSON.parse(JSON.stringify(row))
+                                obj.status = val ? 1 : 2
+                                this.changeChannelTopic(obj)
+                            }}
+                        />
                         )
                     }
                 },
@@ -95,19 +107,30 @@ export default class SportsProgram extends Component {
                 },
                 {
                     title: "操作", key: "action",
-                    fixed: 'right', width: 210,
+                    fixed: 'right', width: 310,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
                                 <Button
-                                    style={{ margin: "0 10px" }}
+                                 
                                     size="small"
                                     type="primary"
                                     onClick={() => {
                                         console.log(rowValue, row);
-                                        this.props.history.push(`/mms/channelManage/editSubject/${row.ID}`)
+                                        this.props.history.push(`/mms/channelManage/editSubjectNew/${row.id}`)
                                     }}
-                                >编辑</Button>
+                                >基础配置</Button>
+                                <Button
+                                   style={{ margin: "0 10px" }}
+                                    size="small"
+                                    type="primary"
+                                    onClick={() => {
+                                       
+                                        this.setState({isShow:true},()=>{
+                                            this.child.showConfChannel(row.id)
+                                        })
+                                    }}
+                                >内容配置</Button>
                                 <Button
                                     size="small"
                                     danger
@@ -121,41 +144,54 @@ export default class SportsProgram extends Component {
         }
     }
     componentDidMount() {
-        this.ChannelTopicOld();
+        this.ChannelTopic();
     }
-    ChannelTopicOld() {
+    ChannelTopic() {
         let params = {
             // name:keyWord || ""
         }
-        ChannelTopicOld(params).then(res => {
+        ChannelTopic(params).then(res => {
             console.log(res);
             if (res.data.errCode === 0) {
                 this.setState({
-                    lists: res.data.data.dataList
+                    lists: res.data.data.data
                 })
             }
         })
     }
-    deleteItem(val) {
+    changeChannelTopic(val){
         let params = {
-            id: val.ID
+           ids:val.id
         }
-        deleteChannelTopicOld(params).then(res => {
+        changeChannelTopic(params).then(res => {
             console.log(res);
             if (res.data.errCode == 0) {
-                message.success("删除成功")
-                this.ChannelTopicOld();
+                message.success("修改成功")
             } else {
                 message.error(res.data.msg)
             }
         })
     }
-    syncChannel() {
+    deleteItem(val) {
+        let params = {
+            ids: val.id
+        }
+        deleteChannelTopic(params).then(res => {
+            console.log(res);
+            if (res.data.errCode == 0) {
+                message.success("删除成功")
+                this.ChannelTopic();
+            } else {
+                message.error(res.data.msg)
+            }
+        })
+    }
+    syncChannelNew() {
         console.log("数据同步")
         this.setState({
             btnLoading: true
         })
-        syncChannel().then((res) => {
+        syncChannelNew().then((res) => {
             console.log(res);
             if (res.data.errCode == 0) {
                 message.success("数据同步成功")
@@ -182,7 +218,11 @@ export default class SportsProgram extends Component {
             }
         })
     }
+    closeDialog(){
+        this.setState({isShow:false})
+    }
     render() {
+        let {isShow } = this.state
         return (
             <div>
                 <Card title={
@@ -196,7 +236,7 @@ export default class SportsProgram extends Component {
                             this.setState({
                                 searchWords:val
                             })
-                            this.ChannelTopicOld(val)
+                            this.ChannelTopic(val)
                         }} /> */}
                     </div>
                 }
@@ -204,14 +244,14 @@ export default class SportsProgram extends Component {
                         <div>
                             <Button type="primary"
                                 onClick={() => {
-                                    this.props.history.push(`/mms/channelManage/editSubject/add`)
+                                    this.props.history.push(`/mms/channelManage/editSubjectNew/add`)
                                 }}
                             >新增专题</Button>
                             <Button type="primary"
                                 loading={this.state.btnLoading}
                                 style={{ margin: "0 10px" }}
                                 onClick={() => {
-                                    this.syncChannel()
+                                    this.syncChannelNew()
                                 }}
                             >数据同步</Button>
                         </div>
@@ -225,6 +265,7 @@ export default class SportsProgram extends Component {
                         scroll={{ x: 1200, y: '75vh' }}
                         />
                 </Card>
+                <ContentDialog isShow={isShow} onCloseDialog={()=>this.closeDialog()} onRef={(ref) => {this.child = ref}}></ContentDialog>
             </div>
         )
     }

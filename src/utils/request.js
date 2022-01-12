@@ -21,7 +21,6 @@ request.interceptors.request.use(function (config) {
     }
     config.headers.userid = JSON.parse(user).userInfo.id
   }
-  
   // hide()
   return config;
 }, function (error) {

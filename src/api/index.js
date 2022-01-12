@@ -398,6 +398,7 @@ export const uploadWechatMenu = (params) => { return request.post(`${baseUrl}/mm
 export const preSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/preview`,params); };           // 微信群发预览
 export const addSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/add`,params); };           // 新建微信群发
 export const materialSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/material`,params); };           // 获取微信图文素材
+export const wechatMaterialSend = (params) => { return request2.post(`${baseUrl}/mms/wx/push/drafts`,params); };           // 获取微信草稿箱
 export const getSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/list`,{ params: params }); };           // 群发列表
 export const everySend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/data`,{ params: params }); };           // 微信群发结束后的统计结果
 export const cancelSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/cancel`,{ params: params }); };           // 取消预约推送

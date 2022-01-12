@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getSend, materialSend, getFansTagList, getPublicList, everySend, addSend, preSend, cancelSend, reSend } from 'api'
+import { getSend, materialSend, getFansTagList, getPublicList, everySend, addSend, preSend, cancelSend, reSend,wechatMaterialSend } from 'api'
 import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Checkbox, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import QRCode from 'qrcode.react';
@@ -49,6 +49,7 @@ export default class EarnIncentiveTask extends React.Component {
             qrCodeShow: false,//二维码框
             setLinkUrl: "",
             editorState: BraftEditor.createEditorState(),
+            hasChooseMaterial:"",
             columns: [
                 {
                     title: "发送记录",
@@ -132,7 +133,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     this.setState({
                                         entranceState: true,
                                     }, () => {
-                                        this.getMaterial()
+                                        // this.materialSend()
                                         this.formRef.current.resetFields()
                                     })
                                 }}
@@ -420,11 +421,17 @@ export default class EarnIncentiveTask extends React.Component {
                                             <Button onClick={() => {
                                                 this.setState({
                                                     materialShow: true
-                                                }, () => {
-                                                    this.child.openDialog(true, this.state.materialData)
+                                                },async () => {
+                                                    await this.materialSend()
                                                 })
                                             }}><PlusOutlined />添加图文</Button>
-
+                                             <Button onClick={() => {
+                                                this.setState({
+                                                    materialShow: true
+                                                },async () => {
+                                                    await this.wechatMaterialSend()
+                                                })
+                                            }}><PlusOutlined />微信草稿箱</Button>
                                         </Form.Item>
                                     :
                                     this.formRef.current && this.formRef.current.getFieldValue("msgType") == "text"
@@ -474,10 +481,17 @@ export default class EarnIncentiveTask extends React.Component {
                                             <Button onClick={() => {
                                                 this.setState({
                                                     materialShow: true
-                                                }, () => {
-                                                    this.child.openDialog(true, this.state.materialData)
+                                                },async () => {
+                                                    await this.materialSend()
                                                 })
                                             }}><PlusOutlined />添加图文</Button>
+                                             <Button onClick={() => {
+                                                this.setState({
+                                                    materialShow: true
+                                                },async () => {
+                                                    await this.wechatMaterialSend()
+                                                })
+                                            }}><PlusOutlined />微信草稿箱</Button>
 
                                         </Form.Item>
 
@@ -493,8 +507,9 @@ export default class EarnIncentiveTask extends React.Component {
                         </Form>
                     }
                 </Modal>
-                <MaterialDialog totalCount={this.state.totalCount} wxCode={this.state.wxCode}
+                <MaterialDialog totalCount={this.state.totalCount} wxCode={this.state.wxCode} 
                     onClose={() => this.setState({ materialShow: false })} onChooseInfo={this.onChooseInfo.bind(this)}
+                    hasChooseMaterial={this.state.hasChooseMaterial}
                     onRef={this.onRef}
                 ></MaterialDialog>
                 <Modal title="群发" key={this.state.sendState}  centered visible={sendState} onCancel={() => {
@@ -713,7 +728,7 @@ export default class EarnIncentiveTask extends React.Component {
             })
         })
     }
-    getMaterial() {
+    materialSend() {
         let params = {
             "type": "news",   //news 图文
             "count": 12,   // 数量
@@ -725,6 +740,24 @@ export default class EarnIncentiveTask extends React.Component {
             this.setState({
                 materialData: res.data.item,
                 totalCount: res.data.total_count
+            },()=>{
+                this.child.openDialog(true, this.state.materialData,"",1)
+            })
+        })
+    }
+    wechatMaterialSend() {
+        let params = {
+            "count": 12,   // 数量
+            "wxCode": this.state.wxCode,  // 公众号code
+            "offset": 0   //偏移量
+        }
+        wechatMaterialSend(params).then(res => {
+            console.log(res.data)
+            this.setState({
+                materialData: res.data.item,
+                totalCount: res.data.total_count
+            },()=>{
+                this.child.openDialog(true, this.state.materialData,"",2)
             })
         })
     }
@@ -737,6 +770,7 @@ export default class EarnIncentiveTask extends React.Component {
         })
         this.setState({
             allMaterial: info,
+            hasChooseMaterial:arr,
             activityIndex: 0
         }, () => {
             let obj = {

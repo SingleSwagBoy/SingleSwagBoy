@@ -1,7 +1,7 @@
 
 
 import React, { Component } from 'react'
-import {materialSend } from 'api'
+import {materialSend,wechatMaterialSend } from 'api'
 import { Checkbox, Card, Button, message, Pagination, Modal, List, Select } from 'antd'
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
@@ -28,6 +28,7 @@ export default class EarnIncentiveTask extends React.Component {
             },
             materialData: [],
             materialShow: false,
+            materialType:null,
         }
     }
     render() {
@@ -118,7 +119,7 @@ export default class EarnIncentiveTask extends React.Component {
     componentDidMount() {
         this.props.onRef(this)
     }
-    openDialog(state, data,item) {
+    openDialog(state, data,item,type) {
         console.log(state, data)
         this.setState({
             materialData: data,
@@ -126,11 +127,17 @@ export default class EarnIncentiveTask extends React.Component {
             chooseMaterial:[],
             checkedItem:[]
         },()=>{
+            if(type){
+                this.setState({materialType:type})
+            }
+            console.log(this.props.hasChooseMaterial,"Material=========>")
             if(item){
                 console.log(item)
                 data.forEach((r)=>{
-                    let arr = r.content.news_item.filter(l=>item.some(h=>h.thumb_media_id == l.thumb_media_id))
-                    if(arr.length>0){
+                    let arr = this.props.hasChooseMaterial.filter(l=>l.media_id == r.media_id) 
+                    let len = r.content.news_item.filter(l=>item.some(h=>h.thumb_media_id == l.thumb_media_id && h.url == l.url))
+                    // console.log("arr,len=========>",arr,len)
+                    if(arr.length>0 && len.length>0){
                         let checkedItem = this.state.checkedItem
                         let chooseMaterial = this.state.chooseMaterial
                         chooseMaterial.push(r)
@@ -141,6 +148,7 @@ export default class EarnIncentiveTask extends React.Component {
                         })
                     }
                 })
+                
             }
         })
         
@@ -151,7 +159,12 @@ export default class EarnIncentiveTask extends React.Component {
         this.setState({
             page: page - 1
         }, () => {
-            this.materialSend()
+            if(this.state.materialType == 1){
+                this.materialSend()
+            }else{
+                this.wechatMaterialSend()
+            }
+          
         })
     }
     materialSend(){
@@ -165,6 +178,19 @@ export default class EarnIncentiveTask extends React.Component {
             console.log(res.data)
             this.setState({
                 materialData:res.data.item
+            })
+        })
+    }
+    wechatMaterialSend() {
+        let params = {
+            "count": this.state.pageSize,   // 数量
+            "wxCode": this.props.wxCode,  // 公众号code
+            "offset": (this.state.page) * this.state.pageSize   //偏移量
+        }
+        wechatMaterialSend(params).then(res => {
+            console.log(res.data)
+            this.setState({
+                materialData: res.data.item,
             })
         })
     }

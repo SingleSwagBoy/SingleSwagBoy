@@ -265,7 +265,10 @@ export default class SportsProgram extends Component {
                                     ))}
 
                                     <Form.Item>
-                                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                        <Button type="dashed" onClick={() => {
+                                            if(this.formRef.current.getFieldValue("playerParams").length >= 3) return message.error("最多三条")
+                                            add()
+                                        }} block icon={<PlusOutlined />}>
                                             新增播放器内容
                                         </Button>
                                     </Form.Item>

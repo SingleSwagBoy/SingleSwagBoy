@@ -167,6 +167,7 @@ export default class SportsProgram extends Component {
             console.log(res);
             if (res.data.errCode == 0) {
                 message.success("修改成功")
+                this.ChannelTopic()
             } else {
                 message.error(res.data.msg)
             }

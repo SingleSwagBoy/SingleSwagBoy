@@ -54,6 +54,7 @@ export default class SportsProgram extends Component {
         this.saveConfChannel(val)
     }
     closeDialog() {
+        this.formRef.current.resetFields()
         this.props.onCloseDialog()
     }
     saveConfChannel(val) {
@@ -266,7 +267,7 @@ export default class SportsProgram extends Component {
 
                                     <Form.Item>
                                         <Button type="dashed" onClick={() => {
-                                            if(this.formRef.current.getFieldValue("playerParams").length >= 3) return message.error("最多三条")
+                                            if(this.formRef.current.getFieldValue("playerParams") && this.formRef.current.getFieldValue("playerParams").length >= 3) return message.error("最多三条")
                                             add()
                                         }} block icon={<PlusOutlined />}>
                                             新增播放器内容

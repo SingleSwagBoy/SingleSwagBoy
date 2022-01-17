@@ -46,13 +46,14 @@ export default class WxReplyModal extends Component {
             wxCode: [],                         //在[自定义二维码回复]类型中展示 
             tag_select_id: 0,                   //标题标签选中id
             reply_select_id: 0,                 //回复消息选中id
-            join_type:[{key:"no_quality",value:"无资格"},{key:"join",value:"已参与"},{key:"joined",value:"已结束"}],
+            join_type: [{ key: "no_quality", value: "无资格" }, { key: "join", value: "已参与" }, { key: "joined", value: "已结束" }],
             //最近获取到焦点的的输入框
             last_select_input_box: {
                 key: '',
                 value: '',
             },
-            optionType:"",
+            optionType: "",
+            isShowType: "",//是否显隐参与场景
         }
     }
     componentDidMount() {
@@ -63,7 +64,7 @@ export default class WxReplyModal extends Component {
         let that = this;
         let { menu_type, } = that.props;
         let { dict_msg_type, dict_public_types, dict_user_tags, dict_rule_types, dict_wx_program } = that.props;
-        let { tags, datas, base_width, tag_select_id, reply_select_id, last_select_input_box,join_type } = that.state;
+        let { tags, datas, base_width, tag_select_id, reply_select_id, last_select_input_box, join_type,isShowType } = that.state;
         let targetReplyId = parseInt(reply_select_id) + 1;
 
         let item = datas[tag_select_id];     //当前选择的数据 整体信息
@@ -187,7 +188,18 @@ export default class WxReplyModal extends Component {
                                     <WxReplyModalActivity onRef={(val) => {
                                         that.setState({ activity_ref: val, }, () => {
                                         })
-                                    }} >
+                                    }} 
+                                    onChangeType={(e)=>{
+                                        let {datas} = this.state
+                                        console.log(datas,tag_select_id,"datas")
+                                        datas[tag_select_id].info = [{msg_type:"text"}]
+                                        datas[tag_select_id].activityType = e
+                                        this.setState({ 
+                                            isShowType: e ,
+                                            datas:datas
+                                        })
+                                    }}
+                                    >
                                     </WxReplyModalActivity>
                                 }
                             </div>
@@ -265,9 +277,9 @@ export default class WxReplyModal extends Component {
                                         onEdit={(targetKey, action) => that.onReplyItemClick(targetKey, action)} onChange={(activeKey) => that.onReplyItemChange(activeKey)}>
                                         {replys.map((item, index) => (
                                             <TabPane tab={`
-                                            ${item.option == "no_quality"?"无资格":
-                                            item.option == "join"?"已参与":item.option
-                                             == "joined"?"已结束":"默认"}第${index+1}条`} key={index}></TabPane>
+                                            ${item.option == "no_quality" ? "无资格" :
+                                                    item.option == "join" ? "已参与" : item.option
+                                                        == "joined" ? "已结束" : "默认"}第${index + 1}条`} key={index}></TabPane>
                                         ))}
                                     </Tabs>
                                 }
@@ -278,16 +290,20 @@ export default class WxReplyModal extends Component {
                                 <Form labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} style={{ width: 600, minHight: 500 }} ref={that.replyFormRef}>
                                     {that.replyFormRef && that.replyFormRef.current && (
                                         <div>
-                                            <Form.Item label='参与场景' name='option' >
-                                                <Radio.Group onChange={(e) => {
-                                                    let type = e.target.value
-                                                    this.setState({optionType : type})
-                                                }}>
-                                                    {join_type.map((item, index) => (
-                                                        <Radio value={item.key} key={index}>{item.value}</Radio>
-                                                    ))}
-                                                </Radio.Group>
-                                            </Form.Item>
+                                            {
+                                                isShowType == 2 &&
+                                                <Form.Item label='参与场景' name='option' >
+                                                    <Radio.Group onChange={(e) => {
+                                                        this.setState({ optionType: e.target.value })
+                                                    }}
+                                                    >
+                                                        {join_type.map((item, index) => (
+                                                            <Radio value={item.key} key={index}>{item.value}</Radio>
+                                                        ))}
+                                                    </Radio.Group>
+                                                </Form.Item>
+                                            }
+
                                             <Form.Item label='消息类型' name='msg_type' >
                                                 <Radio.Group onChange={(e) => that.onRadioClick(e)}>
                                                     {dict_msg_type.map((item, index) => (
@@ -424,7 +440,7 @@ export default class WxReplyModal extends Component {
         that.titleFormRef.current.resetFields();
         that.replyFormRef.current.resetFields();
         console.log(that.state.activity_ref.activityFormRef)
-        if(that.state.activity_ref && that.state.activity_ref.activityFormRef.current){
+        if (that.state.activity_ref && that.state.activity_ref.activityFormRef.current) {
             that.state.activity_ref.activityFormRef.current.resetFields();
         }
         if (!datas || datas.length <= 0) {
@@ -752,15 +768,14 @@ export default class WxReplyModal extends Component {
 
         //新增数据
         if (action === 'add') {
-            let arr = replys.filter(item=>item.option == this.state.optionType)
+            let arr = replys.filter(item => item.option == this.state.optionType)
             if (replys && arr.length >= 3) {
                 message.error('一个类型最多只能配置3条回复')
                 return;
             }
-            
-            replys.push({ msg_type: 'text',option:this.state.optionType });   //如果无数据 将强制一个text类型的回复数据
-            let new_reply_select_id = parseInt(reply_select_id) + 1;
 
+            replys.push({ msg_type: 'text', option: this.state.optionType });   //如果无数据 将强制一个text类型的回复数据
+            let new_reply_select_id = replys.length - 1;
             that.setState({
                 datas: datas,
                 reply_select_id: new_reply_select_id
@@ -829,10 +844,10 @@ export default class WxReplyModal extends Component {
 
         let new_info = Object.assign({}, last_info, curr_info)
         infos[reply_select_id] = new_info;
-
         that.setState({
             infos: infos,
             reply_select_id: index,
+            optionType: infos[Number(index)].option,
             last_select_input_box: {
                 key: '',
                 value: '',
@@ -1074,7 +1089,7 @@ export default class WxReplyModal extends Component {
                 temp.content = content.replace('\\n', '\n');
             }
         }
-        console.log(info,"info===========>")
+        console.log(info, "info===========>")
         result_data.info = JSON.stringify(info);
 
         result_data.replyObjType = 2;
@@ -1110,7 +1125,7 @@ export default class WxReplyModal extends Component {
                 let isOpen = activity_ref_data.isOpen;
                 if (isOpen) {
                     delete activity_ref_data.isOpen;
-                    if(activity_ref_data.activityType == 1){
+                    if (activity_ref_data.activityType == 1) {
                         if (!activity_ref_data.activityType) {
                             message.error('请选择开展的活动');
                             return;
@@ -1127,12 +1142,12 @@ export default class WxReplyModal extends Component {
                             message.error('请输入活动领取周期');
                             return;
                         }
-    
+
                         result_data.replyActivity = JSON.stringify(activity_ref_data);
-                    }else{
+                    } else {
 
                     }
-                  
+
                 } else {
                     result_data.replyActivity = '';
                 }
@@ -1171,12 +1186,12 @@ export default class WxReplyModal extends Component {
         that.setState({
             is_edit_mode: true,
         }, () => {
-            return console.log(result_data,"result_data")
+            // return console.log(result_data,"result_data")
             that.props.onSave(result_data);
         })
     }
 
-    getIndex(item){
+    getIndex(item) {
         console.log(item)
     }
 }

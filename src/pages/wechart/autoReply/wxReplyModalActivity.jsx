@@ -50,7 +50,8 @@ export default class wxReplyModalImageBox extends Component {
                         <div>
                             <Form.Item label='活动类型' name='activityType'>
                                 <Radio.Group onChange={(e) => {
-                                    this.forceUpdate()
+                                    // that.activityFormRef.current.setFieldsValue({activityType:e.target.value})
+                                    this.props.onChangeType(e.target.value)
                                 }}>
                                     {dict_activity_type.map((item, index) => (
                                         <Radio value={item.key}>{item.value}</Radio>

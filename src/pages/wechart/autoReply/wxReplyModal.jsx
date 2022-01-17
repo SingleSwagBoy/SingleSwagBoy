@@ -46,7 +46,7 @@ export default class WxReplyModal extends Component {
             wxCode: [],                         //在[自定义二维码回复]类型中展示 
             tag_select_id: 0,                   //标题标签选中id
             reply_select_id: 0,                 //回复消息选中id
-            join_type: [{ key: "no_quality", value: "无资格" }, { key: "join", value: "已参与" }, { key: "no_count", value: "无次数" }, { key: "joined", value: "已结束" }],
+            join_type: [{ key: "no_quality", value: "无资格" }, { key: "join", value: "已参与" }, { key: "no_count", value: "无次数" }, { key: "over", value: "已结束" }],
             //最近获取到焦点的的输入框
             last_select_input_box: {
                 key: '',
@@ -291,7 +291,7 @@ export default class WxReplyModal extends Component {
                                             <TabPane tab={`
                                             ${item.option == "no_quality" ? "无资格" :
                                                     item.option == "join" ? "已参与" : item.option
-                                                        == "joined" ? "已结束" : item.option == "no_count"?"无次数":"默认"}第${index + 1}条`} key={index}></TabPane>
+                                                        == "over" ? "已结束" : item.option == "no_count"?"无次数":"默认"}第${index + 1}条`} key={index}></TabPane>
                                         ))}
                                     </Tabs>
                                 }

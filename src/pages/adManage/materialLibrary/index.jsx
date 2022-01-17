@@ -253,7 +253,7 @@ export default class adCreateModal extends Component {
                                                 })}
                                             </Select>
                                         </Form.Item>
-                                        <Form.Item label='支付套餐' name='pCode' rules={[{ required: true }]}>
+                                        <Form.Item label='支付套餐' name='pCode'>
                                             <Select placeholder="请选择支付套餐">
                                                 {this.state.rechargeList.map((item, index) => {
                                                     return <Option value={item.skuCode} key={index}> {item.name}</Option>

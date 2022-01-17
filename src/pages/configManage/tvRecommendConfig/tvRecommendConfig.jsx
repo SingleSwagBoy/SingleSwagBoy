@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-12-23 14:43:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-12-28 15:08:15
+ * @LastEditTime: 2021-12-28 19:47:06
  * @Description: tv推荐配置
  */
 
@@ -19,8 +19,14 @@ import {
     requestChannelRecommendEdit,                            //频道管理-编辑
     requestChannelRecommendDelete,                          //频道管理-删除
     requestChannelRecommendChangeState,                     //频道管理-修改状态
+    requestChannelRecommendSearchChannel,                   //频道管理-下拉搜索频道
+    requestChannelRecommendSearchProgram,                   //频道管理-下拉搜索视频
+
 } from 'api'
 import { MySyncBtn } from '@/components/views.js';
+
+
+
 let { Option } = Select;
 
 
@@ -39,6 +45,8 @@ export default class tvRecommendConfig extends Component {
                 data: [],
                 page: undefined,
             },
+            searchChannel: [],      //频道类型 搜索到频道
+            searchProgram: [],      //节目类型 搜索到视频                    
         }
     }
 
@@ -65,18 +73,23 @@ export default class tvRecommendConfig extends Component {
                                                 <div className='expandedBoxTitle' >类型:</div>
                                                 <div className='expandedBoxContent'>{item.type == '10' ? '推荐视频' : '推荐频道'}</div>
                                             </div>
-                                            <div className='expandedBoxLine'>
-                                                <div className='expandedBoxTitle'>推荐渠道id:</div>
-                                                <div className='expandedBoxContent'>{item.channelId}</div>
-                                            </div>
-                                            <div className='expandedBoxLine'>
-                                                <div className='expandedBoxTitle'>推荐节目id:</div>
-                                                <div className='expandedBoxContent'>{item.programId}</div>
-                                            </div>
-                                            <div className='expandedBoxLine'>
-                                                <div className='expandedBoxTitle'>推荐列表id:</div>
-                                                <div className='expandedBoxContent'>{item.tvCVId}</div>
-                                            </div>
+                                            {item.channelId &&
+                                                <div className='expandedBoxLine'>
+                                                    <div className='expandedBoxTitle'>推荐渠道id:</div>
+                                                    <div className='expandedBoxContent'>{item.channelId}</div>
+                                                </div>
+                                            }
+                                            {item.programId &&
+                                                <div className='expandedBoxLine'>
+                                                    <div className='expandedBoxTitle'>推荐节目id:</div>
+                                                    <div className='expandedBoxContent'>{item.programId}</div>
+                                                </div>}
+                                            {item.tvCVId &&
+                                                <div className='expandedBoxLine'>
+                                                    <div className='expandedBoxTitle'>推荐列表id:</div>
+                                                    <div className='expandedBoxContent'>{item.tvCVId}</div>
+                                                </div>
+                                            }
                                             <div className='expandedBoxLine'>
                                                 <div className='expandedBoxTitle'>标题:</div>
                                                 <div className='expandedBoxContent'>{item.title}</div>
@@ -117,7 +130,30 @@ export default class tvRecommendConfig extends Component {
     }
     initData() {
         let that = this;
-        let { recommendBox, dictState } = that.state;
+        //频道管理-下拉搜索频道
+        requestChannelRecommendSearchChannel({}).then(channelRes => {
+            that.setState({
+                searchChannel: channelRes.data,
+            }, () => {
+                //频道管理-下载搜索视频
+                requestChannelRecommendSearchProgram({}).then(programRes => {
+                    that.setState({
+                        searchProgram: programRes.data,
+                    }, () => {
+                        that.initTitle();
+                    })
+                })
+            })
+        })
+
+
+    }
+
+    initTitle() {
+        let that = this;
+        let { recommendBox, dictState, searchChannel, searchProgram } = that.state;
+        let widthStyle = { 'width': 270 };
+
         let title = [
             // { title: '列表id', dataIndex: 'id', key: 'id', width: 80, },
             // { title: '频道id', dataIndex: 'channelId', key: 'channelId', width: 100, },
@@ -125,13 +161,42 @@ export default class tvRecommendConfig extends Component {
             { title: '推荐标题', dataIndex: 'title', key: 'title', width: 100, },
             { title: '频道', dataIndex: 'channelId', key: 'channelId', width: 100, },
             {
-                title: '关联频道视频', width: 100,
+                title: '关联频道', width: 100,
                 render: (rowValue, row, index) => {
                     // return <div>请展开列表</div>
 
                     return (
                         row.content.map((item, index) => {
-                            return (<div> {`${item.type == '10' ? '视频' : '频道'}:${item.type == '10' ? item.programId : item.channelId}`}  </div>)
+                            return (<div> {`${item.type != '10' ? item.channelId : ''}`}</div>)
+                            // return (
+                            //     <Select value={rowValue} style={widthStyle} placeholder='推荐视频'>
+                            //         {searchChannel.map((item, index) => {
+                            //             return <Option key={index} value={item.channelId}>{item.channelName}</Option>
+                            //         })}
+                            //     </Select>
+                            // )
+                        })
+                    )
+                }
+            },
+
+            {
+                title: '关联视频', width: 100,
+                render: (rowValue, row, index) => {
+                    return (
+                        row.content.map((item, index) => {
+                            let value = '';
+                            if (item.type == '10') {
+                                for (let i = 0, len = searchProgram.length; i < len; i++) {
+                                    let currItem = searchProgram[i];
+                                    if (item.programId = currItem.programId) {
+                                        value = currItem.programName;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            return (<div>{value}</div>)
                         })
                     )
                 }

@@ -99,7 +99,7 @@ export default class wxReplyModalImageBox extends Component {
 
                                         <Form.Item name='activityMoney' >
                                             {/* 天数, 随机的话是0-配置的天数 */}
-                                            <InputNumber min={1} max={100000} style={{ width: base_width }} placeholder='随机的话是0-配置的天数' />
+                                            <InputNumber min={1}  style={{ width: base_width }} placeholder='随机配置30-配置的金额（分）' />
                                         </Form.Item>
                                     </Form.Item>
 
@@ -108,7 +108,7 @@ export default class wxReplyModalImageBox extends Component {
                                         <div  style={{display:"flex"}}>
                                             <Form.Item  name='activityTotalMoney'>
                                                 {/* 领取周期(100000表示永久, 小于100000表示配置天数 */}
-                                                <InputNumber placeholder='配置总金额' min={0} style={{ width: "200px" }} />
+                                                <InputNumber placeholder='配置总金额' min={0} style={{ width: "200px" }}  />
                                             </Form.Item>
                                             <Form.Item>
                                                 <Button type="primary" onClick={() => that.setMoney()} >更新金额</Button>
@@ -139,7 +139,7 @@ export default class wxReplyModalImageBox extends Component {
                                         </Select>
                                     </Form.Item>
                                     <Form.Item label='参与次数' name='activityTimes'>
-                                        <Input placeholder='配置参与次数' />
+                                        <InputNumber placeholder='配置参与次数' min={0}  />
                                     </Form.Item>
                                 </>
 

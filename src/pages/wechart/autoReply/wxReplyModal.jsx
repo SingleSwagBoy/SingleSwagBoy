@@ -46,7 +46,7 @@ export default class WxReplyModal extends Component {
             wxCode: [],                         //在[自定义二维码回复]类型中展示 
             tag_select_id: 0,                   //标题标签选中id
             reply_select_id: 0,                 //回复消息选中id
-            join_type: [{ key: "no_quality", value: "无资格" }, { key: "join", value: "已参与" }, { key: "joined", value: "已结束" }],
+            join_type: [{ key: "no_quality", value: "无资格" }, { key: "join", value: "已参与" }, { key: "no_count", value: "无次数" }, { key: "joined", value: "已结束" }],
             //最近获取到焦点的的输入框
             last_select_input_box: {
                 key: '',
@@ -291,7 +291,7 @@ export default class WxReplyModal extends Component {
                                             <TabPane tab={`
                                             ${item.option == "no_quality" ? "无资格" :
                                                     item.option == "join" ? "已参与" : item.option
-                                                        == "joined" ? "已结束" : "默认"}第${index + 1}条`} key={index}></TabPane>
+                                                        == "joined" ? "已结束" : item.option == "no_count"?"无次数":"默认"}第${index + 1}条`} key={index}></TabPane>
                                         ))}
                                     </Tabs>
                                 }
@@ -348,10 +348,10 @@ export default class WxReplyModal extends Component {
                                                         <Button size='small' onClick={() => that.onUserTargetClick('#refund#')} style={{ marginLeft: 3 }}>#退费#</Button>
                                                     </Tooltip>
                                                     <Tooltip title='系统将自动转化为[次数]' placement='top'>
-                                                        <Button size='small' onClick={() => that.onUserTargetClick('#count#')} style={{ marginLeft: 3,marginTop:3, }}>#次数#</Button>
+                                                        <Button size='small' onClick={() => that.onUserTargetClick('#cbcnt#')} style={{ marginLeft: 3,marginTop:3, }}>#次数#</Button>
                                                     </Tooltip>
                                                     <Tooltip title='系统将自动转化为[金额]' placement='top'>
-                                                        <Button size='small' onClick={() => that.onUserTargetClick('#money#')} style={{ marginLeft: 3,marginTop:3, }}>#金额#</Button>
+                                                        <Button size='small' onClick={() => that.onUserTargetClick('#cbmoney#')} style={{ marginLeft: 3,marginTop:3, }}>#金额#</Button>
                                                     </Tooltip>
                                                 </Form.Item>
                                             }
@@ -1191,6 +1191,7 @@ export default class WxReplyModal extends Component {
                             message.error('请输入参与次数');
                             return;
                         }
+                        // activity_ref_data.activityTimes = Number(activity_ref_data.activityTimes)
                         result_data.replyActivity = JSON.stringify(activity_ref_data);
                     }
 

@@ -43,6 +43,7 @@ export const getColumnInfo = (params) => { return request.get(`${baseUrl}/mms/sh
 export const syn_config = (params) => { return request.get(`${baseUrl}/mms/config/common/syn_config`, { params: params }) };                                                                //查找合集短视频
 export const syn_slice = (params) => { return request.get(`${baseUrl}/mms/config/common/syn_slice`, { params: params }) };                                                                  //查找合集短视频
 export const editColumn = (params) => { return request.post(`${baseUrl}/mms/shortVideo/column`, params) };                                                                                  //编辑专题
+export const requestAddToLunbo = (params, vid) => { return request2.get(`${baseUrl}/mms/tv/channelRecommend/addToLunbo?vid=${vid}`, { params: params }) };                                  //添加视频到轮播
 
 export const requestSvcResort = (params) => { return request2.get(`${baseUrl}/mms/shortVideo/svc/resort`, { params: params }) };                                                            //奥运会专题-专题下短视频重新排序
 export const requestSvcChangeVideoSort = (params) => { return request2.post(`${baseUrl}/mms/shortVideo/svc/changeVideoSort`, params) };                                                     //奥运会专题-专题下短视频修改序号

@@ -20,7 +20,7 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy,getRecharge
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, getRecharge
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
@@ -52,7 +52,7 @@ export default class adCreateModal extends Component {
             tailLayout: {
                 wrapperCol: { offset: 16, span: 8 },
             },
-            rechargeList:[],
+            rechargeList: [],
             currentItem: "",
             table_title: [
                 { title: '素材名称', dataIndex: 'name', key: 'name', width: 300, },
@@ -247,19 +247,24 @@ export default class adCreateModal extends Component {
                                             <InputNumber min={0} />
                                         </Form.Item>
                                         <Form.Item label='类型' name='type' rules={[{ required: true }]}>
-                                            <Select placeholder="请选择类型">
+                                            <Select placeholder="请选择类型" onChange={()=>this.forceUpdate()}>
                                                 {this.state.typeList.map((item, index) => {
                                                     return <Option value={item.key} key={index}> {item.name}</Option>
                                                 })}
                                             </Select>
                                         </Form.Item>
-                                        <Form.Item label='支付套餐' name='pCode'>
-                                            <Select placeholder="请选择支付套餐">
-                                                {this.state.rechargeList.map((item, index) => {
-                                                    return <Option value={item.skuCode} key={index}> {item.name}</Option>
-                                                })}
-                                            </Select>
-                                        </Form.Item>
+                                        {
+                                            that.formRef.current.getFieldValue("type") == 4
+                                            &&
+                                            <Form.Item label='支付套餐' name='pCode'>
+                                                <Select placeholder="请选择支付套餐">
+                                                    {this.state.rechargeList.map((item, index) => {
+                                                        return <Option value={item.skuCode} key={index}> {item.name}</Option>
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        }
+
                                         <Form.Item label='倒计时结束时间' name="djsEndTime">
                                             <DatePicker showTime />
                                         </Form.Item>
@@ -371,7 +376,7 @@ export default class adCreateModal extends Component {
         }
         privateData.inputTimeOutVal = setTimeout(() => {
             if (!privateData.inputTimeOutVal) return;
-            this.formRef.current.setFieldsValue({[name]: val })
+            this.formRef.current.setFieldsValue({ [name]: val })
             this.forceUpdate()
         }, 1000)
     }
@@ -458,14 +463,14 @@ export default class adCreateModal extends Component {
     getRecharge() {
         let that = this;
         let obj = {
-            page: { isPage:9 },
+            page: { isPage: 9 },
             productCategoryType: 10
         };
         getRecharge(obj).then(res => {
             that.setState({
-                rechargeList:res.data
+                rechargeList: res.data
             })
-            
+
         })
     }
     //获取上传文件
@@ -475,7 +480,7 @@ export default class adCreateModal extends Component {
         let image_url = file;
         // let obj = {};
         // obj[type] = image_url;
-        that.formRef.current.setFieldsValue({[type]:image_url});
+        that.formRef.current.setFieldsValue({ [type]: image_url });
         that.forceUpdate();
     }
     //获取上传文件图片地址 

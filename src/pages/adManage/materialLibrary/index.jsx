@@ -20,7 +20,7 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy,getRecharge
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
@@ -47,10 +47,12 @@ export default class adCreateModal extends Component {
                 { key: 1, name: "家庭号" },
                 { key: 2, name: "公众号登陆" },
                 { key: 3, name: "小程序登陆" },
+                { key: 4, name: "支付广告" },
             ],
             tailLayout: {
                 wrapperCol: { offset: 16, span: 8 },
             },
+            rechargeList:[],
             currentItem: "",
             table_title: [
                 { title: '素材名称', dataIndex: 'name', key: 'name', width: 300, },
@@ -251,6 +253,13 @@ export default class adCreateModal extends Component {
                                                 })}
                                             </Select>
                                         </Form.Item>
+                                        <Form.Item label='支付套餐' name='pCode' rules={[{ required: true }]}>
+                                            <Select placeholder="请选择支付套餐">
+                                                {this.state.rechargeList.map((item, index) => {
+                                                    return <Option value={item.skuCode} key={index}> {item.name}</Option>
+                                                })}
+                                            </Select>
+                                        </Form.Item>
                                         <Form.Item label='倒计时结束时间' name="djsEndTime">
                                             <DatePicker showTime />
                                         </Form.Item>
@@ -411,6 +420,7 @@ export default class adCreateModal extends Component {
     refreshList(index) {
         if (index == 1) {
             this.requestAdRightKey()
+            this.getRecharge()
         } else {
             this.getScreen()
         }
@@ -443,6 +453,19 @@ export default class adCreateModal extends Component {
                 total: res.page.totalCount
             })
             this.forceUpdate()
+        })
+    }
+    getRecharge() {
+        let that = this;
+        let obj = {
+            page: { isPage:9 },
+            productCategoryType: 10
+        };
+        getRecharge(obj).then(res => {
+            that.setState({
+                rechargeList:res.data
+            })
+            
         })
     }
     //获取上传文件

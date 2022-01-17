@@ -217,6 +217,7 @@ export default class SportsProgram extends Component {
                             currentItem: row
                           }, () => {
                             let info = JSON.parse(JSON.stringify(row))
+                            console.log(info)
                             // info.time = [info.indexStartTime ? moment(info.indexStartTime * 1000) : "", info.indexEndTime ? moment(info.indexEndTime * 1000) : ""]
                             info.channelId = info.channelData.channelId
                             info.name = info.channelData.name
@@ -442,11 +443,14 @@ export default class SportsProgram extends Component {
     console.log(val)
     let arr = this.state.defaultProgram[val.name]
     let channelArr = this.state.channelList.filter(item => item.code == val.channelId)
+    console.log(this.state.defaultProgram,"arr")
+    if(!arr)return this.closeModel()
     val.channelData = {
       channelId: val.channelId,
       // channelName:"" ,
       name: arr.name,
       startTime: arr.start_time,
+      endTime: arr.end_time,
     }
     if (channelArr.length > 0) {
       // val.channelData.channelName = channelArr[0].name

@@ -7,8 +7,8 @@
  */
 
 import React, { Component } from 'react';
-import { Form, message, Switch, Radio, Input, InputNumber, Select } from 'antd';
-import { requestNewAdTagList } from "api"
+import { Form, message, Switch, Radio, Input, InputNumber, Select, Button } from 'antd';
+import { requestNewAdTagList, setMoney } from "api"
 let { Option } = Select;
 export default class wxReplyModalImageBox extends Component {
     constructor(props) {
@@ -102,9 +102,19 @@ export default class wxReplyModalImageBox extends Component {
                                             <InputNumber min={1} max={100000} style={{ width: base_width }} placeholder='随机的话是0-配置的天数' />
                                         </Form.Item>
                                     </Form.Item>
-                                    <Form.Item label='总金额' name='activityTotalMoney'>
-                                        {/* 领取周期(100000表示永久, 小于100000表示配置天数 */}
-                                        <InputNumber placeholder='配置总金额' min={0} style={{ width: "200px" }} />
+
+
+                                    <Form.Item label='总金额'>
+                                        <div  style={{display:"flex"}}>
+                                            <Form.Item  name='activityTotalMoney'>
+                                                {/* 领取周期(100000表示永久, 小于100000表示配置天数 */}
+                                                <InputNumber placeholder='配置总金额' min={0} style={{ width: "200px" }} />
+                                            </Form.Item>
+                                            <Form.Item>
+                                                <Button type="primary" onClick={() => that.setMoney()} >更新金额</Button>
+                                            </Form.Item>
+                                        </div>
+                                       
                                     </Form.Item>
                                     <Form.Item label='用户标签' name='activityTag'>
                                         <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择用户设备标签"
@@ -155,7 +165,6 @@ export default class wxReplyModalImageBox extends Component {
             activityFormRef.current.current.resetFields();
             return;
         }
-
         activityFormRef.current.setFieldsValue(data);
     }
 
@@ -179,6 +188,16 @@ export default class wxReplyModalImageBox extends Component {
             this.setState({
                 dict_user_tags: res.data,
             });
+        })
+    }
+    setMoney() {
+        console.log(this.activityFormRef.current.getFieldValue(), "111")
+        let params = {
+            id: this.props.replyId,
+            money: this.activityFormRef.current.getFieldValue("activityTotalMoney")
+        }
+        setMoney(params).then(res => {
+            message.success("更新成功")
         })
     }
 }

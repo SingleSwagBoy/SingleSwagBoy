@@ -53,6 +53,7 @@ export default class WxReplyModal extends Component {
                 value: '',
             },
             optionType: "",
+            replyId:"", //回复id
             isShowType: "",//是否显隐参与场景
         }
     }
@@ -185,18 +186,29 @@ export default class WxReplyModal extends Component {
                                 </Form>
                                 {
                                     (menu_type === 'keywords' || menu_type === 'other') &&
-                                    <WxReplyModalActivity onRef={(val) => {
+                                    <WxReplyModalActivity
+                                    replyId={this.state.replyId}
+                                     onRef={(val) => {
                                         that.setState({ activity_ref: val, }, () => {
                                         })
                                     }} 
                                     onChangeType={(e)=>{
                                         let {datas} = this.state
+                                        that.replyFormRef.current.resetFields();
                                         console.log(datas,tag_select_id,"datas")
-                                        datas[tag_select_id].info = [{msg_type:"text"}]
+                                        let obj = {msg_type:"text"}
+                                        if(e == 2){
+                                            obj.option = "no_quality"
+                                        }
+                                        datas[tag_select_id].info = [obj]
+                                        datas[tag_select_id].replyActivity = ""
                                         datas[tag_select_id].activityType = e
                                         this.setState({ 
                                             isShowType: e ,
                                             datas:datas
+                                        },()=>{
+                                            console.log(datas,"datas=======<>")
+                                            that.replyFormRef.current.setFieldsValue(obj);
                                         })
                                     }}
                                     >
@@ -294,7 +306,10 @@ export default class WxReplyModal extends Component {
                                                 isShowType == 2 &&
                                                 <Form.Item label='参与场景' name='option' >
                                                     <Radio.Group onChange={(e) => {
+                                                        console.log(that.replyFormRef.current.getFieldValue())
                                                         this.setState({ optionType: e.target.value })
+                                                        console.log(datas,replys,"datas=======>")
+                                                        replys[reply_select_id].option = e.target.value
                                                     }}
                                                     >
                                                         {join_type.map((item, index) => (
@@ -331,6 +346,12 @@ export default class WxReplyModal extends Component {
                                                     </Tooltip>
                                                     <Tooltip title='系统将自动转化为[退费]' placement='top'>
                                                         <Button size='small' onClick={() => that.onUserTargetClick('#refund#')} style={{ marginLeft: 3 }}>#退费#</Button>
+                                                    </Tooltip>
+                                                    <Tooltip title='系统将自动转化为[次数]' placement='top'>
+                                                        <Button size='small' onClick={() => that.onUserTargetClick('#count#')} style={{ marginLeft: 3,marginTop:3, }}>#次数#</Button>
+                                                    </Tooltip>
+                                                    <Tooltip title='系统将自动转化为[金额]' placement='top'>
+                                                        <Button size='small' onClick={() => that.onUserTargetClick('#money#')} style={{ marginLeft: 3,marginTop:3, }}>#金额#</Button>
                                                     </Tooltip>
                                                 </Form.Item>
                                             }
@@ -526,12 +547,16 @@ export default class WxReplyModal extends Component {
         if (is_edit_mode) {
             tag_select_id = that.state.tag_select_id;
             reply_select_id = that.state.reply_select_id;
+           
         }
+        console.log(datas[tag_select_id],"datas")
         that.setState({
             tags: tags,
             datas: datas,
             tag_select_id: tag_select_id,
             reply_select_id: reply_select_id,
+            replyId:datas[tag_select_id].id,
+            isShowType:datas[tag_select_id].replyActivity?JSON.parse(datas[tag_select_id].replyActivity).activityType:0,
             is_edit_mode: false,
             last_select_input_box: {
                 key: '',
@@ -613,6 +638,7 @@ export default class WxReplyModal extends Component {
 
             item.is_empty = false;
             item.info = reply;
+            
             that.setState({
                 datas: datas,
             }, () => {
@@ -637,7 +663,7 @@ export default class WxReplyModal extends Component {
                         if (isEmpty) {
                             replyActivity = {
                                 isOpen: false,          //是否开启
-                                activityType: 0,        //1.vip活动
+                                activityType: 0,        //1.vip活动2返现金
                                 activityDayType: '',    //1.固定 2.随机
                                 activityDays: '',       //天数, 随机的话是0-配置的天数
                                 activityCycle: '',      //领取周期(100000表示永久, 小于100000表示配置天数)
@@ -782,6 +808,7 @@ export default class WxReplyModal extends Component {
             }, () => {
                 that.replyFormRef.current.resetFields();
                 that.renderFormData();
+                console.log(new_reply_select_id,"new_reply_select_id======>")
             })
         }
         //删除数据
@@ -974,11 +1001,12 @@ export default class WxReplyModal extends Component {
         let data = datas[tag_select_id];
         if (!data) return;
         if (!data.info || data.info <= 0) return;
-
-
         let reply = datas[tag_select_id].info[reply_select_id];
-        let msg_type = reply.msg_type;
-
+        
+        let msg_type = reply?reply.msg_type:"text";
+        if(!reply){
+            this.setState({reply_select_id:0})
+        }
         if (msg_type === 'text') return;
         ref.pushSelectWxCodeKeys(wxCodeKeys, msg_type, reply);
     }
@@ -1121,15 +1149,16 @@ export default class WxReplyModal extends Component {
         if (menu_type === 'keywords' || menu_type === 'other') {
             let activity_ref = that.state.activity_ref;
             let activity_ref_data = activity_ref.getDatas();
+            console.log("activity_ref_data========>",activity_ref_data)
             if (activity_ref_data) {
                 let isOpen = activity_ref_data.isOpen;
                 if (isOpen) {
                     delete activity_ref_data.isOpen;
+                    if (!activity_ref_data.activityType) {
+                        message.error('请选择开展的活动');
+                        return;
+                    }
                     if (activity_ref_data.activityType == 1) {
-                        if (!activity_ref_data.activityType) {
-                            message.error('请选择开展的活动');
-                            return;
-                        }
                         if (!activity_ref_data.activityDayType) {
                             message.error('请选择活动Vip天数类型');
                             return;
@@ -1145,7 +1174,24 @@ export default class WxReplyModal extends Component {
 
                         result_data.replyActivity = JSON.stringify(activity_ref_data);
                     } else {
-
+                        console.log(activity_ref_data)
+                        if (!activity_ref_data.activityDayType) {
+                            message.error('请选择金额类型');
+                            return;
+                        }
+                        if (!activity_ref_data.activityMoney) {
+                            message.error('请输入金额数量');
+                            return;
+                        }
+                        if (!activity_ref_data.activityTotalMoney) {
+                            message.error('请输入总金额数量');
+                            return;
+                        }
+                        if (!activity_ref_data.activityTimes) {
+                            message.error('请输入参与次数');
+                            return;
+                        }
+                        result_data.replyActivity = JSON.stringify(activity_ref_data);
                     }
 
                 } else {

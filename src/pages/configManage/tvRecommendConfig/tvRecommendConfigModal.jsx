@@ -175,6 +175,7 @@ export default class recommendModal extends Component {
                                                     <div>
 
                                                         <Space key={field.key} align="baseline">
+
                                                             <Form.Item   {...field} name={[field.name, 'type']}>
                                                                 <Select style={{ 'width': 120 }} placeholder='请选择类型' onChange={() => that.forceUpdate()}>
                                                                     {dictType.map((item, index) => {
@@ -184,21 +185,25 @@ export default class recommendModal extends Component {
                                                             </Form.Item>
                                                             {
                                                                 form[index] && form[index].type === 10 &&
-                                                                <Form.Item name={[field.name, 'programId']}>
-                                                                    <Select style={widthStyle} placeholder='请选择推荐频道'>
-                                                                        {searchProgram.map((item, index) => {
-                                                                            return <Option key={index} value={item.programId}>{item.programName}</Option>
-                                                                        })}
-                                                                    </Select>
-
-                                                                </Form.Item>
+                                                                <div>
+                                                                    <Form.Item name={[field.name, 'programId']} >
+                                                                        <Select style={widthStyle} placeholder='请选择推荐频道' >
+                                                                            {searchProgram.map((item, index) => {
+                                                                                return <Option key={index} value={item.programId}>{item.programName}-{item.channelId}</Option>
+                                                                            })}
+                                                                        </Select>
+                                                                    </Form.Item>
+                                                                    {/* <Form.Item name={[field.name, 'channelId']} >
+                                                                        <Input placeholder='当前频道channelId' />
+                                                                    </Form.Item> */}
+                                                                </div>
                                                             }
                                                             {
                                                                 form[index] && form[index].type === 20 &&
                                                                 <Form.Item name={[field.name, 'channelId']}>
                                                                     <Select style={widthStyle} placeholder='请选择推荐视频'>
                                                                         {searchChannel.map((item, index) => {
-                                                                            return <Option key={index} value={item.channelId}>{item.channelName}</Option>
+                                                                            return <Option key={index} value={item.channelId}>{item.channelName}-{item.channelId}</Option>
                                                                         })}
                                                                     </Select>
                                                                 </Form.Item>
@@ -277,26 +282,6 @@ export default class recommendModal extends Component {
                     </Form>
 
                     <MyTagTypes is_old_tag_resouce={false} tag_name='tagCode' onRef={(ref) => that.onTagTypesRefCallback(ref)} />
-
-
-                    {/* <Divider>推荐关联</Divider> */}
-
-                    {/* <Alert className="alert-box" message="推荐关联" type="success" action={
-                        <div>
-                            <Button onClick={() => this.onCreteNewContentClick()} type="primary" style={{ 'marginLeft': '10px' }} >新增</Button>
-                        </div>
-                    }>
-                    </Alert>
-
-                    <Table key={contentBox.data} columns={contentBox.title} dataSource={contentBox.data} pagination={false} scroll={{ x: 1500, y: '75vh' }} /> */}
-
-                    {/* {
-                        searchProgram && searchProgram.length > 0 && <div>频道类型:searchProgram: {JSON.stringify(searchProgram[0])}</div>
-                    }
-                    {
-                        searchChannel && searchChannel.length > 0 && <div>节目类型:searchChannel: {JSON.stringify(searchChannel[0])}</div>
-                    } */}
-
 
                 </Modal>
 
@@ -489,12 +474,13 @@ export default class recommendModal extends Component {
     //确认被点击
     onConfirmClick() {
         let that = this;
-        let { refTagTypes, contentBox } = that.state;
+        let { refTagTypes, contentBox, searchProgram } = that.state;
         let formRef = that.formRef;
         let value = formRef.current.getFieldsValue();
 
         //获取到数据
         let obj = Object.assign({}, value, refTagTypes.loadData());
+
         if (!obj.channelId) {
             message.error("请选择推荐频道");
             return;
@@ -526,6 +512,9 @@ export default class recommendModal extends Component {
             return;
         }
 
+  
+
+
         for (let i = 0, ilen = contentData.length; i < ilen; i++) {
             let item = contentData[i];
             if (!item.type) {
@@ -551,9 +540,23 @@ export default class recommendModal extends Component {
             //重排序
             if (!item.sort) item.sort = 1
         }
-        // //整合关联关系
-        obj.content = JSON.stringify(contentData);
 
+
+        //筛选出[推荐视频]类型 对programId筛选出对应的channelId
+        for (let i = 0, ilen = contentData.length; i < ilen; i++) {
+            let item = contentData[i];
+            if (item.type == 10) {
+                let selectProgramId = item.programId;
+                searchProgram.map((currItem) => {
+                    if (currItem.programId === selectProgramId) {
+                        item.channelId = currItem.channelId;
+                    }
+                })
+            }
+        }
+
+        //整合关联关系
+        obj.content = JSON.stringify(contentData);
 
         for (let key in obj) {
             let item = obj[key]

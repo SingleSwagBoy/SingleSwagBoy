@@ -20,7 +20,7 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, getRecharge
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
@@ -425,7 +425,7 @@ export default class adCreateModal extends Component {
     refreshList(index) {
         if (index == 1) {
             this.requestAdRightKey()
-            this.getRecharge()
+            this.requestProductSkuList()
         } else {
             this.getScreen()
         }
@@ -460,13 +460,13 @@ export default class adCreateModal extends Component {
             this.forceUpdate()
         })
     }
-    getRecharge() {
+    requestProductSkuList() {
         let that = this;
         let obj = {
             page: { isPage: 9 },
             productCategoryType: 10
         };
-        getRecharge(obj).then(res => {
+        requestProductSkuList(obj).then(res => {
             that.setState({
                 rechargeList: res.data
             })

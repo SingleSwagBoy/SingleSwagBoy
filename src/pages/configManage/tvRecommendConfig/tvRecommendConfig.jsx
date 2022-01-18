@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-12-23 14:43:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2022-01-18 17:39:38
+ * @LastEditTime: 2022-01-18 17:43:43
  * @Description: tv推荐配置
  */
 
@@ -199,12 +199,12 @@ export default class tvRecommendConfig extends Component {
             //     title: '关联视频', dataIndex: 'programId', key: 'programId', width: 100,
             // },
 
-            {
-                title: '是否长期', dataIndex: 'isTimeless', key: 'isTimeless', width: 100,
-                render: (rowValue, row, index) => {
-                    return (<div>{rowValue == '1' ? '是' : '否'}</div>)
-                }
-            },
+            // {
+            //     title: '是否长期', dataIndex: 'isTimeless', key: 'isTimeless', width: 100,
+            //     render: (rowValue, row, index) => {
+            //         return (<div>{rowValue == '1' ? '是' : '否'}</div>)
+            //     }
+            // },
             {
                 title: '有效时间', dataIndex: 'time', key: 'time', width: 100,
                 render: (rowValue, row, index) => {

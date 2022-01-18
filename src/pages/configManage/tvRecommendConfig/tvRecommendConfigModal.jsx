@@ -151,13 +151,13 @@ export default class recommendModal extends Component {
                                     </Select>
                                 </Form.Item>
 
-                                <Form.Item label="是否长期" name='isTimeless'>
+                                {/* <Form.Item label="是否长期" name='isTimeless'>
                                     <Select placeholder='请选择是否长期' className="base-input-wrapper">
                                         {dictIsTimeless.map((item, index) => {
                                             return <Option key={index} value={item.key}>{item.value}</Option>
                                         })}
                                     </Select>
-                                </Form.Item>
+                                </Form.Item> */}
 
                                 <Form.List name='content'>
                                     {(fields, { add, remove }) => {

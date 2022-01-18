@@ -76,23 +76,6 @@ export default class recommendModal extends Component {
     componentDidMount() {
         let that = this;
         that.props.onRef(this);
-        let { searchChannel, } = that.state;
-
-        //频道管理-下拉搜索频道
-        requestChannelRecommendSearchChannel({}).then(channelRes => {
-            that.setState({
-                searchChannel: channelRes.data,
-            }, () => {
-                //频道管理-下载搜索视频
-                requestChannelRecommendSearchProgram({}).then(programRes => {
-                    that.setState({
-                        searchProgram: programRes.data,
-                    }, () => {
-                        that.initData();
-                    })
-                })
-            })
-        })
     }
 
 
@@ -250,12 +233,11 @@ export default class recommendModal extends Component {
                                                                         if (form && form[index]) {
                                                                             form[index].cover = newItem.fileUrl
                                                                             that.forceUpdate()
+                                                                        } else {
+                                                                            that.forceUpdate();
                                                                         }
                                                                     }}
-                                                                    imageUrl={
-                                                                        // "http://test.cdn.dianshihome.com/static/ad/3b020cdfbadda3e1e97a0b4beadfbb5b.png"
-                                                                        form[index] ? form[index].cover : ''
-                                                                    } />
+                                                                    imageUrl={form[index] ? form[index].cover : ''} />
                                                             </Form.Item>
                                                             <Form.Item name={[field.name, 'title']}>
                                                                 <Input placeholder='请输入关联标题' />
@@ -468,9 +450,9 @@ export default class recommendModal extends Component {
 
 
     //外部请求更新页面数据
-    refreshFromData(data) {
+    refreshFromData(data, searchChannel, searchProgram) {
         let that = this;
-        let { modalBox, contentBox, refTagTypes } = that.state;
+        let { modalBox, contentBox, refTagTypes, } = that.state;
         modalBox.isShow = true;
 
         let obj = {};
@@ -500,6 +482,8 @@ export default class recommendModal extends Component {
         that.setState({
             modalBox: modalBox,
             contentBox: contentBox,
+            searchChannel: searchChannel,
+            searchProgram: searchProgram,
         })
     }
 

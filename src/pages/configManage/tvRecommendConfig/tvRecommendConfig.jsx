@@ -1,8 +1,9 @@
+
 /*
  * @Author: HuangQS
  * @Date: 2021-12-23 14:43:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2022-01-18 17:43:43
+ * @LastEditTime: 2022-01-18 18:00:19
  * @Description: tv推荐配置
  */
 
@@ -58,7 +59,7 @@ export default class tvRecommendConfig extends Component {
                 <Alert className="alert-box" message="配置TV频道" type="success" action={
                     <div>
                         <Button onClick={() => that.onCreateConfigClick(null)} type="primary" style={{ 'marginLeft': '10px' }} >新增配置</Button>
-                        <MySyncBtn type={24} name='同步缓存' />
+                        <MySyncBtn type={26} name='同步缓存' />
                     </div>
                 } />
 
@@ -163,8 +164,6 @@ export default class tvRecommendConfig extends Component {
             {
                 title: '关联频道', width: 100,
                 render: (rowValue, row, index) => {
-                    // return <div>请展开列表</div>
-
                     return (
                         row.content.map((item, index) => {
                             return (<div> {`${item.type != '10' ? `${item.channelId}-${item.title}` : ''}`}</div>)
@@ -307,9 +306,9 @@ export default class tvRecommendConfig extends Component {
     //创建配置
     onCreateConfigClick(item) {
         let that = this;
-        let { refTvConfigModal } = that.state;
+        let { refTvConfigModal, searchChannel, searchProgram } = that.state;
 
-        refTvConfigModal.refreshFromData(item);
+        refTvConfigModal.refreshFromData(item, searchChannel, searchProgram);
     }
 
 

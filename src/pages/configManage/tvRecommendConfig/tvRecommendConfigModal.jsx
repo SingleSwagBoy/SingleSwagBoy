@@ -77,14 +77,10 @@ export default class recommendModal extends Component {
         let that = this;
         that.props.onRef(this);
 
-        let { searchChannel, searchProgram } = that.state;
-
         //频道管理-下拉搜索频道
-        if (!searchChannel) {
-            requestChannelRecommendSearchChannel({}).then(channelRes => {
-                that.setState({
-                    searchChannel: channelRes.data,
-                })
+        requestChannelRecommendSearchChannel({}).then(channelRes => {
+            that.setState({
+                searchChannel: channelRes.data,
             }, () => {
                 //频道管理-下载搜索视频
                 requestChannelRecommendSearchProgram({}).then(programRes => {
@@ -95,7 +91,7 @@ export default class recommendModal extends Component {
                     })
                 })
             })
-        }
+        })
 
 
     }
@@ -186,6 +182,8 @@ export default class recommendModal extends Component {
                                                                         return <Option key={index} value={item.key}>{item.value}</Option>
                                                                     })}
                                                                 </Select>
+
+
                                                             </Form.Item>
                                                             {
                                                                 form[index] && form[index].type === 10 && searchProgram &&
@@ -214,6 +212,7 @@ export default class recommendModal extends Component {
                                                                     </Form.Item>
                                                                 </div>
                                                             }
+
                                                             {
                                                                 form[index] && form[index].type === 20 && searchChannel &&
                                                                 <Form.Item name={[field.name, 'channelId']}>

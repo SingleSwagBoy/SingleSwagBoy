@@ -79,22 +79,20 @@ export default class recommendModal extends Component {
         let { searchChannel, } = that.state;
 
         //频道管理-下拉搜索频道
-        if (!searchChannel) {
-            requestChannelRecommendSearchChannel({}).then(channelRes => {
-                that.setState({
-                    searchChannel: channelRes.data,
-                }, () => {
-                    //频道管理-下载搜索视频
-                    requestChannelRecommendSearchProgram({}).then(programRes => {
-                        that.setState({
-                            searchProgram: programRes.data,
-                        }, () => {
-                            that.initData();
-                        })
+        requestChannelRecommendSearchChannel({}).then(channelRes => {
+            that.setState({
+                searchChannel: channelRes.data,
+            }, () => {
+                //频道管理-下载搜索视频
+                requestChannelRecommendSearchProgram({}).then(programRes => {
+                    that.setState({
+                        searchProgram: programRes.data,
+                    }, () => {
+                        that.initData();
                     })
                 })
             })
-        }
+        })
     }
 
 

@@ -109,6 +109,9 @@ export default class tagConfig extends Component {
                                         <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} />
                                     </Form.Item>
                                 </Form.Item>
+                                <Form.Item label="计数" name='count' rules={[{ required: true }]} >
+                                    <Input className="base-input-wrapper" placeholder="计数" disabled />
+                                </Form.Item>
                                 <Form.Item {...this.state.tailLayout}>
                                         <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
                                         <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>

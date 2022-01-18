@@ -189,7 +189,7 @@ export default class recommendModal extends Component {
                                                                                 }
                                                                             }}>
                                                                             {searchProgram.map((item, index) => {
-                                                                                return <Option key={index} value={item.programId}>{item.programName}-{item.programId}</Option>
+                                                                                return <Option key={index} value={item.programId}>{item.programName}-{item.channelId}</Option>
                                                                             })}
                                                                         </Select>
                                                                         {/* <Input /> */}
@@ -565,7 +565,7 @@ export default class recommendModal extends Component {
                 let selectProgramId = item.programId;
                 searchProgram.map((currItem) => {
                     if (currItem.programId === selectProgramId) {
-                        // item.channelId = currItem.channelId;
+                        item.channelId = currItem.channelId;
                     }
                 })
             }

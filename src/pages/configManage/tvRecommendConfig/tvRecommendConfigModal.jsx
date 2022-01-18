@@ -77,12 +77,14 @@ export default class recommendModal extends Component {
         let that = this;
         that.props.onRef(this);
 
-
+        let { searchChannel, searchProgram } = that.state;
 
         //频道管理-下拉搜索频道
-        requestChannelRecommendSearchChannel({}).then(channelRes => {
-            that.setState({
-                searchChannel: channelRes.data,
+        if (!searchChannel) {
+            requestChannelRecommendSearchChannel({}).then(channelRes => {
+                that.setState({
+                    searchChannel: channelRes.data,
+                })
             }, () => {
                 //频道管理-下载搜索视频
                 requestChannelRecommendSearchProgram({}).then(programRes => {
@@ -93,7 +95,9 @@ export default class recommendModal extends Component {
                     })
                 })
             })
-        })
+        }
+
+
     }
 
 
@@ -184,24 +188,51 @@ export default class recommendModal extends Component {
                                                                 </Select>
                                                             </Form.Item>
                                                             {
-                                                                form[index] && form[index].type === 10 &&
+                                                                form[index] && form[index].type === 10 && searchProgram &&
                                                                 <div>
                                                                     <Form.Item name={[field.name, 'programId']} >
-                                                                        <Select style={widthStyle} placeholder='请选择推荐频道' >
+                                                                        <Select style={widthStyle} showSearch placeholder='请选择推荐频道'
+                                                                            filterOption={(input, option) => {
+                                                                                if (!input) return true;
+                                                                                let children = option.children;
+                                                                                if (children) {
+                                                                                    let key = children[2];
+                                                                                    let isFind = false;
+                                                                                    isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                                                    if (!isFind) {
+                                                                                        let code = children[0];
+                                                                                        isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                                                    }
+
+                                                                                    return isFind;
+                                                                                }
+                                                                            }}     >
                                                                             {searchProgram.map((item, index) => {
                                                                                 return <Option key={index} value={item.programId}>{item.programName}-{item.channelId}</Option>
                                                                             })}
                                                                         </Select>
                                                                     </Form.Item>
-                                                                    {/* <Form.Item name={[field.name, 'channelId']} >
-                                                                        <Input placeholder='当前频道channelId' />
-                                                                    </Form.Item> */}
                                                                 </div>
                                                             }
                                                             {
-                                                                form[index] && form[index].type === 20 &&
+                                                                form[index] && form[index].type === 20 && searchChannel &&
                                                                 <Form.Item name={[field.name, 'channelId']}>
-                                                                    <Select style={widthStyle} placeholder='请选择推荐视频'>
+                                                                    <Select style={widthStyle} showSearch placeholder='请选择推荐视频'
+                                                                        filterOption={(input, option) => {
+                                                                            if (!input) return true;
+                                                                            let children = option.children;
+                                                                            if (children) {
+                                                                                let key = children[2];
+                                                                                let isFind = false;
+                                                                                isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                                                if (!isFind) {
+                                                                                    let code = children[0];
+                                                                                    isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                                                }
+
+                                                                                return isFind;
+                                                                            }
+                                                                        }}>
                                                                         {searchChannel.map((item, index) => {
                                                                             return <Option key={index} value={item.channelId}>{item.channelName}-{item.channelId}</Option>
                                                                         })}
@@ -512,7 +543,7 @@ export default class recommendModal extends Component {
             return;
         }
 
-  
+
 
 
         for (let i = 0, ilen = contentData.length; i < ilen; i++) {

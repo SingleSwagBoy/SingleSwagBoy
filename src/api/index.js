@@ -276,8 +276,6 @@ export const adRightKeyDel = (params) => { return request2.delete(`${baseUrl}/mm
 export const adRightKeySync = (params) => { return request2.post(`${baseUrl}/mms/ad/adRightKey/sync`,  params) };                                                             //素材混村
 export const screenCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/screen/copy`,  params) };                                                             //素材混村
 export const adRightKeyCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/adRightKey/copy`,  params) };                                                             //素材混村
-// export const getRecharge = (params) => { return request2.post(`${baseUrl}/mms/p/product/sku`,  params) };                                                             //获取套餐列表
-
 
 //  转转管理------赚赚激励气泡
 export const getEarnTskList = (params) => { return request2.get(`${baseUrl}/mms/bubbletask/list`, { params: params }); };  // 获取转转激励任务列表

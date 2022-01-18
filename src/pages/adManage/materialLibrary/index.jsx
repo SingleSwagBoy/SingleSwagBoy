@@ -467,9 +467,13 @@ export default class adCreateModal extends Component {
             productCategoryType: 10
         };
         requestProductSkuList(obj).then(res => {
-            that.setState({
-                rechargeList: res.data
-            })
+            console.log(res.data)
+            if(res.data.errCode == 0){
+                that.setState({
+                    rechargeList: res.data.data
+                })
+            }
+           
 
         })
     }

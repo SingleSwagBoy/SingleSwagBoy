@@ -187,7 +187,7 @@ export default class WxReplyModal extends Component {
                                 {
                                     (menu_type === 'keywords' || menu_type === 'other') &&
                                     <WxReplyModalActivity
-                                    replyId={this.state.replyId}
+                                    replyId={that.titleFormRef.current && that.titleFormRef.current.getFieldValue("id")}
                                      onRef={(val) => {
                                         that.setState({ activity_ref: val, }, () => {
                                         })
@@ -673,7 +673,7 @@ export default class WxReplyModal extends Component {
                         replyActivity = JSON.parse(replyActivity);
                         replyActivity.isOpen = true;
                     }
-
+                    this.setState({ isShowType:replyActivity.activityType},()=>{console.log(item,"isShowType")})
                     that.refreshActivityBox(replyActivity);
                 }
 

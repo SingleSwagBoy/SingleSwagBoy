@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-12-23 14:43:31
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-12-28 19:47:06
+ * @LastEditTime: 2022-01-18 17:39:38
  * @Description: tv推荐配置
  */
 
@@ -167,14 +167,7 @@ export default class tvRecommendConfig extends Component {
 
                     return (
                         row.content.map((item, index) => {
-                            return (<div> {`${item.type != '10' ? item.channelId : ''}`}</div>)
-                            // return (
-                            //     <Select value={rowValue} style={widthStyle} placeholder='推荐视频'>
-                            //         {searchChannel.map((item, index) => {
-                            //             return <Option key={index} value={item.channelId}>{item.channelName}</Option>
-                            //         })}
-                            //     </Select>
-                            // )
+                            return (<div> {`${item.type != '10' ? `${item.channelId}-${item.title}` : ''}`}</div>)
                         })
                     )
                 }
@@ -189,18 +182,22 @@ export default class tvRecommendConfig extends Component {
                             if (item.type == '10') {
                                 for (let i = 0, len = searchProgram.length; i < len; i++) {
                                     let currItem = searchProgram[i];
-                                    if (item.programId = currItem.programId) {
+
+                                    if (item.programId == currItem.programId) {
                                         value = currItem.programName;
                                         break;
                                     }
                                 }
                             }
-
                             return (<div>{value}</div>)
                         })
                     )
                 }
             },
+
+            // {
+            //     title: '关联视频', dataIndex: 'programId', key: 'programId', width: 100,
+            // },
 
             {
                 title: '是否长期', dataIndex: 'isTimeless', key: 'isTimeless', width: 100,
@@ -238,6 +235,7 @@ export default class tvRecommendConfig extends Component {
                 render: (rowValue, row, index) => {
                     return (
                         <div>
+
                             <Button size='small' type="primary" type="link" onClick={() => this.onTableItemEditClick(row)} >编辑</Button>
                             <Button size='small' type="primary" type="link" onClick={() => this.onTableItemDeleteClick(row)}>删除</Button>
                         </div>

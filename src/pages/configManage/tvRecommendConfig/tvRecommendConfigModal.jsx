@@ -76,24 +76,25 @@ export default class recommendModal extends Component {
     componentDidMount() {
         let that = this;
         that.props.onRef(this);
+        let { searchChannel, } = that.state;
 
         //频道管理-下拉搜索频道
-        requestChannelRecommendSearchChannel({}).then(channelRes => {
-            that.setState({
-                searchChannel: channelRes.data,
-            }, () => {
-                //频道管理-下载搜索视频
-                requestChannelRecommendSearchProgram({}).then(programRes => {
-                    that.setState({
-                        searchProgram: programRes.data,
-                    }, () => {
-                        that.initData();
+        if (!searchChannel) {
+            requestChannelRecommendSearchChannel({}).then(channelRes => {
+                that.setState({
+                    searchChannel: channelRes.data,
+                }, () => {
+                    //频道管理-下载搜索视频
+                    requestChannelRecommendSearchProgram({}).then(programRes => {
+                        that.setState({
+                            searchProgram: programRes.data,
+                        }, () => {
+                            that.initData();
+                        })
                     })
                 })
             })
-        })
-
-
+        }
     }
 
 
@@ -173,8 +174,7 @@ export default class recommendModal extends Component {
                                             {
                                                 fields.map((field, index) => (
                                                     <div>
-
-                                                        <Space key={field.key} align="baseline">
+                                                        <Space key={field.key}>
 
                                                             <Form.Item   {...field} name={[field.name, 'type']}>
                                                                 <Select style={{ 'width': 120 }} placeholder='请选择类型' onChange={() => that.forceUpdate()}>
@@ -182,14 +182,17 @@ export default class recommendModal extends Component {
                                                                         return <Option key={index} value={item.key}>{item.value}</Option>
                                                                     })}
                                                                 </Select>
-
-
                                                             </Form.Item>
+                                                            {/*
+                                                            {key: 10, value: '推荐视频' },
+                                                            {key: 20, value: '推荐频道' }, */}
+
                                                             {
+                                                                // 推荐视频
                                                                 form[index] && form[index].type === 10 && searchProgram &&
                                                                 <div>
                                                                     <Form.Item name={[field.name, 'programId']} >
-                                                                        <Select style={widthStyle} showSearch placeholder='请选择推荐频道'
+                                                                        <Select style={widthStyle} showSearch placeholder='请选择推荐视频'
                                                                             filterOption={(input, option) => {
                                                                                 if (!input) return true;
                                                                                 let children = option.children;
@@ -201,22 +204,23 @@ export default class recommendModal extends Component {
                                                                                         let code = children[0];
                                                                                         isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
                                                                                     }
-
                                                                                     return isFind;
                                                                                 }
-                                                                            }}     >
+                                                                            }}>
                                                                             {searchProgram.map((item, index) => {
-                                                                                return <Option key={index} value={item.programId}>{item.programName}-{item.channelId}</Option>
+                                                                                return <Option key={index} value={item.programId}>{item.programName}-{item.programId}</Option>
                                                                             })}
                                                                         </Select>
+                                                                        {/* <Input /> */}
                                                                     </Form.Item>
                                                                 </div>
                                                             }
 
                                                             {
+                                                                // 推荐频道
                                                                 form[index] && form[index].type === 20 && searchChannel &&
                                                                 <Form.Item name={[field.name, 'channelId']}>
-                                                                    <Select style={widthStyle} showSearch placeholder='请选择推荐视频'
+                                                                    <Select style={widthStyle} showSearch placeholder='请选择推荐频道'
                                                                         filterOption={(input, option) => {
                                                                             if (!input) return true;
                                                                             let children = option.children;
@@ -579,12 +583,12 @@ export default class recommendModal extends Component {
                 let selectProgramId = item.programId;
                 searchProgram.map((currItem) => {
                     if (currItem.programId === selectProgramId) {
-                        item.channelId = currItem.channelId;
+                        // item.channelId = currItem.channelId;
                     }
                 })
             }
         }
-
+        console.log('获取到content:', contentData);
         //整合关联关系
         obj.content = JSON.stringify(contentData);
 

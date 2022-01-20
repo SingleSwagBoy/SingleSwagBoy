@@ -8,7 +8,7 @@
 
 import React, { Component } from 'react';
 import { Form, message, Switch, Radio, Input, InputNumber, Select, Button } from 'antd';
-import { requestNewAdTagList, setMoney } from "api"
+import { requestNewAdTagList, setMoney,getMoney } from "api"
 let { Option } = Select;
 export default class wxReplyModalImageBox extends Component {
     constructor(props) {
@@ -20,6 +20,7 @@ export default class wxReplyModalImageBox extends Component {
             dict_activity_type: [{ key: 1, value: 'vip活动' }, { key: 2, value: '返现金' }],
             dict_activity_day_type: [{ key: 1, value: '固定' }, { key: 2, value: '随机' }],
             dict_user_tags: [],
+            surplus:0
         }
     }
 
@@ -28,7 +29,6 @@ export default class wxReplyModalImageBox extends Component {
         that.props.onRef(that);
         this.requestNewAdTagList()
     }
-
     render() {
         let that = this;
         let { base_width, dict_activity_type, dict_activity_day_type, dict_user_tags } = that.state;
@@ -116,6 +116,17 @@ export default class wxReplyModalImageBox extends Component {
                                         </div>
                                        
                                     </Form.Item>
+                                    <Form.Item label='剩余金额'>
+                                        <div style={{display:"flex"}}>
+                                            <Form.Item name="surplus">
+                                                <InputNumber placeholder='剩余金额' min={0} style={{ width: "200px" }} disabled />
+                                            </Form.Item>
+                                            <Form.Item>
+                                                <Button type="primary" onClick={() => that.getMoney()} >获取剩余金额</Button>
+                                            </Form.Item>
+                                        </div>
+                                       
+                                    </Form.Item>
                                     <Form.Item label='用户标签' name='activityTag'>
                                         <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择用户设备标签"
                                             filterOption={(input, option) => {
@@ -198,6 +209,14 @@ export default class wxReplyModalImageBox extends Component {
         }
         setMoney(params).then(res => {
             message.success("更新成功")
+        })
+    }
+    getMoney(){
+        getMoney({id: this.props.replyId}).then(res=>{
+            // this.setState({
+            //     surplus:res.data
+            // })
+            this.activityFormRef.current.setFieldsValue({"surplus":res.data})
         })
     }
 }

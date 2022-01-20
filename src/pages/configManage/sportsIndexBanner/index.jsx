@@ -70,6 +70,20 @@ export default class EarnIncentiveTask extends React.Component {
                     }
                 },
                 {
+                    title: "位置",
+                    dataIndex: "position",
+                    key:"position",
+                    render: (rowValue, row, index) => {
+                        if (row.position == 10) {
+                            return <div>体育频道</div>
+                        }
+                        if (row.position == 20) {
+                            return <div>冬奥会</div>
+                        }
+                        return <div>{row.position}</div>
+                    }
+                },
+                {
                     title: "已关联视频集数",
                     dataIndex: "total",
                     key: "total",
@@ -191,6 +205,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     {...this.state.selectProps}
                                 >
                                     <Option value={10} key={1}>体育频道</Option>
+                                    <Option value={20} key={2}>冬奥会</Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item {...this.state.tailLayout}>

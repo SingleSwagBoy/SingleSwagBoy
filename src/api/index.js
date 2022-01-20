@@ -235,6 +235,7 @@ export const syncMenuImage = (params) => { return request2.get(`${baseUrl}/mms/c
 export const syncWxTemplateMsgConfig = (params) => { return request2.get(`${baseUrl}/mms/tmpl/message/config/sync`, { params: params }); };                                                 //微信模板消息 同步
 export const syncAdNewTagSync = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/sync`, { params: params }); };                                                                 //广告新标签 数据同步
 export const setMoney = (params) => { return request2.get(`${baseUrl}/mms/wxReply/setMoney`, { params: params }); };                                                                 //更新金额
+export const getMoney = (params) => { return request2.get(`${baseUrl}/mms/wxReply/getMoney`, { params: params }); };                                                                 //更新金额
 
 
 

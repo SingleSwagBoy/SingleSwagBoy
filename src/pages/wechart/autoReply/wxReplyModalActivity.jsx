@@ -118,8 +118,8 @@ export default class wxReplyModalImageBox extends Component {
                                     </Form.Item>
                                     <Form.Item label='剩余金额'>
                                         <div style={{display:"flex"}}>
-                                            <Form.Item>
-                                                <InputNumber key={this.state.surplus} placeholder='剩余金额' min={0} defaultValue={this.state.surplus} style={{ width: "200px" }} disabled />
+                                            <Form.Item name="surplus">
+                                                <InputNumber placeholder='剩余金额' min={0} style={{ width: "200px" }} disabled />
                                             </Form.Item>
                                             <Form.Item>
                                                 <Button type="primary" onClick={() => that.getMoney()} >获取剩余金额</Button>
@@ -213,9 +213,10 @@ export default class wxReplyModalImageBox extends Component {
     }
     getMoney(){
         getMoney({id: this.props.replyId}).then(res=>{
-            this.setState({
-                surplus:res.data
-            })
+            // this.setState({
+            //     surplus:res.data
+            // })
+            this.activityFormRef.current.setFieldsValue({"surplus":res.data})
         })
     }
 }

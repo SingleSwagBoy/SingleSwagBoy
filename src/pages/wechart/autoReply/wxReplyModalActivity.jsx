@@ -99,7 +99,7 @@ export default class wxReplyModalImageBox extends Component {
 
                                         <Form.Item name='activityMoney' >
                                             {/* 天数, 随机的话是0-配置的天数 */}
-                                            <InputNumber min={1}  style={{ width: base_width }} placeholder='随机配置30-配置的金额（分）' />
+                                            <Input style={{ width: base_width }} placeholder='随机配置30-配置的金额（分）' />
                                         </Form.Item>
                                     </Form.Item>
 

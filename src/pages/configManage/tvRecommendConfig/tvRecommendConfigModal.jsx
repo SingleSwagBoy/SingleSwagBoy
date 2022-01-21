@@ -105,7 +105,7 @@ export default class recommendModal extends Component {
                                     </Form.Item>
                                 }
 
-                                <Form.Item label="推荐标题" name='title' rules={[{ required: true }]}>
+                                <Form.Item label="推荐标题" name='title' rules={[{ required: true, message: '请输入推荐标题' }]}>
                                     <Input className="base-input-wrapper" placeholder='请输入标题' />
                                 </Form.Item>
                                 <Form.Item label="频道" name='channelId' rules={[{ required: true }]} >
@@ -187,9 +187,20 @@ export default class recommendModal extends Component {
                                                                                     }
                                                                                     return isFind;
                                                                                 }
-                                                                            }}>
+                                                                            }}
+                                                                            onChange={(e,i)=>{
+                                                                                console.log(e,i)
+                                                                                let arr = searchProgram.filter(item=>item.programId == e && i["data-channelid"] == item.channelId)
+                                                                                if(arr.length>0){
+                                                                                    form[index].cover = arr[0].programPic
+                                                                                    form[index].title = arr[0].programName
+                                                                                    this.formRef.current.setFieldsValue({content:form})
+                                                                                    this.forceUpdate()
+                                                                                }
+                                                                            }}
+                                                                            >
                                                                             {searchProgram.map((item, index) => {
-                                                                                return <Option key={index} value={item.programId}>{item.programName}-{item.channelId}</Option>
+                                                                                return <Option key={index} value={item.programId} data-channelid={item.channelId}>{item.programName}-{item.channelId}</Option>
                                                                             })}
                                                                         </Select>
                                                                         {/* <Input /> */}
@@ -239,7 +250,7 @@ export default class recommendModal extends Component {
                                                                     }}
                                                                     imageUrl={form[index] ? form[index].cover : ''} />
                                                             </Form.Item>
-                                                            <Form.Item name={[field.name, 'title']}>
+                                                            <Form.Item name={[field.name, 'title']}  fieldKey={[field.fieldKey, 'title']}>
                                                                 <Input placeholder='请输入关联标题' />
                                                             </Form.Item>
 
@@ -281,7 +292,7 @@ export default class recommendModal extends Component {
 
                                             <Form.Item>
                                                 <Button type="dashed" onClick={() => add({ cover: '', sort: 1 })} block icon={<PlusOutlined />}>
-                                                    新建投票选项
+                                                    新建推荐关联
                                                 </Button>
                                             </Form.Item>
                                         </Form.Item>
@@ -496,16 +507,19 @@ export default class recommendModal extends Component {
 
         //获取到数据
         let obj = Object.assign({}, value, refTagTypes.loadData());
-
+        if (!obj.title) {
+            message.error("请选择推荐标题");
+            return;
+        }
         if (!obj.channelId) {
             message.error("请选择推荐频道");
             return;
         }
 
-        if (!obj.tagCode) {
-            message.error("请选择用户标签");
-            return;
-        }
+        // if (!obj.tagCode) {
+        //     message.error("请选择用户标签");
+        //     return;
+        // }
         if (obj.tagCode.constructor === Array) {
             obj.tagCode = obj.tagCode.join(',');
         }
@@ -545,14 +559,14 @@ export default class recommendModal extends Component {
                 message.error(`请修改第${i + 1}条推荐关联数据的[推荐视频]`);
                 return;
             }
-            if (!item.cover) {
-                message.error(`请修改第${i + 1}条推荐关联数据的[封面图]`);
-                return;
-            }
-            if (!item.title) {
-                message.error(`请修改第${i + 1}条推荐关联数据的[标题]`);
-                return;
-            }
+            // if (!item.cover) {
+            //     message.error(`请修改第${i + 1}条推荐关联数据的[封面图]`);
+            //     return;
+            // }
+            // if (!item.title) {
+            //     message.error(`请修改第${i + 1}条推荐关联数据的[标题]`);
+            //     return;
+            // }
             //重排序
             if (!item.sort) item.sort = 1
         }

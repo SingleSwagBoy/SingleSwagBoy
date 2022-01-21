@@ -64,50 +64,50 @@ export default class tvRecommendConfig extends Component {
                 } />
 
                 <Table columns={recommendBox.title} dataSource={recommendBox.data} pagination={false} scroll={{ x: 1500, y: '75vh' }}
-                    expandable={{
-                        expandedRowRender: record =>
-                            <div className='expandedWrapper'>
-                                {record.content.map((item, index) => {
-                                    return (
-                                        <div className='expandedBox'>
-                                            <div className='expandedBoxLine'>
-                                                <div className='expandedBoxTitle' >类型:</div>
-                                                <div className='expandedBoxContent'>{item.type == '10' ? '推荐视频' : '推荐频道'}</div>
-                                            </div>
-                                            {item.channelId &&
-                                                <div className='expandedBoxLine'>
-                                                    <div className='expandedBoxTitle'>推荐渠道id:</div>
-                                                    <div className='expandedBoxContent'>{item.channelId}</div>
-                                                </div>
-                                            }
-                                            {item.programId &&
-                                                <div className='expandedBoxLine'>
-                                                    <div className='expandedBoxTitle'>推荐节目id:</div>
-                                                    <div className='expandedBoxContent'>{item.programId}</div>
-                                                </div>}
-                                            {item.tvCVId &&
-                                                <div className='expandedBoxLine'>
-                                                    <div className='expandedBoxTitle'>推荐列表id:</div>
-                                                    <div className='expandedBoxContent'>{item.tvCVId}</div>
-                                                </div>
-                                            }
-                                            <div className='expandedBoxLine'>
-                                                <div className='expandedBoxTitle'>标题:</div>
-                                                <div className='expandedBoxContent'>{item.title}</div>
-                                            </div>
-                                            <div className='expandedBoxLine'>
-                                                <div className='expandedBoxTitle'>封面图:</div>
-                                                <div className='expandedBoxContent'>
-                                                    <Image width={60} src={item.cover} />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        ,
-                        rowExpandable: record => record.name !== 'Not Expandable',
-                    }}
+                    // expandable={{
+                    //     expandedRowRender: record =>
+                    //         <div className='expandedWrapper'>
+                    //             {record.content.map((item, index) => {
+                    //                 return (
+                    //                     <div className='expandedBox'>
+                    //                         <div className='expandedBoxLine'>
+                    //                             <div className='expandedBoxTitle' >类型:</div>
+                    //                             <div className='expandedBoxContent'>{item.type == '10' ? '推荐视频' : '推荐频道'}</div>
+                    //                         </div>
+                    //                         {item.channelId &&
+                    //                             <div className='expandedBoxLine'>
+                    //                                 <div className='expandedBoxTitle'>推荐渠道id:</div>
+                    //                                 <div className='expandedBoxContent'>{item.channelId}</div>
+                    //                             </div>
+                    //                         }
+                    //                         {item.programId &&
+                    //                             <div className='expandedBoxLine'>
+                    //                                 <div className='expandedBoxTitle'>推荐节目id:</div>
+                    //                                 <div className='expandedBoxContent'>{item.programId}</div>
+                    //                             </div>}
+                    //                         {item.tvCVId &&
+                    //                             <div className='expandedBoxLine'>
+                    //                                 <div className='expandedBoxTitle'>推荐列表id:</div>
+                    //                                 <div className='expandedBoxContent'>{item.tvCVId}</div>
+                    //                             </div>
+                    //                         }
+                    //                         <div className='expandedBoxLine'>
+                    //                             <div className='expandedBoxTitle'>标题:</div>
+                    //                             <div className='expandedBoxContent'>{item.title}</div>
+                    //                         </div>
+                    //                         <div className='expandedBoxLine'>
+                    //                             <div className='expandedBoxTitle'>封面图:</div>
+                    //                             <div className='expandedBoxContent'>
+                    //                                 <Image width={60} src={item.cover} />
+                    //                             </div>
+                    //                         </div>
+                    //                     </div>
+                    //                 )
+                    //             })}
+                    //         </div>
+                    //     ,
+                    //     rowExpandable: record => record.name !== 'Not Expandable',
+                    // }}
                 />
 
                 {

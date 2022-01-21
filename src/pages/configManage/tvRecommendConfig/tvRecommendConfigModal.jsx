@@ -15,7 +15,9 @@ import {
 
 let { RangePicker } = DatePicker;
 let { Option } = Select;
-
+let privateData = {
+    inputTimeOutVal: null
+};
 export default class recommendModal extends Component {
     constructor(props) {
         super(props);
@@ -65,11 +67,7 @@ export default class recommendModal extends Component {
             },
 
             //渠道搜索
-            searchChannelBox: {
-                data: [],               //渠道搜索列表
-                lastSearchKey: '',      //上次刷新的关键字
-                lastSearchTime: 0,      //上次刷新的时间
-            },
+            searchChannelBox:[],
         }
     }
 
@@ -110,9 +108,20 @@ export default class recommendModal extends Component {
                                 </Form.Item>
                                 <Form.Item label="频道" name='channelId' rules={[{ required: true }]} >
 
-                                    <Select className="base-input-wrapper" allowClear {...selectProps} placeholder="请输入关键字搜索[频道]信息" onSearch={(searchKey) => that.onChannelSearch(searchKey)} >
-                                        {searchChannelBox.data &&
-                                            searchChannelBox.data.map((item, index) => {
+                                    <Select className="base-input-wrapper" allowClear {...selectProps} placeholder="请输入关键字搜索[频道]信息" 
+                                    onSearch={(searchKey) => {
+                                        if (privateData.inputTimeOutVal) {
+                                            clearTimeout(privateData.inputTimeOutVal);
+                                            privateData.inputTimeOutVal = null;
+                                        }
+                                        privateData.inputTimeOutVal = setTimeout(() => {
+                                            if (!privateData.inputTimeOutVal) return;
+                                            that.onChannelSearch(searchKey)
+                                        }, 800)
+                                       
+                                    }} >
+                                        {
+                                            searchChannelBox.map((item, index) => {
                                                 return <Option value={item.code} key={item.id}>{item.name + "----" + item.code}</Option>
                                             })
                                         }
@@ -227,7 +236,17 @@ export default class recommendModal extends Component {
 
                                                                                 return isFind;
                                                                             }
-                                                                        }}>
+                                                                        }}
+                                                                        onChange={(e)=>{
+                                                                            let arr = searchProgram.filter(item=>item.channelId == e)
+                                                                            if(arr.length>0){
+                                                                                form[index].cover = arr[0].programPic
+                                                                                form[index].title = arr[0].programName
+                                                                                this.formRef.current.setFieldsValue({content:form})
+                                                                                this.forceUpdate()
+                                                                            }
+                                                                        }}
+                                                                        >
                                                                         {searchChannel.map((item, index) => {
                                                                             return <Option key={index} value={item.channelId}>{item.channelName}-{item.channelId}</Option>
                                                                         })}
@@ -421,38 +440,16 @@ export default class recommendModal extends Component {
      */
     onChannelSearch(currSearchKey) {
         if (!currSearchKey) return;
-
-        let that = this;
-        let { searchChannelBox } = that.state;
-        let lastSearchKey = searchChannelBox.lastSearchKey;
-        if (currSearchKey === lastSearchKey) return;
-
-        //非强制刷新 判断上次刷新时间
-        let currSearchTime = new Date().getTime();
-        let lastSearchTime = searchChannelBox.lastSearchTime;
-
-        //返回 停止本次刷新
-        if (currSearchTime - lastSearchTime < 800) return;
-        searchChannelBox.lastSearchTime = currSearchTime;
-        searchChannelBox.lastSearchKey = currSearchKey;
-        searchChannelBox.data = [];
-
-        that.setState({
-            searchChannelBox: searchChannelBox,
-        }, () => {
-            let obj = {
-                keywords: currSearchKey,
-            };
-            getChannel(obj).then(res => {
-                let errCode = res.data.errCode;
-                if (errCode === 0 && res.data.data) {
-                    searchChannelBox.data = res.data.data;
-                    that.setState({
-                        searchChannelBox: searchChannelBox,
-                    })
-                }
-            })
-
+        let obj = {
+            keywords: currSearchKey,
+        };
+        getChannel(obj).then(res => {
+            let errCode = res.data.errCode;
+            if (errCode === 0 && res.data.data) {
+                this.setState({
+                    searchChannelBox: res.data.data,
+                })
+            }
         })
 
 

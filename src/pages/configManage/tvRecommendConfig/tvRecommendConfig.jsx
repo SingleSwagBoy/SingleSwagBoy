@@ -21,6 +21,7 @@ import {
     requestChannelRecommendDelete,                          //频道管理-删除
     requestChannelRecommendChangeState,                     //频道管理-修改状态
     requestChannelRecommendSearchChannel,                   //频道管理-下拉搜索频道
+    getChannel,                   //频道管理-下拉搜索频道
     requestChannelRecommendSearchProgram,                   //频道管理-下拉搜索视频
 
 } from 'api'
@@ -132,9 +133,9 @@ export default class tvRecommendConfig extends Component {
     initData() {
         let that = this;
         //频道管理-下拉搜索频道
-        requestChannelRecommendSearchChannel({}).then(channelRes => {
+        getChannel({}).then(channelRes => {
             that.setState({
-                searchChannel: channelRes.data,
+                searchChannel: channelRes.data.data,
             }, () => {
                 //频道管理-下载搜索视频
                 requestChannelRecommendSearchProgram({}).then(programRes => {

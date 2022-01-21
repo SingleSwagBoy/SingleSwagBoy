@@ -121,7 +121,7 @@ export default class recommendModal extends Component {
                                        
                                     }} >
                                         {
-                                            searchChannelBox.map((item, index) => {
+                                            searchChannel.map((item, index) => {
                                                 return <Option value={item.code} key={item.id}>{item.name + "----" + item.code}</Option>
                                             })
                                         }
@@ -203,6 +203,7 @@ export default class recommendModal extends Component {
                                                                                 if(arr.length>0){
                                                                                     form[index].cover = arr[0].programPic
                                                                                     form[index].title = arr[0].programName
+                                                                                    form[index].programId = arr[0].programId
                                                                                     this.formRef.current.setFieldsValue({content:form})
                                                                                     this.forceUpdate()
                                                                                 }
@@ -237,18 +238,32 @@ export default class recommendModal extends Component {
                                                                                 return isFind;
                                                                             }
                                                                         }}
+                                                                        onSearch={(searchKey) => {
+                                                                            if (privateData.inputTimeOutVal) {
+                                                                                clearTimeout(privateData.inputTimeOutVal);
+                                                                                privateData.inputTimeOutVal = null;
+                                                                            }
+                                                                            privateData.inputTimeOutVal = setTimeout(() => {
+                                                                                if (!privateData.inputTimeOutVal) return;
+                                                                                that.onChannelSearch(searchKey)
+                                                                            }, 800)
+                                                                           
+                                                                        }}
                                                                         onChange={(e)=>{
-                                                                            let arr = searchProgram.filter(item=>item.channelId == e)
+                                                                            console.log(e,searchChannel)
+                                                                            let arr = searchChannel.filter(item=>item.code == e)
+                                                                            console.log(arr)
                                                                             if(arr.length>0){
-                                                                                form[index].cover = arr[0].programPic
-                                                                                form[index].title = arr[0].programName
+                                                                                form[index].cover = arr[0].posterUrl
+                                                                                form[index].title = arr[0].name
+                                                                                form[index].channelId = arr[0].code
                                                                                 this.formRef.current.setFieldsValue({content:form})
                                                                                 this.forceUpdate()
                                                                             }
                                                                         }}
                                                                         >
                                                                         {searchChannel.map((item, index) => {
-                                                                            return <Option key={index} value={item.channelId}>{item.channelName}-{item.channelId}</Option>
+                                                                            return <Option key={index} value={item.code}>{item.name}-{item.code}</Option>
                                                                         })}
                                                                     </Select>
                                                                 </Form.Item>
@@ -370,7 +385,7 @@ export default class recommendModal extends Component {
                                 row.type === 20 &&
                                 <Select value={row.channelId} style={widthStyle} placeholder='请选择推荐视频' onChange={(e) => { that.onItemStatusChange(index, 'channelId', e) }}>
                                     {searchChannel.map((item, index) => {
-                                        return <Option key={index} value={item.channelId}>{item.channelName}</Option>
+                                        return <Option key={index} value={item.code}>{item.name}</Option>
                                     })}
                                 </Select>
                             }
@@ -447,7 +462,7 @@ export default class recommendModal extends Component {
             let errCode = res.data.errCode;
             if (errCode === 0 && res.data.data) {
                 this.setState({
-                    searchChannelBox: res.data.data,
+                    searchChannel: res.data.data,
                 })
             }
         })
@@ -503,7 +518,9 @@ export default class recommendModal extends Component {
         let value = formRef.current.getFieldsValue();
 
         //获取到数据
+       
         let obj = Object.assign({}, value, refTagTypes.loadData());
+        console.log(obj)
         if (!obj.title) {
             message.error("请选择推荐标题");
             return;
@@ -549,11 +566,11 @@ export default class recommendModal extends Component {
                 return;
             }
             if (item.type === 10 && !item.programId) {
-                message.error(`请修改第${i + 1}条推荐关联数据的[推荐频道]`);
+                message.error(`请修改第${i + 1}条推荐关联数据的[推荐视频]`);
                 return;
             }
             if (item.type === 20 && !item.channelId) {
-                message.error(`请修改第${i + 1}条推荐关联数据的[推荐视频]`);
+                message.error(`请修改第${i + 1}条推荐关联数据的[推荐频道]`);
                 return;
             }
             // if (!item.cover) {

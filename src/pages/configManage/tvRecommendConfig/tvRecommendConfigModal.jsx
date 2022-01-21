@@ -534,9 +534,10 @@ export default class recommendModal extends Component {
         //     message.error("请选择用户标签");
         //     return;
         // }
-        if (obj.tagCode.constructor === Array) {
-            obj.tagCode = obj.tagCode.join(',');
-        }
+        // if (obj.tagCode.constructor === Array) {
+        //     obj.tagCode = obj.tagCode.join(',');
+        // }
+        obj.tagCode = Array.isArray(obj.tagCode)?obj.tagCode.join(","):obj.tagCode
 
         // if (!obj.time) {
         //     message.error("请选择时间范围")

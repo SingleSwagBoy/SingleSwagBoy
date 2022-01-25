@@ -15,6 +15,7 @@ import {
     requestWxReplyDelete,               //删除
     requestWxReplyCreate,               //添加
     requestAdTagList,                   //用户设备标签
+    requestNewAdTagList,
     requestWxProgramList,               //小程序列表
 } from 'api'
 import './wxReply.css';
@@ -134,7 +135,7 @@ export default class WxReply extends Component {
         requestWxProgramList().then(res => {
             that.setState({ dict_wx_program: res.data })
             //用户标签
-            requestAdTagList().then(res => {
+            requestNewAdTagList().then(res => {
                 let datas = res.data;
                 let tags = [];
                 tags.push({ id: -1, code: 'default', name: '默认', },{ id: -2, code: 'nouserid', name: '无userid用户', });

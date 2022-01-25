@@ -9,28 +9,28 @@ export default class App extends Component {
   render() {
     return (
       // <Router >
-        <Switch>
-          <Route  path="/mms" render={(routeProps)=>{
-            // 判断是否登录，登录了可以访问，否则补鞥呢访问
-            const token = localStorage.getItem('user')
-            if(token) {
-              if(JSON.parse(token).authorization){
-                return <Admin {...routeProps}/>
-              }else{
-                return <Redirect to="/login" />
-              }
-            }else {
+      <Switch>
+        <Route path="/mms" render={(routeProps) => {
+          // 判断是否登录，登录了可以访问，否则不能访问
+          const token = localStorage.getItem('user')
+          if (token) {
+            if (JSON.parse(token).authorization) {
+              return <Admin {...routeProps} />
+            } else {
               return <Redirect to="/login" />
-            
             }
-          }} />
-          <Route path="/login" component={Login} />
-          <Route path="/404" component={NotFound} />
-          <Redirect to="/mms" from="/" exact />
-          <Redirect to="/404" />
-        </Switch>
+          } else {
+            return <Redirect to="/login" />
+
+          }
+        }} />
+        <Route path="/login" component={Login} />
+        <Route path="/404" component={NotFound} />
+        <Redirect to="/mms" from="/" exact />
+        <Redirect to="/404" />
+      </Switch>
       // </Router>
-      
+
     )
   }
 }

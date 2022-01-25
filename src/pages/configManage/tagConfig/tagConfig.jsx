@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-27 18:41:39
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-11-02 13:34:43
+ * @LastEditTime: 2021-12-23 18:42:37
  * @Description: 
  */
 
@@ -146,7 +146,7 @@ export default class tagConfig extends Component {
             { title: '描述', dataIndex: 'description', key: 'description',  },
             {
                 title: '状态', dataIndex: 'status', key: 'status', width: 100,
-                render: (rowValue, row, indes) => {
+                render: (rowValue, row, index) => {
                     return (
                         <Select value={rowValue} placeholder='标签状态' onChange={(e) => { that.onItemStatusChange(e, row) }}>
                             {dict_status.map((item, index) => {

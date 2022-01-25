@@ -1,0 +1,28 @@
+.expandedWrapper {
+    width         : 100%;
+    display       : flex;
+    flex-direction: row;
+    flex-wrap     : wrap;
+}
+
+.expandedBox {
+    width        : 20%;
+    border       : 1px dashed rgba(85, 46, 84, 0.5);
+    margin-right : 30px;
+    margin-bottom: 25px;
+    padding      : 20px 0;
+}
+
+.expandedBoxLine {
+    display       : flex;
+    flex-direction: row;
+    padding       : 3px 10px;
+}
+
+.expandedBoxTitle {
+    width: 150px;
+}
+
+.expandedBoxContent {
+    width: 220px;
+}

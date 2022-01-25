@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-11-02 19:22:36
+ * @LastEditTime: 2021-12-23 14:42:56
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -76,9 +76,10 @@ const EnterImageConfig = lazy(() => import('pages/configManage/enterImageConfig/
 const GoodLooking = lazy(() => import('pages/configManage/goodLooking/index.jsx'));
 const PuzzleRobot = lazy(() => import('pages/configManage/puzzleRobot/index.jsx'));
 const ChannelShield = lazy(() => import('pages/configManage/channelShield/index.jsx'));
+const TvRecommendConfig = lazy(() => import('pages/configManage/tvRecommendConfig/tvRecommendConfig.jsx'))      //Tv推荐配置
 const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
-const LuckyDraw=lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
-const GoodsConfig=lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
+const LuckyDraw = lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
+const GoodsConfig = lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
 // const VipCombo = lazy(() => import('pages/comboManage/vipCombo/index.jsx')); 
 
 
@@ -161,6 +162,7 @@ const adminRoutes = [
     { name: '好看分类', icon: UnorderedListOutlined, path: '/mms/config/goodLooking', component: GoodLooking, code: "configManage", sub_code: 'goodLooking' },
     { name: '拼团机器人', icon: UnorderedListOutlined, path: '/mms/config/puzzleRobot', component: PuzzleRobot, code: "configManage", sub_code: 'puzzleRobot' },
     { name: '移动端节目单屏蔽', icon: UnorderedListOutlined, path: '/mms/config/channelShield', component: ChannelShield, code: "configManage", sub_code: 'channelShield' },
+    { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/config/tvRecommendConfig', component: TvRecommendConfig, code: "configManage", sub_code: 'tvRecommendConfig' },
 
 
 

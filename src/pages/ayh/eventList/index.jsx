@@ -443,14 +443,14 @@ export default class SportsProgram extends Component {
     console.log(val)
     let arr = this.state.defaultProgram[val.name]
     let channelArr = this.state.channelList.filter(item => item.code == val.channelId)
-    console.log(this.state.defaultProgram,"arr")
-    if(!arr)return this.closeModel()
+    console.log(arr,"arr")
+    // if(!arr)return this.closeModel()
     val.channelData = {
-      channelId: val.channelId,
+      channelId: val.channelId?val.channelId:"",
       // channelName:"" ,
-      name: arr.name,
-      startTime: arr.start_time,
-      endTime: arr.end_time,
+      name: arr?arr.name : "",
+      startTime: arr?arr.start_time : "",
+      endTime:arr?arr.end_time : "",
     }
     if (channelArr.length > 0) {
       // val.channelData.channelName = channelArr[0].name

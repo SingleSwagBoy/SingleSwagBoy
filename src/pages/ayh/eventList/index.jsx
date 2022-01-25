@@ -222,6 +222,7 @@ export default class SportsProgram extends Component {
                             info.channelId = info.channelData.channelId
                             info.name = info.channelData.name
                             this.getChannel(info.channelData.channelName)
+                            this.getProgramsList(info.channelData.name)
                             this.formRef.current.resetFields()
                             this.formRef.current.setFieldsValue(info)
                           })

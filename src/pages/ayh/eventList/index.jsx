@@ -316,7 +316,7 @@ export default class SportsProgram extends Component {
               ref={this.formRef}
               onFinish={this.submitForm.bind(this)}
             >
-              <Form.Item label="频道信息" name="channelId" rules={[{ required: true, message: '请选择频道信息' }]}>
+              <Form.Item label="频道信息" name="channelId">
                 <Select
                   style={{ width: "300px" }}
                   placeholder="请选择频道配置"
@@ -340,7 +340,7 @@ export default class SportsProgram extends Component {
                   }
                 </Select>
               </Form.Item>
-              <Form.Item label="节目信息" name="name" rules={[{ required: true, message: '请选择节目信息' }]}>
+              <Form.Item label="节目信息" name="name">
                 <Select
                   style={{ width: "300px" }}
                   placeholder="请选择节目信息"

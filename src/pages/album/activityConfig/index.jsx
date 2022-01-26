@@ -36,6 +36,7 @@ function App2() {
   }
   const deleteData =(index)=>{
     let arr = Object.assign([],activityConfig)
+    if(arr.gradeTask.length == 1)return message.error("必须保留一项")
     arr.gradeTask.splice(index,1)
     setActivityConfig(arr)
   }

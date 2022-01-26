@@ -507,6 +507,14 @@ export const delShieldList = (params) => { return request2.post(`${baseUrl}/mms/
 export const addShieldList = (params) => { return request2.post(`${baseUrl}/mms/channel/programs/addBlackProgram`,params); };          //添加节目到黑名单
 
 
+//家庭相册传照片配置
+export const getActivityConfig = (params) => { return request2.post(`${baseUrl}/mms/album/config/upload/guideActivity/list`,params); };          //引导上传照片活动配置 - 查
+export const addActivityConfig = (params) => { return request2.post(`${baseUrl}/mms/album/config/upload/guideActivity/add`,params); };          //引导上传照片活动配置 - 增加
+export const updateActivityConfig = (params) => { return request2.post(`${baseUrl}/mms/album/config/upload/guideActivity/update`,params); };          //引导上传照片活动配置 - 更新
+export const delActivityConfig = (params) => { return request2.get(`${baseUrl}/mms/album/config/upload/guideActivity/del`,{params:params}); };          //引导上传照片活动配置 - 删
+export const syncActivityConfig = (params) => { return request2.get(`${baseUrl}/mms/album/config/upload/guideActivity/sync`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
+
+
 
 
 //广告-二维码套餐类型

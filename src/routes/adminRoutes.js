@@ -88,6 +88,8 @@ const SysRole = lazy(() => import('pages/sys/role/role.jsx'));
 const SysUser = lazy(() => import('pages/sys/user/user.jsx'));
 const SysMenu = lazy(() => import('pages/sys/menu/menu.jsx'));
 const SysPermission = lazy(() => import('pages/sys/permission/permission.jsx'));
+//家庭相册
+const ActivityConfig = lazy(() => import('pages/album/activityConfig/index.jsx'));
 
 
 // advertising management
@@ -186,6 +188,10 @@ const adminRoutes = [
     { name: '提现黑名单', icon: UnorderedListOutlined, path: '/mms/earnManage/blackList', component: BlackList, code: "earnManage", sub_code: 'blackList' },
     { name: '限时任务', icon: UnorderedListOutlined, path: '/mms/earnManage/timeLimitedTask', component: TimeLimitedTask, code: "earnManage", sub_code: 'timeLimitedTask' },
 
+
+
+    //家庭相册
+    { name: '传照片活动配置', icon: UnorderedListOutlined, path: '/mms/album/activityConfig', component: ActivityConfig, code: "Album", sub_code: 'activityConfig' },
     //套餐管理
     // { name: 'VIP会员套餐', icon: UnorderedListOutlined, path: '/mms/comboManage/vipCombo', component: VipCombo, code: "comboManage", sub_code: 'vipCombo' },
 

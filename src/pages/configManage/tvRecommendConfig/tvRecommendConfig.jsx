@@ -167,7 +167,7 @@ export default class tvRecommendConfig extends Component {
                 render: (rowValue, row, index) => {
                     return (
                         row.content.map((item, index) => {
-                            return (<div> {`${item.type != '10' ? `${item.channelId}-${item.title}` : ''}`}</div>)
+                            return (<div key={index}> {`${item.type != 10 ? `${item.channelId}-${item.title}` : ''}`}</div>)
                         })
                     )
                 }
@@ -179,17 +179,18 @@ export default class tvRecommendConfig extends Component {
                     return (
                         row.content.map((item, index) => {
                             let value = '';
-                            if (item.type == '10') {
-                                for (let i = 0, len = searchProgram.length; i < len; i++) {
-                                    let currItem = searchProgram[i];
-
-                                    if (item.programId == currItem.programId) {
-                                        value = currItem.programName;
-                                        break;
-                                    }
-                                }
+                            if (item.type == 10) {
+                                value = value + item.title
+                                // for (let i = 0, len = searchProgram.length; i < len; i++) {
+                                //     let currItem = searchProgram[i];
+                                //     if (item.programId == currItem.programId) {
+                                //         value = value + currItem.programName;
+                                //         console.log(value,"value")
+                                //         break;
+                                //     }
+                                // }
                             }
-                            return (<div>{value}</div>)
+                            return (<div key={index}>{value}</div>)
                         })
                     )
                 }

@@ -450,8 +450,8 @@ export default class SportsProgram extends Component {
       channelId: val.channelId?val.channelId:"",
       // channelName:"" ,
       name: arr?arr.name : "",
-      startTime: arr?arr.start_time : "",
-      endTime:arr?arr.end_time : "",
+      startTime: arr?arr.start_time : 0,
+      endTime:arr?arr.end_time : 0,
     }
     if (channelArr.length > 0) {
       // val.channelData.channelName = channelArr[0].name

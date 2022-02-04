@@ -137,7 +137,15 @@ export default class SportsProgram extends Component {
                 },()=>{
                     console.log(this.state.shortVideoList)
                 })
+            }else{
+                this.setState({
+                    shortVideoList: []
+                })
             }
+        }).catch(err=>{
+            this.setState({
+                shortVideoList: []
+            })
         })
     }
     //短视频集搜索

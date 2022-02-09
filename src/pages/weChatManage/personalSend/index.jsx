@@ -891,6 +891,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
         // return console.log(params)
         delSend(params).then(res => {
+            message.success("撤销成功")
             this.getSend()
         })
     }

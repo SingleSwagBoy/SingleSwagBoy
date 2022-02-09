@@ -416,6 +416,7 @@ export const getSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push
 export const everySend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/data`,{ params: params }); };           // 微信群发结束后的统计结果
 export const cancelSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/cancel`,{ params: params }); };           // 取消预约推送
 export const reSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/resend`,{ params: params }); };           // 取消推送重发
+export const delSend = (params) => { return request2.get(`${baseUrl}/mms/wx/push/delete`,{ params: params }); };           // 撤销发送
 
 
 //微信粉丝

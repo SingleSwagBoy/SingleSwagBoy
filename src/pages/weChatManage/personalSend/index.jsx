@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getSend, materialSend, getFansTagList, getPublicList, everySend, addSend, preSend, cancelSend, reSend,wechatMaterialSend } from 'api'
+import { getSend, materialSend, getFansTagList, getPublicList, everySend, addSend, preSend, cancelSend, reSend,wechatMaterialSend,delSend } from 'api'
 import { Radio, Card, Popover, Button, message, Table, Modal, DatePicker, Input, Form, Select, Alert, Checkbox, InputNumber } from 'antd'
 import { } from 'react-router-dom'
 import QRCode from 'qrcode.react';
@@ -102,6 +102,24 @@ export default class EarnIncentiveTask extends React.Component {
                                         </div>
                                 }
                             </div>
+                        )
+                    }
+                },
+                {
+                    key: "msgType",
+                    render: (rowValue, row, index) => {
+                        return (
+                            row.msgType == "mpnews" &&  <Button danger onClick={()=>{
+                                Modal.confirm({
+                                    title: `确认撤销发送该条数据吗，撤销后会导致点击图文链接失效？`,
+                                    // content: '确认删除？',
+                                    onOk: () => {
+                                        this.delSend(row)
+                                    },
+                                    onCancel: () => {
+                                    }
+                                })
+                            }}>撤销发送</Button>
                         )
                     }
                 }
@@ -864,6 +882,15 @@ export default class EarnIncentiveTask extends React.Component {
         }
         // return console.log(params)
         reSend(params).then(res => {
+            this.getSend()
+        })
+    }
+    delSend(item) { //撤销发送
+        let params = {
+            id: item.id
+        }
+        // return console.log(params)
+        delSend(params).then(res => {
             this.getSend()
         })
     }

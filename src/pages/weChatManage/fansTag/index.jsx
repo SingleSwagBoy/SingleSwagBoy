@@ -284,8 +284,9 @@ export default class EarnIncentiveTask extends React.Component {
         getPublicList({}).then(res => {
             console.log(res)
             if (res.data.errCode === 0) {
+                let arr = res.data.data.filter(item=>item.code == "dsj_server" || item.code == "dsj_welfare" || item.code == "dsj_reader" )
                 this.setState({
-                    wxPublic: res.data.data
+                    wxPublic: arr
                 })
             }
         })

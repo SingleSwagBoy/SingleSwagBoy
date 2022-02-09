@@ -554,7 +554,8 @@ export default class WxPayTemplate extends Component {
 
 
 
-        data.time_bucket = ref_time_interval.getData();     //播放时间段
+        data.time_bucket = ref_time_interval.getData() == "-"?"":ref_time_interval.getData();     //播放时间段
+        // return console.log(data.time_bucket,"data.time_bucket")
         let formData = ref_template_content.loadData();        //编辑内容
         if (formData) {
             formData = formData.replaceAll('\\n', '');

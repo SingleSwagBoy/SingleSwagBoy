@@ -120,7 +120,8 @@ export default class tagConfig extends Component {
                                                                                             <div className="formula-item" style={{ width: 90 }}>
                                                                                                 <Select showSearch placeholder='运算符' allowClear value={layer3item.oper} disabled={is_show_only} onChange={(e) => { that.onOperatorSelectChange(e, layer1index, layer2index, layer3index, 'oper') }}>
                                                                                                     {dict_operator.map((item, index) => {
-                                                                                                        return <Option key={index} value={item.value}>{item.name}</Option>
+                                                                                                        return <Option key={index} value={item.value} 
+                                                                                                        disabled={this.getStateOption(item,layer3item)}>{item.name}</Option>
                                                                                                     })}
                                                                                                 </Select>
                                                                                             </div>
@@ -171,7 +172,17 @@ export default class tagConfig extends Component {
     initData() {
         // 地域 产品线 渠道 类型数据需要特殊处理
     }
-
+    getStateOption(item,layer3item){
+        if(layer3item.field == "region"){
+            if(item.value>=7){
+                return false
+            }else{
+                return true
+            }
+        }else{
+            return false
+        }
+    }
 
     // that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'field')
     //输入框失去焦点
@@ -206,8 +217,11 @@ export default class tagConfig extends Component {
                 break;
             }
         }
-
-
+        //更新运算符
+        if(targetKey == "field"){
+            rules[layer1index][layer2index][layer3index].oper = null;
+        }
+       
         //更新参数
         rules[layer1index][layer2index][layer3index][targetKey] = value ? value : "";
 

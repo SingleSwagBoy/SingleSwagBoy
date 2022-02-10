@@ -97,6 +97,8 @@ export default class WxReplyModal extends Component {
 
                     <WxReplyModalTags onRef={(val) => { }} tags={tags}
                         tag_select_id={tag_select_id}
+                        dict_public_types={dict_public_types}
+                        menu_type={menu_type}
                         onSelectIdChange={(tag_select_id) => that.onTitleTagChangeClick(tag_select_id)}
                         onTabsDeleteClick={(index) => that.onTabsCreateDeleteClick(index, 'remove')}
                     />
@@ -509,7 +511,7 @@ export default class WxReplyModal extends Component {
                 if (!name || name.length <= 0) {
                     name = `第${item.id + 1}条`;
                 }
-                tag = { id: i, name: name }
+                tag = { id: i, ...item,name: name, }
             }
             //自定义二维码回复
             else if (menu_type === 'other') {
@@ -517,21 +519,22 @@ export default class WxReplyModal extends Component {
                 if (!name || name.length <= 0) {
                     name = `第${item.id + 1}条`;
                 }
-                tag = { id: i, name: name }
+                tag = { id: i, name: name,...item }
             }
             //其他类型
             else {
                 if (!tag) {
                     tag = { name: `[无标签的老数据]` }
                 } else {
-                    let obj = { id: -1, name: tag, code: '' };
+                    let obj = { id: -1, name: tag, code: ''};
                     for (let j = 0, jlen = dict_user_tags.length; j < jlen; j++) {
                         let temp_tag_item = dict_user_tags[j];
                         if (`${temp_tag_item.code}` === tag) {
                             let name = temp_tag_item.name;
                             let id = parseInt(item.id);
                             let code = temp_tag_item.code;
-                            obj = { id: id, name: name, code: code };
+                            let status = temp_tag_item.status;
+                            obj = { id: id, name: name, code: code};
                             break;
                         }
                     }

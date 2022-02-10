@@ -48,7 +48,9 @@ export default class EarnIncentiveTask extends React.Component {
                             dataSource={materialData}
                             renderItem={(item, index) => (
                                 <List.Item key={index}>
-                                    <Checkbox value={item.media_id} onClick={(e) => {
+                                    <Checkbox value={item.media_id}
+                                    disabled={item.content.news_item && item.content.news_item.length==0}
+                                     onClick={(e) => {
                                         let arr = this.state.chooseMaterial
                                         console.log(arr, "arr")
                                         if (e.target.checked) {

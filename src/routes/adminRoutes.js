@@ -7,14 +7,11 @@
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
-const AyhChannel = lazy(() => import('pages/ayh/channel/index.jsx'))
 const NoPermission = lazy(() => import('pages/NoPermission/index.jsx'))
 const WinningNews = lazy(() => import('pages/ayh/winningNews/index.jsx'))
-const SportsProgram = lazy(() => import('pages/ayh/sportsProgram/index.jsx'))
 const MedalList = lazy(() => import('pages/ayh/medalList/index.jsx'))
 const EventList = lazy(() => import('pages/ayh/eventList/index.jsx'))
 const SpecialList = lazy(() => import('pages/ayh/specialList/index.jsx'))
-const ShortVideo = lazy(() => import('pages/ayh/shortVideo/index.jsx'))
 const Equity = lazy(() => import('pages/level/equity/index.jsx'))
 const LevelConfig = lazy(() => import('pages/level/levelConfig/index.jsx'))
 const GrowConfig = lazy(() => import('pages/level/growConfig/index.jsx'))
@@ -31,21 +28,13 @@ const AdGroup = lazy(() => import('pages/adManage/adGroup/adGroup.jsx'));
 const MaterialLibrary = lazy(() => import('pages/adManage/materialLibrary/index.jsx'));
 const Voting = lazy(() => import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(() => import('pages/channelManage/channelLock/index.jsx'))
-const LivePreview = lazy(() => import('pages/channelManage/livePreview/index.jsx'))
 const AddressNews = lazy(() => import('pages/configManage/addressNews/index.jsx'))
-const ChannelSubject = lazy(() => import('pages/channelManage/channelSubject/index.jsx'))
-const ChannelSubjectNew = lazy(() => import('pages/channelManage/channelSubjectNew/index.jsx'))
 const MarsBootIn= lazy(() => import('pages/channelManage/marsBootIn/index.jsx'))
 const SourceFailure= lazy(() => import('pages/channelManage/sourceFailure/index.jsx'))
-const EditSubject = lazy(() => import('pages/channelManage/editSubject/index.jsx'))
-const EditSubjectNew = lazy(() => import('pages/channelManage/editSubjectNew/index.jsx'))
-const ConfigDoc = lazy(() => import('pages/config/doc.jsx'));
 const WxReply = lazy(() => import('pages/wechart/autoReply/wxReply.jsx'));
 const wxTemplateMsg = lazy(() => import('pages/wechart/templateMsg/wxTemplateMsg.jsx'));
 const LoginManage = lazy(() => import('pages/adManage/loginManage/index.jsx'));
-const MiniConfig = lazy(() => import('pages/configManage/miniConfig/index.jsx'));
 const SvScreenConfig = lazy(() => import('pages/configManage/svScreenConfig/svScreenConfig.jsx'));
-const OffineConfig = lazy(() => import('pages/configManage/offlineConfig/offlineConfig.jsx'));
 
 const WxMsg = lazy(() => import('pages/weChatManage/WxMsg/index.jsx'))
 const WechatMenu = lazy(() => import('pages/weChatManage/wechatMenu/index.jsx'))
@@ -62,25 +51,39 @@ const WithdrawalConfig = lazy(() => import('pages/earnManage/withdrawalConfig/in
 const Notice = lazy(() => import('pages/earnManage/notice/index.jsx'))
 const BlackList = lazy(() => import('pages/earnManage/blackList/index.jsx'))
 const TimeLimitedTask = lazy(() => import('pages/earnManage/timeLimitedTask/index.jsx'))
-const WhiteList = lazy(() => import('pages/configManage/whiteList/index.jsx'))
-const RiskAreaConfig = lazy(() => import('pages/configManage/riskAreaConfig/riskAreaConfig.jsx'));
-const TagConfig = lazy(() => import('pages/configManage/tagConfig/tagConfig.jsx'));
 const ChannelShortVideoList = lazy(() => import('pages/configManage/channelShortVideoList/index.jsx'));
 const ShortListConfig = lazy(() => import('pages/configManage/shortListConfig/index.jsx'));
 const SportsIndexBanner = lazy(() => import('pages/configManage/sportsIndexBanner/index.jsx'));
 const RecommendConfig = lazy(() => import('pages/configManage/recommendConfig/index.jsx'));
 const WordsSwiperConfig = lazy(() => import('pages/configManage/wordsSwiperConfig/index.jsx'));
 const HomeBroadcast = lazy(() => import('pages/configManage/homeBroadcast/index.jsx'));
-const EnterChannelConfig = lazy(() => import('pages/configManage/enterChannelConfig/index.jsx'));
-const EnterImageConfig = lazy(() => import('pages/configManage/enterImageConfig/index.jsx'));
-const GoodLooking = lazy(() => import('pages/configManage/goodLooking/index.jsx'));
-const PuzzleRobot = lazy(() => import('pages/configManage/puzzleRobot/index.jsx'));
 const ChannelShield = lazy(() => import('pages/configManage/channelShield/index.jsx'));
 const TvRecommendConfig = lazy(() => import('pages/configManage/tvRecommendConfig/tvRecommendConfig.jsx'))      //Tv推荐配置
-const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
+//const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
 const LuckyDraw = lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
 const GoodsConfig = lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
-// const VipCombo = lazy(() => import('pages/comboManage/vipCombo/index.jsx')); 
+const mobileChannel = lazy(() => import('pages/mobileSubject/channel/index.jsx'))
+const mobileSportsProgram = lazy(() => import('pages/mobileSubject/sportsProgram/index.jsx'))
+const mobileShortVideo = lazy(() => import('pages/mobileSubject/shortVideo/index.jsx'))
+const mobileChannelSubject = lazy(() => import('pages/mobileSubject/channelSubject/index.jsx'))
+const mobileChannelSubjectNew = lazy(() => import('pages/mobileSubject/channelSubjectNew/index.jsx'))
+const mobileEditSubject = lazy(() => import('pages/mobileSubject/editSubject/index.jsx'))
+const mobileEditSubjectNew = lazy(() => import('pages/mobileSubject/editSubjectNew/index.jsx'))
+
+const ConfigDoc = lazy(() => import('pages/generalConfig/wenanconfig/doc.jsx'));
+const OffineConfig = lazy(() => import('pages/generalConfig/offlineConfig/offlineConfig.jsx'));
+const RiskAreaConfig = lazy(() => import('pages/generalConfig/riskAreaConfig/riskAreaConfig.jsx'));
+const TagConfig = lazy(() => import('pages/generalConfig/tagConfig/tagConfig.jsx'));
+const MiniConfig = lazy(() => import('pages/generalConfig/miniConfig/index.jsx'));
+const PuzzleRobot = lazy(() => import('pages/generalConfig/puzzleRobot/index.jsx'));
+
+const WhiteList = lazy(() => import('pages/TVConfig/whiteList/index.jsx'))
+const EnterChannelConfig = lazy(() => import('pages/TVConfig/enterChannelConfig/index.jsx'));
+const EnterImageConfig = lazy(() => import('pages/TVConfig/enterImageConfig/index.jsx'));
+const GoodLooking = lazy(() => import('pages/TVConfig/goodLooking/index.jsx'));
+const ProgramAppConfig = lazy(() => import('pages/TVConfig/ProgramAppConfig/index.jsx')); //电视节目单配置
+
+const LivePreview = lazy(() => import('pages/configManage/livePreview/index.jsx'))
 
 
 //用户权限相关
@@ -96,13 +99,10 @@ const ActivityConfig = lazy(() => import('pages/album/activityConfig/index.jsx')
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
 
-    { name: '奥运会节目单', icon: LineChartOutlined, path: '/mms/ayh/channel', component: AyhChannel, code: "OlympicGames", sub_code: 'ayhProgramList' },
     { name: '夺奖快讯', icon: LineChartOutlined, path: '/mms/ayh/winningNews', component: WinningNews, code: "OlympicGames", sub_code: 'winningNews' },
-    { name: '体育节目', icon: LineChartOutlined, path: '/mms/ayh/sportsProgram', component: SportsProgram, code: "OlympicGames", sub_code: 'sportsProgram' },
     { name: '奖牌榜', icon: LineChartOutlined, path: '/mms/ayh/medalList', component: MedalList, code: "OlympicGames", sub_code: 'medalList' },
     { name: '赛事列表', icon: LineChartOutlined, path: '/mms/ayh/eventList', component: EventList, code: "OlympicGames", sub_code: 'EventList' },
     { name: '专题', icon: LineChartOutlined, path: '/mms/ayh/specialList', component: SpecialList, code: "OlympicGames", sub_code: 'SpecialList' },
-    { name: '短视频搜索', icon: LineChartOutlined, path: '/mms/ayh/shortVideo', component: ShortVideo, code: "OlympicGames", sub_code: 'AyhShortVideo' },
     { name: '奖金发放', icon: LineChartOutlined, path: '/mms/ayh/bonusPayment', component: BonusPayment, code: "OlympicGames", sub_code: 'BonusPayment' },
 
     { name: '权益配置', icon: UnorderedListOutlined, path: '/mms/level/equity', component: Equity, code: "LevelManage", sub_code: 'EquityConfig' },
@@ -122,15 +122,10 @@ const adminRoutes = [
     { name: '商品配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/goodsConfig', component: GoodsConfig, code: "ActiveManagement", sub_code: 'GoodsConfig' },
     //频道管理
     { name: '专享台解锁', icon: UnorderedListOutlined, path: '/mms/channelManage/channelLock', component: ChannelLock, code: "channelManage", sub_code: 'channelLock' },
-    { name: '直播预告', icon: UnorderedListOutlined, path: '/mms/channel/livePreview', component: LivePreview, code: "channelManage", sub_code: 'livePreview' },
-    { name: '频道专题', icon: UnorderedListOutlined, path: '/mms/channelManage/channelSubject', component: ChannelSubject, code: "channelManage", sub_code: 'channelSubject' },
-    { name: '新频道专题', icon: UnorderedListOutlined, path: '/mms/channelManage/channelSubjectNew', component: ChannelSubjectNew, code: "channelManage", sub_code: 'channelSubjectNew' },
     { name: '火星开机进入', icon: UnorderedListOutlined, path: '/mms/channelManage/marsBootIn', component: MarsBootIn, code: "channelManage", sub_code: 'marsBootIn' },
     { name: '源失效推荐', icon: UnorderedListOutlined, path: '/mms/channelManage/sourceFailure', component: SourceFailure, code: "channelManage", sub_code: 'sourceFailure' },
-    { name: '编辑专题', icon: UnorderedListOutlined, path: '/mms/channelManage/editSubject/:id', component: EditSubject, code: "channelManage" }, //频道专题二级页面
-    { name: '新编辑专题', icon: UnorderedListOutlined, path: '/mms/channelManage/editSubjectNew/:id', component: EditSubjectNew, code: "channelManage" }, //频道专题二级页面
 
-    //广告管理
+    //TV端-广告管理
     { name: '尝鲜版', component: Recommend, path: '/mms/adManage/recommend', icon: UnorderedListOutlined, code: "adManage", sub_code: 'Recommend' },
     { name: '个人中心登录', component: LoginManage, path: '/mms/adManage/LoginManage', icon: UnorderedListOutlined, code: "adManage", sub_code: 'LoginManage' },
     { name: '菜单栏图片配置', component: MenuImage, path: '/mms/adManage/menuImage', icon: UnorderedListOutlined, code: "adManage", sub_code: 'menuImage' },
@@ -144,27 +139,18 @@ const adminRoutes = [
     { name: '功能列表', icon: UnorderedListOutlined, path: '/mms/sys/menu', component: SysMenu, code: "sessionManage", sub_code: 'sysMenu' },
     { name: '权限列表', icon: UnorderedListOutlined, path: '/mms/sys/permission', component: SysPermission, code: "sessionManage", sub_code: 'sysPermission' },
 
-    //配置管理
-    { name: '文案管理', icon: UnorderedListOutlined, path: '/mms/doc', component: ConfigDoc, code: "configManage", sub_code: 'DocManager' },
+    //移动端-配置管理
     { name: '地域新闻', icon: UnorderedListOutlined, path: '/mms/configManage/addressNews', component: AddressNews, code: "configManage", sub_code: 'AddressNews' },
-    { name: '小程序配置', icon: UnorderedListOutlined, path: '/mms/config/miniConfig', component: MiniConfig, code: "configManage", sub_code: 'MiniConfig' },
-    { name: '白名单配置', icon: UnorderedListOutlined, path: '/mms/config/whiteList', component: WhiteList, code: "configManage", sub_code: 'MiniConfig' },
     { name: '短视频首屏配置', icon: UnorderedListOutlined, path: '/mms/config/svScreenConfig', component: SvScreenConfig, code: "configManage", sub_code: 'svScreenConfig' },
-    { name: '停服下线通知配置', icon: UnorderedListOutlined, path: '/mms/config/offlineConfig', component: OffineConfig, code: "configManage", sub_code: 'offlineConfig' },
-    { name: '风险地域配置', icon: UnorderedListOutlined, path: '/mms/config/riskAreaConfig', component: RiskAreaConfig, code: "configManage", sub_code: 'riskAreaConfig' },
-    { name: '标签配置', icon: UnorderedListOutlined, path: '/mms/config/tagConfig', component: TagConfig, code: "configManage", sub_code: 'tagConfig' },
     { name: '节目单视频集配置', icon: UnorderedListOutlined, path: '/mms/config/channelShortVideoList', component: ChannelShortVideoList, code: "configManage", sub_code: 'channelShortVideoList' },
     { name: '短视频集配置', icon: UnorderedListOutlined, path: '/mms/config/shortListConfig', component: ShortListConfig, code: "configManage", sub_code: 'shortListConfig' },
     { name: '体育频道视频集配置', icon: UnorderedListOutlined, path: '/mms/config/sportsIndexBanner', component: SportsIndexBanner, code: "configManage", sub_code: 'sportsIndexBanner' },
     { name: '首页为你推荐配置', icon: UnorderedListOutlined, path: '/mms/config/recommendConfig', component: RecommendConfig, code: "configManage", sub_code: 'recommendConfig' },
     { name: '文字轮播配置', icon: UnorderedListOutlined, path: '/mms/config/wordsSwiperConfig', component: WordsSwiperConfig, code: "configManage", sub_code: 'wordsSwiperConfig' },
     { name: '首页直播配置', icon: UnorderedListOutlined, path: '/mms/config/homeBroadcast', component: HomeBroadcast, code: "configManage", sub_code: 'homeBroadcast' },
-    { name: '开机进入频道配置', icon: UnorderedListOutlined, path: '/mms/config/enterChannelConfig', component: EnterChannelConfig, code: "configManage", sub_code: 'enterChannelConfig' },
-    { name: '开机启动图配置', icon: UnorderedListOutlined, path: '/mms/config/enterImageConfig', component: EnterImageConfig, code: "configManage", sub_code: 'enterImageConfig' },
-    { name: '好看分类', icon: UnorderedListOutlined, path: '/mms/config/goodLooking', component: GoodLooking, code: "configManage", sub_code: 'goodLooking' },
-    { name: '拼团机器人', icon: UnorderedListOutlined, path: '/mms/config/puzzleRobot', component: PuzzleRobot, code: "configManage", sub_code: 'puzzleRobot' },
     { name: '移动端节目单屏蔽', icon: UnorderedListOutlined, path: '/mms/config/channelShield', component: ChannelShield, code: "configManage", sub_code: 'channelShield' },
     { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/config/tvRecommendConfig', component: TvRecommendConfig, code: "configManage", sub_code: 'tvRecommendConfig' },
+    { name: '直播预告', icon: UnorderedListOutlined, path: '/mms/config/livePreview', component: LivePreview, code: "configManage", sub_code: 'livePreview' },
 
 
 
@@ -195,9 +181,32 @@ const adminRoutes = [
     //套餐管理
     // { name: 'VIP会员套餐', icon: UnorderedListOutlined, path: '/mms/comboManage/vipCombo', component: VipCombo, code: "comboManage", sub_code: 'vipCombo' },
 
+    // 移动端-专题管理
+    { name: '节目单配置', icon: LineChartOutlined, path: '/mms/mobileSubject/channel', component: mobileChannel, code: "mobileProject", sub_code: 'ayhProgramList' },
+    { name: '专题节目配置', icon: LineChartOutlined, path: '/mms/mobileSubject/sportsProgram', component: mobileSportsProgram, code: "mobileProject", sub_code: 'sportsProgram' },
+    { name: '短视频搜索', icon: LineChartOutlined, path: '/mms/mobileSubject/shortVideo', component: mobileShortVideo, code: "mobileProject", sub_code: 'AyhShortVideo' },
+    { name: '频道专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/channelSubject', component: mobileChannelSubject, code: "mobileProject", sub_code: 'channelSubject' },
+    { name: '新频道专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/channelSubjectNew', component: mobileChannelSubjectNew, code: "mobileProject", sub_code: 'channelSubjectNew' },
+    { name: '编辑专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/editSubject/:id', component: mobileEditSubject, code: "mobileProject" }, //频道专题二级页面
+    { name: '新编辑专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/editSubjectNew/:id', component: mobileEditSubjectNew, code: "mobileProject" }, //频道专题二级页面
+
+    // 通用-配置管理
+    { name: '文案管理', icon: UnorderedListOutlined, path: '/mms/generalConfig/doc', component: ConfigDoc, code: "generalMangement", sub_code: 'DocManager' },
+    { name: '停服下线通知配置', icon: UnorderedListOutlined, path: '/mms/generalConfig/offlineConfig', component: OffineConfig, code: "generalMangement", sub_code: 'offlineConfig' },
+    { name: '风险地域配置', icon: UnorderedListOutlined, path: '/mms/generalConfig/riskAreaConfig', component: RiskAreaConfig, code: "generalMangement", sub_code: 'riskAreaConfig' },
+    { name: '标签配置', icon: UnorderedListOutlined, path: '/mms/generalConfig/tagConfig', component: TagConfig, code: "generalMangement", sub_code: 'tagConfig' },
+    { name: '小程序配置', icon: UnorderedListOutlined, path: '/mms/generalConfig/miniConfig', component: MiniConfig, code: "generalMangement", sub_code: 'MiniConfig' },
+    { name: '拼团机器人', icon: UnorderedListOutlined, path: '/mms/generalConfig/puzzleRobot', component: PuzzleRobot, code: "generalMangement", sub_code: 'puzzleRobot' },
+
+    // TV端-配置管理
+    { name: '白名单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/whiteList', component: WhiteList, code: "tvConfigManagement", sub_code: 'MiniConfig' },
+    { name: '开机进入频道配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/enterChannelConfig', component: EnterChannelConfig, code: "tvConfigManagement", sub_code: 'enterChannelConfig' },
+    { name: '开机启动图配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/enterImageConfig', component: EnterImageConfig, code: "tvConfigManagement", sub_code: 'enterImageConfig' },
+    { name: '好看分类', icon: UnorderedListOutlined, path: '/mms/TVConfig/goodLooking', component: GoodLooking, code: "tvConfigManagement", sub_code: 'goodLooking' },
+    { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/programAppConfig', component: ProgramAppConfig, code: "tvConfigManagement", sub_code: 'programAppConfig' },
 
     //电视节目单配置
-    { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },
+    //{ name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },
     //其他
     { name: '没有权限', icon: UnorderedListOutlined, path: '/mms/noPermission', component: NoPermission, meta: { isNav: false, roles: '*' } }
 

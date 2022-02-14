@@ -195,6 +195,7 @@ export default class SysMenu extends Component {
         //角色列表
         requestSysMenu()
             .then(res => {
+                console.log("=============",res)
                 let { table_box } = that.state;
                 let data = res.data;
                 let menus = [];
@@ -237,6 +238,7 @@ export default class SysMenu extends Component {
         let id = that.formRef.current.getFieldValue('id');
 
         let obj = Object.assign({}, that.formRef.current.getFieldsValue());
+        console.log("objobjobjobj",obj)
         for (let key in obj) {
             let value = obj[key];
             if (!value) delete obj[key];
@@ -257,6 +259,9 @@ export default class SysMenu extends Component {
             message.error('请输入页面层级');
             return;
         }
+        if(!obj.sortOrder){
+            obj.sortOrder=0
+        }
 
         (id ? requestSysMenuUpdate(obj) : requestSysMenuCreate(obj)).then(res => {
             message.success('操作成功');
@@ -269,8 +274,6 @@ export default class SysMenu extends Component {
                 that.refreshList();
             })
         })
-
-
     }
     //删除按钮被点击
     onItemDeleteClick(item) {

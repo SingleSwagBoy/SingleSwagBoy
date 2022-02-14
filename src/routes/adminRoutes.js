@@ -59,7 +59,7 @@ const WordsSwiperConfig = lazy(() => import('pages/configManage/wordsSwiperConfi
 const HomeBroadcast = lazy(() => import('pages/configManage/homeBroadcast/index.jsx'));
 const ChannelShield = lazy(() => import('pages/configManage/channelShield/index.jsx'));
 const TvRecommendConfig = lazy(() => import('pages/configManage/tvRecommendConfig/tvRecommendConfig.jsx'))      //Tv推荐配置
-const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
+//const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
 const LuckyDraw = lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
 const GoodsConfig = lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
 const mobileChannel = lazy(() => import('pages/mobileSubject/channel/index.jsx'))
@@ -81,6 +81,7 @@ const WhiteList = lazy(() => import('pages/TVConfig/whiteList/index.jsx'))
 const EnterChannelConfig = lazy(() => import('pages/TVConfig/enterChannelConfig/index.jsx'));
 const EnterImageConfig = lazy(() => import('pages/TVConfig/enterImageConfig/index.jsx'));
 const GoodLooking = lazy(() => import('pages/TVConfig/goodLooking/index.jsx'));
+const ProgramAppConfig = lazy(() => import('pages/TVConfig/ProgramAppConfig/index.jsx')); //电视节目单配置
 
 const LivePreview = lazy(() => import('pages/configManage/livePreview/index.jsx'))
 
@@ -202,9 +203,10 @@ const adminRoutes = [
     { name: '开机进入频道配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/enterChannelConfig', component: EnterChannelConfig, code: "tvConfigManagement", sub_code: 'enterChannelConfig' },
     { name: '开机启动图配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/enterImageConfig', component: EnterImageConfig, code: "tvConfigManagement", sub_code: 'enterImageConfig' },
     { name: '好看分类', icon: UnorderedListOutlined, path: '/mms/TVConfig/goodLooking', component: GoodLooking, code: "tvConfigManagement", sub_code: 'goodLooking' },
+    { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/programAppConfig', component: ProgramAppConfig, code: "tvConfigManagement", sub_code: 'programAppConfig' },
 
     //电视节目单配置
-    { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },
+    //{ name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },
     //其他
     { name: '没有权限', icon: UnorderedListOutlined, path: '/mms/noPermission', component: NoPermission, meta: { isNav: false, roles: '*' } }
 

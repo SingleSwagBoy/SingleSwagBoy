@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { baseUrl, searchVideo, getMyProduct, updateChannelTopic, addChannelTopic, Getchannels, requestNewAdTagList, listProgramByChannelId, ChannelTopic } from 'api'
+import { baseUrl, searchVideo, getMyProduct, updateChannelTopicOld, addChannelTopicOld, Getchannels, requestAdTagList, listProgramByChannelId, ChannelTopicOld } from 'api'
 import { Breadcrumb, Card, DatePicker, Button, Tooltip, Modal, message, Input, Form, Select, InputNumber, Upload, Divider, Space, Radio } from 'antd'
 import { } from 'react-router-dom'
 import { LoadingOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -88,7 +88,7 @@ export default class SportsProgram extends Component {
                 isAdd: true
             })
         } else if (this.props.match.params && this.props.match.params.id != "add") {
-            this.ChannelTopic();
+            this.ChannelTopicOld();
             this.setState({
                 parentId: this.props.match.params.id,
                 isAdd: false
@@ -113,7 +113,7 @@ export default class SportsProgram extends Component {
         })
     }
     getInfo() {
-        requestNewAdTagList().then(res => {
+        requestAdTagList().then(res => {
             let _list = res.data.map(item => {  //  this.tagOptions 
                 return { label: item.name, value: item.code }
             })
@@ -173,18 +173,18 @@ export default class SportsProgram extends Component {
             }
         })
     }
-    ChannelTopic() {
+    ChannelTopicOld() {
         let params = {
             // name:keyWord || ""
         }
-        ChannelTopic(params).then(res => {
+        ChannelTopicOld(params).then(res => {
             if (res.data.errCode === 0) {
                 this.setState({
-                    lists: res.data.data.data
+                    lists: res.data.data.dataList
                 })
-                for (let i = 0; i < res.data.data.data.length; i++) {
-                    if (res.data.data.data[i].id == this.state.parentId) {
-                        let _obj = res.data.data.data[i];
+                for (let i = 0; i < res.data.data.dataList.length; i++) {
+                    if (res.data.data.dataList[i].ID == this.state.parentId) {
+                        let _obj = res.data.data.dataList[i];
                         if (_obj.tags != '') {
                             _obj.tags = _obj.tags.split(",")
                         } else {
@@ -200,13 +200,13 @@ export default class SportsProgram extends Component {
 
 
                         this.formRef.current.setFieldsValue(_obj)
-                        this.getDetail(res.data.data.data[i].channelId)
+                        this.getDetail(res.data.data.dataList[i].channelId)
                         this.setState({
-                            currentObj: res.data.data.data[i],
-                            currentItem: res.data.data.data[i],
-                            defaultAddress: (res.data.data.data[i].area && res.data.data.data[i].area.includes(",")) ? res.data.data.data[i].area.split(",") : res.data.data.data[i].area,
-                            backImage: res.data.data.data[i].backImage,
-                            headerImage: res.data.data.data[i].headerImage
+                            currentObj: res.data.data.dataList[i],
+                            currentItem: res.data.data.dataList[i],
+                            defaultAddress: (res.data.data.dataList[i].area && res.data.data.dataList[i].area.includes(",")) ? res.data.data.dataList[i].area.split(",") : res.data.data.dataList[i].area,
+                            backImage: res.data.data.dataList[i].backImage,
+                            headerImage: res.data.data.dataList[i].headerImage
                         }, () => {
                             console.log(this.state.defaultAddress)
                         })
@@ -265,7 +265,7 @@ export default class SportsProgram extends Component {
             backImage: this.state.backImage,
             headerImage: this.state.headerImage,
             //channelName:this.state.channelName,
-            id: this.state.parentId * 1 || 0
+            ID: this.state.parentId * 1 || 0
         }
         //更新时间
         let time = params.time;
@@ -279,7 +279,7 @@ export default class SportsProgram extends Component {
         delete params.time;
 
         if (this.state.isAdd == true) {  // 新增
-            addChannelTopic(params).then(res => {
+            addChannelTopicOld(params).then(res => {
                 if (res.data.errCode == 0) {
                     message.success("添加成功")
                     setTimeout(() => {
@@ -290,7 +290,7 @@ export default class SportsProgram extends Component {
                 }
             })
         } else {
-            updateChannelTopic(params).then(res => {
+            updateChannelTopicOld(params).then(res => {
                 if (res.data.errCode == 0) {
                     message.success("修改成功")
                     setTimeout(() => {
@@ -317,7 +317,7 @@ export default class SportsProgram extends Component {
                     <div>
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <Link to="/mms/channelManage/channelSubjectNew">频道专题</Link>
+                                <Link to="/mms/mobileSubject/channelSubject">频道专题</Link>
                             </Breadcrumb.Item>
                             {
                                 this.state.isAdd == true &&
@@ -382,7 +382,7 @@ export default class SportsProgram extends Component {
                             <Form.Item label="背景色" name="bgColor" rules={[{ required: true, message: '请填写背景色' }]}>
                                 <Input className="base-input-wrapper" placeholder="请填写背景色" />
                             </Form.Item>
-                            <Form.Item label="专题编码(拼音)" name="idKey" rules={[{ required: true, message: '请填写专题编码' }]}>
+                            <Form.Item label="专题编码(拼音)" name="IdKey" rules={[{ required: true, message: '请填写专题编码' }]}>
                                 {
                                     this.state.isAdd == true &&
                                     <Input className="base-input-wrapper" placeholder="请填写专题编码" /> ||
@@ -399,22 +399,22 @@ export default class SportsProgram extends Component {
                                 // this.formRef.current ? this.formRef.current.getFieldValue("backImage") : ""
                                 />
                             </Form.Item>
-                            {/*<Form.Item label="预告片" name="svIds" rules={[{ required: true, message: '请填写预告片ID' }]}>
-                                 <Select placeholder="请选择视频">
+                            <Form.Item label="预告片" name="svIds" rules={[{ required: true, message: '请填写预告片ID' }]}>
+                                {/* <Select placeholder="请选择视频">
                                 {this.state.videoLists.map((item, index) => {
                                     return <Option value={item.value} key={index}> {item.value}</Option>
                                 })}
-                            </Select> *
+                            </Select> */}
                                 <Input className="base-input-wrapper" placeholder="请填写预告片ID" />
                             </Form.Item>
 
                             <Form.Item label="预告片标题" name="svName" rules={[{ required: true, message: '请填写预告片标题' }]}>
                                 <Input className="base-input-wrapper" placeholder="请填写预告片标题" />
-                            </Form.Item> */}
+                            </Form.Item>
 
 
                             <Form.Item label="用户分群" name="tags" >
-                                <Select className="base-input-wrapper" placeholder="请选择用户分群" allowClear>
+                                <Select className="base-input-wrapper" placeholder="请选择用户分群" mode="multiple" allowClear>
                                     {
                                         this.state.tagList.map(r => {
                                             return (
@@ -455,9 +455,9 @@ export default class SportsProgram extends Component {
                             </Select>
                         </Form.Item> */}
 
-                            {/* <Form.Item label="地域" name="area">
+                            <Form.Item label="地域" name="area">
                                 <Address defaultAddress={this.state.defaultAddress} onCheckAddress={this.onCheckAddress.bind(this)} />
-                            </Form.Item> */}
+                            </Form.Item>
 
                             <Form.Item label="白名单" name="whiteList">
                                 <Input className="base-input-wrapper" placeholder="请填写白名单" />
@@ -472,6 +472,15 @@ export default class SportsProgram extends Component {
                             </Select> */}
                             </Form.Item>
                         </>
+
+
+
+
+
+
+
+
+
 
                         <Form.Item {...this.state.tailLayout}>
                             <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>

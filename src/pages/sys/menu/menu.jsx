@@ -195,6 +195,7 @@ export default class SysMenu extends Component {
         //角色列表
         requestSysMenu()
             .then(res => {
+                console.log("=============",res)
                 let { table_box } = that.state;
                 let data = res.data;
                 let menus = [];

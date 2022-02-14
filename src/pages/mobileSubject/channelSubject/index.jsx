@@ -105,7 +105,7 @@ export default class SportsProgram extends Component {
                                     type="primary"
                                     onClick={() => {
                                         console.log(rowValue, row);
-                                        this.props.history.push(`/mms/channelManage/editSubject/${row.ID}`)
+                                        this.props.history.push(`/mms/mobileSubject/editSubject/${row.ID}`)
                                     }}
                                 >编辑</Button>
                                 <Button
@@ -204,7 +204,7 @@ export default class SportsProgram extends Component {
                         <div>
                             <Button type="primary"
                                 onClick={() => {
-                                    this.props.history.push(`/mms/channelManage/editSubject/add`)
+                                    this.props.history.push(`/mms/mobileSubject/editSubject/add`)
                                 }}
                             >新增专题</Button>
                             <Button type="primary"

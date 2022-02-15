@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser, getWechatList, getCount } from 'api'
+import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser, getWechatList, getCount,getexcluswitch,setexcluswitch } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Divider, Tabs } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -44,7 +44,8 @@ export default class EarnIncentiveTask extends React.Component {
             },
             allUserList: [],
             wechatList: [],
-            activityCode:"",//当前激活的哪一个qywechatCode
+            activityCode: "",//当前激活的哪一个qywechatCode
+            switchState:"",
             columns: [
                 {
                     title: "位置",
@@ -134,7 +135,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                     arr.status = arr.status == 1 ? true : false
                                                     arr.qywechatCode = this.state.wechatList.length > 0 ? this.state.wechatList[0].code : null
                                                     this.setState({
-                                                        activityCode:arr.qywechatCode
+                                                        activityCode: arr.qywechatCode
                                                     })
                                                     this.formRef.current.setFieldsValue(arr)
                                                     this.forceUpdate()
@@ -167,6 +168,15 @@ export default class EarnIncentiveTask extends React.Component {
                 }
                     extra={
                         <div>
+                            <Switch
+                                    checkedChildren="开启"
+                                    unCheckedChildren="关闭"
+                                    defaultChecked={this.state.switchState == "open" ? true : false}
+                                    key={this.state.switchState}
+                                    onChange={(val) => {
+                                        this.setexcluswitch(val)
+                                    }}
+                                />
                             <MySyncBtn type={23} name='同步企业微信数据' />
                             <MySyncBtn type={22} name='同步缓存' />
                         </div>
@@ -201,7 +211,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     ?
 
                                     <>
-                                        <Tabs defaultActiveKey="0" centered onChange={async(e) => {
+                                        <Tabs defaultActiveKey="0" centered onChange={async (e) => {
                                             console.log(e)
                                             let code = this.state.wechatList[e].code
                                             await this.getWechatUser(code)
@@ -209,7 +219,7 @@ export default class EarnIncentiveTask extends React.Component {
                                             this.getCount(code)
                                             // this.forceUpdate()
                                             this.setState({
-                                                activityCode:code
+                                                activityCode: code
                                             })
                                         }}>
                                             {
@@ -247,7 +257,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                                         <Option value={r.userid} key={i}>
                                                                                                             <img src={r.avatar} alt="" style={{ width: "20px" }} />
                                                                                                             {r.name}
-                                                                                                            {r.limit?"---"+r.limit:""}
+                                                                                                            {r.limit ? "---" + r.limit : ""}
                                                                                                         </Option>
                                                                                                     )
 
@@ -257,7 +267,7 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                         </Select>
                                                                                     </Form.Item>
                                                                                     <Button type="dashed" style={{ marginBottom: "28px" }} onClick={() => {
-                                                                                        if(this.formRef.current.getFieldValue("userList").length==1)return message.error("请保留至少一条")
+                                                                                        if (this.formRef.current.getFieldValue("userList").length == 1) return message.error("请保留至少一条")
                                                                                         remove(field.name)
                                                                                     }} icon={<MinusCircleOutlined />}>
                                                                                         删除
@@ -330,6 +340,19 @@ export default class EarnIncentiveTask extends React.Component {
         this.getQrcodeConfig();
         this.requestNewAdTagList()
         this.getWechatList()
+        this.getexcluswitch()
+    }
+    getexcluswitch(){
+        getexcluswitch({}).then(res => {
+            this.setState({
+                switchState: res.data
+            });
+        })
+    }
+    setexcluswitch(val){
+        setexcluswitch({config:val?"open":"close"}).then(res => {
+            message.success("设置成功")
+        })
     }
     //获取标签信息
     requestNewAdTagList() {
@@ -375,7 +398,7 @@ export default class EarnIncentiveTask extends React.Component {
         await getWechatUser({ qywechatCode: val }).then(res => {
             this.setState({
                 allUserList: res.data
-            },()=>{
+            }, () => {
                 // this.getCount(val)
             })
         })
@@ -391,17 +414,17 @@ export default class EarnIncentiveTask extends React.Component {
     }
     getCount(val) {  //获取选中客服次数
         getCount({ qywechatCode: val }).then(res => {
-            console.log(this.state.allUserList,"allUserList")
+            console.log(this.state.allUserList, "allUserList")
             let keys = Object.keys(res.data)
             let arr = this.state.allUserList
-            keys.forEach(r=>{
-                arr.forEach(l=>{
-                    if(r == l.userid){
+            keys.forEach(r => {
+                arr.forEach(l => {
+                    if (r == l.userid) {
                         l.limit = res.data[r]
                     }
                 })
             })
-            this.setState({allUserList:arr})
+            this.setState({ allUserList: arr })
         })
     }
     closeModal() {

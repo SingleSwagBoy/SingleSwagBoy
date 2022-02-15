@@ -215,7 +215,7 @@ class MyLayout extends Component {
                                 <Badge count={0}>
                                     <Dropdown overlay={menu}>
                                         <div style={{ color: "#555" }}>
-                                            <Avatar src="http://test.cdn.dianshihome.com/test/ic_launcher.png" />
+                                            <Avatar src="http://test.cdn.mydianshijia.com/test/ic_launcher.png" />
                                             <span style={{ marginLeft: 10 }}>{decodeURI(this.props.userInfo.userName)}</span>
                                         </div>
                                     </Dropdown>

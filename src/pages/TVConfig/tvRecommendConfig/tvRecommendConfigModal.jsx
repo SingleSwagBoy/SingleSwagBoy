@@ -269,7 +269,7 @@ export default class recommendModal extends Component {
                                                                 </Form.Item>
                                                             }
 
-                                                            {/* <Image width={200} height={50} src={'http://test.cdn.dianshihome.com/static/ad/3b020cdfbadda3e1e97a0b4beadfbb5b.png'}></Image> */}
+                                                            {/* <Image width={200} height={50} src={'http://test.cdn.mydianshijia.com/static/ad/3b020cdfbadda3e1e97a0b4beadfbb5b.png'}></Image> */}
 
 
                                                             <Form.Item name={[field.name, 'cover']}>
@@ -404,7 +404,7 @@ export default class recommendModal extends Component {
                         <div key={row} >
                             {JSON.stringify(row.cover)}
 
-                            <Image width={200} src='http://test.cdn.dianshihome.com/static/ad/3b020cdfbadda3e1e97a0b4beadfbb5b.png' />
+                            <Image width={200} src='http://test.cdn.mydianshijia.com/static/ad/3b020cdfbadda3e1e97a0b4beadfbb5b.png' />
 
                             <MyImageUpload
                                 getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl(row, 'cover', file, newItem) }}

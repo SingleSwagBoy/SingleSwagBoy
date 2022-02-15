@@ -482,6 +482,8 @@ export const syncQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mm
 export const saveMyWechatUser = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/savereluser`,params); }; 
 export const getWechatList = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/codes`,{params:params}); };  //获取企业微信列表
 export const getCount = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/listrelcount`,{params:params}); };  //企业微信客服解锁使用次数
+export const getexcluswitch = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/getexcluswitch`,{params:params}); };  //企业微信客服解锁
+export const setexcluswitch = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/setexcluswitch`,{params:params}); };  //企业微信客服解锁使用次数
 
 
 // 易添加企业微信客服列表更新

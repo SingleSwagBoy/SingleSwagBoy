@@ -58,8 +58,6 @@ const RecommendConfig = lazy(() => import('pages/configManage/recommendConfig/in
 const WordsSwiperConfig = lazy(() => import('pages/configManage/wordsSwiperConfig/index.jsx'));
 const HomeBroadcast = lazy(() => import('pages/configManage/homeBroadcast/index.jsx'));
 const ChannelShield = lazy(() => import('pages/configManage/channelShield/index.jsx'));
-const TvRecommendConfig = lazy(() => import('pages/configManage/tvRecommendConfig/tvRecommendConfig.jsx'))      //Tv推荐配置
-//const ProgramAppConfig = lazy(() => import('pages/programApp/ProgramAppConfig/index.jsx')); //电视节目单配置
 const LuckyDraw = lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
 const GoodsConfig = lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
 const mobileChannel = lazy(() => import('pages/mobileSubject/channel/index.jsx'))
@@ -82,6 +80,7 @@ const EnterChannelConfig = lazy(() => import('pages/TVConfig/enterChannelConfig/
 const EnterImageConfig = lazy(() => import('pages/TVConfig/enterImageConfig/index.jsx'));
 const GoodLooking = lazy(() => import('pages/TVConfig/goodLooking/index.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/TVConfig/ProgramAppConfig/index.jsx')); //电视节目单配置
+const TvRecommendConfig = lazy(() => import('pages/TVConfig/tvRecommendConfig/tvRecommendConfig.jsx'))      //Tv推荐配置
 
 const LivePreview = lazy(() => import('pages/configManage/livePreview/index.jsx'))
 
@@ -149,7 +148,7 @@ const adminRoutes = [
     { name: '文字轮播配置', icon: UnorderedListOutlined, path: '/mms/config/wordsSwiperConfig', component: WordsSwiperConfig, code: "configManage", sub_code: 'wordsSwiperConfig' },
     { name: '首页直播配置', icon: UnorderedListOutlined, path: '/mms/config/homeBroadcast', component: HomeBroadcast, code: "configManage", sub_code: 'homeBroadcast' },
     { name: '移动端节目单屏蔽', icon: UnorderedListOutlined, path: '/mms/config/channelShield', component: ChannelShield, code: "configManage", sub_code: 'channelShield' },
-    { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/config/tvRecommendConfig', component: TvRecommendConfig, code: "configManage", sub_code: 'tvRecommendConfig' },
+    // { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/config/tvRecommendConfig', component: TvRecommendConfig, code: "configManage", sub_code: 'tvRecommendConfig' },
     { name: '直播预告', icon: UnorderedListOutlined, path: '/mms/config/livePreview', component: LivePreview, code: "configManage", sub_code: 'livePreview' },
 
 
@@ -204,6 +203,7 @@ const adminRoutes = [
     { name: '开机启动图配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/enterImageConfig', component: EnterImageConfig, code: "tvConfigManagement", sub_code: 'enterImageConfig' },
     { name: '好看分类', icon: UnorderedListOutlined, path: '/mms/TVConfig/goodLooking', component: GoodLooking, code: "tvConfigManagement", sub_code: 'goodLooking' },
     { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/programAppConfig', component: ProgramAppConfig, code: "tvConfigManagement", sub_code: 'programAppConfig' },
+    { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/tvRecommendConfig', component: TvRecommendConfig, code: "tvConfigManagement", sub_code: 'tvRecommendConfig' },
 
     //电视节目单配置
     //{ name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },

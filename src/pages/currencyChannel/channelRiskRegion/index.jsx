@@ -28,7 +28,7 @@ function App2() {
   const [qywechatCode, setQywechatCode] = useState("")
   const key = "CHANNEL_RISK_TAG"
   const tagListRef = useRef(tagList)
-  const [columns] = useState([
+  const columns = [
     {
       title: "名称",
       dataIndex: "name",
@@ -104,19 +104,19 @@ function App2() {
         )
       }
     }
-  ])
+  ]
   useEffect(() => {
     const fetchTagData = async () => {
       let arr = await requestNewAdTagList({ currentPage: 1, pageSize: 999999, })
       console.log(arr,"arr")
       setTagList(arr.data)
-      forceUpdate()
+      // forceUpdate()
     }
     fetchTagData()
   }, [])
-  useEffect(() => {
-    tagListRef.current = tagList
-  }, [tagList])
+  // useEffect(() => {
+  //   tagListRef.current = tagList
+  // }, [tagList])
   useEffect(() => {
     const fetchData = async () => {
       const list = await getList({ key: key })
@@ -186,7 +186,7 @@ function App2() {
     })
   }
   const getTagName = (name) =>{
-    let arr = tagListRef.current.filter(item => item.code == name)
+    let arr = tagList.filter(item => item.code == name)
     if(arr.length>0){
       return arr[0].name
     }else{

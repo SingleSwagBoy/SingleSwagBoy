@@ -67,6 +67,7 @@ const mobileChannelSubject = lazy(() => import('pages/mobileSubject/channelSubje
 const mobileChannelSubjectNew = lazy(() => import('pages/mobileSubject/channelSubjectNew/index.jsx'))
 const mobileEditSubject = lazy(() => import('pages/mobileSubject/editSubject/index.jsx'))
 const mobileEditSubjectNew = lazy(() => import('pages/mobileSubject/editSubjectNew/index.jsx'))
+const mobileGoodPlay = lazy(() => import('pages/mobileSubject/goodPlay/index.jsx'))
 
 const ConfigDoc = lazy(() => import('pages/generalConfig/wenanconfig/doc.jsx'));
 const OffineConfig = lazy(() => import('pages/generalConfig/offlineConfig/offlineConfig.jsx'));
@@ -187,7 +188,8 @@ const adminRoutes = [
     { name: '频道专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/channelSubject', component: mobileChannelSubject, code: "mobileProject", sub_code: 'channelSubject' },
     { name: '新频道专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/channelSubjectNew', component: mobileChannelSubjectNew, code: "mobileProject", sub_code: 'channelSubjectNew' },
     { name: '编辑专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/editSubject/:id', component: mobileEditSubject, code: "mobileProject" }, //频道专题二级页面
-    { name: '新编辑专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/editSubjectNew/:id', component: mobileEditSubjectNew, code: "mobileProject" }, //频道专题二级页面
+    { name: '新编辑专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/editSubjectNew/:id', component: mobileEditSubjectNew, code: "mobileProject" }, //新频道专题二级页面
+    { name: '好剧专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/goodPlay', component: mobileGoodPlay, code: "mobileProject", sub_code: 'channelGoodPlay' },
 
     // 通用-配置管理
     { name: '文案管理', icon: UnorderedListOutlined, path: '/mms/generalConfig/doc', component: ConfigDoc, code: "generalMangement", sub_code: 'DocManager' },

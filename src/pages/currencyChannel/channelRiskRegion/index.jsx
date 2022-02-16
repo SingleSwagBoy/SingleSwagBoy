@@ -209,7 +209,7 @@ function App2() {
               setSource("add")
               formRef.setFieldsValue({ "qywechatCode": qywechatCode })
             }}>新建</Button>
-            <MySyncBtn type={7} name='同步缓存'  params={{ key: key }} />
+            <MySyncBtn type={7} name='同步缓存，同步过后再到老后台同步缓存：数据同步--->频道'  params={{ key: key }} />
           </div>
         }
       >

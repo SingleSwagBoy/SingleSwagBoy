@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import { getList, updateList, deleteConfig, addList, changeWelcome, requestNewAdTagList } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, DatePicker, Switch, Space } from 'antd'
 import { } from 'react-router-dom'
@@ -27,7 +27,6 @@ function App2() {
   const [source, setSource] = useState("")
   const [qywechatCode, setQywechatCode] = useState("")
   const key = "CHANNEL_RISK_TAG"
-  const tagListRef = useRef(tagList)
   const columns = [
     {
       title: "名称",
@@ -105,27 +104,20 @@ function App2() {
       }
     }
   ]
-  useEffect(() => {
+  useEffect(() => {//标签
     const fetchTagData = async () => {
       let arr = await requestNewAdTagList({ currentPage: 1, pageSize: 999999, })
-      console.log(arr,"arr")
       setTagList(arr.data)
-      // forceUpdate()
     }
     fetchTagData()
   }, [])
-  // useEffect(() => {
-  //   tagListRef.current = tagList
-  // }, [tagList])
-  useEffect(() => {
+  useEffect(() => {//列表
     const fetchData = async () => {
       const list = await getList({ key: key })
-      console.log(list.data.data)
       setLists(list.data.data)
     }
     fetchData()
   }, [forceUpdateId])
-
   const changeSize = (e) => {
     console.log(e)
   }

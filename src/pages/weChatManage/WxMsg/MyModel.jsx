@@ -294,7 +294,7 @@ export default class AddressNews extends Component {
                           <div>小程序</div>
                           <div>
                             <div className="title">{this.formRef.current.getFieldValue("mpTitle")}</div>
-                            <div className="image_box"><img src={this.formRef.current.getFieldValue("url")|| "http://test.cdn.dianshihome.com/test/ic_launcher.png"} alt="" /></div>
+                            <div className="image_box"><img src={this.formRef.current.getFieldValue("url")|| "http://test.cdn.mydianshijia.com/test/ic_launcher.png"} alt="" /></div>
                             <div className="content">小程序</div>
                           </div>
                         </div> : ""

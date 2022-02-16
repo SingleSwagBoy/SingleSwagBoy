@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react'
+import React, { useState, useEffect, useRef, useReducer } from 'react'
 import { getList, updateList, deleteConfig, addList, changeWelcome, requestNewAdTagList } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, DatePicker, Switch, Space } from 'antd'
 import { } from 'react-router-dom'
@@ -27,6 +27,7 @@ function App2() {
   const [source, setSource] = useState("")
   const [qywechatCode, setQywechatCode] = useState("")
   const key = "CHANNEL_RISK_TAG"
+  const tagListRef = useRef(tagList)
   const [columns] = useState([
     {
       title: "名称",
@@ -37,11 +38,11 @@ function App2() {
       title: "标签",
       dataIndex: "tags",
       key: "tags",
-      // render: (rowValue, row, index) => {
-      //   return (
-      //     <div>{getTagName(rowValue)}</div>
-      //   )
-      // }
+      render: (rowValue, row, index) => {
+        return (
+          <div>{getTagName(rowValue)}</div>
+        )
+      }
     },
     {
       title: "上下线时间",
@@ -105,6 +106,18 @@ function App2() {
     }
   ])
   useEffect(() => {
+    const fetchTagData = async () => {
+      let arr = await requestNewAdTagList({ currentPage: 1, pageSize: 999999, })
+      console.log(arr,"arr")
+      setTagList(arr.data)
+      forceUpdate()
+    }
+    fetchTagData()
+  }, [])
+  useEffect(() => {
+    tagListRef.current = tagList
+  }, [tagList])
+  useEffect(() => {
     const fetchData = async () => {
       const list = await getList({ key: key })
       console.log(list.data.data)
@@ -112,14 +125,7 @@ function App2() {
     }
     fetchData()
   }, [forceUpdateId])
-  useEffect(() => {
-    const fetchTagData = async () => {
-      let arr = await requestNewAdTagList({ currentPage: 1, pageSize: 999999, })
-      console.log(arr,"arr")
-      setTagList(arr.data)
-    }
-    fetchTagData()
-  }, [])
+
   const changeSize = (e) => {
     console.log(e)
   }
@@ -165,17 +171,6 @@ function App2() {
       forceUpdate()
     })
   }
-  const changeWelcomeAPi = (val) => {
-    console.log(val)
-    let params = {
-      id: val.id,
-      status: val.status
-    }
-    changeWelcome(params).then(res => {
-      message.success("操作成功")
-      forceUpdate()
-    })
-  }
   const delItem = (row) => {
     Modal.confirm({
       title: `确认删除该条数据吗？`,
@@ -191,7 +186,12 @@ function App2() {
     })
   }
   const getTagName = (name) =>{
-    console.log(tagList,"tagList==========")
+    let arr = tagListRef.current.filter(item => item.code == name)
+    if(arr.length>0){
+      return arr[0].name
+    }else{
+      return ""
+    }
   }
   return (
     <div className="loginVip">

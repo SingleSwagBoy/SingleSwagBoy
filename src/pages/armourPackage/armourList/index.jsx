@@ -57,7 +57,8 @@ function App2() {
           <div>{<Switch checkedChildren="开" unCheckedChildren="关" defaultChecked={rowValue == 1 ? true : false} key={rowValue}
             onChange={(val) => {
               let info = JSON.parse(JSON.stringify(row))
-              info.status = val
+              info.autoDownload = val?1:2
+              submitForm(info)
             }}
           />}</div>
         )
@@ -93,11 +94,12 @@ function App2() {
           <div>{<Switch
             checkedChildren="有效"
             unCheckedChildren="无效"
-            defaultChecked={rowValue}
+            defaultChecked={rowValue == 1?true:false}
             key={rowValue}
             onChange={(val) => {
               let info = JSON.parse(JSON.stringify(row))
-              info.status = val
+              info.status = val?1:2
+              console.log(info.status,"info.status")
               submitForm(info)
             }}
           />}</div>
@@ -161,7 +163,7 @@ function App2() {
         autoDownload: val.autoDownload ? 1 : 2,
         status: val.status ? 1 : 2
       }
-      addWelcomeApi(params)
+      addArmour(params)
     } else if (source == "edit") {
       let params = {
         ...currentItem,
@@ -171,16 +173,16 @@ function App2() {
         autoDownload: val.autoDownload ? 1 : 2,
         status: val.status ? 1 : 2
       }
-      saveWelcomeApi(params)
+      editArmour(params)
     } else {
       let params = {
         ...val,
       }
-      saveWelcomeApi(params)
+      editArmour(params)
     }
     closeDialog()
   }
-  const addWelcomeApi = (params) => {
+  const addArmour = (params) => {
     addArmourPackage(params).then(res => {
       message.success("新增成功")
       forceUpdate()
@@ -189,8 +191,9 @@ function App2() {
   const closeDialog = () => {
     formRef.resetFields()
     setOpen(false)
+    setSource("")
   }
-  const saveWelcomeApi = (params) => {
+  const editArmour = (params) => {
     editArmourPackage(params).then(res => {
       message.success("更新成功")
       forceUpdate()

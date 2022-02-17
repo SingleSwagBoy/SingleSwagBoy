@@ -199,7 +199,7 @@ function App2() {
             <Button type="primary" onClick={() => {
               setOpen(true)
               setSource("add")
-              formRef.setFieldsValue({ "qywechatCode": qywechatCode })
+              // formRef.setFieldsValue({ "qywechatCode": qywechatCode })
             }}>新建</Button>
             <MySyncBtn type={7} name='同步缓存，同步过后再到老后台同步缓存：数据同步--->频道'  params={{ key: key }} />
           </div>

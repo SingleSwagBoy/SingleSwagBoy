@@ -82,6 +82,7 @@ const GoodLooking = lazy(() => import('pages/TVConfig/goodLooking/index.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/TVConfig/ProgramAppConfig/index.jsx')); //电视节目单配置
 const TvRecommendConfig = lazy(() => import('pages/TVConfig/tvRecommendConfig/tvRecommendConfig.jsx'))      //Tv推荐配置
 const ChannelRiskRegion = lazy(() => import('pages/currencyChannel/channelRiskRegion/index.jsx'))      //风险地域
+const ArmourList = lazy(() => import('pages/armourPackage/armourList/index.jsx'))      //马甲包管理
 
 const LivePreview = lazy(() => import('pages/configManage/livePreview/index.jsx'))
 
@@ -210,6 +211,8 @@ const adminRoutes = [
 
     //通用-频道管理
     { name: '频道风险地域', icon: UnorderedListOutlined, path: '/mms/currencyChannel/channelRiskRegion', component: ChannelRiskRegion, code: "currencyChannel", sub_code: 'channelRiskRegion' },
+    //马甲包管理
+    { name: '马甲包管理', icon: UnorderedListOutlined, path: '/mms/armourPackage/armourList', component: ArmourList, code: "armourPackage", sub_code: 'armourList' },
     //电视节目单配置
     //{ name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },
     //其他

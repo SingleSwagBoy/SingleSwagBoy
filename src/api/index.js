@@ -518,6 +518,13 @@ export const delActivityConfig = (params) => { return request2.get(`${baseUrl}/m
 export const syncActivityConfig = (params) => { return request2.get(`${baseUrl}/mms/album/config/upload/guideActivity/sync`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
 
 
+//下线节目
+export const getOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/get`,params); };          //下线节目列表
+export const getApkList = (params) => { return request2.post(`${baseUrl}/mms/offline/apk/get`,params); };          //下线节目列表
+export const getOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/get`,params); };          //下线节目列表
+export const updateOfflineTime = (params) => { return request2.post(`${baseUrl}/mms/offline/schedule/update`,params); };          //下线节目列表
+
+
 
 
 //广告-二维码套餐类型

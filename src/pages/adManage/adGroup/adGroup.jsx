@@ -45,6 +45,7 @@ export default class adGroup extends Component {
             dict_ad_type: [
                 { key: 1, value: '右键运营位' },
                 { key: 2, value: '屏显广告' },
+                { key: 3, value: '信息流广告' },
             ],
             //标签列表
             dict_target_list: [],
@@ -135,8 +136,13 @@ export default class adGroup extends Component {
                             <Select style={{ width: '200px', margin: "0 5px" }} allowClear showSearch placeholder="广告内容"
                                 onChange={(e) => { this.state.search.adType = e }}
                             >
-                                <Option value={1} key={1}>右键运营位广告</Option>
-                                <Option value={2} key={2}>屏显广告</Option>
+                                {
+                                    dict_ad_type.map((r, i) => {
+                                        return (
+                                            <Option value={r.key} key={i}>{r.value}</Option>
+                                        )
+                                    })
+                                }
                             </Select>
                             <Button type="primary" onClick={() => { this.refreshList(this.state.search) }}>查询</Button>
                         </div>
@@ -145,7 +151,7 @@ export default class adGroup extends Component {
                 </Card>
 
 
-                <Modal visible={modal_box.is_show} title={modal_box.title} width={1500} style={{ top: 20 }} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
+                <Modal visible={modal_box.is_show} title={modal_box.title} width={2000} style={{ top: 20 }} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
                     footer={null}
                 // destroyOnClose
                 // footer={[
@@ -263,7 +269,7 @@ export default class adGroup extends Component {
                                             {dict_ad_type.map((item, index) => {
                                                 return (
                                                     <Radio value={item.key} >
-                                                        {item.value}(5条)
+                                                        {item.value}
                                                     </Radio>
                                                 )
                                             })}
@@ -329,17 +335,17 @@ export default class adGroup extends Component {
             { title: '广告组名称', dataIndex: 'name', key: 'name', width: 200, },
             { title: '标签', dataIndex: 'tag', key: 'tag', width: 200, },
             {
-                title: '上下线时间', dataIndex: 'time', key: 'time',
+                title: '上下线时间', dataIndex: 'time', key: 'time', width: 350,
                 render: (rowValue, row, index) => {
                     return (
                         <div>{row.onlineTime ? util.formatTime(row.onlineTime, "") : "未配置"} - {row.offlineTime ? util.formatTime(row.offlineTime, "") : "未配置"}</div>
                     )
                 }
             },
-            { title: '下发量', dataIndex: 'dealtNum', key: 'dealtNum', },
+            { title: '下发量', dataIndex: 'dealtNum', key: 'dealtNum', width: 100, },
             { title: '排序', dataIndex: 'sortOrder', key: 'sortOrder', },
             {
-                title: '状态', dataIndex: 'status', key: 'status', width: 200,
+                title: '状态', dataIndex: 'status', key: 'status', width: 100,
                 render: (rowValue, row, index) => {
                     // 1、有效,2、无效
                     return (
@@ -347,20 +353,20 @@ export default class adGroup extends Component {
                             defaultChecked={rowValue == 1 ? true : false}
                             onChange={(val) => {
                                 let obj = JSON.parse(JSON.stringify(row))
-                                obj.status =  val ? 1 : 2
+                                obj.status = val ? 1 : 2
                                 this.setState({
-                                    currentItem:row
-                                },()=>{
+                                    currentItem: row
+                                }, () => {
                                     this.requestNewGroupChange(obj)
                                 })
-                              
+
                             }}
                         />
                     )
 
                 }
             },
-            { title: '备注', dataIndex: 'remark', key: 'remark', width: 200,ellipsis: true, },
+            { title: '备注', dataIndex: 'remark', key: 'remark', width: 200, ellipsis: true, },
             {
                 title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 210,
                 render: (rowValue, row, index) => {
@@ -398,7 +404,7 @@ export default class adGroup extends Component {
         })
 
         //标签数据类型信息
-        requestAdFieldList({page:{pageSize:9999}}).then(res => {
+        requestAdFieldList({ page: { pageSize: 9999 } }).then(res => {
             that.setState({
                 dict_field_list: res.data,
             })
@@ -410,13 +416,13 @@ export default class adGroup extends Component {
         let { table_box } = that.state;
         let params = {
             ...val,
-            groupName:this.state.search.groupName,
-            onlineTime:this.state.search.onlineTime,
-            offlineTime:this.state.search.offlineTime,
-            adName:this.state.search.adName,
-            tag:this.state.search.tag,
-            adType:this.state.search.adType,
-            
+            groupName: this.state.search.groupName,
+            onlineTime: this.state.search.onlineTime,
+            offlineTime: this.state.search.offlineTime,
+            adName: this.state.search.adName,
+            tag: this.state.search.tag,
+            adType: this.state.search.adType,
+
         }
         requestNewGroupList(params).then(res => {
             console.log('group_list', res.data);

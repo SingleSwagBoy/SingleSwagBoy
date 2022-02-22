@@ -58,6 +58,7 @@ const RecommendConfig = lazy(() => import('pages/configManage/recommendConfig/in
 const WordsSwiperConfig = lazy(() => import('pages/configManage/wordsSwiperConfig/index.jsx'));
 const HomeBroadcast = lazy(() => import('pages/configManage/homeBroadcast/index.jsx'));
 const ChannelShield = lazy(() => import('pages/configManage/channelShield/index.jsx'));
+const ProgrammeManage = lazy(() => import('pages/configManage/programmeManage/index.jsx'));
 const LuckyDraw = lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
 const GoodsConfig = lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
 const mobileChannel = lazy(() => import('pages/mobileSubject/channel/index.jsx'))
@@ -151,6 +152,7 @@ const adminRoutes = [
     { name: '移动端节目单屏蔽', icon: UnorderedListOutlined, path: '/mms/config/channelShield', component: ChannelShield, code: "configManage", sub_code: 'channelShield' },
     // { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/config/tvRecommendConfig', component: TvRecommendConfig, code: "configManage", sub_code: 'tvRecommendConfig' },
     { name: '直播预告', icon: UnorderedListOutlined, path: '/mms/config/livePreview', component: LivePreview, code: "configManage", sub_code: 'livePreview' },
+    { name: '节目单管理', icon: UnorderedListOutlined, path: '/mms/configManage/programmeManage', component: ProgrammeManage, code: "configManage", sub_code: 'programmeManage' },
 
 
 

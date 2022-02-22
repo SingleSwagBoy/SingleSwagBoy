@@ -515,7 +515,17 @@ export const updateActivityConfig = (params) => { return request2.post(`${baseUr
 export const delActivityConfig = (params) => { return request2.get(`${baseUrl}/mms/album/config/upload/guideActivity/del`,{params:params}); };          //引导上传照片活动配置 - 删
 export const syncActivityConfig = (params) => { return request2.get(`${baseUrl}/mms/album/config/upload/guideActivity/sync`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
 
-
+//  好剧专题
+export const specialList = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/list`,{params:params}); };       // 专题列表
+export const specialAdd = (params) => { return request.post(`${baseUrl}/mms/channel/home/special/add`,params); };       // 新增专题
+export const specialGetBaseInfo = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/getBaseInfo`,{params:params}); };       // 获取专题标题
+export const specialSetBaseInfo = (params) => { return request.post(`${baseUrl}/mms/channel/home/special/setBaseInfo`,params); };       // 设置专题标题
+export const specialStatus = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/status`,{params:params}); };       // 获取专题标题
+export const specialSync = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/sync`,{params:params}); };       // 专题同步
+export const specialUpdate = (params) => { return request.post(`${baseUrl}/mms/channel/home/special/update`,params); };       // 修改专题
+export const specialDelete = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/del`,{params:params}); };       // 专题删除
+export const specialChangepos = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/changepos`,{params:params}); };       // 设置专题排序
+export const specialResort = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/resort`,{params:params}); };       // 专题重排序
 
 
 //广告-二维码套餐类型

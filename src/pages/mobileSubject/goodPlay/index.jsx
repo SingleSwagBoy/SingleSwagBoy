@@ -255,6 +255,7 @@ export default class GoodPlay extends Component{
         specialResort({}).then(res => {
             if(res.data.errCode==0){
                 message.success("重新排序成功")
+                this.getList();
             }else{
                 message.error(res.data.msg)
             }

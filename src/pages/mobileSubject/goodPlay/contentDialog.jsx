@@ -101,6 +101,7 @@ export default class GoodPlayDialog extends Component{
                 console.log("specialUpdate",res)
                 if(res.data.errCode==0){
                     message.success("修改成功")
+                    this.formRef.current.resetFields()
                     this.props.onCloseDialog();
                     this.props.ongetList();
                 }else{
@@ -112,6 +113,7 @@ export default class GoodPlayDialog extends Component{
                 console.log("onConfirmClick",res)
                 if(res.data.errCode==0){
                     message.success("新增成功")
+                    this.formRef.current.resetFields()
                     this.props.onCloseDialog();
                     this.props.ongetList();
                 }else{
@@ -216,8 +218,8 @@ export default class GoodPlayDialog extends Component{
                         imageUrl={this.formRef.current && this.formRef.current.getFieldValue("playerStyle")} />
                     </Form.Item>
                     {
-                        this.formRef.current && this.formRef.current.getFieldValue("type") &&
-                        this.formRef.current.getFieldValue("type") == 2 &&
+                        this.formRef.current && this.formRef.current.getFieldValue("playerType") &&
+                        this.formRef.current.getFieldValue("playerType") == 2 &&
                         <Form.Item label="播放器跳转" name='playerTarget' rules={[{ required: true }]} >
                             <Select className="base-input-wrapper" allowClear {...selectProps} placeholder="频道搜索" 
                             onSearch={(searchKey) => {

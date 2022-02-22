@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer, useRouter } from 'react'
-import { getOfflineChannel, updateOfflineTime, deleteConfig, addList, changeWelcome, requestNewAdTagList, getApkList } from 'api'
+import { getOfflineChannel, updateOfflineTime, delOfflineChannel, addList, getChannel, updateOfflineChannel, addOfflineChannel } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, DatePicker, Switch, Popover, Space } from 'antd'
 import { Link } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -14,7 +14,7 @@ let privateData = {
 };
 function App2(props) {
   console.log(props, "props")
-  
+
   const [forceUpdateId, forceUpdate] = useReducer(() => [], []);
   const [forceUpdatePage, forceUpdatePages] = useReducer(() => [], []);
   const [page, setPage] = useState(1)
@@ -23,12 +23,24 @@ function App2(props) {
   const [lists, setLists] = useState([])
   const [apkList, setApkList] = useState([])
   const [tagList, setTagList] = useState([])
+  const [channelList, setChannelList] = useState([])
   const layout = { labelCol: { span: 4 }, wrapperCol: { span: 20 } }
-  const [formRef] = Form.useForm()
+  const [formRef, channerForm] = Form.useForm()
   const tailLayout = { wrapperCol: { offset: 16, span: 48 } }
   const [openDailog, setOpen] = useState(false)
+  const [isChannelShow, setIsChannel] = useState(false)
   const [currentItem, setCurrent] = useState({})
+  const [currentChannel, setCurrentChannel] = useState({})
   const [source, setSource] = useState("")
+  const selectProps = {
+    optionFilterProp: "children",
+    filterOption(input, option) {
+      return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    },
+    showSearch() {
+      console.log('onSearch')
+    }
+  }
   const filterOption = (input, option) => {
     if (!input) return true;
     let children = option.children;
@@ -50,18 +62,30 @@ function App2(props) {
     { key: 3, value: "彻底下线" },
     { key: 4, value: "退出下线" },
   ]
-  const content = (
-    <div>
-      {
-        controlState.map((r, i) => {
-          return <p><Button type={i == 3 ? "primary" : i == 0 ? "ghost" : i == 1 ? "dashed" : i == 2 ? "" : ""} danger={i == 2 ? false : true} onClick={() => changeLine(r.key)}>{r.value}</Button></p>
-        })
-      }
-    </div>
-  );
-  
-  const changeLine = (index) => {
+  const content = (val) => {
+    return (
+      <div>
+        {
+          controlState.map((r, i) => {
+            return (
+              <p>
+                <Button type={i == 3 ? "primary" : i == 0 ? "ghost" : i == 1 ? "dashed" : i == 2 ? "" : ""}
+                  danger={i == 2 ? false : true} onClick={() => changeLine(r.key, val)}>
+                  {r.value}
+                </Button>
+              </p>
+            )
+
+          })
+        }
+      </div>
+    )
+  }
+
+  const changeLine = (index, val) => {
     console.log(index)
+    val.strict = index
+    updateOfflineFunc(val)
   }
   const getBtnCont = (val) => {
     let arr = controlState.filter(item => item.key == val)
@@ -74,8 +98,8 @@ function App2(props) {
       title: "控制状态", dataIndex: "strict", key: "strict",
       render: (rowValue, row, index) => {
         return (
-          <Popover content={content} trigger="focus">
-            <Button>{getBtnCont(rowValue)}</Button>
+          <Popover content={content(row)} trigger="focus">
+            <Button type={rowValue == 4 ? "primary" : rowValue == 1 ? "ghost" : rowValue == 2 ? "dashed" : rowValue == 3 ? "" : ""} danger={rowValue == 3 ? false : true} >{getBtnCont(rowValue)}</Button>
           </Popover>
         )
       }
@@ -91,15 +115,15 @@ function App2(props) {
             key={rowValue}
             onChange={(val) => {
               let info = JSON.parse(JSON.stringify(row))
-              info.status = val
-
+              info.status = val ? 1 : 2
+              updateOfflineFunc(info)
             }}
           />}</div>
         )
       }
     },
     {
-      title: "上下线时间", dataIndex: "time", key: "time",width:350,
+      title: "上下线时间", dataIndex: "time", key: "time", width: 350,
       render: (rowValue, row, index) => {
         return (
           <div>
@@ -122,12 +146,13 @@ function App2(props) {
               onClick={() => {
                 console.log(row)
                 let arr = JSON.parse(JSON.stringify(row))
-                let list = arr.scheduleList?JSON.parse(arr.scheduleList):[]
+                let list = arr.scheduleList ? JSON.parse(arr.scheduleList) : []
                 list.forEach(r => {
                   r.time = [moment(r.startTime), moment(r.endTime)]
                 })
                 arr.scheduleList = list
-                setCurrent(row)
+                setCurrent(row.scheduleList)
+                setCurrentChannel(row)
                 setOpen(true)
                 formRef.setFieldsValue(arr)
                 setSource("edit")
@@ -147,11 +172,11 @@ function App2(props) {
       // setApkList(list.data)
     }
     fetchTagData()
-    if(!props.location.query)return props.history.push('/mms/offline/program')
+    if (!props.location.query) return props.history.push('/mms/offline/program')
   }, [])
   useEffect(() => {//列表
     const fetchData = async () => {
-      if(props.location.query){
+      if (props.location.query) {
         const list = await getOfflineChannel({ page: { currentPage: page, pageSize: pageSize }, programId: props.location.query.id })
         setLists(list.data)
       }
@@ -162,41 +187,58 @@ function App2(props) {
     console.log(e)
   }
   const submitForm = (val) => {//表单提交
-    let list = JSON.parse(currentItem.scheduleList)
-    val.scheduleList.forEach(r => {
-      if (list.length == 0) {
-        r.programId = currentItem.programId
-        r.channelId = currentItem.channelId
+    console.log(currentItem, val)
+    let list = currentItem ? Array.isArray(currentItem) ? currentItem : JSON.parse(currentItem) : []
+    if (list.length == 0) {
+      val.scheduleList.forEach(r => {
+        r.programId = currentChannel.programId
+        r.channelId = currentChannel.channelId
         r.startTime = r.time[0].valueOf()
         r.endTime = r.time[1].valueOf()
         r.deleted = 0
-      } else {
-        list.forEach(l => {
-          if (r.id == l.id) {
-            r.startTime = r.time[0].valueOf()
-            r.endTime = r.time[1].valueOf()
-          } else {
-            r.programId = currentItem.programId
-            r.channelId = currentItem.channelId
-            r.startTime = r.time[0].valueOf()
-            r.endTime = r.time[1].valueOf()
-            r.deleted = 0
-          }
-        })
-      }
-    })
-    console.log(val.scheduleList)
-    updateOffline(val.scheduleList)
+      })
+      updateOffline(val.scheduleList)
+    } else {
+      list.forEach(l => {
+        if (val.scheduleList.length == 0) {
+          l.deleted = 1
+        } else {
+          val.scheduleList.forEach(r => {
+            if (r.deleted == 0 || !r.deleted) {
+              if (r.id == l.id) {
+                l.startTime = r.time[0].valueOf()
+                l.endTime = r.time[1].valueOf()
+              } else {
+                list.push({
+                  programId: currentChannel.programId,
+                  channelId: currentChannel.channelId,
+                  startTime: r.time[0].valueOf(),
+                  endTime: r.time[1].valueOf(),
+                  deleted: 0
+                })
+              }
+            }
+          })
+        }
+      })
+      // return console.log(list)
+      updateOffline(list)
+    }
   }
-  const addWelcomeApi = (params) => {
-    addList(params).then(res => {
-      message.success("新增成功")
+  const updateOfflineFunc = (params) => {
+    updateOfflineChannel(params).then(res => {
+      message.success("修改成功")
       forceUpdate()
     })
   }
-  const closeDialog = () => {
+  const closeDialog = (type) => {
     formRef.resetFields()
-    setOpen(false)
+    if (type == 1) {
+      setOpen(false)
+    } else {
+      setIsChannel(false)
+    }
+
   }
   const updateOffline = (params) => {
     updateOfflineTime(params).then(res => {
@@ -210,7 +252,7 @@ function App2(props) {
       title: `确认删除该条数据吗？`,
       // content: '确认删除？',
       onOk: () => {
-        deleteConfig({ id: row.indexId }).then(res => {
+        delOfflineChannel({ id: row.id }).then(res => {
           message.success("删除成功")
           forceUpdate()
         })
@@ -219,12 +261,32 @@ function App2(props) {
       }
     })
   }
+  const getChannelFunc = (val) => {
+    let params = {
+      keywords: val
+    }
+    getChannel(params).then(res => {
+      setChannelList(res.data.data || [])
+    })
+  }
+  const submitChannelForm = (val) => {
+    console.log(val)
+    let params = {
+      programId: props.location.query.id,
+      channelIds: val.channelList.join(",")
+    }
+    addOfflineChannel(params).then(res => {
+      message.success("新增成功")
+      forceUpdate()
+    })
+    setIsChannel(false)
+  }
   return (
     <div className="loginVip">
       <Card title={
         <Breadcrumb>
           <Breadcrumb.Item>
-            <Link to="/mms/offline/program">下线频道</Link>
+            <Link to="/mms/offline/program">下线节目</Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>设置下线频道</Breadcrumb.Item>
 
@@ -234,10 +296,10 @@ function App2(props) {
         extra={
           <div>
             <Button type="primary" onClick={() => {
-              setOpen(true)
+              setIsChannel(true)
               setSource("add")
             }}>新建频道</Button>
-            <MySyncBtn type={7} name='同步缓存' />
+            {/* <MySyncBtn type={7} name='同步缓存' /> */}
           </div>
         }
       >
@@ -254,7 +316,7 @@ function App2(props) {
             onChange: changeSize
           }}
         />
-        <Modal title="时刻表" centered visible={openDailog} onCancel={() => closeDialog()} footer={null} width={1000}>
+        <Modal title="时刻表" centered visible={openDailog} onCancel={() => closeDialog(1)} footer={null} width={1000}>
           {
             <Form {...layout}
               name="taskForm"
@@ -277,10 +339,14 @@ function App2(props) {
                           </Form.Item>
 
                           <MinusCircleOutlined onClick={() => {
-                            // let arr = formRef.getFieldsValue().scheduleList
-                            // console.log(arr)
-                            // arr[index].deleted = 1
-                            // formRef.setFieldsValue({scheduleList:arr})
+                            if (!!currentItem) {
+                              let arr = Array.isArray(currentItem) ? currentItem : JSON.parse(currentItem)
+                              if (arr.length > 0) {
+                                console.log(arr)
+                                arr[index].deleted = 1
+                                setCurrent(arr)
+                              }
+                            }
                             remove(field.name)
                           }} />
                         </Space>
@@ -296,7 +362,46 @@ function App2(props) {
                 </Form.List>
               </Form.Item>
               <Form.Item {...tailLayout}>
-                <Button onClick={() => closeDialog()}>取消</Button>
+                <Button onClick={() => closeDialog(1)}>取消</Button>
+                <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                  确定
+                </Button>
+              </Form.Item>
+            </Form>
+          }
+        </Modal>
+        <Modal title="新增频道" centered visible={isChannelShow} onCancel={() => closeDialog(2)} footer={null} width={1000}>
+          {
+            <Form {...layout}
+              name="channelForm"
+              form={channerForm}
+              onFinish={(e) => submitChannelForm(e)}>
+              <Form.Item label="频道" name="channelList">
+                <Select placeholder="请选择频道配置" mode="multiple" allowClear
+                  {...selectProps}
+                  onSearch={(val) => {
+                    console.log(val)
+                    if (privateData.inputTimeOutVal) {
+                      clearTimeout(privateData.inputTimeOutVal);
+                      privateData.inputTimeOutVal = null;
+                    }
+                    privateData.inputTimeOutVal = setTimeout(() => {
+                      if (!privateData.inputTimeOutVal) return;
+                      getChannelFunc(val)
+                    }, 1000)
+                  }}
+                >
+                  {
+                    channelList.map(r => {
+                      return (
+                        <Option value={r.id} key={r.id}>{r.name + "----" + r.code}</Option>
+                      )
+                    })
+                  }
+                </Select>
+              </Form.Item>
+              <Form.Item {...tailLayout}>
+                <Button onClick={() => closeDialog(2)}>取消</Button>
                 <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
                   确定
                 </Button>

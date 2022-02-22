@@ -523,6 +523,12 @@ export const getOfflineProgram = (params) => { return request2.post(`${baseUrl}/
 export const getApkList = (params) => { return request2.post(`${baseUrl}/mms/offline/apk/get`,params); };          //下线节目列表
 export const getOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/get`,params); };          //下线节目列表
 export const updateOfflineTime = (params) => { return request2.post(`${baseUrl}/mms/offline/schedule/update`,params); };          //下线节目列表
+export const delOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/del`,params); };          //删除频道
+export const addOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/add`,params); };          //删除频道
+export const updateOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/update`,params); };          //删除频道
+export const updateOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/update`,params); };          //删除频道
+export const addOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/add`,params); };          //删除频道
+export const delOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/del`,params); };          //删除频道
 
 
 

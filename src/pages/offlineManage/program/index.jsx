@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { getOfflineProgram, updateList, deleteConfig, addList, changeWelcome, requestNewAdTagList, getApkList } from 'api'
-import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, DatePicker, Switch, Space } from 'antd'
+import { getOfflineProgram, updateOfflineProgram, deleteConfig, addOfflineProgram, delOfflineProgram, requestNewAdTagList, getApkList } from 'api'
+import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, DatePicker, Switch, Divider } from 'antd'
 import { Link } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
@@ -15,7 +15,7 @@ function App2() {
   const [forceUpdateId, forceUpdate] = useReducer(() => [], []);
   const [forceUpdatePage, forceUpdatePages] = useReducer(() => [], []);
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(100)
   const [total, setTotal] = useState(0)
   const [lists, setLists] = useState([])
   const [apkList, setApkList] = useState([])
@@ -75,8 +75,8 @@ function App2() {
             key={rowValue}
             onChange={(val) => {
               let info = JSON.parse(JSON.stringify(row))
-              info.isOfflineLastestOnly = val
-
+              info.isOfflineLastestOnly = val?1:2
+              submitForm(info)
             }}
           />}</div>
         )
@@ -95,8 +95,8 @@ function App2() {
             key={rowValue}
             onChange={(val) => {
               let info = JSON.parse(JSON.stringify(row))
-              info.status = val
-
+              info.status = val?1:2
+              submitForm(info)
             }}
           />}</div>
         )
@@ -116,6 +116,8 @@ function App2() {
                 console.log(row)
                 let arr = JSON.parse(JSON.stringify(row))
                 arr.time = [moment(arr.startTime), moment(arr.endTime)]
+                arr.showType = arr.showType == 1?true:false
+                arr.isOpenSelfBuild = arr.isOpenSelfBuild == 1?true:false
                 setCurrent(row)
                 setOpen(true)
                 formRef.setFieldsValue(arr)
@@ -124,7 +126,7 @@ function App2() {
             >编辑</Button>
             <Button size="small" type="dashed" style={{ margin: "0 10px" }}>
               {/* <Link to={`/mms/offline/detail?id=${row.id}&name=${row.name}`}>设置下线频道</Link> */}
-              <Link to={{pathname:'/mms/offline/detail',query:{id:row.id,name:row.name}}}>设置下线频道</Link>
+              <Link to={{ pathname: '/mms/offline/detail', query: { id: row.id, name: row.name } }}>设置下线频道</Link>
             </Button>
             <Button danger size="small" onClick={() => delItem(row)}>删除</Button>
           </div>
@@ -153,32 +155,32 @@ function App2() {
   }
   const submitForm = (val) => {//表单提交
     console.log(val)
-    return
+    // return
     if (source == "add") {
       let params = {
         ...val,
-        startTime: val.time ? val.time[0].valueOf() : val.startTime,
-        endTime: val.time ? val.time[1].valueOf() : val.endTime,
+        showType:val.showType?1:2,
+        isOpenSelfBuild:val.isOpenSelfBuild?1:2,
       }
-      addWelcomeApi(params)
+      addOfflineProgramFunc(params)
     } else if (source == "edit") {
       let params = {
         ...currentItem,
         ...val,
-        startTime: val.time ? val.time[0].valueOf() : val.startTime,
-        endTime: val.time ? val.time[1].valueOf() : val.endTime,
+        showType:val.showType?1:2,
+        isOpenSelfBuild:val.isOpenSelfBuild?1:2
       }
-      saveWelcomeApi(params)
+      updateOfflineProgramFunc(params)
     } else {
       let params = {
         ...val,
       }
-      saveWelcomeApi(params)
+      updateOfflineProgramFunc(params)
     }
     closeDialog()
   }
-  const addWelcomeApi = (params) => {
-    addList(params).then(res => {
+  const addOfflineProgramFunc = (params) => {
+    addOfflineProgram(params).then(res => {
       message.success("新增成功")
       forceUpdate()
     })
@@ -186,9 +188,11 @@ function App2() {
   const closeDialog = () => {
     formRef.resetFields()
     setOpen(false)
+    setSource("")
   }
-  const saveWelcomeApi = (params) => {
-    updateList(params).then(res => {
+  const updateOfflineProgramFunc = (params) => {
+    // return console.log(params)
+    updateOfflineProgram(params).then(res => {
       message.success("更新成功")
       forceUpdate()
     })
@@ -198,7 +202,7 @@ function App2() {
       title: `确认删除该条数据吗？`,
       // content: '确认删除？',
       onOk: () => {
-        deleteConfig({ id: row.indexId }).then(res => {
+        delOfflineProgram({ id: row.id }).then(res => {
           message.success("删除成功")
           forceUpdate()
         })
@@ -278,19 +282,50 @@ function App2() {
               {/* <Form.Item label="上下线时间" name="time">
                 <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
               </Form.Item> */}
-              <Form.Item label="设备" name="platform">
+              {/* <Form.Item label="设备" name="platform">
                 <Radio.Group size="large" onChange={(e) => {
                   forceUpdatePages()
                 }}>
                   <Radio.Button value="1">手机端配置</Radio.Button>
                   <Radio.Button value="2">电视端配置</Radio.Button>
                 </Radio.Group>
+              </Form.Item> */}
+              <Divider plain>手机端配置</Divider>
+              <Form.Item label="下线图" name="mBgPicUrl" rules={[{ required: true, message: '请输入跳转链接' }]}>
+                <MyImageUpload
+                  getUploadFileUrl={(file, newItem) => { getUploadFileUrl('mBgPicUrl', file, newItem) }}
+                  imageUrl={getUploadFileImageUrlByType('mBgPicUrl')} />
+                <Input placeholder="请输入下线图地址" defaultValue={getUploadFileImageUrlByType('mBgPicUrl')} key={getUploadFileImageUrlByType('mBgPicUrl')}
+                  onChange={(e) => {
+                    if (privateData.inputTimeOutVal) {
+                      clearTimeout(privateData.inputTimeOutVal);
+                      privateData.inputTimeOutVal = null;
+                    }
+                    privateData.inputTimeOutVal = setTimeout(() => {
+                      if (!privateData.inputTimeOutVal) return;
+                      formRef.setFieldsValue({ mBgPicUrl: e.target.value })
+                      forceUpdatePages()
+                    }, 1000)
+                  }}
+                />
+              </Form.Item>
+              <Form.Item label="跳转链接" name="jumpUrl" rules={[{ required: true, message: '请输入跳转链接' }]}>
+                <Input placeholder="请输入跳转链接" />
+              </Form.Item>
+
+              <Divider plain>电视端配置</Divider>
+              <Form.Item label="全屏样式" name="fullScreenStyle" rules={[{ required: true, message: '请选择全屏样式' }]}>
+                <Select mode={true} allowClear showSearch placeholder="请选择全屏样式" filterOption={filterOption}
+                  onChange={(e) => forceUpdatePages()}
+                >
+                  <Option value={1} key={1}>下线图</Option>
+                  <Option value={2} key={2}>apk下载</Option>
+                </Select>
               </Form.Item>
               {
-                formRef.getFieldValue("platform") == "1"
-                &&
+                formRef.getFieldValue("fullScreenStyle") == "1" &&
                 <>
-                  <Form.Item label="下线图" name="bgPicUrl" rules={[{ required: true, message: '请输入跳转链接' }]}>
+                  <Form.Item label="下线图" name="bgPicUrl" rules={[{ required: true, message: '请输入下线图地址' }]}>
                     <MyImageUpload
                       getUploadFileUrl={(file, newItem) => { getUploadFileUrl('bgPicUrl', file, newItem) }}
                       imageUrl={getUploadFileImageUrlByType('bgPicUrl')} />
@@ -302,106 +337,60 @@ function App2() {
                         }
                         privateData.inputTimeOutVal = setTimeout(() => {
                           if (!privateData.inputTimeOutVal) return;
-                          console.log(111)
                           formRef.setFieldsValue({ bgPicUrl: e.target.value })
                           forceUpdatePages()
                         }, 1000)
                       }}
                     />
                   </Form.Item>
-                  <Form.Item label="跳转链接" name="jumpUrl" rules={[{ required: true, message: '请输入跳转链接' }]}>
-                    <Input placeholder="请输入跳转链接" />
+                  <Form.Item label="下线运营图" name="fullScreenBgPicUrl" rules={[{ required: true, message: '请输入下线运营图' }]}>
+                    <MyImageUpload
+                      getUploadFileUrl={(file, newItem) => { getUploadFileUrl('fullScreenBgPicUrl', file, newItem) }}
+                      imageUrl={getUploadFileImageUrlByType('fullScreenBgPicUrl')} />
+                    <Input placeholder="请输入下线运营图地址" defaultValue={getUploadFileImageUrlByType('fullScreenBgPicUrl')} key={getUploadFileImageUrlByType('fullScreenBgPicUrl')}
+                      onChange={(e) => {
+                        if (privateData.inputTimeOutVal) {
+                          clearTimeout(privateData.inputTimeOutVal);
+                          privateData.inputTimeOutVal = null;
+                        }
+                        privateData.inputTimeOutVal = setTimeout(() => {
+                          if (!privateData.inputTimeOutVal) return;
+                          formRef.setFieldsValue({ fullScreenBgPicUrl: e.target.value })
+                          forceUpdatePages()
+                        }, 1000)
+                      }}
+                    />
+                  </Form.Item>
+                  <Form.Item label="二维码登录" name="showType" valuePropName="checked">
+                    <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>
                   </Form.Item>
                 </>
               }
               {
-                formRef.getFieldValue("platform") == "2"
-                &&
+                formRef.getFieldValue("fullScreenStyle") == "2" &&
                 <>
-                  <Form.Item label="全屏样式" name="fullScreenStyle" rules={[{ required: true, message: '请选择全屏样式' }]}>
-                    <Select mode={true} allowClear showSearch placeholder="请选择全屏样式" filterOption={filterOption}
-                      onChange={(e) => forceUpdatePages()}
-                    >
-                      <Option value={1} key={1}>下线图</Option>
-                      <Option value={2} key={2}>apk下载</Option>
+                  <Form.Item label="运营APK" name="apkId" rules={[{ required: true, message: '请选择全屏样式' }]}>
+                    <Select mode={true} allowClear showSearch placeholder="请选择全屏样式" filterOption={filterOption}>
+                      {
+                        apkList.map((r, i) => {
+                          return <Option value={r.id} key={i}>{r.name}</Option>
+                        })
+                      }
                     </Select>
                   </Form.Item>
-                  {
-                    formRef.getFieldValue("fullScreenStyle") == "1" &&
-                    <>
-                      <Form.Item label="下线图" name="bgPicUrl" rules={[{ required: true, message: '请输入下线图地址' }]}>
-                        <MyImageUpload
-                          getUploadFileUrl={(file, newItem) => { getUploadFileUrl('bgPicUrl', file, newItem) }}
-                          imageUrl={getUploadFileImageUrlByType('bgPicUrl')} />
-                        <Input placeholder="请输入下线图地址" defaultValue={getUploadFileImageUrlByType('bgPicUrl')} key={getUploadFileImageUrlByType('bgPicUrl')}
-                          onChange={(e) => {
-                            if (privateData.inputTimeOutVal) {
-                              clearTimeout(privateData.inputTimeOutVal);
-                              privateData.inputTimeOutVal = null;
-                            }
-                            privateData.inputTimeOutVal = setTimeout(() => {
-                              if (!privateData.inputTimeOutVal) return;
-                              formRef.setFieldsValue({ bgPicUrl: e.target.value })
-                              forceUpdatePages()
-                            }, 1000)
-                          }}
-                        />
-                      </Form.Item>
-                      <Form.Item label="下线运营图" name="fullScreenBgPicUrl" rules={[{ required: true, message: '请输入下线运营图' }]}>
-                        <MyImageUpload
-                          getUploadFileUrl={(file, newItem) => { getUploadFileUrl('fullScreenBgPicUrl', file, newItem) }}
-                          imageUrl={getUploadFileImageUrlByType('fullScreenBgPicUrl')} />
-                        <Input placeholder="请输入下线运营图地址" defaultValue={getUploadFileImageUrlByType('fullScreenBgPicUrl')} key={getUploadFileImageUrlByType('bgPicUrl')}
-                          onChange={(e) => {
-                            if (privateData.inputTimeOutVal) {
-                              clearTimeout(privateData.inputTimeOutVal);
-                              privateData.inputTimeOutVal = null;
-                            }
-                            privateData.inputTimeOutVal = setTimeout(() => {
-                              if (!privateData.inputTimeOutVal) return;
-                              formRef.setFieldsValue({ fullScreenBgPicUrl: e.target.value })
-                              forceUpdatePages()
-                            }, 1000)
-                          }}
-                        />
-                      </Form.Item>
-                      <Form.Item label="二维码登录" name="showType" valuePropName="checked">
-                        <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>
-                      </Form.Item>
-                      {/* <Form.Item label="跳转链接" name="jumpUrl" rules={[{ required: true, message: '请输入跳转链接' }]}>
-                        <Input placeholder="请输入跳转链接" />
-                      </Form.Item> */}
-
-                    </>
-                  }
-                  {
-                    formRef.getFieldValue("fullScreenStyle") == "2" &&
-                    <>
-                      <Form.Item label="运营APK" name="apkId" rules={[{ required: true, message: '请选择全屏样式' }]}>
-                        <Select mode={true} allowClear showSearch placeholder="请选择全屏样式" filterOption={filterOption}>
-                          {
-                            apkList.map((r, i) => {
-                              return <Option value={r.id} key={i}>{r.name}</Option>
-                            })
-                          }
-                        </Select>
-                      </Form.Item>
-                      <Form.Item label="推广渠道" name="apkLauType" rules={[{ required: true, message: '请选择全屏样式' }]}>
-                        <Select mode={true} allowClear showSearch placeholder="请选择全屏样式" filterOption={filterOption}>
-                          <Option value={1} key={1}>腾讯</Option>
-                          <Option value={2} key={2}>爱奇艺</Option>
-                          <Option value={3} key={3}>优酷</Option>
-                        </Select>
-                      </Form.Item>
-                      <Form.Item label="推广地址" name="apkLauAction" rules={[{ required: true, message: '请输入推广地址' }]}>
-                        <Input placeholder="请输入推广地址" />
-                      </Form.Item>
-                      <Form.Item label="推广参数" name="apkLauParam" rules={[{ required: true, message: '请输入推广参数' }]}>
-                        <Input placeholder="请输入推广参数" />
-                      </Form.Item>
-                    </>
-                  }
-
+                  <Form.Item label="推广渠道" name="apkLauType" rules={[{ required: true, message: '请选择全屏样式' }]}>
+                    <Select mode={true} allowClear showSearch placeholder="请选择全屏样式" filterOption={filterOption}>
+                      <Option value={1} key={1}>腾讯</Option>
+                      <Option value={2} key={2}>爱奇艺</Option>
+                      <Option value={3} key={3}>优酷</Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item label="推广地址" name="apkLauAction" rules={[{ required: true, message: '请输入推广地址' }]}>
+                    <Input placeholder="请输入推广地址" />
+                  </Form.Item>
+                  <Form.Item label="推广参数" name="apkLauParam" rules={[{ required: true, message: '请输入推广参数' }]}>
+                    <Input placeholder="请输入推广参数" />
+                  </Form.Item>
                 </>
               }
 

@@ -16,7 +16,7 @@ function App2() {
   const [forceUpdateId, forceUpdate] = useReducer(() => [], []);
   const [forceUpdatePage, forceUpdatePages] = useReducer(() => [], []);
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(9999)
   const [total, setTotal] = useState(0)
   const [lists, setLists] = useState([])
   const [tagList, setTagList] = useState([])
@@ -145,7 +145,7 @@ function App2() {
   }, [])
   useEffect(() => {//列表
     const fetchData = async () => {
-      const list = await getArmourPackage({})
+      const list = await getArmourPackage({page:{currentPage: 1,pageSize: 9999}})
       setLists(list.data.data)
     }
     fetchData()

@@ -37,7 +37,7 @@ import {
     synctags,                        //企微标签
     syncChannelRecommend,           //频道推荐-数据同步
     syncActivityConfig,           //家庭相册配置图片活动
-
+    syncArmourPackage,              //马甲包
 
 } from 'api'
 
@@ -87,6 +87,7 @@ export default class SyncBtn extends Component {
         if (type === 26) return syncChannelRecommend();                                 //频道推荐-数据同步
         if (type === 27) return synctags();                                      //企微标签
         if (type === 28) return syncActivityConfig();                                      //家庭相册配置图片活动
+        if (type === 29) return syncArmourPackage();                                      //马甲包
       
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误

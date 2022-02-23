@@ -517,6 +517,14 @@ export const updateActivityConfig = (params) => { return request2.post(`${baseUr
 export const delActivityConfig = (params) => { return request2.get(`${baseUrl}/mms/album/config/upload/guideActivity/del`,{params:params}); };          //引导上传照片活动配置 - 删
 export const syncActivityConfig = (params) => { return request2.get(`${baseUrl}/mms/album/config/upload/guideActivity/sync`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
 
+// 马甲包
+export const getArmourPackage = (params) => { return request2.post(`${baseUrl}/mms/armourPackage/list`,params); };          //引导上传照片活动配置 - 缓存同步
+export const addArmourPackage = (params) => { return request2.post(`${baseUrl}/mms/armourPackage/create`,params); };          //引导上传照片活动配置 - 缓存同步
+export const delArmourPackage = (params) => { return request2.get(`${baseUrl}/mms/armourPackage/delete`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
+export const editArmourPackage = (params) => { return request2.post(`${baseUrl}/mms/armourPackage/edit`,params); };          //引导上传照片活动配置 - 缓存同步
+export const copyArmourPackage = (params) => { return request2.get(`${baseUrl}/mms/armourPackage/copy`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
+export const syncArmourPackage = (params) => { return request2.get(`${baseUrl}/mms/armourPackage/sync`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
+
 
 //下线节目
 export const getOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/get`,params); };          //下线节目列表

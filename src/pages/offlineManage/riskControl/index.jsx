@@ -19,10 +19,10 @@ function App2() {
   const [riskUser, setRiskUser] = useState({})
   const [riskUuid, setRiskUuid] = useState({})
   const controlState = [
-    { key: 1, value: "严格下线" },
-    { key: 2, value: "换台下线" },
-    { key: 3, value: "彻底下线" },
-    { key: 4, value: "退出下线" },
+    { key: 0, value: "严格下线" },
+    { key: 1, value: "换台下线" },
+    { key: 2, value: "彻底下线" },
+    { key: 3, value: "退出下线" },
   ]
   const everyBody = [
     { value: "风险用户", key: 1 },

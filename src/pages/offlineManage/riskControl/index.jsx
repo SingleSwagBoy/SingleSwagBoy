@@ -85,7 +85,7 @@ function App2() {
               setOpen(true)
               setSource("add")
             }}>新建</Button> */}
-            {/* <MySyncBtn type={7} name='同步缓存' /> */}
+            <MySyncBtn type={30} name='同步缓存' />
           </div>
         }
       >

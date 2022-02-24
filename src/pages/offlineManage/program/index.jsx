@@ -343,11 +343,11 @@ function App2() {
                       }}
                     />
                   </Form.Item>
-                  <Form.Item label="下线运营图" name="fullScreenBgPicUrl" rules={[{ required: true, message: '请输入下线运营图' }]}>
+                  <Form.Item label="下线运营图" name="operaterPicUrl" rules={[{ required: true, message: '请输入下线运营图' }]}>
                     <MyImageUpload
-                      getUploadFileUrl={(file, newItem) => { getUploadFileUrl('fullScreenBgPicUrl', file, newItem) }}
-                      imageUrl={getUploadFileImageUrlByType('fullScreenBgPicUrl')} />
-                    <Input placeholder="请输入下线运营图地址" defaultValue={getUploadFileImageUrlByType('fullScreenBgPicUrl')} key={getUploadFileImageUrlByType('fullScreenBgPicUrl')}
+                      getUploadFileUrl={(file, newItem) => { getUploadFileUrl('operaterPicUrl', file, newItem) }}
+                      imageUrl={getUploadFileImageUrlByType('operaterPicUrl')} />
+                    <Input placeholder="请输入下线运营图地址" defaultValue={getUploadFileImageUrlByType('operaterPicUrl')} key={getUploadFileImageUrlByType('operaterPicUrl')}
                       onChange={(e) => {
                         if (privateData.inputTimeOutVal) {
                           clearTimeout(privateData.inputTimeOutVal);
@@ -355,7 +355,7 @@ function App2() {
                         }
                         privateData.inputTimeOutVal = setTimeout(() => {
                           if (!privateData.inputTimeOutVal) return;
-                          formRef.setFieldsValue({ fullScreenBgPicUrl: e.target.value })
+                          formRef.setFieldsValue({ operaterPicUrl: e.target.value })
                           forceUpdatePages()
                         }, 1000)
                       }}

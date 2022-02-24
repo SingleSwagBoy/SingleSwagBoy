@@ -57,10 +57,10 @@ function App2(props) {
     }
   }
   const controlState = [
-    { key: 1, value: "严格下线" },
+    { key: 1, value: "退出下线" },
     { key: 2, value: "换台下线" },
-    { key: 3, value: "彻底下线" },
-    { key: 4, value: "退出下线" },
+    { key: 3, value: "严格下线" },
+    { key: 4, value: "彻底下线" },
   ]
   const content = (val) => {
     return (

@@ -63,11 +63,11 @@ function App2() {
   }
   const getState = (index) => {
     if (index == 0) {
-      return riskUser.strict == 1 ? true : false
+      return riskUser.isOpenSelfBuild == 1 ? true : false
     } else if (index == 1) {
-      return riskUuid.strict == 1 ? true : false
+      return riskUuid.isOpenSelfBuild == 1 ? true : false
     } else if (index == 2) {
-      return riskRouter.strict == 1 ? true : false
+      return riskRouter.isOpenSelfBuild == 1 ? true : false
     }
   }
   return (
@@ -98,17 +98,17 @@ function App2() {
                   <div style={{ marginBottom: "20px", display: 'flex', alignItems: "center" }}>
                     <p style={{ marginBottom: "0" }}>下线级别:</p>
                     <Select style={{ width: "200px" }} placeholder="请选择下线级别"
-                      key={index == 0 ? riskUser.isOpenSelfBuild : index == 1 ? riskUuid.isOpenSelfBuild : index == 2 ? riskRouter.isOpenSelfBuild : ""}
-                      defaultValue={index == 0 ? riskUser.isOpenSelfBuild : index == 1 ? riskUuid.isOpenSelfBuild : index == 2 ? riskRouter.isOpenSelfBuild : ""}
+                      key={index == 0 ? riskUser.strict : index == 1 ? riskUuid.strict : index == 2 ? riskRouter.strict : ""}
+                      defaultValue={index == 0 ? riskUser.strict : index == 1 ? riskUuid.strict : index == 2 ? riskRouter.strict : ""}
                       onChange={(e) => {
                         if (index == 0) {
-                          riskUser.isOpenSelfBuild = e
+                          riskUser.strict = e
                           setRiskUser(riskUser)
                         }else if (index == 1) {
-                          riskUuid.isOpenSelfBuild = e
+                          riskUuid.strict = e
                           setRiskUuid(riskUuid)
                         }else if (index == 2) {
-                          riskRouter.isOpenSelfBuild = e
+                          riskRouter.strict = e
                           setRiskRouter(riskRouter)
                         } 
                       }}
@@ -128,13 +128,13 @@ function App2() {
                       defaultChecked={getState(index)}
                       onChange={(e) => {
                         if (index == 0) {
-                          riskUser.strict = e?1:2
+                          riskUser.isOpenSelfBuild = e?1:2
                           setRiskUser(riskUser)
                         }else if (index == 1) {
-                          riskUuid.strict = e?1:2
+                          riskUuid.isOpenSelfBuild = e?1:2
                           setRiskUuid(riskUuid)
                         }else if (index == 2) {
-                          riskRouter.strict = e?1:2
+                          riskRouter.isOpenSelfBuild = e?1:2
                           setRiskRouter(riskRouter)
                         } 
                       }}

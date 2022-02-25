@@ -274,6 +274,11 @@ export const requestNewGroupList = (params) => { return request2.post(`${baseUrl
 export const requestNewGroupDelete = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/del`, params) };                                                                         //删除广告组
 export const requestNewGroupCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/copy`, params) };                                                                          //复制广告组
 
+//素材库
+export const getInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/get`, params) };                                                                          //信息流广告组
+
+
+
 
 export const requestNewAdTagList = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/get`, { params: params }) };                                                                //新版 获取用户标签列表
 export const requestNewAdTagCreate = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/add`, params) };                                                                         //新版 创建用户标签数据

@@ -370,6 +370,24 @@ function App2() {
               {
                 formRef.getFieldValue("fullScreenStyle") == "2" &&
                 <>
+                  <Form.Item label="全屏背景图" name="fullScreenBgPicUrl" rules={[{ required: true, message: '请输入下线运营图' }]}>
+                    <MyImageUpload
+                      getUploadFileUrl={(file, newItem) => { getUploadFileUrl('fullScreenBgPicUrl', file, newItem) }}
+                      imageUrl={getUploadFileImageUrlByType('fullScreenBgPicUrl')} />
+                    <Input placeholder="请输入下线运营图地址" defaultValue={getUploadFileImageUrlByType('fullScreenBgPicUrl')} key={getUploadFileImageUrlByType('fullScreenBgPicUrl')}
+                      onChange={(e) => {
+                        if (privateData.inputTimeOutVal) {
+                          clearTimeout(privateData.inputTimeOutVal);
+                          privateData.inputTimeOutVal = null;
+                        }
+                        privateData.inputTimeOutVal = setTimeout(() => {
+                          if (!privateData.inputTimeOutVal) return;
+                          formRef.setFieldsValue({ fullScreenBgPicUrl: e.target.value })
+                          forceUpdatePages()
+                        }, 1000)
+                      }}
+                    />
+                  </Form.Item>
                   <Form.Item label="运营APK" name="apkId" rules={[{ required: true, message: '请选择全屏样式' }]}>
                     <Select mode={true} allowClear showSearch placeholder="请选择全屏样式" filterOption={filterOption}>
                       {

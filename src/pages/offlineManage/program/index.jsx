@@ -62,26 +62,26 @@ function App2() {
       dataIndex: "apkId",
       key: "apkId"
     },
-    {
-      title: "仅下线最新版本",
-      dataIndex: "isOfflineLastestOnly",
-      key: "isOfflineLastestOnly",
-      render: (rowValue, row, index) => {
-        return (
-          <div>{<Switch
-            checkedChildren="是"
-            unCheckedChildren="否"
-            defaultChecked={rowValue == 1 ? true : false}
-            key={rowValue}
-            onChange={(val) => {
-              let info = JSON.parse(JSON.stringify(row))
-              info.isOfflineLastestOnly = val?1:2
-              submitForm(info)
-            }}
-          />}</div>
-        )
-      }
-    },
+    // {
+    //   title: "仅下线最新版本",
+    //   dataIndex: "isOfflineLastestOnly",
+    //   key: "isOfflineLastestOnly",
+    //   render: (rowValue, row, index) => {
+    //     return (
+    //       <div>{<Switch
+    //         checkedChildren="是"
+    //         unCheckedChildren="否"
+    //         defaultChecked={rowValue == 1 ? true : false}
+    //         key={rowValue}
+    //         onChange={(val) => {
+    //           let info = JSON.parse(JSON.stringify(row))
+    //           info.isOfflineLastestOnly = val?1:2
+    //           submitForm(info)
+    //         }}
+    //       />}</div>
+    //     )
+    //   }
+    // },
     {
       title: "状态",
       dataIndex: "status",
@@ -95,7 +95,7 @@ function App2() {
             key={rowValue}
             onChange={(val) => {
               let info = JSON.parse(JSON.stringify(row))
-              info.status = val?1:2
+              info.status = val ? 1 : 2
               submitForm(info)
             }}
           />}</div>
@@ -116,8 +116,8 @@ function App2() {
                 console.log(row)
                 let arr = JSON.parse(JSON.stringify(row))
                 arr.time = [moment(arr.startTime), moment(arr.endTime)]
-                arr.showType = arr.showType == 1?true:false
-                arr.isOpenSelfBuild = arr.isOpenSelfBuild == 1?true:false
+                arr.showType = arr.showType == 1 ? true : false
+                arr.isOpenSelfBuild = arr.isOpenSelfBuild == 1 ? true : false
                 setCurrent(row)
                 setOpen(true)
                 formRef.setFieldsValue(arr)
@@ -159,16 +159,16 @@ function App2() {
     if (source == "add") {
       let params = {
         ...val,
-        showType:val.showType?1:2,
-        isOpenSelfBuild:val.isOpenSelfBuild?1:2,
+        showType: val.showType ? 1 : 2,
+        isOpenSelfBuild: val.isOpenSelfBuild ? 1 : 2,
       }
       addOfflineProgramFunc(params)
     } else if (source == "edit") {
       let params = {
         ...currentItem,
         ...val,
-        showType:val.showType?1:2,
-        isOpenSelfBuild:val.isOpenSelfBuild?1:2
+        showType: val.showType ? 1 : 2,
+        isOpenSelfBuild: val.isOpenSelfBuild ? 1 : 2
       }
       updateOfflineProgramFunc(params)
     } else {
@@ -322,27 +322,28 @@ function App2() {
                   <Option value={2} key={2}>apk下载</Option>
                 </Select>
               </Form.Item>
+              <Form.Item label="下线图" name="bgPicUrl" rules={[{ required: true, message: '请输入下线图地址' }]}>
+                <MyImageUpload
+                  getUploadFileUrl={(file, newItem) => { getUploadFileUrl('bgPicUrl', file, newItem) }}
+                  imageUrl={getUploadFileImageUrlByType('bgPicUrl')} />
+                <Input placeholder="请输入下线图地址" defaultValue={getUploadFileImageUrlByType('bgPicUrl')} key={getUploadFileImageUrlByType('bgPicUrl')}
+                  onChange={(e) => {
+                    if (privateData.inputTimeOutVal) {
+                      clearTimeout(privateData.inputTimeOutVal);
+                      privateData.inputTimeOutVal = null;
+                    }
+                    privateData.inputTimeOutVal = setTimeout(() => {
+                      if (!privateData.inputTimeOutVal) return;
+                      formRef.setFieldsValue({ bgPicUrl: e.target.value })
+                      forceUpdatePages()
+                    }, 1000)
+                  }}
+                />
+              </Form.Item>
               {
                 formRef.getFieldValue("fullScreenStyle") == "1" &&
                 <>
-                  <Form.Item label="下线图" name="bgPicUrl" rules={[{ required: true, message: '请输入下线图地址' }]}>
-                    <MyImageUpload
-                      getUploadFileUrl={(file, newItem) => { getUploadFileUrl('bgPicUrl', file, newItem) }}
-                      imageUrl={getUploadFileImageUrlByType('bgPicUrl')} />
-                    <Input placeholder="请输入下线图地址" defaultValue={getUploadFileImageUrlByType('bgPicUrl')} key={getUploadFileImageUrlByType('bgPicUrl')}
-                      onChange={(e) => {
-                        if (privateData.inputTimeOutVal) {
-                          clearTimeout(privateData.inputTimeOutVal);
-                          privateData.inputTimeOutVal = null;
-                        }
-                        privateData.inputTimeOutVal = setTimeout(() => {
-                          if (!privateData.inputTimeOutVal) return;
-                          formRef.setFieldsValue({ bgPicUrl: e.target.value })
-                          forceUpdatePages()
-                        }, 1000)
-                      }}
-                    />
-                  </Form.Item>
+
                   <Form.Item label="下线运营图" name="operaterPicUrl" rules={[{ required: true, message: '请输入下线运营图' }]}>
                     <MyImageUpload
                       getUploadFileUrl={(file, newItem) => { getUploadFileUrl('operaterPicUrl', file, newItem) }}

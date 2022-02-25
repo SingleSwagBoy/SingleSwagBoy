@@ -10,7 +10,7 @@
 
 import React, { Component } from 'react';
 
-import { Input, Form, DatePicker, Button, Table, Modal, Card, Switch, Select, message, Image, InputNumber } from 'antd';
+import { Input, Form, DatePicker, Button, Table, Modal, Card, Switch, Select, message, Image, InputNumber, Radio } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
 import {
@@ -20,7 +20,7 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
@@ -170,7 +170,7 @@ export default class adCreateModal extends Component {
                         <div style={{ display: "flex" }}>
                             <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center' }}>
                                 <div>类型:</div>
-                                <Select allowClear placeholder="请选择类型" defaultValue={1}
+                                {/* <Select allowClear placeholder="请选择类型" defaultValue={1}
                                     onChange={(val) => {
                                         this.setState({
                                             adIndex: val,
@@ -182,7 +182,21 @@ export default class adCreateModal extends Component {
                                 >
                                     <Option value={1} key={1}>右键运营位广告</Option>
                                     <Option value={2} key={2}>屏显广告</Option>
-                                </Select>
+                                </Select> */}
+                                <Radio.Group defaultValue="1" size="large"
+                                    onChange={(val) => {
+                                        console.log(val.target.value)
+                                        this.setState({
+                                            adIndex: val.target.value,
+                                            page: 1
+                                        }, () => {
+                                            this.refreshList(val.target.value)
+                                        })
+                                    }}>
+                                    <Radio.Button value="1">右键运营位广告</Radio.Button>
+                                    <Radio.Button value="2">屏显广告</Radio.Button>
+                                    <Radio.Button value="3">信息流广告</Radio.Button>
+                                </Radio.Group>
                             </div>
                             <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center' }}>
                                 <div>广告名称:</div>
@@ -237,80 +251,81 @@ export default class adCreateModal extends Component {
                 >
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef} onFinish={this.onModalConfirmClick.bind(this)}>
                         {
-                            (that.formRef && that.formRef.current) ?
+                            (that.formRef && that.formRef.current) &&
                                 adIndex == 1 ?
-                                    <div>
-                                        <Form.Item label='名称' name='name' rules={[{ required: true }]}>
-                                            <Input className="base-input-wrapper" placeholder="请输入广告名称" />
-                                        </Form.Item>
-                                        <Form.Item label='时长（s）' name='duration' rules={[{ required: true }]}>
-                                            <InputNumber min={0} />
-                                        </Form.Item>
-                                        <Form.Item label='类型' name='type' rules={[{ required: true }]}>
-                                            <Select placeholder="请选择类型" onChange={()=>this.forceUpdate()}>
-                                                {this.state.typeList.map((item, index) => {
-                                                    return <Option value={item.key} key={index}> {item.name}</Option>
+                                <div>
+                                    <Form.Item label='名称' name='name' rules={[{ required: true }]}>
+                                        <Input className="base-input-wrapper" placeholder="请输入广告名称" />
+                                    </Form.Item>
+                                    <Form.Item label='时长（s）' name='duration' rules={[{ required: true }]}>
+                                        <InputNumber min={0} />
+                                    </Form.Item>
+                                    <Form.Item label='类型' name='type' rules={[{ required: true }]}>
+                                        <Select placeholder="请选择类型" onChange={() => this.forceUpdate()}>
+                                            {this.state.typeList.map((item, index) => {
+                                                return <Option value={item.key} key={index}> {item.name}</Option>
+                                            })}
+                                        </Select>
+                                    </Form.Item>
+                                    {
+                                        that.formRef.current.getFieldValue("type") == 4
+                                        &&
+                                        <Form.Item label='支付套餐' name='pCode'>
+                                            <Select placeholder="请选择支付套餐">
+                                                {this.state.rechargeList.map((item, index) => {
+                                                    return <Option value={item.skuCode} key={index}> {item.name}</Option>
                                                 })}
                                             </Select>
                                         </Form.Item>
-                                        {
-                                            that.formRef.current.getFieldValue("type") == 4
-                                            &&
-                                            <Form.Item label='支付套餐' name='pCode'>
-                                                <Select placeholder="请选择支付套餐">
-                                                    {this.state.rechargeList.map((item, index) => {
-                                                        return <Option value={item.skuCode} key={index}> {item.name}</Option>
-                                                    })}
-                                                </Select>
-                                            </Form.Item>
-                                        }
+                                    }
 
-                                        <Form.Item label='倒计时结束时间' name="djsEndTime">
-                                            <DatePicker showTime />
-                                        </Form.Item>
-                                        <Form.Item label='是否显示距离今日结束时间' name='jljr'>
-                                            <Select placeholder="是否显示距离今日结束时间">
-                                                <Option value={1} key={1}> 是</Option>
-                                                <Option value={0} key={0}> 否</Option>
-                                            </Select>
-                                        </Form.Item>
-                                        <Form.Item label='状态' name='status' valuePropName="checked">
-                                            <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
-                                        </Form.Item>
-                                        <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
-                                            <div>
-                                                <MyImageUpload
-                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
-                                                    imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
-                                                <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('picUrl')} key={that.getUploadFileImageUrlByType('picUrl') || ""}
-                                                    onChange={(e) => {
-                                                        this.getNewUrl("picUrl", e.target.value)
-                                                    }} />
-                                            </div>
-                                        </Form.Item>
-                                        <Form.Item label="缩略图" name="iconPicUrl" rules={[{ required: true }]}>
-                                            <div>
-                                                <MyImageUpload
-                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('iconPicUrl', file, newItem) }}
-                                                    imageUrl={that.getUploadFileImageUrlByType('iconPicUrl')} />
-                                                <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('iconPicUrl')} key={that.getUploadFileImageUrlByType('iconPicUrl') || ""}
-                                                    onChange={(e) => {
-                                                        this.getNewUrl("iconPicUrl", e.target.value)
-                                                    }}
-                                                />
-                                            </div>
-                                        </Form.Item>
-                                        <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
-                                            <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
-                                        </Form.Item>
-                                        <Form.Item {...this.state.tailLayout}>
-                                            <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
-                                            <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
-                                                确定
-                                            </Button>
-                                        </Form.Item>
-                                    </div>
-                                    :
+                                    <Form.Item label='倒计时结束时间' name="djsEndTime">
+                                        <DatePicker showTime />
+                                    </Form.Item>
+                                    <Form.Item label='是否显示距离今日结束时间' name='jljr'>
+                                        <Select placeholder="是否显示距离今日结束时间">
+                                            <Option value={1} key={1}> 是</Option>
+                                            <Option value={0} key={0}> 否</Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item label='状态' name='status' valuePropName="checked">
+                                        <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
+                                    </Form.Item>
+                                    <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
+                                        <div>
+                                            <MyImageUpload
+                                                getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
+                                                imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
+                                            <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('picUrl')} key={that.getUploadFileImageUrlByType('picUrl') || ""}
+                                                onChange={(e) => {
+                                                    this.getNewUrl("picUrl", e.target.value)
+                                                }} />
+                                        </div>
+                                    </Form.Item>
+                                    <Form.Item label="缩略图" name="iconPicUrl" rules={[{ required: true }]}>
+                                        <div>
+                                            <MyImageUpload
+                                                getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('iconPicUrl', file, newItem) }}
+                                                imageUrl={that.getUploadFileImageUrlByType('iconPicUrl')} />
+                                            <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('iconPicUrl')} key={that.getUploadFileImageUrlByType('iconPicUrl') || ""}
+                                                onChange={(e) => {
+                                                    this.getNewUrl("iconPicUrl", e.target.value)
+                                                }}
+                                            />
+                                        </div>
+                                    </Form.Item>
+                                    <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
+                                        <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
+                                    </Form.Item>
+                                    <Form.Item {...this.state.tailLayout}>
+                                        <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
+                                        <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                                            确定
+                                        </Button>
+                                    </Form.Item>
+                                </div>
+                                :
+                                adIndex == 2 ?
                                     <div>
                                         <Form.Item label='名称' name='name' rules={[{ required: true }]}>
                                             <Input className="base-input-wrapper" placeholder="请输入广告名称" />
@@ -352,11 +367,10 @@ export default class adCreateModal extends Component {
                                             </Button>
                                         </Form.Item>
                                     </div>
-                                : ""
+                                    :
+                                    <div>111</div>
+
                         }
-
-
-
                     </Form>
 
 
@@ -426,8 +440,10 @@ export default class adCreateModal extends Component {
         if (index == 1) {
             this.requestAdRightKey()
             this.requestProductSkuList()
-        } else {
+        } else if (index == 2) {
             this.getScreen()
+        } else {
+            this.getInfoGroup()
         }
     }
     requestAdRightKey() {
@@ -440,8 +456,8 @@ export default class adCreateModal extends Component {
         };
         requestAdRightKey(obj).then(res => {
             that.setState({
-                lists: res.data,
-                total: res.page.totalCount
+                lists: res.data || [],
+                total: res.page ? res.page.totalCount : 0
             })
             this.forceUpdate()
         })
@@ -454,8 +470,22 @@ export default class adCreateModal extends Component {
         };
         getScreen(obj).then(res => {
             that.setState({
-                lists: res.data,
-                total: res.page.totalCount
+                lists: res.data || [],
+                total: res.page ? res.page.totalCount : 0
+            })
+            this.forceUpdate()
+        })
+    }
+    getInfoGroup() {
+        let that = this;
+        let obj = {
+            page: { currentPage: this.state.page, pageSize: this.state.pageSize },
+            name: this.state.searchWords
+        };
+        getInfoGroup(obj).then(res => {
+            that.setState({
+                lists: res.data || [],
+                total: res.page ? res.page.totalCount : 0
             })
             this.forceUpdate()
         })
@@ -468,12 +498,12 @@ export default class adCreateModal extends Component {
         };
         requestProductSkuList(obj).then(res => {
             console.log(res.data)
-            if(res.data.errCode == 0){
+            if (res.data.errCode == 0) {
                 that.setState({
                     rechargeList: res.data.data
                 })
             }
-           
+
 
         })
     }

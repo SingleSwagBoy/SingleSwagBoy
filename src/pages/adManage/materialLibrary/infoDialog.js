@@ -43,6 +43,22 @@ function App2(props) {
         { key: 7, value: '跳转到二维码' },
         { key: 8, value: '跳转到好看分类' },
     ]
+    const goodLookTypes = [
+        { key: 1, value: '点歌台' },
+        { key: 2, value: '电视相册' },
+        { key: 3, value: '公共相册' },
+    ]
+    const jumpMenuTypes = [
+        { key: 1, value: '跳转到金币' },
+        { key: 2, value: '跳转到手机' },
+        { key: 3, value: '跳转到自建' },
+        { key: 4, value: '跳转到设置' },
+        { key: 5, value: '跳转到联系' },
+        { key: 6, value: '跳转到语音' },
+        { key: 7, value: '跳转到套餐' },
+        { key: 8, value: '跳转到小剧场列表页' },
+        { key: 100, value: '跳转到小剧场播放页' },
+    ]
     const [formRef] = Form.useForm()
     const [content, setContent] = useState([])
     const [sdkList, setSdkList] = useState([])
@@ -104,7 +120,7 @@ function App2(props) {
             <Form.Item label="图片配置" name="content">
                 <Tabs
                     type="editable-card"
-                    onChange={(e) => { }}
+                    onChange={(e) => {setActiveKey(e)}}
                     activeKey={activeKey.toString()}
                     onEdit={(targetKey, action) => {
                         // if (action == "add") {
@@ -158,9 +174,9 @@ function App2(props) {
                                         {
                                             formRef.getFieldValue("content")[i].jumpType == 1 &&
                                             <Form.Item label='频道'>
-                                                <Select style={{ width: "100%" }} placeholder='请输入频道'
-                                                    defaultValue={formRef.getFieldValue("content")[i].jumpType}
-                                                    key={formRef.getFieldValue("content")[i].jumpType}
+                                                <Select style={{ width: "100%" }} placeholder='请选择频道'
+                                                    defaultValue={formRef.getFieldValue("content")[i].channel}
+                                                    key={formRef.getFieldValue("content")[i].channel}
                                                     onChange={(e) => {
 
                                                     }}>
@@ -170,6 +186,51 @@ function App2(props) {
                                                 </Select>
                                             </Form.Item>
                                         }
+                                        {
+                                            formRef.getFieldValue("content")[i].jumpType == 6 &&
+                                            <Form.Item label='跳转菜单类型'>
+                                                <Select style={{ width: "100%" }} placeholder='请选择跳转菜单类型'
+                                                    defaultValue={formRef.getFieldValue("content")[i].jumpMenuType}
+                                                    key={formRef.getFieldValue("content")[i].jumpMenuType}
+                                                    onChange={(e) => {
+
+                                                    }}>
+                                                    {jumpMenuTypes.map((item, index) => (
+                                                        <Option value={item.key} key={index}>{item.value}</Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        }
+                                        {
+                                            formRef.getFieldValue("content")[i].jumpType == 8 &&
+                                            <Form.Item label='好看分类'>
+                                                <Select style={{ width: "100%" }} placeholder='请选择好看分类'
+                                                    defaultValue={formRef.getFieldValue("content")[i].goodLookType}
+                                                    key={formRef.getFieldValue("content")[i].goodLookType}
+                                                    onChange={(e) => {
+
+                                                    }}>
+                                                    {goodLookTypes.map((item, index) => (
+                                                        <Option value={item.key} key={index}>{item.value}</Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        }
+                                        <Form.Item label='停留时长'>
+                                            <InputNumber min={0} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime} />
+                                        </Form.Item>
+                                        <Form.Item label='排序'>
+                                            <InputNumber min={0} placeholder='请输入排序' key={formRef.getFieldValue("content")[i].sort} defaultValue={formRef.getFieldValue("content")[i].sort} />
+                                        </Form.Item>
+                                        <Form.Item label='推广渠道'>
+                                            <Input placeholder='请输入推广渠道' key={formRef.getFieldValue("content")[i].apkLauType} defaultValue={formRef.getFieldValue("content")[i].apkLauType} />
+                                        </Form.Item>
+                                        <Form.Item label='推广地址'>
+                                            <Input placeholder='请输入推广地址' key={formRef.getFieldValue("content")[i].apkLauAction} defaultValue={formRef.getFieldValue("content")[i].apkLauAction} />
+                                        </Form.Item>
+                                        <Form.Item label='推广参数'>
+                                            <Input placeholder='请输入推广参数' key={formRef.getFieldValue("content")[i].apkLauParam} defaultValue={formRef.getFieldValue("content")[i].apkLauParam} />
+                                        </Form.Item>
                                     </div>
                                 }
                             </div>

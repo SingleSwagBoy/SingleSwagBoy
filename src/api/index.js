@@ -526,7 +526,17 @@ export const copyArmourPackage = (params) => { return request2.get(`${baseUrl}/m
 export const syncArmourPackage = (params) => { return request2.get(`${baseUrl}/mms/armourPackage/sync`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
 
 
+//  微信登陆-专享配置
+export const getconfigsLogin = (params) => { return request.get(`${baseUrl}/mms/wx/exclusive/list`, { params: params }); };     // 解锁配置列表
+export const getconfigsstatus = (params) => { return request.get(`${baseUrl}/mms/wx/exclusive/status`, { params: params }); };     // 解锁配置上下线
+export const getconfigsAdd = (params) => { return request.post(`${baseUrl}/mms/wx/exclusive/add`, params); };                 // 解锁配置添加
+export const getconfigsUpdate = (params) => { return request.post(`${baseUrl}/mms/wx/exclusive/update`, params); };                 // 解锁配置更新
+export const getconfigsDelete = (params) => { return request.get(`${baseUrl}/mms/wx/exclusive/delete`, { params: params }); };     // 解锁配置删除
+export const getconfigsSync = (params) => { return request.get(`${baseUrl}/mms/wx/exclusive/sync`, { params: params }); };     // 解锁配置同步
 
+// 登录(专享)配置
+export const listextraGet = (params) => { return request.get(`${baseUrl}/mms/wx/qrcode/listextra`, { params: params }); };     // 解锁二维码文案描述
+export const setextra = (params) => { return request.post(`${baseUrl}/mms/wx/qrcode/setextra`, params); };                 // 设置解锁二维码文案描述
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

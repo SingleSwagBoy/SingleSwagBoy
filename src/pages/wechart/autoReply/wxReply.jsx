@@ -36,6 +36,8 @@ export default class WxReply extends Component {
                 { index: "3", code: "addFriend", name: '搜索关注回复' },
                 { index: "4", code: "scanSubscribe", name: '第1次扫码关注回复' },
                 { index: "5", code: "scan", name: '第x次关注扫码回复' },
+                { index: "7", code: "exclusiveScan", name: '专享解锁回复' },
+                { index: "8", code: "loginScan", name: '登录回复' },
             ],
             dict_rule_type: [
                 { key: 1, value: '全匹配' },
@@ -56,6 +58,12 @@ export default class WxReply extends Component {
             dict_wx_program: [],                        //微信小程序列表
             dict_user_tags: [],                         //字典 用户标签
             dict_public_types: [],                      //字典 微信公众号回复类型
+            dict_public_types_init: [], 
+            dict_public_types_Login:[
+                {code: "dsj_server",id: 1,name: "电视家服务号",type: 1},
+                {id: 2, code: "dsj_welfare", name: "电视家福利号", type: 1},
+                {id: 4, code: "dsj_reader", name: "电视家权益号", type: 1}
+            ],
             dict_status: [],                            //字典 状态类型
             table_box: {
                 table_title: [],
@@ -82,7 +90,7 @@ export default class WxReply extends Component {
 
 
     render() {
-        let { table_box, menu_select_code, menu_list, request_box,
+        let { table_box, menu_select_code, menu_list, request_box,dict_public_types_Login,
             dict_public_types, dict_msg_type, dict_user_tags, dict_rule_types, dict_wx_program} = this.state;
 
         return (
@@ -100,12 +108,26 @@ export default class WxReply extends Component {
 
                 {/* ===================== 收到消息回复|被关注回复|首次扫码关注回复|已关注扫码回复 ===================== */}
                 {
-                    (menu_select_code === 'messageDefault' || menu_select_code === 'addFriend' || menu_select_code === 'scanSubscribe' || menu_select_code === 'scan') &&
+                    (menu_select_code === 'messageDefault' || menu_select_code === 'addFriend' || menu_select_code === 'scanSubscribe' || menu_select_code === 'scan'|| menu_select_code === 'exclusiveScan') &&
                     <div>
                         <Tooltip title='回复公众号类型' placement="left" color={'purple'}>
                             <Menu onClick={(item) => this.onMenuPublicTypeClick(item)} selectedKeys={[request_box.wxCode]} mode="horizontal">
                                 {
                                     dict_public_types.map((item, index) => {
+                                        return <Menu.Item key={item.code}> {item.name}</Menu.Item>
+                                    })
+                                }
+                            </Menu>
+                        </Tooltip>
+                    </div>
+                }
+                {
+                    menu_select_code === 'loginScan' &&
+                    <div>
+                        <Tooltip title='回复公众号类型' placement="left" color={'purple'}>
+                            <Menu onClick={(item) => this.onMenuPublicTypeClick(item)} selectedKeys={[request_box.wxCode]} mode="horizontal">
+                                {
+                                    dict_public_types_Login.map((item, index) => {
                                         return <Menu.Item key={item.code}> {item.name}</Menu.Item>
                                     })
                                 }
@@ -154,8 +176,10 @@ export default class WxReply extends Component {
                         let types = res.data;
                         if (types && types.length > 0) {
                             that.setState({
-                                dict_public_types: types
+                                dict_public_types: types,
+                                dict_public_types_init:types
                             }, () => {
+                                console.log("dict_public_typesdict_public_typesdict_public_types",that.state.dict_public_types)
                                 //渲染menu
                                 let code = that.state.menu_list[0].code;
                                 that.refreshTableTitleByMenuCode(code);
@@ -177,9 +201,11 @@ export default class WxReply extends Component {
 
         let last_code = that.state.menu_select_code;
         if (last_code === curr_code) return;
-
-
-        that.refreshTableTitleByMenuCode(curr_code);
+        that.setState({
+            dict_public_types:item.key=="loginScan"?this.state.dict_public_types_Login:this.state.dict_public_types_init
+        },()=>{
+            that.refreshTableTitleByMenuCode(curr_code);
+        })
     };
     //微信公众号回复类型
     onMenuPublicTypeClick(item) {

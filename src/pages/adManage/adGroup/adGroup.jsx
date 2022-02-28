@@ -258,7 +258,6 @@ export default class adGroup extends Component {
                                                     tag_select_id: list.length > 0 ? list[0].adId : 0,
                                                     adIndex: e.target.value
                                                 })
-
                                                 if (e.target.value == 1) {
                                                     this.requestAdRightKey(list.length > 0 ? list[0].adId : "")
                                                 } else if(e.target.value == 2){

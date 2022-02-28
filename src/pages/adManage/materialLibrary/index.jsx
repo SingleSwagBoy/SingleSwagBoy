@@ -24,6 +24,7 @@ import {
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
+import InfoDialog from "./infoDialog"
 let { RangePicker } = DatePicker;
 let { Option } = Select;
 
@@ -368,7 +369,7 @@ export default class adCreateModal extends Component {
                                         </Form.Item>
                                     </div>
                                     :
-                                    <div>111</div>
+                                    <div><InfoDialog table_data={this.formRef.current && this.formRef.current.getFieldValue()} /></div>
 
                         }
                     </Form>

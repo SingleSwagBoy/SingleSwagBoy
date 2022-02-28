@@ -203,7 +203,7 @@ export default class adCreateModal extends Component {
             this.requestAdRightKey(tagList)
         } else if(index == 2){
             this.getScreen(tagList)
-        } else if(index == 3){
+        } else if(index == 11){
             this.getInfoGroup(tagList)
         }
     }

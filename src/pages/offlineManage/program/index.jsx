@@ -291,7 +291,7 @@ function App2() {
                 </Radio.Group>
               </Form.Item> */}
               <Divider plain>手机端配置</Divider>
-              <Form.Item label="下线图" name="mBgPicUrl" rules={[{ required: formRef.getFieldValue("fullScreenStyle")?false:true, message: '请输入跳转链接' }]}>
+              <Form.Item label="下线图" name="mBgPicUrl" rules={[{ required: formRef.getFieldValue("fullScreenStyle") ? false : true, message: '请输入跳转链接' }]}>
                 <MyImageUpload
                   getUploadFileUrl={(file, newItem) => { getUploadFileUrl('mBgPicUrl', file, newItem) }}
                   imageUrl={getUploadFileImageUrlByType('mBgPicUrl')} />
@@ -309,12 +309,12 @@ function App2() {
                   }}
                 />
               </Form.Item>
-              <Form.Item label="跳转链接" name="jumpUrl" rules={[{ required: formRef.getFieldValue("fullScreenStyle")?false:true, message: '请输入跳转链接' }]}>
-                <Input placeholder="请输入跳转链接" onChange={()=>forceUpdatePages()} />
+              <Form.Item label="跳转链接" name="jumpUrl" rules={[{ required: formRef.getFieldValue("fullScreenStyle") ? false : true, message: '请输入跳转链接' }]}>
+                <Input placeholder="请输入跳转链接" onChange={() => forceUpdatePages()} />
               </Form.Item>
 
               <Divider plain>电视端配置</Divider>
-              <Form.Item label="全屏样式" name="fullScreenStyle" rules={[{ required: (formRef.getFieldValue("mBgPicUrl") || formRef.getFieldValue("jumpUrl"))?false:true, message: '请选择全屏样式' }]}>
+              <Form.Item label="全屏样式" name="fullScreenStyle" rules={[{ required: (formRef.getFieldValue("mBgPicUrl") || formRef.getFieldValue("jumpUrl")) ? false : true, message: '请选择全屏样式' }]}>
                 <Select mode={true} allowClear showSearch placeholder="请选择全屏样式" filterOption={filterOption}
                   onChange={(e) => forceUpdatePages()}
                 >
@@ -366,9 +366,7 @@ function App2() {
                       }}
                     />
                   </Form.Item>
-                  <Form.Item label="二维码登录" name="showType" valuePropName="checked">
-                    <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>
-                  </Form.Item>
+
                 </>
               }
               {
@@ -416,7 +414,9 @@ function App2() {
                   </Form.Item>
                 </>
               }
-
+              <Form.Item label="二维码登录" name="showType" valuePropName="checked">
+                <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>
+              </Form.Item>
               <Form.Item label="开启自建/注入播放" name="isOpenSelfBuild" valuePropName="checked">
                 <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>
               </Form.Item>

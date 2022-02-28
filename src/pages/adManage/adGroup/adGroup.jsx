@@ -25,7 +25,8 @@ import {
     requestNewGroupCopy,                    //复制广告组
     requestAdRightKey,                      ///右键运营位
     getScreen,//获取屏显广告
-    baseUrl
+    baseUrl,
+    getInfoGroup
 } from 'api';
 
 // import { util } from 'echarts';
@@ -260,8 +261,10 @@ export default class adGroup extends Component {
 
                                                 if (e.target.value == 1) {
                                                     this.requestAdRightKey(list.length > 0 ? list[0].adId : "")
-                                                } else {
+                                                } else if(e.target.value == 2){
                                                     this.getScreen(list.length > 0 ? list[0].adId : "")
+                                                }else{
+                                                    this.getInfoGroup(list.length > 0 ? list[0].adId : "")
                                                 }
                                                 this.forceUpdate()
                                             }}
@@ -526,8 +529,10 @@ export default class adGroup extends Component {
         })
         if (this.state.adIndex == 1) {
             this.requestAdRightKey(id)
-        } else {
+        } else if(this.state.adIndex == 2){
             this.getScreen(id)
+        }else{
+            this.getInfoGroup(id)
         }
 
     }
@@ -620,6 +625,20 @@ export default class adGroup extends Component {
             id: id
         }
         getScreen(params).then(res => {
+            console.log('group_list', res.data);
+            if (Array.isArray(res.data) && res.data.length > 0) {
+                let arr = res.data[0]
+                this.formRef.current.setFieldsValue({ "detailName": arr.name, "detailTime": [moment(arr.startTime), moment(arr.endTime)], "detailPic": arr.picUrl })
+                this.forceUpdate()
+            }
+        })
+    }
+    getInfoGroup(id) {
+        if (!id) return
+        let params = {
+            id: id
+        }
+        getInfoGroup(params).then(res => {
             console.log('group_list', res.data);
             if (Array.isArray(res.data) && res.data.length > 0) {
                 let arr = res.data[0]

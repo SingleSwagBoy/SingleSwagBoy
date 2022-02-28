@@ -177,7 +177,7 @@ export default class LockPersonConfig extends React.Component {
         })
     }
     render() {
-        let { lists, layout, loading, columns, entranceState, tagList, allUserList,public_list } = this.state;
+        let { layout, entranceState, tagList} = this.state;
         return (
             <div>
                 <Card  title={
@@ -302,7 +302,6 @@ export default class LockPersonConfig extends React.Component {
     submitForm(obj) {   // 提交表单
         console.log(obj, "obj")
         if(this.state.currentItem.id){   // 修改
-            console.log("xiugaiiiii")
             let params={
                 ...obj,
                 status:obj.status?1:2,

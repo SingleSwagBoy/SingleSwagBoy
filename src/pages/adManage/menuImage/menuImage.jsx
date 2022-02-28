@@ -312,12 +312,10 @@ export default class MenuImagePage extends Component {
 
     }
     getTag(val){
-        if(val.length>0){
-            let arr = this.state.dict_user_tags.filter(item=>val.some(l=>l==item.code) )
+        if(val){
+            let arr = this.state.dict_user_tags.filter(item=>val==item.code)
             if(arr.length>0){
-                let name = []
-                arr.forEach(r=>{name.push(r.name)})
-                return name.join(",")
+                return arr[0].name
             }else{
                 return "未配置"
             }

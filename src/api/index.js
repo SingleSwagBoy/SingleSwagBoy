@@ -528,6 +528,12 @@ export const specialChangepos = (params) => { return request.get(`${baseUrl}/mms
 export const specialResort = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/resort`,{params:params}); };       // 专题重排序
 
 
+//移动端节目单屏蔽
+export const getCategories = (params) => { return request.get(`${baseUrl}/mms/channel/programs/getCategories`,{params:params}); };       // 节目类型 
+export const getlistAllPrograms = (params) => { return request.get(`${baseUrl}/mms/channel/programs/listAllPrograms`,{params:params}); };       // 列表-节目单
+export const getCategoriesDetail = (params) => { return request.get(`${baseUrl}/mms/channel/programs/${params.id}`,{params:params}); };       // 详情-节目单
+export const categoriesUpdate = (params) => { return request.put(`${baseUrl}/mms/shortVideo/column`, params) }; 
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

@@ -1,6 +1,6 @@
 import React, { Component,useState, useEffect, useCallback  } from 'react'
 
-import { getRecords, delShieldList, getShieldList,requestAdTagList } from 'api'
+import { getRecords, delShieldList, getlistAllPrograms,requestAdTagList,getCategories } from 'api'
 import { Breadcrumb, Card, Image, Button, Table, Modal, message, DatePicker, Input, Form, Select, Checkbox,Switch,Radio } from 'antd'
 
 import { } from 'react-router-dom'
@@ -29,7 +29,7 @@ export default class ProgrammeManage extends Component{
         this.formRef = React.createRef()
         this.state = {
             page: 1,
-            pageSize: 50,
+            pageSize: 10,
             total: 0,
             data: [],
             loading: false,
@@ -139,6 +139,10 @@ export default class ProgrammeManage extends Component{
             ],
             checkedOptionList:[2,3],
             tagList: [],
+            searchName:"",  // 搜索名称
+            type:"",     // 类型名称（电视剧、电影、综艺）
+            category:"",   // 分类名称
+            isBlack:"",  //是否屏蔽(true: 已屏蔽；false :未屏蔽)
         }
     }
     componentDidMount() {
@@ -155,7 +159,7 @@ export default class ProgrammeManage extends Component{
                 tagList: res.data
             })
         });
-        this.getShieldList()
+        this.getlistAllPrograms()
     }
     changeSize = (page, pageSize) => {   // 分页
         console.log(page, pageSize);
@@ -163,20 +167,23 @@ export default class ProgrammeManage extends Component{
             page: page,
             pageSize: pageSize
         }, () => {
-            this.getShieldList()
+            this.getlistAllPrograms()
         })
     }
-    getShieldList() {
+    getlistAllPrograms() {
         let params = {
-            //name: this.state.searchName,
+            name: this.state.searchName,
+            type:this.state.type,
+            category:this.state.category,
+            isBlack:this.state.isBlack,
             pageSize: this.state.pageSize,
             pageNum: this.state.page
         }
-        getShieldList(params).then(res => {
-            console.log("getShieldList",res)
+        getlistAllPrograms(params).then(res => {
+            console.log("getlistAllPrograms",res)
             this.setState({
-                lists: res.data.programs,
-                total:res.data.totalPage
+                lists: res.data.data.programs,
+                total:res.data.data.totalPage*this.state.pageSize
             })
         })
     }
@@ -191,7 +198,7 @@ export default class ProgrammeManage extends Component{
                 }
                 delShieldList(params).then(res => {
                     message.success("操作成功")
-                    this.getShieldList()
+                    this.getlistAllPrograms()
                 })
             },
             onCancel: () => {
@@ -216,6 +223,19 @@ export default class ProgrammeManage extends Component{
     }
     onModalResult=(obj)=>{
         console.log("obj",obj)
+    }
+    getCategoryList=()=>{
+        let params={
+            type:this.state.type
+        }
+        getCategories(params).then(res=>{
+            console.log("getCategoryList",res)
+            if(res.data.errCode==0){
+                // this.setState({
+                    
+                // })
+            }
+        })
     }
 
     getRecords(type){
@@ -247,69 +267,70 @@ export default class ProgrammeManage extends Component{
                     <div className="cardTitle">
                         <div className="everyBody">
                             <Input.Search allowClear placeholder="请输入节目名" onSearch={(val)=>{
-                                if(val){
-                                    this.state.screen.name = val
-                                }else{
-                                    delete this.state.screen.name
-                                }
-                                this.getRecords(1)
+                                this.setState({
+                                    searchName:val
+                                },()=>{
+                                    this.getlistAllPrograms();
+                                })
                             }} />
                         </div>
                         <div className='everyBody'>
-                            <Select allowClear  placeholder="类型"
+                            <Select allowClear  placeholder="类型" className='set-width-select'
                                 onChange={(val)=>{
-                                    console.log(val)
-                                    if(val){
-                                        this.state.screen.type = Number(val)
-                                    }else{
-                                        delete this.state.screen.type
-                                    }
-                                    this.forceUpdate();
-                                    this.getRecords(1)
+                                    console.log("val",val)
+                                    this.setState({
+                                        type:val
+                                    },()=>{
+                                        this.forceUpdate();
+                                        this.getlistAllPrograms();
+                                        this.getCategoryList();
+                                    })
                                 }}
                             >
                                 {
                                 this.state.activityType.map(r=>{
                                     return(
-                                    <Option value={r.id} key={r.id}>{r.name}</Option>
+                                    <Option value={r.name} key={r.id}>{r.name}</Option>
                                     )
                                 })
                                 }
                             </Select>
                         </div>
                         <div className="everyBody">
-                            <Select allowClear  placeholder="分类"
+                            <Select allowClear  placeholder="分类" className='set-width-select'
                             onChange={(val)=>{
-                                if(val){
-                                    this.state.screen.cateGray = Number(val)
-                                }else{
-                                    delete this.state.screen.cateGray
-                                }
-                                this.getRecords(1)
+                                console.log("category  val",val)
+                                this.setState({
+                                    category:val
+                                },()=>{
+                                    this.forceUpdate();
+                                    this.getlistAllPrograms();
+                                })
                             }}
                             >
                             {
                                 this.state.optionList.map(r=>{
                                     return(
-                                        <Option value={r.id} key={r.id}>{r.name}</Option>
+                                        <Option value={r.value} key={r.value}>{r.label}</Option>
                                     )
                                 })
                             }
                             </Select>
                         </div>
                         <div className="everyBody">
-                            <Select allowClear  placeholder="是否屏蔽" 
+                            <Select allowClear  placeholder="是否屏蔽"  className='set-width-select'
                                 onChange={(val)=>{
-                                    if(val){
-                                        this.state.screen.hide = Number(val)
-                                    }else{
-                                        delete this.state.screen.hide
-                                    }
-                                    this.getRecords(1)
+                                    console.log("category  val",val)
+                                    this.setState({
+                                        isBlack:val
+                                    },()=>{
+                                        this.forceUpdate();
+                                        this.getlistAllPrograms();
+                                    })
                                 }}
                             >
-                                <Option value={1} key={1}>已屏蔽</Option>
-                                <Option value={2} key={2}>未屏蔽</Option>
+                                <Option value={true} key={1}>已屏蔽</Option>
+                                <Option value={false} key={2}>未屏蔽</Option>
                             </Select>
                         </div>
                         <div className='everyBody'>

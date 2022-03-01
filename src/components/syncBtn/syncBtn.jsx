@@ -39,6 +39,7 @@ import {
     syncActivityConfig,           //家庭相册配置图片活动
     syncArmourPackage,              //马甲包
     syncOfflineProgram,              //下线节目
+    syncAdSPList,              //支付成功
 
 } from 'api'
 
@@ -90,6 +91,7 @@ export default class SyncBtn extends Component {
         if (type === 28) return syncActivityConfig();                                      //家庭相册配置图片活动
         if (type === 29) return syncArmourPackage();                                      //马甲包
         if (type === 30) return syncOfflineProgram();                                      //下线节目
+        if (type === 31) return syncAdSPList();                                      //支付成功
       
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误

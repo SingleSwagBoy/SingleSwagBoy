@@ -553,6 +553,13 @@ export const syncOfflineProgram = (params) => { return request2.get(`${baseUrl}/
 export const getRiskConfig = (params) => { return request2.get(`${baseUrl}/mms/offline/program/risk/config`,{params:params}); };          //删除频道
 export const editRiskConfig = (params) => { return request2.post(`${baseUrl}/mms/offline/program/risk/config`,params); };          //删除频道
 
+//支付成功页面
+export const getAdSPList = (params) => { return request2.post(`${baseUrl}/mms/ad/adSP/list`,params); };          //查看支付成功列表
+export const addAdSPList = (params) => { return request2.post(`${baseUrl}/mms/ad/adSP/create`,params); };          //查看支付成功列表
+export const updateAdSPList = (params) => { return request2.post(`${baseUrl}/mms/ad/adSP/update`,params); };          //查看支付成功列表
+export const delAdSPList = (params) => { return request2.get(`${baseUrl}/mms/ad/adSP/del`,{params:params}); };          //查看支付成功列表
+export const syncAdSPList = (params) => { return request2.get(`${baseUrl}/mms/sync/ad`,{params:params}); };          //查看支付成功列表
+
 
 
 

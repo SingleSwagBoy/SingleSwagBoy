@@ -1,6 +1,6 @@
 import React, { Component,useState, useEffect, useCallback  } from 'react'
 
-import { getRecords, delShieldList, getlistAllPrograms,requestAdTagList,getCategories } from 'api'
+import { getRecords, getlistAllPrograms,requestNewAdTagList,getCategories,categoriesUpdate } from 'api'
 import { Breadcrumb, Card, Image, Button, Table, Modal, message, DatePicker, Input, Form, Select, Checkbox,Switch,Radio } from 'antd'
 
 import { } from 'react-router-dom'
@@ -35,12 +35,7 @@ export default class ProgrammeManage extends Component{
             loading: false,
             btnLoading: false,
             searchWords: "",
-            lists: [
-                { name: "扫黑风暴",type:1,category:"电视剧 科幻 少儿", sort: 1, status: 1, id: 1,imgUrl:"http://cdn.mydianshijia.com/wechat/breakfast/shareImg.jpg",
-                hide:"敏感地区" ,projectInfo:"节目信息111",zhuyan:"艾斯",daoyan:"导演",bianju:"编剧",area:"中国",pbi:1,tag:"es-es-feixiandiyu"},
-                { name: "啊啊啊啊",type:2,category:"电视剧 科幻 少儿", sort: 2, status: 2, id: 2,imgUrl:"",hide:"",projectInfo:"节目信息222",
-                zhuyan:"艾斯2",daoyan:"导演2",bianju:"编剧2",area:"日本" ,pbi:2,tag:""}
-            ],
+            lists: [],
             currentItem: "",//编辑行的id
             newData: {},
             layout: {
@@ -72,14 +67,14 @@ export default class ProgrammeManage extends Component{
                     }
                 },
                 {
-                    title:"节目信息",dataIndex: "projectInfo", key: "projectInfo",
+                    title:"节目信息",dataIndex: "projectInfo", key: "projectInfo",width:200,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                                <p>主演:{row.zhuyan?row.zhuyan:"-"}</p>
-                                <p>导演:{row.daoyan?row.daoyan:"-"}</p>
-                                <p>编剧:{row.bianju?row.bianju:"-"}</p>
-                                <p>地区:{row.area?row.area:"-"}</p>
+                                <p>主演:{row.starring?row.starring:"-"}</p>
+                                <p>导演:{row.director?row.director:"-"}</p>
+                                <p>编剧:{row.screenWriter?row.screenWriter:"-"}</p>
+                                <p>地区:{row.part?row.part:"-"}</p>
                             </div>
                             
                         )
@@ -90,30 +85,51 @@ export default class ProgrammeManage extends Component{
                     render: (rowValue, row, index) => {
                         return (
                             <span>
-                                {rowValue?`是(${rowValue})`:`否`}
+                                {rowValue?"是("+this.getTagsName(row.tags)+")":""}
                             </span>
                         )
                     }
                 },
                 {
                     title: "操作", key: "action",
-                    fixed: 'right', width: 310,
+                    fixed: 'right', 
                     render: (rowValue, row, index) => {
                         return (
                             <div>
                                 <Button  size="small" type="primary"
                                     onClick={() => {
                                         console.log(rowValue, row);
-                                        this.setState({isOpenModal:true},()=>{
+                                        if(row.categoryOne){
+                                            let params={
+                                                type:row.categoryOne
+                                            }
+                                            getCategories(params).then(res=>{
+                                                console.log("row.categoryOnerow.categoryOnerow.categoryOnerow.categoryOne",res)
+                                                if(res.data.errCode==0){
+                                                    let _list=res.data.data.type;
+                                                    for(let i=0;i<_list.length;i++){
+                                                        if(_list[i].name==row.categoryOne){
+                                                            this.setState({
+                                                                optionListTwo:_list[i].category.map((item=>{
+                                                                    item.label=item.name;
+                                                                    item.value=item.name;
+                                                                    return item;
+                                                                }))
+                                                            },()=>{
+                                                                console.log("optionListTwooptionListTwooptionListTwooptionListTwo",this.state.optionListTwo)
+                                                            })
+                                                        }
+                                                    }
+                                                }
+                                            })
+                                        }
+                                        
+                                        this.setState({isOpenModal:true,currentItem:row},()=>{
                                             this.forceUpdate();
                                             this.formRef.current.resetFields();
                                             this.formRef.current.setFieldsValue(row);
                                         })
                                     }}>编辑</Button>
-                                <Button size="small" type="primary" onClick={() => { 
-                                    
-                                }} style={{ margin: "0 10px" }}>同步缓存</Button>
-                                <Button size="small" danger onClick={() => { this.delShieldList(row) }}>删除</Button>
                             </div>
                         )
                     }
@@ -137,7 +153,9 @@ export default class ProgrammeManage extends Component{
                 {value:16,label:"革命战争"},{value:17,label:"军旅"},{value:18,label:"爱情"},{value:19,label:"穿越"},{value:20,label:"神话魔幻"},
                 {value:21,label:"动作"},{value:22,label:"纪录片"},{value:23,label:"武侠"},{value:24,label:"古装"},
             ],
-            checkedOptionList:[2,3],
+            optionListTwo:[],
+            categoryNext:[],  // 二级分类列表
+            checkedOptionList:["喜剧"],
             tagList: [],
             searchName:"",  // 搜索名称
             type:"",     // 类型名称（电视剧、电影、综艺）
@@ -148,18 +166,26 @@ export default class ProgrammeManage extends Component{
     componentDidMount() {
         //this.ChannelTopic();
         //this.initData()
-        requestAdTagList().then(res => {
-            console.log("res",res)
-            let _list = res.data.map(item => { 
-                //return { label: item.name, value: item.code }
-                item.name=item.name+"-"+item.code;
-                return item
-            })
+        requestNewAdTagList().then(res => {
+            console.log("res requestNewAdTagList",res)
+            // let _list = res.data.map(item => { 
+            //     //return { label: item.name, value: item.code }
+            //     item.name=item.name+"-"+item.code;
+            //     return item
+            // })
             this.setState({
                 tagList: res.data
             })
         });
         this.getlistAllPrograms()
+    }
+    getTagsName=(val)=> {
+        let arr = this.state.tagList.filter(r => r.code == val)
+        if (arr.length > 0) {
+            return arr[0].name
+        } else {
+            return ""
+        }
     }
     changeSize = (page, pageSize) => {   // 分页
         console.log(page, pageSize);
@@ -182,38 +208,61 @@ export default class ProgrammeManage extends Component{
         getlistAllPrograms(params).then(res => {
             console.log("getlistAllPrograms",res)
             this.setState({
-                lists: res.data.data.programs,
+                lists: Array.isArray(res.data.data.programs)?res.data.data.programs.map((item)=>{
+                    if(item.categoryName){
+                        let arr=item.categoryName.split(" ");
+                        console.log("arrrrrrr",arr);
+                        item.categoryOne=item.categoryName.split(" ")[0];
+                        item.categoryTwo=arr.slice(1,arr.length);
+                        console.log("item.categoryTwo",item.categoryTwo);
+                    }else{
+                        item.categoryOne="";
+                        item.categoryTwo=[];
+                    }
+                    return item
+                }):[],
                 total:res.data.data.totalPage*this.state.pageSize
+            },()=>{
+                console.log("listslistslists====listslistslistslists",this.state.lists);
             })
-        })
-    }
-    delShieldList(val) {   // 删除
-        Modal.confirm({
-            title: `执行删除操作后，该专题和该专题下对应的信息都会被删除。是否确认删除？`,
-            content: '确认删除？',
-            onOk: () => {
-                let params={
-                    name:val.name,
-                    programId:val.programId
-                }
-                delShieldList(params).then(res => {
-                    message.success("操作成功")
-                    this.getlistAllPrograms()
-                })
-            },
-            onCancel: () => {
-            }
         })
     }
     submitForm(obj){
         console.log(obj);
-    }
-    getUploadFileUrl(fill){   // 图片上传
-        console.log(fill)
-        this.formRef.current.setFieldsValue({ "picUrl": fill });
-        this.setState({
-            picUrl:fill
+        obj.categoryName=""
+        if(obj.categoryTwo.length==0){
+            obj.categoryName=obj.categoryOne
+        }else{
+            obj.categoryName=obj.categoryOne+" "+obj.categoryTwo.join(" ")
+        }
+        console.log("obj.categoryName",obj.categoryName)
+        let params={
+            ...this.state.currentItem,
+            ...obj
+        }
+        console.log("params",params)
+        categoriesUpdate(params).then(res=>{
+            console.log("categoriesUpdate",res)
+            if(res.data.errCode==0){
+                message.success("操作成功")
+                this.setState({
+                    isOpenModal:false
+                })
+                this.formRef.current.resetFields();
+                this.getlistAllPrograms()
+            }else{
+                message.error(res.data.msg)
+            }
         })
+        
+    }
+    getUploadFileUrl(type,fill){   // 图片上传
+        console.log(fill)
+        this.formRef.current.setFieldsValue({ "image": fill });
+        //this.formRef.current.setFieldsValue(obj);
+        // this.setState({
+        //     picUrl:fill
+        // })
         this.forceUpdate();
     }
     closeDialog=()=>{
@@ -229,11 +278,17 @@ export default class ProgrammeManage extends Component{
             type:this.state.type
         }
         getCategories(params).then(res=>{
-            console.log("getCategoryList",res)
+            console.log("getCategoryList============getCategoryList",res)
             if(res.data.errCode==0){
-                // this.setState({
-                    
-                // })
+                let _list=res.data.data.type;
+                for(let i=0;i<_list.length;i++){
+                    if(_list[i].name==this.state.type){
+                        this.setState({
+                            categoryNext:_list[i].category
+                        })
+                    }
+                }
+                
             }
         })
     }
@@ -260,7 +315,7 @@ export default class ProgrammeManage extends Component{
     }
 
     render(){
-        let {page,pageSize,total,}=this.state
+        let {page,pageSize,total,categoryNext}=this.state
         return (
             <div>
                 <Card title={
@@ -279,7 +334,9 @@ export default class ProgrammeManage extends Component{
                                 onChange={(val)=>{
                                     console.log("val",val)
                                     this.setState({
-                                        type:val
+                                        type:val,
+                                        category:"",
+                                        categoryNext:[]
                                     },()=>{
                                         this.forceUpdate();
                                         this.getlistAllPrograms();
@@ -309,9 +366,9 @@ export default class ProgrammeManage extends Component{
                             }}
                             >
                             {
-                                this.state.optionList.map(r=>{
+                                categoryNext.map(r=>{
                                     return(
-                                        <Option value={r.value} key={r.value}>{r.label}</Option>
+                                        <Option value={r.name} key={r.id}>{r.name}</Option>
                                     )
                                 })
                             }
@@ -333,21 +390,12 @@ export default class ProgrammeManage extends Component{
                                 <Option value={false} key={2}>未屏蔽</Option>
                             </Select>
                         </div>
-                        <div className='everyBody'>
+                        {/* <div className='everyBody'>
                             <Button type="primary" onClick={()=>{this.getRecords(1)}}>搜索</Button>
-                        </div>
+                        </div> */}
                   </div>
                 }
-                extra={
-                    <div>
-                        <Button type="primary"
-                            // loading={this.state.btnLoading}
-                            // onClick={() => {
-                            //     this.syncChannelNew()
-                            // }}
-                        >同步缓存</Button>
-                    </div>
-                }>
+                >
                     <Table
                         dataSource={this.state.lists}
                         loading={this.state.loading}
@@ -357,72 +405,97 @@ export default class ProgrammeManage extends Component{
                             pageSize: pageSize,
                             total: total,
                             onChange: this.changeSize
-                        }}
-                        />
-                    <Modal visible={this.state.isOpenModal} title="节目单管理" onCancel={() => {this.setState({isOpenModal:false})}} footer={null} width={740}>
+                        }}/>
+                    <Modal visible={this.state.isOpenModal} title="节目单管理" onCancel={() => {
+                        this.setState({isOpenModal:false})
+                        this.formRef.current.resetFields()
+                        }} footer={null} width={740}>
                         {
                             <Form name="projectForm" ref = {this.formRef} onFinish={this.submitForm.bind(this)}>
                                 <Form.Item label="节目名" name="name" rules={[{ required: true, message: '请填写节目名' }]}>
                                     <Input className='base-input-wrapper' placeholder="请填写节目名称" />
                                 </Form.Item> 
-                                <Form.Item label="节目类别" name="type" rules={[{ required: true,message: '请选择节目类别'}]}>
+                                <Form.Item label="节目类别" name="categoryOne" rules={[{ required: true,message: '请选择节目类别'}]}>
                                     <Radio.Group
                                         onChange={(e) => {
                                             console.log(e)
-                                            this.formRef.current.setFieldsValue("type",e.target.value);
+                                            this.formRef.current.setFieldsValue("categoryOne",e.target.value);
                                             this.forceUpdate()
+                                            let params={
+                                                type:e.target.value
+                                            }
+                                            getCategories(params).then(res=>{
+                                                console.log("row.categoryOnerow.categoryOnerow.categoryOnerow.categoryOne",res)
+                                                if(res.data.errCode==0){
+                                                    let _list=res.data.data.type;
+                                                    for(let i=0;i<_list.length;i++){
+                                                        if(_list[i].name==e.target.value){
+                                                            if(_list[i].category){
+                                                                this.setState({
+                                                                    optionListTwo:_list[i].category.map((item=>{
+                                                                        item.label=item.name;
+                                                                        item.value=item.name;
+                                                                        return item
+                                                                    }))
+                                                                },()=>{
+                                                                    console.log("optionListTwooptionListTwooptionListTwooptionListTwo",this.state.optionListTwo)
+                                                                })
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            })
                                         }}
                                     >
-                                        <Radio value={1}>电视剧</Radio>
-                                        <Radio value={2}>电影</Radio>
-                                        <Radio value={3}>综艺</Radio>
-                                        <Radio value={4}>无</Radio>
+                                        <Radio value={"电视剧"}>电视剧</Radio>
+                                        <Radio value={"电影"}>电影</Radio>
+                                        <Radio value={"综艺"}>综艺</Radio>
                                     </Radio.Group>
                                 </Form.Item>
-                                <Form.Item label="具体类别">
-                                    <Checkbox.Group options={this.state.optionList} defaultValue={this.state.checkedOptionList} onChange={(e) => {
+                                <Form.Item label="具体类别" name="categoryTwo">
+                                    <Checkbox.Group options={this.state.optionListTwo}  onChange={(e) => {
                                         console.log(e)
                                         // this.setState({
                                         //     checkedItem: e
                                         // })
                                     }} />
                                 </Form.Item> 
-                                <Form.Item label="主演" name="zhuyan">
+                                <Form.Item label="主演" name="starring">
                                     <Input className='base-input-wrapper' placeholder="主演" />
                                 </Form.Item> 
-                                <Form.Item label="导演" name="daoyan">
+                                <Form.Item label="导演" name="director">
                                     <Input className='base-input-wrapper' placeholder="导演" />
                                 </Form.Item> 
-                                <Form.Item label="编剧" name="bianju">
+                                <Form.Item label="编剧" name="screenWriter">
                                     <Input className='base-input-wrapper' placeholder="编剧" />
                                 </Form.Item> 
-                                <Form.Item label="地区" name="area">
+                                <Form.Item label="地区" name="part">
                                     <Input className='base-input-wrapper' placeholder="地区" />
                                 </Form.Item> 
-                                <Form.Item label="剧情介绍" name="projectInfo">
+                                <Form.Item label="剧情介绍" name="plot">
                                     <TextArea className='base-input-wrapper' placeholder="剧情介绍" />
                                 </Form.Item> 
-                                <Form.Item label="节目封面" name="imgUrl" valuePropName="fileList" getValueFromEvent={normFile} >
+                                <Form.Item label="节目封面" name="image" valuePropName="fileList" getValueFromEvent={normFile} >
                                     <MyImageUpload
-                                    getUploadFileUrl={(file) => { this.getUploadFileUrl('imgUrl', file) }}
-                                    imageUrl={this.formRef.current && this.formRef.current.getFieldValue("imgUrl")} />
+                                    getUploadFileUrl={(file) => { this.getUploadFileUrl('image', file) }}
+                                    imageUrl={this.formRef.current && this.formRef.current.getFieldValue("image")} />
                                 </Form.Item>
                                 <div className='flex-row-items2'>
-                                    <Form.Item label="是否屏蔽" name="type" rules={[{ required: true,message: '请选择是否屏蔽'}]} style={{marginRight:"40px"}}>
+                                    <Form.Item label="是否屏蔽" name="isBlack" rules={[{ required: true,message: '请选择是否屏蔽'}]} style={{marginRight:"40px"}}>
                                         <Select className="base-input-wrapper3" placeholder="请选择" dropdownMatchSelectWidth={true} 
                                         onChange={(val)=>{
                                             console.log(val);
                                             this.forceUpdate();
                                         }}
                                         allowClear>
-                                            <Option value={1} key={1}>已屏蔽</Option>
-                                            <Option value={2} key={2}>未屏蔽</Option>
+                                            <Option value={true} key={1}>已屏蔽</Option>
+                                            <Option value={false} key={2}>未屏蔽</Option>
                                         </Select>
                                     </Form.Item>
                                     {
-                                        this.formRef.current && this.formRef.current.getFieldValue("type") &&
-                                        this.formRef.current.getFieldValue("type") == 1 &&
-                                        <Form.Item label="关联标签" name="tag" >
+                                        this.formRef.current && this.formRef.current.getFieldValue("isBlack") &&
+                                        this.formRef.current.getFieldValue("isBlack") == 1 &&
+                                        <Form.Item label="关联标签" name="tags" >
                                             <Select className="base-input-wrapper5" placeholder="请选择标签" showSearch allowClear
                                             filterOption={(input, option) => {
                                                 if (!input) return true;
@@ -451,7 +524,7 @@ export default class ProgrammeManage extends Component{
                                 </div>
                                 
                                 <Form.Item {...this.state.tailLayout}>
-                                    <Button style={{ margin: "0 20px" }} onClick={()=>{this.setState({isOpenModal:false})}}>取消</Button>
+                                    <Button style={{ margin: "0 20px" }} onClick={()=>{this.setState({isOpenModal:false});this.formRef.current.resetFields();}}>取消</Button>
                                     <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>提交</Button>
                                 </Form.Item>
                                 

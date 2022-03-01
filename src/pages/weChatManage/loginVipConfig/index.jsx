@@ -445,6 +445,7 @@ export default class EarnIncentiveTask extends React.Component {
         setextra(val).then(res=>{
             console.log("setextra",res)
         })
+        this.getQrcodeConfig()
         this.closeModal()
     }
 

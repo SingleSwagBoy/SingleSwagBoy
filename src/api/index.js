@@ -277,6 +277,8 @@ export const requestNewGroupCopy = (params) => { return request2.post(`${baseUrl
 //素材库
 export const getInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/get`, params) };                                                                          //信息流广告组
 export const addInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/add`, params) };                                                                          //信息流广告组
+export const updateInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/update`, params) };                                                                          //信息流广告组
+export const delInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/del`, params) };                                                                          //信息流广告组
 export const getSdkList = (params) => { return request2.post(`${baseUrl}/mms/ad/sdk/get`, params) };                                                                          //信息流广告组
 
 

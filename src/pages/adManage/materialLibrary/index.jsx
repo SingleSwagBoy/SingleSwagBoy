@@ -20,7 +20,7 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup,delInfoGroup
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
@@ -138,15 +138,19 @@ export default class adCreateModal extends Component {
                                         obj.time = [moment(obj.startTime), moment(obj.endTime)]
                                         obj.djsEndTime = obj.djsEndTime ? moment(obj.djsEndTime) : ""
                                         obj.status = obj.status == 1 ? true : false
-                                        this.formRef.current.setFieldsValue(obj)
+                                        if(this.state.adIndex != 3){
+                                            this.formRef.current.setFieldsValue(obj)
+                                        }
                                         this.forceUpdate()
                                     })
                                 }}>编辑</Button>
                                 <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
                                     if (this.state.adIndex == 1) {
                                         this.adRightKeyDel(row.id)
-                                    } else {
+                                    } else if(this.state.adIndex == 2){
                                         this.screenDel(row.id)
+                                    } else {
+                                        this.delInfoGroup(row.id)
                                     }
                                 }}>删除</Button>
                             </div>
@@ -221,11 +225,14 @@ export default class adCreateModal extends Component {
                         <div>
                             <Button type="primary" onClick={() => {
                                 this.setState({
+                                    currentItem:{},
                                     adIndex: this.state.adIndex,
                                     materialShow: true,
                                     source: "add",
                                 }, () => {
-                                    this.formRef.current.resetFields()
+                                    if(this.state.adIndex != 3){
+                                        this.formRef.current.resetFields()
+                                    }
                                     this.forceUpdate()
                                 })
                             }}>新建</Button>
@@ -250,83 +257,89 @@ export default class adCreateModal extends Component {
                     onCancel={() => that.onModalCancelClick()}
                     footer={null}
                 >
-                    <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef} onFinish={this.onModalConfirmClick.bind(this)}>
-                        {
-                            (that.formRef && that.formRef.current) &&
-                                adIndex == 1 ?
-                                <div>
-                                    <Form.Item label='名称' name='name' rules={[{ required: true }]}>
-                                        <Input className="base-input-wrapper" placeholder="请输入广告名称" />
-                                    </Form.Item>
-                                    <Form.Item label='时长（s）' name='duration' rules={[{ required: true }]}>
-                                        <InputNumber min={0} />
-                                    </Form.Item>
-                                    <Form.Item label='类型' name='type' rules={[{ required: true }]}>
-                                        <Select placeholder="请选择类型" onChange={() => this.forceUpdate()}>
-                                            {this.state.typeList.map((item, index) => {
-                                                return <Option value={item.key} key={index}> {item.name}</Option>
-                                            })}
-                                        </Select>
-                                    </Form.Item>
-                                    {
-                                        that.formRef.current.getFieldValue("type") == 4
-                                        &&
-                                        <Form.Item label='支付套餐' name='pCode'>
-                                            <Select placeholder="请选择支付套餐">
-                                                {this.state.rechargeList.map((item, index) => {
-                                                    return <Option value={item.skuCode} key={index}> {item.name}</Option>
+                    {
+                        adIndex == 3 &&
+                        <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={()=>this.onModalCancelClick()} /></div>
+                    }
+                    {
+                        adIndex != 3 &&
+                        <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef} onFinish={this.onModalConfirmClick.bind(this)}>
+                            {
+                                (that.formRef && that.formRef.current) &&
+                                    adIndex == 1 ?
+                                    <div>
+                                        <Form.Item label='名称' name='name' rules={[{ required: true }]}>
+                                            <Input className="base-input-wrapper" placeholder="请输入广告名称" />
+                                        </Form.Item>
+                                        <Form.Item label='时长（s）' name='duration' rules={[{ required: true }]}>
+                                            <InputNumber min={0} />
+                                        </Form.Item>
+                                        <Form.Item label='类型' name='type' rules={[{ required: true }]}>
+                                            <Select placeholder="请选择类型" onChange={() => this.forceUpdate()}>
+                                                {this.state.typeList.map((item, index) => {
+                                                    return <Option value={item.key} key={index}> {item.name}</Option>
                                                 })}
                                             </Select>
                                         </Form.Item>
-                                    }
+                                        {
+                                            that.formRef.current.getFieldValue("type") == 4
+                                            &&
+                                            <Form.Item label='支付套餐' name='pCode'>
+                                                <Select placeholder="请选择支付套餐">
+                                                    {this.state.rechargeList.map((item, index) => {
+                                                        return <Option value={item.skuCode} key={index}> {item.name}</Option>
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        }
 
-                                    <Form.Item label='倒计时结束时间' name="djsEndTime">
-                                        <DatePicker showTime />
-                                    </Form.Item>
-                                    <Form.Item label='是否显示距离今日结束时间' name='jljr'>
-                                        <Select placeholder="是否显示距离今日结束时间">
-                                            <Option value={1} key={1}> 是</Option>
-                                            <Option value={0} key={0}> 否</Option>
-                                        </Select>
-                                    </Form.Item>
-                                    <Form.Item label='状态' name='status' valuePropName="checked">
-                                        <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
-                                    </Form.Item>
-                                    <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
-                                        <div>
-                                            <MyImageUpload
-                                                getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
-                                                imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
-                                            <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('picUrl')} key={that.getUploadFileImageUrlByType('picUrl') || ""}
-                                                onChange={(e) => {
-                                                    this.getNewUrl("picUrl", e.target.value)
-                                                }} />
-                                        </div>
-                                    </Form.Item>
-                                    <Form.Item label="缩略图" name="iconPicUrl" rules={[{ required: true }]}>
-                                        <div>
-                                            <MyImageUpload
-                                                getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('iconPicUrl', file, newItem) }}
-                                                imageUrl={that.getUploadFileImageUrlByType('iconPicUrl')} />
-                                            <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('iconPicUrl')} key={that.getUploadFileImageUrlByType('iconPicUrl') || ""}
-                                                onChange={(e) => {
-                                                    this.getNewUrl("iconPicUrl", e.target.value)
-                                                }}
-                                            />
-                                        </div>
-                                    </Form.Item>
-                                    <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
-                                        <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
-                                    </Form.Item>
-                                    <Form.Item {...this.state.tailLayout}>
-                                        <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
-                                        <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
-                                            确定
-                                        </Button>
-                                    </Form.Item>
-                                </div>
-                                :
-                                adIndex == 2 ?
+                                        <Form.Item label='倒计时结束时间' name="djsEndTime">
+                                            <DatePicker showTime />
+                                        </Form.Item>
+                                        <Form.Item label='是否显示距离今日结束时间' name='jljr'>
+                                            <Select placeholder="是否显示距离今日结束时间">
+                                                <Option value={1} key={1}> 是</Option>
+                                                <Option value={0} key={0}> 否</Option>
+                                            </Select>
+                                        </Form.Item>
+                                        <Form.Item label='状态' name='status' valuePropName="checked">
+                                            <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
+                                        </Form.Item>
+                                        <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
+                                            <div>
+                                                <MyImageUpload
+                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
+                                                    imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
+                                                <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('picUrl')} key={that.getUploadFileImageUrlByType('picUrl') || ""}
+                                                    onChange={(e) => {
+                                                        this.getNewUrl("picUrl", e.target.value)
+                                                    }} />
+                                            </div>
+                                        </Form.Item>
+                                        <Form.Item label="缩略图" name="iconPicUrl" rules={[{ required: true }]}>
+                                            <div>
+                                                <MyImageUpload
+                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('iconPicUrl', file, newItem) }}
+                                                    imageUrl={that.getUploadFileImageUrlByType('iconPicUrl')} />
+                                                <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('iconPicUrl')} key={that.getUploadFileImageUrlByType('iconPicUrl') || ""}
+                                                    onChange={(e) => {
+                                                        this.getNewUrl("iconPicUrl", e.target.value)
+                                                    }}
+                                                />
+                                            </div>
+                                        </Form.Item>
+                                        <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
+                                            <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
+                                        </Form.Item>
+                                        <Form.Item {...this.state.tailLayout}>
+                                            <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
+                                            <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                                                确定
+                                            </Button>
+                                        </Form.Item>
+                                    </div>
+                                    :
+
                                     <div>
                                         <Form.Item label='名称' name='name' rules={[{ required: true }]}>
                                             <Input className="base-input-wrapper" placeholder="请输入广告名称" />
@@ -368,11 +381,13 @@ export default class adCreateModal extends Component {
                                             </Button>
                                         </Form.Item>
                                     </div>
-                                    :
-                                    <div><InfoDialog table_data={this.formRef.current && this.formRef.current.getFieldValue()} /></div>
 
-                        }
-                    </Form>
+
+
+                            }
+                        </Form>
+                    }
+
 
 
                 </Modal>
@@ -409,7 +424,9 @@ export default class adCreateModal extends Component {
     //弹出框取消按钮被点击
     onModalCancelClick() {
         let that = this;
-        this.formRef.current.resetFields()
+        if(this.state.adIndex != 3){
+            this.formRef.current.resetFields()
+        }
         that.setState({
             materialShow: false,
         })
@@ -521,7 +538,7 @@ export default class adCreateModal extends Component {
     //获取上传文件图片地址 
     getUploadFileImageUrlByType(type) {
         let that = this;
-        let image_url = that.formRef.current.getFieldValue(type);
+        let image_url = that.formRef.current && that.formRef.current.getFieldValue(type);
         return image_url ? image_url : '';
     }
     adRightKeyUpdateState(val) {
@@ -577,6 +594,21 @@ export default class adCreateModal extends Component {
                 screenDel({ id: id }).then(res => {
                     message.success("删除成功")
                     this.refreshList(2)
+                })
+            },
+            onCancel: () => {
+
+            }
+        })
+    }
+    delInfoGroup(id) {
+        Modal.confirm({
+            title: '删除此信息流素材',
+            content: '确认删除？',
+            onOk: () => {
+                delInfoGroup({ id: id }).then(res => {
+                    message.success("删除成功")
+                    this.refreshList(3)
                 })
             },
             onCancel: () => {

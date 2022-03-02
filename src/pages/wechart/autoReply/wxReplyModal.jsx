@@ -175,29 +175,39 @@ export default class WxReplyModal extends Component {
                                     {
                                         menu_type !== 'keywords' && menu_type !== 'other' &&
                                         <div>
-                                            <Form.Item label='标签' name='tags' >
-                                                <Select style={{ width: base_width }} showSearch placeholder="请选择用户设备标签" onChange={(value, option) => that.onUserTagSelectChange(value, option)}
-                                                filterOption={(input, option) => {
-                                                    if (!input) return true;
-                                                    let children = option.children;
-                                                    if (children) {
-                                                        let key = children[2];
-                                                        let isFind = false;
-                                                        isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
-                                                        if (!isFind) {
-                                                            let code = children[0];
-                                                            isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                            {
+                                                menu_type=="loginScan" &&
+                                                <Form.Item label='标签' name='tags'>
+                                                    <Select style={{ width: base_width }}  defaultValue={dict_user_tags[0].code.toString()} disabled>
+                                                        {dict_user_tags.map((item, index) => (
+                                                            <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>
+                                                        ))}
+                                                    </Select>
+                                                </Form.Item> || 
+                                                <Form.Item label='标签' name='tags' >
+                                                    <Select style={{ width: base_width }} showSearch placeholder="请选择用户设备标签" onChange={(value, option) => that.onUserTagSelectChange(value, option)}
+                                                    filterOption={(input, option) => {
+                                                        if (!input) return true;
+                                                        let children = option.children;
+                                                        if (children) {
+                                                            let key = children[2];
+                                                            let isFind = false;
+                                                            isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                            if (!isFind) {
+                                                                let code = children[0];
+                                                                isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                            }
+        
+                                                            return isFind;
                                                         }
-    
-                                                        return isFind;
-                                                    }
-                                                }}
-                                                >
-                                                    {dict_user_tags.map((item, index) => (
-                                                        <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>
-                                                    ))}
-                                                </Select>
-                                            </Form.Item>
+                                                    }}
+                                                    >
+                                                        {dict_user_tags.map((item, index) => (
+                                                            <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>
+                                                        ))}
+                                                    </Select>
+                                                </Form.Item>
+                                            }
                                         </div>
                                     }
 

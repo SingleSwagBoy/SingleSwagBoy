@@ -121,8 +121,8 @@ export default class EarnIncentiveTask extends React.Component {
                 },
                 {
                     title: "解锁人数/当日展示量",
-                    dataIndex: "UnlockNum",
-                    key: "UnlockNum",
+                    dataIndex: "unlockNum",
+                    key: "unlockNum",
                     render: (rowValue, row, index) => {
                         return (
                             <div>{rowValue}/{row.showNum}</div>

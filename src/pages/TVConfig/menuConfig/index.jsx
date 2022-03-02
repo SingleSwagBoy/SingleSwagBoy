@@ -104,7 +104,7 @@ function App2() {
         )
       }
     },
-    
+
     {
       title: "状态",
       dataIndex: "status",
@@ -140,7 +140,7 @@ function App2() {
               onClick={() => {
                 console.log(row)
                 let arr = JSON.parse(JSON.stringify(row))
-                arr.time = [arr.onlineTime?moment(arr.onlineTime * 1000):0, arr.offlineTime?moment(arr.offlineTime * 1000):0]
+                arr.time = [arr.onlineTime ? moment(arr.onlineTime * 1000) : 0, arr.offlineTime ? moment(arr.offlineTime * 1000) : 0]
                 arr.status = arr.status == 1 ? true : false
                 setCurrent(row)
                 setOpen(true)
@@ -170,7 +170,7 @@ function App2() {
     }
     fetchData()
   }, [forceUpdateId])
-  const changeSize = (page,pageSize) => {
+  const changeSize = (page, pageSize) => {
     setPage(page)
     setPageSize(pageSize)
     forceUpdate()
@@ -296,64 +296,74 @@ function App2() {
                 <Input placeholder="请输入名称" />
               </Form.Item>
               <Form.Item label="默认图片" name="defPicUrl" rules={[{ required: true, message: '请上传默认图片' }]}>
-                <MyImageUpload
-                  getUploadFileUrl={(file, newItem) => getUploadFileUrl('defPicUrl', file, newItem)}
-                  imageUrl={getUploadFileImageUrlByType('defPicUrl')}
-                />
-                <Input defaultValue={formRef.getFieldValue("defPicUrl")} key={formRef.getFieldValue("defPicUrl")}
-                  onChange={(e) => {
-                    if (privateData.inputTimeOutVal) {
-                      clearTimeout(privateData.inputTimeOutVal);
-                      privateData.inputTimeOutVal = null;
-                    }
-                    privateData.inputTimeOutVal = setTimeout(() => {
-                      if (!privateData.inputTimeOutVal) return;
-                      formRef.setFieldsValue({ defPicUrl: e.target.value })
-                      forceUpdatePages()
-                    }, 1000)
-                  }}
-                />
+                <div style={{ display: "flex", alignItems: "center" }}>
+
+                  <Input defaultValue={formRef.getFieldValue("defPicUrl")} key={formRef.getFieldValue("defPicUrl")}
+                    onChange={(e) => {
+                      if (privateData.inputTimeOutVal) {
+                        clearTimeout(privateData.inputTimeOutVal);
+                        privateData.inputTimeOutVal = null;
+                      }
+                      privateData.inputTimeOutVal = setTimeout(() => {
+                        if (!privateData.inputTimeOutVal) return;
+                        formRef.setFieldsValue({ defPicUrl: e.target.value })
+                        forceUpdatePages()
+                      }, 1000)
+                    }}
+                  />
+                  <MyImageUpload
+                    getUploadFileUrl={(file, newItem) => getUploadFileUrl('defPicUrl', file, newItem)}
+                    imageUrl={getUploadFileImageUrlByType('defPicUrl')}
+                  />
+                </div>
+
               </Form.Item>
               <Form.Item label="插入位置" name="index" rules={[{ required: true, message: '请输入插入位置' }]}>
                 <InputNumber placeholder="请输入插入位置" min={0} />
               </Form.Item>
               <Form.Item label="无焦点图片" name="noFocPicUrl">
-                <MyImageUpload
-                  getUploadFileUrl={(file, newItem) => getUploadFileUrl('noFocPicUrl', file, newItem)}
-                  imageUrl={getUploadFileImageUrlByType('noFocPicUrl')}
-                />
-                <Input defaultValue={formRef.getFieldValue("noFocPicUrl")} key={formRef.getFieldValue("noFocPicUrl")}
-                  onChange={(e) => {
-                    if (privateData.inputTimeOutVal) {
-                      clearTimeout(privateData.inputTimeOutVal);
-                      privateData.inputTimeOutVal = null;
-                    }
-                    privateData.inputTimeOutVal = setTimeout(() => {
-                      if (!privateData.inputTimeOutVal) return;
-                      formRef.setFieldsValue({ noFocPicUrl: e.target.value })
-                      forceUpdatePages()
-                    }, 1000)
-                  }}
-                />
+                <div style={{ display: "flex", alignItems: "center" }}>
+
+                  <Input defaultValue={formRef.getFieldValue("noFocPicUrl")} key={formRef.getFieldValue("noFocPicUrl")}
+                    onChange={(e) => {
+                      if (privateData.inputTimeOutVal) {
+                        clearTimeout(privateData.inputTimeOutVal);
+                        privateData.inputTimeOutVal = null;
+                      }
+                      privateData.inputTimeOutVal = setTimeout(() => {
+                        if (!privateData.inputTimeOutVal) return;
+                        formRef.setFieldsValue({ noFocPicUrl: e.target.value })
+                        forceUpdatePages()
+                      }, 1000)
+                    }}
+                  />
+                  <MyImageUpload
+                    getUploadFileUrl={(file, newItem) => getUploadFileUrl('noFocPicUrl', file, newItem)}
+                    imageUrl={getUploadFileImageUrlByType('noFocPicUrl')}
+                  />
+                </div>
               </Form.Item>
               <Form.Item label="焦点图片" name="focPicUrl">
-                <MyImageUpload
-                  getUploadFileUrl={(file, newItem) => getUploadFileUrl('focPicUrl', file, newItem)}
-                  imageUrl={getUploadFileImageUrlByType('focPicUrl')}
-                />
-                <Input defaultValue={formRef.getFieldValue("focPicUrl")} key={formRef.getFieldValue("focPicUrl")}
-                  onChange={(e) => {
-                    if (privateData.inputTimeOutVal) {
-                      clearTimeout(privateData.inputTimeOutVal);
-                      privateData.inputTimeOutVal = null;
-                    }
-                    privateData.inputTimeOutVal = setTimeout(() => {
-                      if (!privateData.inputTimeOutVal) return;
-                      formRef.setFieldsValue({ focPicUrl: e.target.value })
-                      forceUpdatePages()
-                    }, 1000)
-                  }}
-                />
+                <div style={{ display: "flex", alignItems: "center" }}>
+
+                  <Input defaultValue={formRef.getFieldValue("focPicUrl")} key={formRef.getFieldValue("focPicUrl")}
+                    onChange={(e) => {
+                      if (privateData.inputTimeOutVal) {
+                        clearTimeout(privateData.inputTimeOutVal);
+                        privateData.inputTimeOutVal = null;
+                      }
+                      privateData.inputTimeOutVal = setTimeout(() => {
+                        if (!privateData.inputTimeOutVal) return;
+                        formRef.setFieldsValue({ focPicUrl: e.target.value })
+                        forceUpdatePages()
+                      }, 1000)
+                    }}
+                  />
+                  <MyImageUpload
+                    getUploadFileUrl={(file, newItem) => getUploadFileUrl('focPicUrl', file, newItem)}
+                    imageUrl={getUploadFileImageUrlByType('focPicUrl')}
+                  />
+                </div>
               </Form.Item>
               <Form.Item label="上下线时间" name="time">
                 <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />

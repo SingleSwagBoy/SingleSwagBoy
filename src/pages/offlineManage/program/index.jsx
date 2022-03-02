@@ -15,7 +15,7 @@ function App2() {
   const [forceUpdateId, forceUpdate] = useReducer(() => [], []);
   const [forceUpdatePage, forceUpdatePages] = useReducer(() => [], []);
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(100)
+  const [pageSize, setPageSize] = useState(50)
   const [total, setTotal] = useState(0)
   const [lists, setLists] = useState([])
   const [apkList, setApkList] = useState([])
@@ -147,11 +147,14 @@ function App2() {
     const fetchData = async () => {
       const list = await getOfflineProgram({ page: { currentPage: page, pageSize: pageSize } })
       setLists(list.data)
+      setTotal(list.totalCount)
     }
     fetchData()
   }, [forceUpdateId])
-  const changeSize = (e) => {
-    console.log(e)
+  const changeSize = (page, pageSize) => {
+    console.log(page, pageSize);
+    setPage(page)
+    setPageSize(pageSize)
   }
   const submitForm = (val) => {//表单提交
     console.log(val)
@@ -255,6 +258,7 @@ function App2() {
             total: total,
             onChange: changeSize
           }}
+
         />
         <Modal title="编辑" centered visible={openDailog} onCancel={() => closeDialog()} footer={null} width={1000}>
           {

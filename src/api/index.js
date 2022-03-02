@@ -280,6 +280,7 @@ export const addInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/a
 export const updateInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/update`, params) };                                                                          //信息流广告组
 export const delInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/del`, params) };                                                                          //信息流广告组
 export const getSdkList = (params) => { return request2.post(`${baseUrl}/mms/ad/sdk/get`, params) };                                                                          //信息流广告组
+export const getPosition = (params) => { return request2.post(`${baseUrl}/mms/ad/space/get`, params) };                                                                          //信息流广告组
 
 
 

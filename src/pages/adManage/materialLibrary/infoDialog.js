@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react'
-import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup } from 'api'
-import { Radio, Divider, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, Switch, Space, DatePicker } from 'antd'
+import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup, getPosition } from 'api'
+import { Radio, Divider, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, Switch, Checkbox, DatePicker, Row, Col } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
@@ -9,6 +9,7 @@ import util from 'utils'
 let { Option } = Select;
 let { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
+const CheckboxGroup = Checkbox.Group;
 let privateData = {
     inputTimeOutVal: null
 };
@@ -80,24 +81,30 @@ function App2(props) {
     const [formRef] = Form.useForm()
     const [product, setProduct] = useState([])
     const [sdkList, setSdkList] = useState([])
+    const [position, setPosition] = useState([])
+    const [isOpen, setIsOpen] = useState(false)
     const [channelList, setChannelList] = useState([])
     const [lists, setLists] = useState([])
     useEffect(() => {
         const fetchData = async () => {
-            if(props.table_data.name){
+            if (props.table_data.name) {
                 setLists(props.table_data)
                 if (props.table_data && props.table_data.content) {
-                    console.log(1111)
                     let arr = props.table_data
                     arr.random = arr.random == 1 ? true : false
-                    arr.time = [moment(arr.startTime), moment(arr.endTime)]
+                    if (arr.type == 6) {
+                        arr.content[0].channel = Array.isArray(arr.content[0].channel) ? arr.content[0].channel : arr.content[0].channel.split(",")
+                    }
+                    // arr.position = Array.isArray(arr.position)?arr.position.join(","):arr.position
+                    arr.time = [arr.startTime ? moment(arr.startTime) : 0, arr.endTime ? moment(arr.endTime) : 0]
                     formRef.setFieldsValue(props.table_data)
                     console.log(formRef.getFieldsValue(), "formRef.getFieldValue")
                 }
-            }else{
+            } else {
                 formRef.resetFields()
                 setLists([])
             }
+            setActiveKey(0)
             forceUpdatePages()
         }
         fetchData()
@@ -107,26 +114,44 @@ function App2(props) {
             let list = await getSdkList({})
             setSdkList(list.data)
             let productList = await requestProductSkuList({ productCategoryType: 10, page: { idPage: 9 } })
-            console.log(productList, "productList")
             setProduct(productList.data.data)
+            let positionList = await getPosition({ page: { idPage: 9 } })
+            let data = positionList.data
+            let formPosition = []
+            data.forEach((r, i) => {
+                if (r.validPosition) {
+                    let arr = r.validPosition.split(",")
+                    arr.forEach((l, index) => {
+                        formPosition.push({ key: `${r.channelGroupId}:${l}`, value: `${r.channelGroupId}-${r.name}:位置${l}` })
+                    })
+                }
+            })
+            setPosition(formPosition)
         }
         fetchData()
     }, [forceUpdateId])
     const submitFinish = (e) => {
         let obj = formRef.getFieldValue()
-        if(obj.id){
+        if (obj.type == 6) { //轮播推荐只会有一条数据
+            obj.content[0].channel = Array.isArray(obj.content[0].channel) ? obj.content[0].channel.join(",") : obj.content[0].channel
+        }
+        if (obj.mode == 1) {
+            obj.position = Array.isArray(obj.position) ? obj.position.join(",") : obj.position
+        }
+        if (obj.id) {
             updateInfoGroupFunc(formRef.getFieldValue())
-        }else{
+        } else {
             addInfoGroupFunc(formRef.getFieldValue())
         }
-      
+
     }
     const addInfoGroupFunc = (val) => {
         let params = {
             ...val,
-            startTime: val.time[0] ? parseInt(val.time[0].valueOf()) : "",
-            endTime: val.time[1] ? parseInt(val.time[1].valueOf()) : "",
+            startTime: (val.time && val.time[0]) ? parseInt(val.time[0].valueOf()) : "",
+            endTime: (val.time && val.time[1]) ? parseInt(val.time[1].valueOf()) : "",
         }
+        delete params.time
         addInfoGroup(params).then(res => {
             message.success("新增成功")
             props.onModalCancelClick(3)
@@ -134,11 +159,13 @@ function App2(props) {
         })
     }
     const updateInfoGroupFunc = (val) => {
+        console.log(val)
         let params = {
             ...val,
-            startTime: val.time[0] ? parseInt(val.time[0].valueOf()) : "",
-            endTime: val.time[1] ? parseInt(val.time[1].valueOf()) : "",
+            startTime: (val.time && val.time[0]) ? parseInt(val.time[0].valueOf()) : "",
+            endTime: (val.time && val.time[1]) ? parseInt(val.time[1].valueOf()) : "",
         }
+        delete params.time
         updateInfoGroup(params).then(res => {
             message.success("更新成功")
             props.onModalCancelClick(3)
@@ -228,7 +255,7 @@ function App2(props) {
                     }
                 </Select>
             </Form.Item>
-            <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
+            <Form.Item label="上下线时间" name='time'>
                 <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
             </Form.Item>
             <Form.Item label="广告模式" name="mode" rules={[{ required: true }]}>
@@ -237,6 +264,29 @@ function App2(props) {
                     <Option value={2} key={2}>非定向</Option>
                 </Select>
             </Form.Item>
+
+            {
+                formRef.getFieldValue("mode") === 1 &&
+                <>
+                    <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}><Button type='primary' onClick={() => setIsOpen(isOpen => !isOpen)}>{isOpen ? "点击折叠" : "点击展开"}</Button></div>
+                    <Form.Item label="位置" name="position" style={isOpen ? { height: "auto" } : { height: "200px", overflowY: "scroll" }}>
+                        <CheckboxGroup>
+                            <Row>
+                                {
+                                    position.map(r => {
+                                        return (
+                                            <Col span={6} style={{ margin: "0 0 10px 0" }}>
+                                                <Checkbox value={r.key}>{r.value}</Checkbox>
+                                            </Col>
+                                        )
+                                    })
+                                }
+                            </Row>
+                        </CheckboxGroup>
+                    </Form.Item>
+                </>
+
+            }
             {
                 (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 2) &&
                 <Form.Item label='随机排序' name='random' valuePropName="checked">
@@ -266,7 +316,7 @@ function App2(props) {
                                 <div>
                                     {
                                         // 图片回复
-                                        formRef.getFieldValue("type") === 1 &&
+                                        (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13) &&
                                         <div>
                                             <Form.Item label='图片'>
                                                 <MyImageUpload
@@ -380,7 +430,7 @@ function App2(props) {
                                     }
                                     {
                                         // 视频
-                                        formRef.getFieldValue("type") === 2 &&
+                                        (formRef.getFieldValue("type") === 2 || formRef.getFieldValue("type") === 14) &&
                                         <div>
                                             <Form.Item label='视频'>
                                                 <Input placeholder='请输入视频' key={formRef.getFieldValue("content")[i].videoUrl} defaultValue={formRef.getFieldValue("content")[i].videoUrl}

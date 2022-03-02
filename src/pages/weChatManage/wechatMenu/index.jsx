@@ -101,6 +101,7 @@ export default class EarnIncentiveTask extends React.Component {
                         // rowKey={item=>item.indexId}
                         loading={loading}
                         columns={columns}
+                        pagination={{pageSize:100}}
                     />
                 </Card>
                 <DefaultMenu

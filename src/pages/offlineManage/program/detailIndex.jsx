@@ -189,41 +189,26 @@ function App2(props) {
   const submitForm = (val) => {//表单提交
     console.log(currentItem, val)
     let list = currentItem ? Array.isArray(currentItem) ? currentItem : JSON.parse(currentItem) : []
-    if (list.length == 0) {
-      val.scheduleList.forEach(r => {
-        r.programId = currentChannel.programId
-        r.channelId = currentChannel.channelId
-        r.startTime = r.time[0].valueOf()
-        r.endTime = r.time[1].valueOf()
-        r.deleted = 0
-      })
-      updateOffline(val.scheduleList)
-    } else {
-      list.forEach(l => {
-        if (val.scheduleList.length == 0) {
-          l.deleted = 1
-        } else {
-          val.scheduleList.forEach(r => {
-            if (r.deleted == 0 || !r.deleted) {
-              if (r.id == l.id) {
-                l.startTime = r.time[0].valueOf()
-                l.endTime = r.time[1].valueOf()
-              } else {
-                list.push({
-                  programId: currentChannel.programId,
-                  channelId: currentChannel.channelId,
-                  startTime: r.time[0].valueOf(),
-                  endTime: r.time[1].valueOf(),
-                  deleted: 0
-                })
-              }
-            }
-          })
-        }
-      })
-      // return console.log(list)
-      updateOffline(list)
-    }
+    console.log(list)
+    // let sameList = val.scheduleList.filter(item=>list.some(l=>l.id == item.id))
+    let diffList = val.scheduleList.filter(item=>list.some(l=>l.id != item.id))
+    console.log(diffList)
+    let arr = []
+    diffList.forEach(r=>{
+      if(!r.deleted && r.deleted !=0){
+        arr.push({
+          programId: currentChannel.programId,
+          channelId: currentChannel.channelId,
+          startTime: r.time[0].valueOf(),
+          endTime: r.time[1].valueOf(),
+          deleted: 0
+        })
+      }
+    })
+    let submitList = arr.concat(list)
+    
+    // console.log(submitList)
+    updateOffline(submitList)
   }
   const updateOfflineFunc = (params) => {
     updateOfflineChannel(params).then(res => {

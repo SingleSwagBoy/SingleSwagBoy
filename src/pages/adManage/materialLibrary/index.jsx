@@ -215,9 +215,22 @@ export default class adCreateModal extends Component {
                                 <Radio.Group defaultValue="1" size="large"
                                     onChange={(val) => {
                                         console.log(val.target.value)
+                                        let arr = table_title
+                                        if (val.target.value == 3) {
+                                            arr = table_title.filter(item => item.key != "iconPicUrl" && item.key != "picUrl")
+                                            arr.splice(2, 0, {
+                                                title: '广告模式', dataIndex: 'mode', key: 'mode', width: 300,
+                                                render: (rowValue, row, index) => {
+                                                    return (
+                                                        <div>{rowValue == 1 ? "定向" : rowValue == 2 ? "不定向" : "未知"}</div>
+                                                    )
+                                                }
+                                            })
+                                        }
                                         this.setState({
                                             adIndex: val.target.value,
-                                            page: 1
+                                            page: 1,
+                                            table_title: arr
                                         }, () => {
                                             this.refreshList(val.target.value)
                                         })

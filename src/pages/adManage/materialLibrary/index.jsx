@@ -259,7 +259,7 @@ export default class adCreateModal extends Component {
                 >
                     {
                         adIndex == 3 &&
-                        <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={()=>this.onModalCancelClick()} /></div>
+                        <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={(e)=>this.onModalCancelClick(e)} /></div>
                     }
                     {
                         adIndex != 3 &&
@@ -422,8 +422,12 @@ export default class adCreateModal extends Component {
     }
 
     //弹出框取消按钮被点击
-    onModalCancelClick() {
+    onModalCancelClick(e) {
         let that = this;
+        console.log(e,"e")
+        if(e == 3){
+            this.refreshList(3)
+        }
         if(this.state.adIndex != 3){
             this.formRef.current.resetFields()
         }

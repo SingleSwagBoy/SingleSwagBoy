@@ -87,6 +87,7 @@ function App2(props) {
             if(props.table_data.name){
                 setLists(props.table_data)
                 if (props.table_data && props.table_data.content) {
+                    console.log(1111)
                     let arr = props.table_data
                     arr.random = arr.random == 1 ? true : false
                     arr.time = [moment(arr.startTime), moment(arr.endTime)]
@@ -123,26 +124,24 @@ function App2(props) {
     const addInfoGroupFunc = (val) => {
         let params = {
             ...val,
-            startTime: val.time[0] ? parseInt(val.time[0].valueOf() / 1000) : "",
-            endTime: val.time[1] ? parseInt(val.time[1].valueOf() / 1000) : "",
+            startTime: val.time[0] ? parseInt(val.time[0].valueOf()) : "",
+            endTime: val.time[1] ? parseInt(val.time[1].valueOf()) : "",
         }
         addInfoGroup(params).then(res => {
             message.success("新增成功")
-            formRef.resetFields()
-            props.onModalCancelClick()
+            props.onModalCancelClick(3)
 
         })
     }
     const updateInfoGroupFunc = (val) => {
         let params = {
             ...val,
-            startTime: val.time[0] ? parseInt(val.time[0].valueOf() / 1000) : "",
-            endTime: val.time[1] ? parseInt(val.time[1].valueOf() / 1000) : "",
+            startTime: val.time[0] ? parseInt(val.time[0].valueOf()) : "",
+            endTime: val.time[1] ? parseInt(val.time[1].valueOf()) : "",
         }
         updateInfoGroup(params).then(res => {
             message.success("更新成功")
-            formRef.resetFields()
-            props.onModalCancelClick()
+            props.onModalCancelClick(3)
 
         })
     }
@@ -511,7 +510,6 @@ function App2(props) {
 
             <Form.Item {...tailLayout}>
                 <Button onClick={() => {
-                    formRef.resetFields()
                     props.onModalCancelClick()
 
                 }}>取消</Button>

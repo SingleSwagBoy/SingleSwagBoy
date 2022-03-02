@@ -241,7 +241,7 @@ export default class ProgrammeManage extends Component{
             ...obj
         }
         console.log("params",params)
-        categoriesUpdate(params).then(res=>{
+        categoriesUpdate(this.state.currentItem.programId,params).then(res=>{
             console.log("categoriesUpdate",res)
             if(res.data.errCode==0){
                 message.success("操作成功")

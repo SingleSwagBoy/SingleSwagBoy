@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser, getWechatList, getCount,getexcluswitch,setexcluswitch } from 'api'
+import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser, getWechatList, getCount,getexcluswitch,setexcluswitch,listextraGet,setextra } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Divider, Tabs } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -44,6 +44,11 @@ export default class EarnIncentiveTask extends React.Component {
             },
             allUserList: [],
             wechatList: [],
+            public_list: [
+                {  WxCode: "dsj_server",Name:   "电视家服务号" },
+                {  WxCode: "dsj_welfare",Name:   "电视家福利号", },
+                {  WxCode: "dsj_reader",Name:   "电视家权益号",},
+            ],
             activityCode: "",//当前激活的哪一个qywechatCode
             switchState:"",
             columns: [
@@ -63,9 +68,14 @@ export default class EarnIncentiveTask extends React.Component {
                     key: "code",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>{rowValue == "loginmini" ? "小程序登录" : rowValue == "loginwechat" ? "公众号登录" : rowValue == "exclusivemini" ? "小程序解锁" : rowValue == "exclusivewechat" ? "关注公众号解锁" : "企业微信解锁"}</div>
+                            <div>{rowValue == "loginmini" ? "小程序登录" : rowValue == "loginwechat" ? "公众号登录" : rowValue == "exclusivemini" ? "小程序" : rowValue == "exclusivewechat" ? "关注公众号小号" :  rowValue == "exclusiveworkwx" ? "企业微信":rowValue == "exclusivebigwechat" ? "关注公众号大号":""}</div>
                         )
                     }
+                },
+                {
+                    title: "排序",
+                    dataIndex: "sort",
+                    key: "sort",
                 },
                 {
                     title: "上线时间-下线时间",
@@ -110,6 +120,16 @@ export default class EarnIncentiveTask extends React.Component {
                     }
                 },
                 {
+                    title: "解锁人数/当日展示量",
+                    dataIndex: "UnlockNum",
+                    key: "UnlockNum",
+                    render: (rowValue, row, index) => {
+                        return (
+                            <div>{rowValue}/{row.showNum}</div>
+                        )
+                    }
+                },
+                {
                     title: "操作",
                     key: "action",
                     fixed: 'right', width: 100,
@@ -137,8 +157,23 @@ export default class EarnIncentiveTask extends React.Component {
                                                     this.setState({
                                                         activityCode: arr.qywechatCode
                                                     })
-                                                    this.formRef.current.setFieldsValue(arr)
-                                                    this.forceUpdate()
+                                                    if(row.code=="exclusivemini" || row.code=="exclusivewechat" || row.code=="exclusiveworkwx" || row.code=="exclusivebigwechat"){
+                                                        let params={
+                                                            exclusiveType:row.code=="exclusivemini"?"mp":row.code=="exclusivewechat"?"wx":row.code=="exclusiveworkwx"?"workwx":row.code=="exclusivebigwechat"?"bigwx":""
+                                                         }
+                                                         listextraGet(params).then(res=>{
+                                                             let obj={
+                                                                 ...arr,
+                                                                 ...res.data.data
+                                                             }
+                                                             this.formRef.current.setFieldsValue(obj);
+                                                             this.forceUpdate();
+                                                         })
+                                                    }else{
+                                                        this.formRef.current.setFieldsValue(arr);
+                                                        this.forceUpdate();
+                                                    }
+                                                    
                                                     await this.getWechatUser(arr.qywechatCode)
                                                     await this.getMyWechatUser(arr.qywechatCode)
                                                     await this.getCount(arr.qywechatCode)
@@ -156,7 +191,7 @@ export default class EarnIncentiveTask extends React.Component {
         }
     }
     render() {
-        let { lists, layout, loading, columns, entranceState, tagList, allUserList } = this.state;
+        let { lists, layout, loading, columns, entranceState, tagList, allUserList,public_list } = this.state;
         return (
             <div className="loginVip">
                 <Card title={
@@ -200,7 +235,6 @@ export default class EarnIncentiveTask extends React.Component {
                     this.setState({ entranceState: false })
                     this.formRef.current.resetFields()
                 }} footer={null} width={1000}>
-
                     {
                         <Form {...layout}
                             name="taskForm"
@@ -315,6 +349,45 @@ export default class EarnIncentiveTask extends React.Component {
                             <Form.Item label="状态" name="status" valuePropName="checked">
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
                             </Form.Item>
+                            {
+                                this.formRef.current && this.formRef.current.getFieldValue("code") == "exclusivebigwechat" &&
+                                <Form.Item label="公众号" name="wxcode">
+                                    <Select placeholder="请选择类别" dropdownMatchSelectWidth={true} 
+                                    onChange={(val)=>{
+                                        console.log(val);
+                                        this.formRef.current.setFieldsValue({ "num": 0 })
+                                        this.forceUpdate();
+                                    }}
+                                    allowClear>
+                                        {
+                                            public_list.map((item,index)=>{
+                                                return <Option value={item.WxCode} key={item.WxCode} name={item.Name}>{item.Name}</Option>
+                                            })
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            }
+                            {
+                                this.formRef.current && (this.formRef.current.getFieldValue("code") == "exclusivemini" || this.formRef.current.getFieldValue("code") == "exclusivewechat" || this.formRef.current.getFieldValue("code") == "exclusivebigwechat") &&
+                                <Form.Item label="展示量" name="showLimit">
+                                    <InputNumber min={0} />
+                                </Form.Item>
+                            }
+                            <Form.Item label="排序" name="sort">
+                                <InputNumber min={1}/>
+                            </Form.Item>
+                            <Form.Item label="标题" name="title">
+                                <Input  laceholder="请填写标题" />
+                            </Form.Item>
+                            <Form.Item label="副标题" name="subtitle">
+                                <Input  laceholder="请填写副标题" />
+                            </Form.Item>
+                            <Form.Item label="更多频道标题" name="moreTitle">
+                                <Input  laceholder="请填写" />
+                            </Form.Item>
+                            <Form.Item label="更多频道副标题" name="moreSubtitle">
+                                <Input  laceholder="请填写" />
+                            </Form.Item>
 
                             <Form.Item {...this.state.tailLayout}>
                                 <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
@@ -324,14 +397,7 @@ export default class EarnIncentiveTask extends React.Component {
                             </Form.Item>
                         </Form>
                     }
-
-
-
-
-
-
                 </Modal>
-
             </div>
         )
     }
@@ -372,10 +438,14 @@ export default class EarnIncentiveTask extends React.Component {
         })
     }
     submitForm(val) {   // 提交表单
-        console.log(val, "val")
-        // return
         this.saveQrcodeConfig(val) //保存其他数据
         this.saveMyWechatUser(val) //保存联系人
+        val.exclusiveType=this.state.currentItem.code=="exclusivemini"?"mp":this.state.currentItem.code=="exclusivewechat"?"wx":this.state.currentItem.code=="exclusiveworkwx"?"workwx":this.state.currentItem.code=="exclusivebigwechat"?"bigwx":"";
+        console.log(val, "val")
+        setextra(val).then(res=>{
+            console.log("setextra",res)
+        })
+        this.getQrcodeConfig()
         this.closeModal()
     }
 
@@ -389,6 +459,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     getQrcodeConfig() {
         getQrcodeConfig({}).then(res => {
+            console.log("getQrcodeConfig",res)
             this.setState({
                 lists: res.data
             })
@@ -465,19 +536,23 @@ export default class EarnIncentiveTask extends React.Component {
     }
     saveMyWechatUser(val) {
         let info = val.userList
+        console.log("info",info)
         let arr = []
-        info.forEach(r => {
-            arr.push({
-                "qywechatCode": this.state.activityCode,   //企业微信code码
-                "userids": r.userId.join(","),   //企业微信客服列表里面的userid
-                "showLimit": r.showLimit   // 二维码次数限制
+        if(info){
+            info.forEach(r => {
+                arr.push({
+                    "qywechatCode": this.state.activityCode,   //企业微信code码
+                    "userids": r.userId.join(","),   //企业微信客服列表里面的userid
+                    "showLimit": r.showLimit   // 二维码次数限制
+                })
             })
-        })
-        let params = arr
-        // return console.log(params)
-
-        saveMyWechatUser(params).then(res => {
-            message.success("保存联系人成功")
-        })
+            let params = arr
+            // return console.log(params)
+    
+            saveMyWechatUser(params).then(res => {
+                message.success("保存联系人成功")
+            })
+        }
+        
     }
 }

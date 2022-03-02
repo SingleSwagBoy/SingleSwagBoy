@@ -1,0 +1,16 @@
+
+.cardTitle{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.cardTitle .everyBody{
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    margin-right: 20px;
+}
+.cardTitle .everyBody>div:nth-child(1){
+   font-size: 14px;
+   margin-right: 5px;
+}

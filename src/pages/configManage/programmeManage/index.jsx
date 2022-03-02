@@ -85,7 +85,7 @@ export default class ProgrammeManage extends Component{
                     render: (rowValue, row, index) => {
                         return (
                             <span>
-                                {rowValue?"是("+this.getTagsName(row.tags)+")":""}
+                                {rowValue?"是("+this.getTagsName(row.tags)+")":"否"}
                             </span>
                         )
                     }

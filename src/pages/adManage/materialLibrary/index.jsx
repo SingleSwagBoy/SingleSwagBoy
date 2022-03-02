@@ -21,7 +21,7 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup,updateInfoGroup
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
@@ -124,8 +124,10 @@ export default class adCreateModal extends Component {
                                     else row.status = 2
                                     if (this.state.adIndex == 1) {
                                         this.adRightKeyUpdateState(row)
-                                    } else {
+                                    } else if(this.state.adIndex == 2){
                                         this.screenUpdateState(row)
+                                    }else{
+                                        this.updateInfoGroup(row)
                                     }
                                 }}
                             />
@@ -739,6 +741,15 @@ export default class adCreateModal extends Component {
         screenCopy(param).then(res => {
             message.success("复制成功")
             this.refreshList(2)
+        })
+    }
+    updateInfoGroup(val){
+        let params = {
+            ...val,
+        }
+        updateInfoGroup(params).then(res => {
+            message.success("更新成功")
+            this.onModalCancelClick(3)
         })
     }
 }

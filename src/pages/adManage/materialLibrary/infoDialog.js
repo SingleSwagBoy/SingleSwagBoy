@@ -152,6 +152,7 @@ function App2(props) {
             ...val,
             startTime: (val.time && val.time[0]) ? parseInt(val.time[0].valueOf()) : "",
             endTime: (val.time && val.time[1]) ? parseInt(val.time[1].valueOf()) : "",
+            random:val.random?1:2
         }
         delete params.time
         addInfoGroup(params).then(res => {
@@ -166,6 +167,7 @@ function App2(props) {
             ...val,
             startTime: (val.time && val.time[0]) ? parseInt(val.time[0].valueOf()) : "",
             endTime: (val.time && val.time[1]) ? parseInt(val.time[1].valueOf()) : "",
+            random:val.random?1:2
         }
         delete params.time
         updateInfoGroup(params).then(res => {
@@ -290,7 +292,7 @@ function App2(props) {
 
             }
             {
-                (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 2) &&
+                (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13 || formRef.getFieldValue("type") === 14 || formRef.getFieldValue("type") === 2) &&
                 <Form.Item label='随机排序' name='random' valuePropName="checked">
                     <Switch checkedChildren="开" unCheckedChildren="关" ></Switch>
                 </Form.Item>

@@ -379,13 +379,13 @@ export default class EarnIncentiveTask extends React.Component {
                             <Form.Item label="标题" name="title">
                                 <Input  laceholder="请填写标题" />
                             </Form.Item>
-                            <Form.Item label="副标题" name="subTitle">
+                            <Form.Item label="副标题" name="subtitle">
                                 <Input  laceholder="请填写副标题" />
                             </Form.Item>
                             <Form.Item label="更多频道标题" name="moreTitle">
                                 <Input  laceholder="请填写" />
                             </Form.Item>
-                            <Form.Item label="更多频道副标题" name="moreSubTitle">
+                            <Form.Item label="更多频道副标题" name="moreSubtitle">
                                 <Input  laceholder="请填写" />
                             </Form.Item>
 

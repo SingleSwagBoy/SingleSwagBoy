@@ -214,9 +214,8 @@ export default class adCreateModal extends Component {
                                 </Select> */}
                                 <Radio.Group defaultValue="1" size="large"
                                     onChange={(val) => {
-                                        console.log(val.target.value)
                                         let arr = table_title
-                                        if (val.target.value == 3) {
+                                        if (val.target.value == 3) {//信息流素材自定义表头
                                             arr = table_title.filter(item => item.key != "iconPicUrl" && item.key != "picUrl")
                                             arr.splice(2, 0, {
                                                 title: '广告模式', dataIndex: 'mode', key: 'mode', width: 300,

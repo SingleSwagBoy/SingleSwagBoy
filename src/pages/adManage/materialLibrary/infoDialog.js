@@ -200,7 +200,7 @@ function App2(props) {
     }
     const add = () => {
         let arr = formRef.getFieldValue()
-        if (formRef.getFieldValue("type") != 1 && formRef.getFieldValue("type") != 2 && arr.content.length == 1) return message.error("已经达到上限")
+        if (formRef.getFieldValue("type") != 1 && formRef.getFieldValue("type") != 13 && formRef.getFieldValue("type") != 14 && formRef.getFieldValue("type") != 2 && arr.content.length == 1) return message.error("该类型已经达到上限")
         arr.content.push({})
         forceUpdatePages()
         setActiveKey(arr.content.length - 1)
@@ -259,7 +259,7 @@ function App2(props) {
                 <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
             </Form.Item>
             <Form.Item label="广告模式" name="mode" rules={[{ required: true }]}>
-                <Select placeholder="类型">
+                <Select placeholder="类型" onChange={() => forceUpdatePages()}>
                     <Option value={1} key={1}>定向</Option>
                     <Option value={2} key={2}>非定向</Option>
                 </Select>
@@ -273,9 +273,9 @@ function App2(props) {
                         <CheckboxGroup>
                             <Row>
                                 {
-                                    position.map(r => {
+                                    position.map((r, i) => {
                                         return (
-                                            <Col span={6} style={{ margin: "0 0 10px 0" }}>
+                                            <Col span={6} style={{ margin: "0 0 10px 0" }} key={i}>
                                                 <Checkbox value={r.key}>{r.value}</Checkbox>
                                             </Col>
                                         )
@@ -340,60 +340,67 @@ function App2(props) {
                                                     ))}
                                                 </Select>
                                             </Form.Item>
-                                            <Form.Item label='跳转类型'>
-                                                <Select style={{ width: "100%" }} placeholder='请选择跳转类型' allowClear
-                                                    defaultValue={formRef.getFieldValue("content")[i].jumpType}
-                                                    key={formRef.getFieldValue("content")[i].jumpType}
-                                                    onChange={(e) => changeData(e, "jumpType", i)}>
-                                                    {jumpTypes.map((item, index) => (
-                                                        <Option value={item.key} key={index}>{item.value}</Option>
-                                                    ))}
-                                                </Select>
-                                            </Form.Item>
                                             {
-                                                formRef.getFieldValue("content")[i].jumpType == 1 &&
-                                                <Form.Item label='频道'>
-                                                    <Select style={{ width: "100%" }} placeholder='请选择频道' allowClear
-                                                        {...selectProps}
-                                                        defaultValue={formRef.getFieldValue("content")[i].channel}
-                                                        key={formRef.getFieldValue("content")[i].channel}
-                                                        onChange={(e) => changeData(e, "channel", i)}
-                                                        onSearch={(e) => comChannel(e)}
-                                                    >
-                                                        {
-                                                            channelList.map((r, i) => {
-                                                                return <Option value={r.code} key={r.id}>{r.name + "----" + r.code}</Option>
-                                                            })
-                                                        }
-                                                    </Select>
-                                                </Form.Item>
+                                                formRef.getFieldValue("content")[i].sdk == "dsjLive" &&
+                                                <>
+                                                    <Form.Item label='跳转类型'>
+                                                        <Select style={{ width: "100%" }} placeholder='请选择跳转类型' allowClear
+                                                            defaultValue={formRef.getFieldValue("content")[i].jumpType}
+                                                            key={formRef.getFieldValue("content")[i].jumpType}
+                                                            onChange={(e) => changeData(e, "jumpType", i)}>
+                                                            {jumpTypes.map((item, index) => (
+                                                                <Option value={item.key} key={index}>{item.value}</Option>
+                                                            ))}
+                                                        </Select>
+                                                    </Form.Item>
+                                                    {
+                                                        formRef.getFieldValue("content")[i].jumpType == 1 &&
+                                                        <Form.Item label='频道'>
+                                                            <Select style={{ width: "100%" }} placeholder='请选择频道' allowClear
+                                                                {...selectProps}
+                                                                defaultValue={formRef.getFieldValue("content")[i].channel}
+                                                                key={formRef.getFieldValue("content")[i].channel}
+                                                                onChange={(e) => changeData(e, "channel", i)}
+                                                                onSearch={(e) => comChannel(e)}
+                                                            >
+                                                                {
+                                                                    channelList.map((r, i) => {
+                                                                        return <Option value={r.code} key={r.id}>{r.name + "----" + r.code}</Option>
+                                                                    })
+                                                                }
+                                                            </Select>
+                                                        </Form.Item>
+                                                    }
+                                                    {
+                                                        formRef.getFieldValue("content")[i].jumpType == 6 &&
+                                                        <Form.Item label='跳转菜单类型'>
+                                                            <Select style={{ width: "100%" }} placeholder='请选择跳转菜单类型' allowClear
+                                                                defaultValue={formRef.getFieldValue("content")[i].jumpMenuType}
+                                                                key={formRef.getFieldValue("content")[i].jumpMenuType}
+                                                                onChange={(e) => changeData(e, "jumpMenuType", i)}>
+                                                                {jumpMenuTypes.map((item, index) => (
+                                                                    <Option value={item.key} key={index}>{item.value}</Option>
+                                                                ))}
+                                                            </Select>
+                                                        </Form.Item>
+                                                    }
+                                                    {
+                                                        formRef.getFieldValue("content")[i].jumpType == 8 &&
+                                                        <Form.Item label='好看分类'>
+                                                            <Select style={{ width: "100%" }} placeholder='请选择好看分类' allowClear
+                                                                defaultValue={formRef.getFieldValue("content")[i].goodLookType}
+                                                                key={formRef.getFieldValue("content")[i].goodLookType}
+                                                                onChange={(e) => changeData(e, "goodLookType", i)}>
+                                                                {goodLookTypes.map((item, index) => (
+                                                                    <Option value={item.key} key={index}>{item.value}</Option>
+                                                                ))}
+                                                            </Select>
+                                                        </Form.Item>
+                                                    }
+                                                </>
+
                                             }
-                                            {
-                                                formRef.getFieldValue("content")[i].jumpType == 6 &&
-                                                <Form.Item label='跳转菜单类型'>
-                                                    <Select style={{ width: "100%" }} placeholder='请选择跳转菜单类型' allowClear
-                                                        defaultValue={formRef.getFieldValue("content")[i].jumpMenuType}
-                                                        key={formRef.getFieldValue("content")[i].jumpMenuType}
-                                                        onChange={(e) => changeData(e, "jumpMenuType", i)}>
-                                                        {jumpMenuTypes.map((item, index) => (
-                                                            <Option value={item.key} key={index}>{item.value}</Option>
-                                                        ))}
-                                                    </Select>
-                                                </Form.Item>
-                                            }
-                                            {
-                                                formRef.getFieldValue("content")[i].jumpType == 8 &&
-                                                <Form.Item label='好看分类'>
-                                                    <Select style={{ width: "100%" }} placeholder='请选择好看分类' allowClear
-                                                        defaultValue={formRef.getFieldValue("content")[i].goodLookType}
-                                                        key={formRef.getFieldValue("content")[i].goodLookType}
-                                                        onChange={(e) => changeData(e, "goodLookType", i)}>
-                                                        {goodLookTypes.map((item, index) => (
-                                                            <Option value={item.key} key={index}>{item.value}</Option>
-                                                        ))}
-                                                    </Select>
-                                                </Form.Item>
-                                            }
+
                                             <Form.Item label='停留时长'>
                                                 <InputNumber min={0} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime}
                                                     onChange={(e) => changeData(e, "showTime", i, 2)} />
@@ -403,29 +410,35 @@ function App2(props) {
                                                     onChange={(e) => changeData(e, "sort", i, 2)}
                                                 />
                                             </Form.Item>
-                                            <Form.Item label='推广渠道'>
-                                                {/* <Input placeholder='请输入推广渠道' key={formRef.getFieldValue("content")[i].apkLauType} defaultValue={formRef.getFieldValue("content")[i].apkLauType}
+                                            {
+                                                formRef.getFieldValue("content")[i].sdk != "dsjLive" &&
+                                                <>
+                                                    <Form.Item label='推广渠道'>
+                                                        {/* <Input placeholder='请输入推广渠道' key={formRef.getFieldValue("content")[i].apkLauType} defaultValue={formRef.getFieldValue("content")[i].apkLauType}
                                                     onChange={(e) => changeData(e, "apkLauType", i, 1)}
                                                 /> */}
-                                                <Select style={{ width: "100%" }} placeholder='请选择推广渠道' allowClear
-                                                    defaultValue={formRef.getFieldValue("content")[i].apkLauType}
-                                                    key={formRef.getFieldValue("content")[i].apkLauType}
-                                                    onChange={(e) => changeData(e, "apkLauType", i)}>
-                                                    {apkLauTypes.map((item, index) => (
-                                                        <Option value={item.key} key={index}>{item.value}</Option>
-                                                    ))}
-                                                </Select>
-                                            </Form.Item>
-                                            <Form.Item label='推广地址'>
-                                                <Input placeholder='请输入推广地址' key={formRef.getFieldValue("content")[i].apkLauAction} defaultValue={formRef.getFieldValue("content")[i].apkLauAction}
-                                                    onChange={(e) => changeData(e, "apkLauAction", i, 1)}
-                                                />
-                                            </Form.Item>
-                                            <Form.Item label='推广参数'>
-                                                <Input placeholder='请输入推广参数' key={formRef.getFieldValue("content")[i].apkLauParam} defaultValue={formRef.getFieldValue("content")[i].apkLauParam}
-                                                    onChange={(e) => changeData(e, "apkLauParam", i, 1)}
-                                                />
-                                            </Form.Item>
+                                                        <Select style={{ width: "100%" }} placeholder='请选择推广渠道' allowClear
+                                                            defaultValue={formRef.getFieldValue("content")[i].apkLauType}
+                                                            key={formRef.getFieldValue("content")[i].apkLauType}
+                                                            onChange={(e) => changeData(e, "apkLauType", i)}>
+                                                            {apkLauTypes.map((item, index) => (
+                                                                <Option value={item.key} key={index}>{item.value}</Option>
+                                                            ))}
+                                                        </Select>
+                                                    </Form.Item>
+                                                    <Form.Item label='推广地址'>
+                                                        <Input placeholder='请输入推广地址' key={formRef.getFieldValue("content")[i].apkLauAction} defaultValue={formRef.getFieldValue("content")[i].apkLauAction}
+                                                            onChange={(e) => changeData(e, "apkLauAction", i, 1)}
+                                                        />
+                                                    </Form.Item>
+                                                    <Form.Item label='推广参数'>
+                                                        <Input placeholder='请输入推广参数' key={formRef.getFieldValue("content")[i].apkLauParam} defaultValue={formRef.getFieldValue("content")[i].apkLauParam}
+                                                            onChange={(e) => changeData(e, "apkLauParam", i, 1)}
+                                                        />
+                                                    </Form.Item>
+                                                </>
+                                            }
+
                                         </div>
                                     }
                                     {

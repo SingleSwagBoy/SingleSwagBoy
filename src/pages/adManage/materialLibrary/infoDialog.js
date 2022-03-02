@@ -95,7 +95,9 @@ function App2(props) {
                     if (arr.type == 6) {
                         arr.content[0].channel = Array.isArray(arr.content[0].channel) ? arr.content[0].channel : arr.content[0].channel.split(",")
                     }
-                    // arr.position = Array.isArray(arr.position)?arr.position.join(","):arr.position
+                    if (arr.mode == 1) {
+                        arr.position = Array.isArray(arr.position) ? arr.position : arr.position.split(",")
+                    }
                     arr.time = [arr.startTime ? moment(arr.startTime) : 0, arr.endTime ? moment(arr.endTime) : 0]
                     formRef.setFieldsValue(props.table_data)
                     console.log(formRef.getFieldsValue(), "formRef.getFieldValue")
@@ -276,7 +278,7 @@ function App2(props) {
                                     position.map((r, i) => {
                                         return (
                                             <Col span={6} style={{ margin: "0 0 10px 0" }} key={i}>
-                                                <Checkbox value={r.key}>{r.value}</Checkbox>
+                                                <Checkbox value={r.key} key={r.key}>{r.value}</Checkbox>
                                             </Col>
                                         )
                                     })

@@ -189,10 +189,7 @@ function App2(props) {
   const submitForm = (val) => {//表单提交
     console.log(currentItem, val)
     let list = currentItem ? Array.isArray(currentItem) ? currentItem : JSON.parse(currentItem) : []
-    console.log(list)
-    // let sameList = val.scheduleList.filter(item=>list.some(l=>l.id == item.id))
     let diffList = val.scheduleList.filter(item=>list.some(l=>l.id != item.id))
-    console.log(diffList)
     let arr = []
     diffList.forEach(r=>{
       if(!r.deleted && r.deleted !=0){
@@ -206,8 +203,6 @@ function App2(props) {
       }
     })
     let submitList = arr.concat(list)
-    
-    // console.log(submitList)
     updateOffline(submitList)
   }
   const updateOfflineFunc = (params) => {

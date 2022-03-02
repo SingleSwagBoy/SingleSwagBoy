@@ -178,7 +178,7 @@ export default class WxReplyModal extends Component {
                                             {
                                                 menu_type=="loginScan" &&
                                                 <Form.Item label='标签' name='tags'>
-                                                    <Select style={{ width: base_width }}  defaultValue={dict_user_tags[0].code.toString()} disabled>
+                                                    <Select style={{ width: base_width }}  defaultValue={dict_user_tags[0].code.toString()}>
                                                         {dict_user_tags.map((item, index) => (
                                                             <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>
                                                         ))}

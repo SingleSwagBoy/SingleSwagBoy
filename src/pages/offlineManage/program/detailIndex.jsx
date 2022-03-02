@@ -190,7 +190,17 @@ function App2(props) {
     console.log(currentItem, val)
     let list = currentItem ? Array.isArray(currentItem) ? currentItem : JSON.parse(currentItem) : []
     let diffList = val.scheduleList.filter(item=>list.some(l=>l.id != item.id))
+    let sameList = list.filter(item=>val.scheduleList.some(l=>l.id == item.id && item.deleted == 0))
+    let delList = list.filter(item=>item.deleted == 1)
     let arr = []
+    sameList.forEach(r=>{
+      val.scheduleList.forEach(l=>{
+        if(r.id == l.id){
+          r.startTime = l.time[0].valueOf()
+          r.endTime = l.time[1].valueOf()
+        }
+      })
+    })
     diffList.forEach(r=>{
       if(!r.deleted && r.deleted !=0){
         arr.push({
@@ -202,7 +212,8 @@ function App2(props) {
         })
       }
     })
-    let submitList = arr.concat(list)
+    
+    let submitList = sameList.concat(arr.concat(delList))
     updateOffline(submitList)
   }
   const updateOfflineFunc = (params) => {

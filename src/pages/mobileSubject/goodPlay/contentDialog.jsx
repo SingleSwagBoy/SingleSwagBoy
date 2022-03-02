@@ -34,7 +34,6 @@ export default class GoodPlayDialog extends Component{
             searchProgram: [],      //节目类型 搜索到视频   
             shortVideoList: [],//短视频
             shortList: [],//短视频集
-            searchChannel:[],
             //渠道搜索
             selectProps: {
                 optionFilterProp: "children",
@@ -407,7 +406,6 @@ export default class GoodPlayDialog extends Component{
      * @param {*} currSearchKey     当前搜索的关键字
      */
      onChannelSearch(currSearchKey) {
-        if (!currSearchKey) return;
         let obj = {
             keywords: currSearchKey,
         };

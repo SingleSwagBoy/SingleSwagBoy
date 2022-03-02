@@ -40,6 +40,7 @@ import {
     syncArmourPackage,              //马甲包
     syncOfflineProgram,              //下线节目
     syncAdSPList,              //支付成功
+    syncMenuList,              //菜单配置
 
 } from 'api'
 
@@ -92,6 +93,7 @@ export default class SyncBtn extends Component {
         if (type === 29) return syncArmourPackage();                                      //马甲包
         if (type === 30) return syncOfflineProgram();                                      //下线节目
         if (type === 31) return syncAdSPList();                                      //支付成功
+        if (type === 32) return syncMenuList();                                      //菜单配置
       
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误

@@ -562,6 +562,14 @@ export const delAdSPList = (params) => { return request2.get(`${baseUrl}/mms/ad/
 export const syncAdSPList = (params) => { return request2.get(`${baseUrl}/mms/sync/ad`,{params:params}); };          //查看支付成功列表
 
 
+//tv菜单配置
+export const getMenuList = (params) => { return request2.post(`${baseUrl}/mms/tv/menu/list`,params); };          //菜单配置列表
+export const addMenuList = (params) => { return request2.post(`${baseUrl}/mms/tv/menu/create`,params); };          //菜单配置列表
+export const updateMenuList = (params) => { return request2.put(`${baseUrl}/mms/tv/menu/${params.id}`,params); };          //菜单配置列表
+export const delMenuList = (params) => { return request2.delete(`${baseUrl}/mms/tv/menu/${params.id}`,params); };          //菜单配置列表
+export const syncMenuList = (params) => { return request2.get(`${baseUrl}/mms/tv/menu/syncCache`,{params:params}); };          //菜单配置列表
+
+
 
 
 //广告-二维码套餐类型

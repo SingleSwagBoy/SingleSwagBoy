@@ -193,20 +193,36 @@ function App2(props) {
   const submitForm = (val) => {//表单提交
     console.log(currentItem, val)
     let list = currentItem ? Array.isArray(currentItem) ? currentItem : JSON.parse(currentItem) : []
-    let diffList = val.scheduleList.filter(item=>list.some(l=>l.id != item.id))
-    let sameList = list.filter(item=>val.scheduleList.some(l=>l.id == item.id && item.deleted == 0))
-    let delList = list.filter(item=>item.deleted == 1)
-    let arr = []
-    sameList.forEach(r=>{
-      val.scheduleList.forEach(l=>{
-        if(r.id == l.id){
-          r.startTime = l.time[0].valueOf()
-          r.endTime = l.time[1].valueOf()
+    if(list.length>0){
+      let diffList = val.scheduleList.filter(item=>list.some(l=>l.id != item.id))
+      let sameList = list.filter(item=>val.scheduleList.some(l=>l.id == item.id && item.deleted == 0))
+      let delList = list.filter(item=>item.deleted == 1)
+      let arr = []
+      sameList.forEach(r=>{
+        val.scheduleList.forEach(l=>{
+          if(r.id == l.id){
+            r.startTime = l.time[0].valueOf()
+            r.endTime = l.time[1].valueOf()
+          }
+        })
+      })
+      diffList.forEach(r=>{
+        if(!r.deleted && r.deleted !=0){
+          arr.push({
+            programId: currentChannel.programId,
+            channelId: currentChannel.channelId,
+            startTime: r.time[0].valueOf(),
+            endTime: r.time[1].valueOf(),
+            deleted: 0
+          })
         }
       })
-    })
-    diffList.forEach(r=>{
-      if(!r.deleted && r.deleted !=0){
+      let submitList = sameList.concat(arr.concat(delList))
+      // return console.log(submitList,"submitList-----------")
+      updateOffline(submitList)
+    }else{
+      let arr = []
+      val.scheduleList.forEach(r=>{
         arr.push({
           programId: currentChannel.programId,
           channelId: currentChannel.channelId,
@@ -214,11 +230,11 @@ function App2(props) {
           endTime: r.time[1].valueOf(),
           deleted: 0
         })
-      }
-    })
+      })
+      // return console.log(arr,"arr11-----------")
+      updateOffline(arr)
+    }
     
-    let submitList = sameList.concat(arr.concat(delList))
-    updateOffline(submitList)
   }
   const updateOfflineFunc = (params) => {
     updateOfflineChannel(params).then(res => {

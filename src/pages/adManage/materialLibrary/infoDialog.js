@@ -152,7 +152,7 @@ function App2(props) {
             ...val,
             startTime: (val.time && val.time[0]) ? parseInt(val.time[0].valueOf()) : "",
             endTime: (val.time && val.time[1]) ? parseInt(val.time[1].valueOf()) : "",
-            random:val.random?1:2
+            random: val.random ? 1 : 2
         }
         delete params.time
         addInfoGroup(params).then(res => {
@@ -167,7 +167,7 @@ function App2(props) {
             ...val,
             startTime: (val.time && val.time[0]) ? parseInt(val.time[0].valueOf()) : "",
             endTime: (val.time && val.time[1]) ? parseInt(val.time[1].valueOf()) : "",
-            random:val.random?1:2
+            random: val.random ? 1 : 2
         }
         delete params.time
         updateInfoGroup(params).then(res => {
@@ -318,6 +318,10 @@ function App2(props) {
                         {(formRef.getFieldValue().content || []).map((r, i) => (
                             <TabPane tab={`第${i + 1}条`} key={i}>
                                 <div>
+                                    <Form.Item label='停留时长'>
+                                        <InputNumber min={0} style={{width:"200px"}} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime}
+                                            onChange={(e) => changeData(e, "showTime", i, 2)} />
+                                    </Form.Item>
                                     {
                                         // 图片回复
                                         (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13) &&
@@ -405,10 +409,10 @@ function App2(props) {
 
                                             }
 
-                                            <Form.Item label='停留时长'>
+                                            {/* <Form.Item label='停留时长'>
                                                 <InputNumber min={0} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime}
                                                     onChange={(e) => changeData(e, "showTime", i, 2)} />
-                                            </Form.Item>
+                                            </Form.Item> */}
                                             <Form.Item label='排序'>
                                                 <InputNumber style={{ width: "400px" }} min={0} placeholder='请输入排序' key={formRef.getFieldValue("content")[i].sort} defaultValue={formRef.getFieldValue("content")[i].sort}
                                                     onChange={(e) => changeData(e, "sort", i, 2)}

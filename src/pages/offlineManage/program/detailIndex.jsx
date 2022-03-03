@@ -179,12 +179,16 @@ function App2(props) {
       if (props.location.query) {
         const list = await getOfflineChannel({ page: { currentPage: page, pageSize: pageSize }, programId: props.location.query.id })
         setLists(list.data)
+        console.log(list)
+        setTotal(list.page.totalCount)
       }
     }
     fetchData()
   }, [forceUpdateId])
-  const changeSize = (e) => {
-    console.log(e)
+  const changeSize = (page,pageSize) => {
+    setPage(page)
+    setPageSize(pageSize)
+    forceUpdate()
   }
   const submitForm = (val) => {//表单提交
     console.log(currentItem, val)

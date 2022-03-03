@@ -85,13 +85,14 @@ export default class WxReply extends Component {
                 is_show: false,
                 select_item: null,
             },
+            curentWindow:"",   // 判断当前的环境
         }
     }
 
 
     render() {
         let { table_box, menu_select_code, menu_list, request_box,dict_public_types_Login,
-            dict_public_types, dict_msg_type, dict_user_tags, dict_rule_types, dict_wx_program} = this.state;
+            dict_public_types, dict_msg_type, dict_user_tags, dict_rule_types, dict_wx_program,curentWindow} = this.state;
 
         return (
             <div>
@@ -127,7 +128,12 @@ export default class WxReply extends Component {
                         <Tooltip title='回复公众号类型' placement="left" color={'purple'}>
                             <Menu onClick={(item) => this.onMenuPublicTypeClick(item)} selectedKeys={[request_box.wxCode]} mode="horizontal">
                                 {
-                                    dict_public_types_Login.map((item, index) => {
+                                    curentWindow=="test" && dict_public_types.map((item, index) => {
+                                        return <Menu.Item key={item.code}> {item.name}</Menu.Item>
+                                    })
+                                }
+                                {
+                                    curentWindow=="product" && dict_public_types_Login.map((item, index) => {
                                         return <Menu.Item key={item.code}> {item.name}</Menu.Item>
                                     })
                                 }
@@ -135,7 +141,6 @@ export default class WxReply extends Component {
                         </Tooltip>
                     </div>
                 }
-
 
                 <WxReplyModal onRef={(val) => { this.setState({ wxReplyModlRef: val }) }}
                     dict_msg_type={dict_msg_type} dict_user_tags={dict_user_tags} dict_public_types={dict_public_types} dict_rule_types={dict_rule_types} dict_wx_program={dict_wx_program}
@@ -149,6 +154,9 @@ export default class WxReply extends Component {
     componentDidMount() {
         let that = this;
         that.initData();
+        that.setState({
+            curentWindow:(window.location.host.includes("localhost") || window.location.host.includes("test") )?"test":"product"
+        },()=>{console.log("that.state.curentWindow",that.state.curentWindow)})
     }
     initData() {
         let that = this;
@@ -202,8 +210,9 @@ export default class WxReply extends Component {
         let last_code = that.state.menu_select_code;
         if (last_code === curr_code) return;
         that.setState({
-            dict_public_types:item.key=="loginScan"?this.state.dict_public_types_Login:this.state.dict_public_types_init
+            dict_public_types:item.key!="loginScan"?that.state.dict_public_types_init:that.state.curentWindow=="test"?that.state.dict_public_types_init:that.state.dict_public_types_Login
         },()=>{
+            console.log("that.state.dict_public_types",that.state.dict_public_types)
             that.refreshTableTitleByMenuCode(curr_code);
         })
     };

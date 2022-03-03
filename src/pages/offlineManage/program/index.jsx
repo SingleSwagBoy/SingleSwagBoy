@@ -269,14 +269,14 @@ function App2() {
               <Form.Item label="名称" name="name" rules={[{ required: true, message: '请输入名称' }]}>
                 <Input placeholder="请输入名称" />
               </Form.Item>
-              <Form.Item label="运营标签" name="tag" rules={[{ required: formRef.getFieldValue("operatorTag") ? false : true, message: '请选择运营标签' }]}>
+              <Form.Item label="运营标签" name="operatorTag" rules={[{ required: formRef.getFieldValue("tag") ? false : true, message: '请选择运营标签' }]}>
                 <Select mode={true} allowClear showSearch placeholder="请选择运营标签" filterOption={filterOption} onChange={() => forceUpdatePages()}>
                   {tagList.map((item, index) => (
                     <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>
                   ))}
                 </Select>
               </Form.Item>
-              <Form.Item label="风险标签" name="operatorTag" rules={[{ required: formRef.getFieldValue("tag") ? false : true, message: '请选择风险标签' }]}>
+              <Form.Item label="风险标签" name="tag" rules={[{ required: formRef.getFieldValue("operatorTag") ? false : true, message: '请选择风险标签' }]}>
                 <Select mode={true} allowClear showSearch placeholder="请选择用户风险标签" filterOption={filterOption} onChange={() => forceUpdatePages()}>
                   {tagList.map((item, index) => (
                     <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>

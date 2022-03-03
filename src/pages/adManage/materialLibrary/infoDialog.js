@@ -337,17 +337,26 @@ function App2(props) {
                                         // 图片回复
                                         (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13) &&
                                         <div>
-                                            <Form.Item label='图片'>
-                                                <MyImageUpload
-                                                    getUploadFileUrl={(file, newItem) => { getUploadFileUrl('picUrl', file, newItem, i) }}
-                                                    imageUrl={formRef.getFieldValue("content")[i].picUrl} />
+                                            <Form.Item label='图片' >
+                                                <div style={{ display: "flex", alignItems: "center" }}>
+                                                    <Input placeholder='请上传图片' key={formRef.getFieldValue("content")[i].picUrl} defaultValue={formRef.getFieldValue("content")[i].picUrl}
+                                                        onChange={(e) => changeData(e, "picUrl", i, 1)}
+                                                    />
+                                                    <MyImageUpload
+                                                        getUploadFileUrl={(file, newItem) => { getUploadFileUrl('picUrl', file, newItem, i) }}
+                                                        imageUrl={formRef.getFieldValue("content")[i].picUrl} />
+                                                </div>
+
                                             </Form.Item>
                                             <Form.Item label='音频'>
-                                                <Input placeholder='请上传音频' key={formRef.getFieldValue("content")[i].audioUrl} defaultValue={formRef.getFieldValue("content")[i].audioUrl}
-                                                    onChange={(e) => changeData(e, "audioUrl", i, 1)}
-                                                />
-                                                <MyImageUpload
-                                                    getUploadFileUrl={(file, newItem) => { getUploadFileUrl('audioUrl', file, newItem, i) }} />
+                                                <div style={{ display: "flex", alignItems: "center" }}>
+                                                    <Input placeholder='请上传音频' key={formRef.getFieldValue("content")[i].audioUrl} defaultValue={formRef.getFieldValue("content")[i].audioUrl}
+                                                        onChange={(e) => changeData(e, "audioUrl", i, 1)}
+                                                    />
+                                                     <MyImageUpload
+                                                        getUploadFileUrl={(file, newItem) => { getUploadFileUrl('audioUrl', file, newItem, i) }} />
+                                                </div>
+
                                             </Form.Item>
 
 

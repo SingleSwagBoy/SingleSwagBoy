@@ -537,6 +537,7 @@ export const getconfigsSync = (params) => { return request.get(`${baseUrl}/mms/w
 // 登录(专享)配置
 export const listextraGet = (params) => { return request.get(`${baseUrl}/mms/wx/qrcode/listextra`, { params: params }); };     // 解锁二维码文案描述
 export const setextra = (params) => { return request.post(`${baseUrl}/mms/wx/qrcode/setextra`, params); };                 // 设置解锁二维码文案描述
+export const bigwechatsPublic = (params) => { return request.get(`${baseUrl}/mms/wx/qrcode/bigwechats`, { params: params }); };     // 公众号大号的列表
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

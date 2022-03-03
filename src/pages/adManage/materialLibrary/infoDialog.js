@@ -248,9 +248,15 @@ function App2(props) {
                 <Select placeholder="类型" onChange={(e) => {
                     forceUpdatePages()
                     let arr = formRef.getFieldValue()
-                    arr.content = [{}]
+                    if (e == 5) {
+                        arr.content = [{ sdk: "dsjLive" }]
+                    } else {
+                        arr.content = [{}]
+                    }
+
                     setActiveKey(0)
                     formRef.setFieldsValue(arr)
+                    console.log(formRef.getFieldValue(), "formRef.getFieldValue()")
                 }}>
                     {
                         type.map((r, i) => {
@@ -318,10 +324,15 @@ function App2(props) {
                         {(formRef.getFieldValue().content || []).map((r, i) => (
                             <TabPane tab={`第${i + 1}条`} key={i}>
                                 <div>
-                                    <Form.Item label='停留时长'>
-                                        <InputNumber min={0} style={{width:"200px"}} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime}
-                                            onChange={(e) => changeData(e, "showTime", i, 2)} />
-                                    </Form.Item>
+                                    {
+                                        (formRef.getFieldValue("type") != 5 && formRef.getFieldValue("type") != 3 && formRef.getFieldValue("type") != 2 && formRef.getFieldValue("type") != 6)
+                                        &&
+                                        <Form.Item label='停留时长'>
+                                            <InputNumber min={0} style={{ width: "200px" }} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime}
+                                                onChange={(e) => changeData(e, "showTime", i, 2)} />
+                                        </Form.Item>
+                                    }
+
                                     {
                                         // 图片回复
                                         (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13) &&
@@ -338,8 +349,27 @@ function App2(props) {
                                                 <MyImageUpload
                                                     getUploadFileUrl={(file, newItem) => { getUploadFileUrl('audioUrl', file, newItem, i) }} />
                                             </Form.Item>
+
+
+                                            {/* <Form.Item label='停留时长'>
+                                                <InputNumber min={0} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime}
+                                                    onChange={(e) => changeData(e, "showTime", i, 2)} />
+                                            </Form.Item> */}
+                                            <Form.Item label='排序'>
+                                                <InputNumber style={{ width: "400px" }} min={0} placeholder='请输入排序' key={formRef.getFieldValue("content")[i].sort} defaultValue={formRef.getFieldValue("content")[i].sort}
+                                                    onChange={(e) => changeData(e, "sort", i, 2)}
+                                                />
+                                            </Form.Item>
+
+                                        </div>
+                                    }
+                                    {
+                                        //sdk的选择
+                                        (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13 || formRef.getFieldValue("type") === 5 || formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6)
+                                        &&
+                                        <>
                                             <Form.Item label='SDK'>
-                                                <Select style={{ width: "100%" }} placeholder='请选择sdk'
+                                                <Select style={{ width: "100%" }} placeholder='请选择sdk' disabled={formRef.getFieldValue("type") === 5 || formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6}
                                                     defaultValue={formRef.getFieldValue("content")[i].sdk}
                                                     key={formRef.getFieldValue("content")[i].sdk}
                                                     onChange={(e) => changeData(e, "sdk", i)}>
@@ -408,18 +438,8 @@ function App2(props) {
                                                 </>
 
                                             }
-
-                                            {/* <Form.Item label='停留时长'>
-                                                <InputNumber min={0} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime}
-                                                    onChange={(e) => changeData(e, "showTime", i, 2)} />
-                                            </Form.Item> */}
-                                            <Form.Item label='排序'>
-                                                <InputNumber style={{ width: "400px" }} min={0} placeholder='请输入排序' key={formRef.getFieldValue("content")[i].sort} defaultValue={formRef.getFieldValue("content")[i].sort}
-                                                    onChange={(e) => changeData(e, "sort", i, 2)}
-                                                />
-                                            </Form.Item>
                                             {
-                                                formRef.getFieldValue("content")[i].sdk != "dsjLive" &&
+                                                (formRef.getFieldValue("content")[i].sdk != "dsjLive" && formRef.getFieldValue("content")[i].sdk) &&
                                                 <>
                                                     <Form.Item label='推广渠道'>
                                                         {/* <Input placeholder='请输入推广渠道' key={formRef.getFieldValue("content")[i].apkLauType} defaultValue={formRef.getFieldValue("content")[i].apkLauType}
@@ -446,8 +466,8 @@ function App2(props) {
                                                     </Form.Item>
                                                 </>
                                             }
+                                        </>
 
-                                        </div>
                                     }
                                     {
                                         // 视频

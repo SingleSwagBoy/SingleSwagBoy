@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getQrcodeConfig, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser, getWechatList, getCount,getexcluswitch,setexcluswitch,listextraGet,setextra } from 'api'
+import { getQrcodeConfig,bigwechatsPublic, requestNewAdTagList, saveQrcodeConfig, getWechatUser, getMyWechatUser, saveMyWechatUser, getWechatList, getCount,getexcluswitch,setexcluswitch,listextraGet,setextra } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Divider, Tabs } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons"
@@ -45,9 +45,9 @@ export default class EarnIncentiveTask extends React.Component {
             allUserList: [],
             wechatList: [],
             public_list: [
-                {  WxCode: "dsj_server",Name:   "电视家服务号" },
-                {  WxCode: "dsj_welfare",Name:   "电视家福利号", },
-                {  WxCode: "dsj_reader",Name:   "电视家权益号",},
+                {  wxCode: "dsj_server",name:   "电视家服务号" },
+                {  wxCode: "dsj_welfare",name:   "电视家福利号", },
+                {  wxCode: "dsj_reader",name:   "电视家权益号",},
             ],
             activityCode: "",//当前激活的哪一个qywechatCode
             switchState:"",
@@ -188,6 +188,7 @@ export default class EarnIncentiveTask extends React.Component {
                     }
                 }
             ],
+            curentWindow:"",
         }
     }
     render() {
@@ -361,7 +362,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     allowClear>
                                         {
                                             public_list.map((item,index)=>{
-                                                return <Option value={item.WxCode} key={item.WxCode} name={item.Name}>{item.Name}</Option>
+                                                return <Option value={item.wxCode} key={item.wxCode} name={item.name}>{item.name}</Option>
                                             })
                                         }
                                     </Select>
@@ -403,10 +404,26 @@ export default class EarnIncentiveTask extends React.Component {
     }
 
     componentDidMount() {
+        this.setState({
+            curentWindow:(window.location.host.includes("localhost") || window.location.host.includes("test") )?"test":"product"
+        },()=>{console.log("this.state.curentWindow",this.state.curentWindow)})
         this.getQrcodeConfig();
         this.requestNewAdTagList()
         this.getWechatList()
         this.getexcluswitch()
+        this.getPublicBigList()
+    }
+    getPublicBigList=()=>{
+        bigwechatsPublic({}).then(res=>{
+            console.log("bigwechatsPublic=bigwechatsPublic",res)
+            if(res.data.errCode==0){
+                if(this.state.curentWindow=="test"){
+                    this.setState({
+                        public_list:res.data.data
+                    })
+                }
+            }
+        })
     }
     getexcluswitch(){
         getexcluswitch({}).then(res => {

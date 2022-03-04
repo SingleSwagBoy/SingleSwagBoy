@@ -205,7 +205,13 @@ function App2(props) {
     const add = () => {
         let arr = formRef.getFieldValue()
         if (formRef.getFieldValue("type") != 1 && formRef.getFieldValue("type") != 13 && formRef.getFieldValue("type") != 14 && formRef.getFieldValue("type") != 2 && arr.content.length == 1) return message.error("该类型已经达到上限")
-        arr.content.push({})
+        if (arr.type == 5 || arr.type == 3 || arr.type == 6) {
+            arr.content.push({
+                sdk: "dsjLive"
+            })
+        } else {
+            arr.content.push({})
+        }
         forceUpdatePages()
         setActiveKey(arr.content.length - 1)
     }
@@ -248,7 +254,7 @@ function App2(props) {
                 <Select placeholder="类型" onChange={(e) => {
                     forceUpdatePages()
                     let arr = formRef.getFieldValue()
-                    if (e == 5) {
+                    if (e == 5 || e == 3 || e == 6) {
                         arr.content = [{ sdk: "dsjLive" }]
                     } else {
                         arr.content = [{}]
@@ -353,7 +359,7 @@ function App2(props) {
                                                     <Input placeholder='请上传音频' key={formRef.getFieldValue("content")[i].audioUrl} defaultValue={formRef.getFieldValue("content")[i].audioUrl}
                                                         onChange={(e) => changeData(e, "audioUrl", i, 1)}
                                                     />
-                                                     <MyImageUpload
+                                                    <MyImageUpload
                                                         getUploadFileUrl={(file, newItem) => { getUploadFileUrl('audioUrl', file, newItem, i) }} />
                                                 </div>
 

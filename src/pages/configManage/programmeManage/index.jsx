@@ -84,9 +84,19 @@ export default class ProgrammeManage extends Component{
                     title: '状态', dataIndex: 'isBlack', key: 'isBlack',
                     render: (rowValue, row, index) => {
                         return (
-                            <span>
-                                {rowValue?"是("+this.getTagsName(row.tags)+")":"否"}
-                            </span>
+                            <div>
+                                {/* {rowValue?"是("+this.getTagsName(row.tags)+")":"否"} */}
+                                {
+                                    rowValue &&
+                                    <span>
+                                        是
+                                        {
+                                            row.tags?"("+this.getTagsName(row.tags)+")":""
+                                        }
+                                    </span> ||
+                                    <span>否</span>
+                                }
+                            </div>
                         )
                     }
                 },
@@ -280,15 +290,16 @@ export default class ProgrammeManage extends Component{
         getCategories(params).then(res=>{
             console.log("getCategoryList============getCategoryList",res)
             if(res.data.errCode==0){
-                let _list=res.data.data.type;
-                for(let i=0;i<_list.length;i++){
-                    if(_list[i].name==this.state.type){
-                        this.setState({
-                            categoryNext:_list[i].category
-                        })
+                if(res.data.data.type){
+                    let _list=res.data.data.type;
+                    for(let i=0;i<_list.length;i++){
+                        if(_list[i].name==this.state.type){
+                            this.setState({
+                                categoryNext:_list[i].category?_list[i].category:[]
+                            })
+                        }
                     }
                 }
-                
             }
         })
     }
@@ -437,6 +448,12 @@ export default class ProgrammeManage extends Component{
                                                                         item.value=item.name;
                                                                         return item
                                                                     }))
+                                                                },()=>{
+                                                                    console.log("optionListTwooptionListTwooptionListTwooptionListTwo",this.state.optionListTwo)
+                                                                })
+                                                            }else{
+                                                                this.setState({
+                                                                    optionListTwo:[]
                                                                 },()=>{
                                                                     console.log("optionListTwooptionListTwooptionListTwooptionListTwo",this.state.optionListTwo)
                                                                 })

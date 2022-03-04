@@ -32,7 +32,7 @@ function App2(props) {
         { key: 5, value: '三方sdk' },
         { key: 6, value: '轮播推荐' },
         { key: 7, value: '轮播推荐(自动填充)' },
-        { key: 8, value: '优惠券' },
+        // { key: 8, value: '优惠券' },
         { key: 9, value: '家庭号' },
         { key: 10, value: '登录' },
         { key: 11, value: 'H5' },
@@ -525,7 +525,7 @@ function App2(props) {
                                     }
                                     {
                                         // 支付
-                                        (formRef.getFieldValue("type") === 4 || formRef.getFieldValue("type") === 9) &&
+                                        (formRef.getFieldValue("type") === 4 || formRef.getFieldValue("type") === 9  || formRef.getFieldValue("type") === 10  || formRef.getFieldValue("type") === 12) &&
                                         <div>
                                             <Form.Item label='图片'>
                                                 <MyImageUpload

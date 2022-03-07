@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react'
 import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup, getPosition } from 'api'
-import { Radio, Divider, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, Switch, Checkbox, DatePicker, Row, Col } from 'antd'
+import { Radio, Popover, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, Switch, Checkbox, DatePicker, Row, Col } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
@@ -111,6 +111,28 @@ function App2(props) {
         }
         fetchData()
     }, [props.table_data])
+    const getToolTip = (arr, pos) => {
+        let name = ''
+        let sign = 0
+        for (let i in arr) {
+            for (let j in arr[i].position) {
+                let list = Array.isArray(arr[i].position)?arr[i].position[j]:arr[i].position.split(",")[j]
+                if (pos == list && arr[i].status == 1) {
+                    if (sign === 0) {
+                        name += arr[i].name
+                        sign = sign + 1
+                    } else {
+                        name += '、' + arr[i].name
+                    }
+                    break
+                }
+            }
+        }
+        if (name == '') {
+            return name
+        }
+        return '此位置已被【' + name + '】选中'
+    }
     useEffect(() => {
         const fetchData = async () => {
             let list = await getSdkList({})
@@ -124,7 +146,8 @@ function App2(props) {
                 if (r.validPosition) {
                     let arr = r.validPosition.split(",")
                     arr.forEach((l, index) => {
-                        formPosition.push({ key: `${r.channelGroupId}:${l}`, value: `${r.channelGroupId}-${r.name}:位置${l}` })
+                        let hasOwn = getToolTip(props.lists, `${r.channelGroupId}:${l}`)
+                        formPosition.push({ key: `${r.channelGroupId}:${l}`, value: `${r.channelGroupId}-${r.name}:位置${l}`,own:hasOwn})
                     })
                 }
             })
@@ -245,6 +268,17 @@ function App2(props) {
             getChannelList(e)
         }, 1000)
     }
+    // 位置被哪些选中了
+    const content = (val) => {
+        if(val){
+            return (
+                <div>{val}</div>
+            )
+        }else{
+            return
+        }
+        
+    }
     return (
         <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} form={formRef} onFinish={(e) => submitFinish(e)}>
             <Form.Item label='名称' name='name' rules={[{ required: true }]}>
@@ -292,7 +326,11 @@ function App2(props) {
                                     position.map((r, i) => {
                                         return (
                                             <Col span={6} style={{ margin: "0 0 10px 0" }} key={i}>
-                                                <Checkbox value={r.key} key={r.key}>{r.value}</Checkbox>
+                                                <Checkbox value={r.key} key={r.key}>
+                                                    <Popover content={content(r.own)} trigger="hover">
+                                                        {r.value}
+                                                    </Popover>
+                                                </Checkbox>
                                             </Col>
                                         )
                                     })
@@ -525,7 +563,7 @@ function App2(props) {
                                     }
                                     {
                                         // 支付
-                                        (formRef.getFieldValue("type") === 4 || formRef.getFieldValue("type") === 9  || formRef.getFieldValue("type") === 10  || formRef.getFieldValue("type") === 12) &&
+                                        (formRef.getFieldValue("type") === 4 || formRef.getFieldValue("type") === 9 || formRef.getFieldValue("type") === 10 || formRef.getFieldValue("type") === 12) &&
                                         <div>
                                             <Form.Item label='图片'>
                                                 <MyImageUpload

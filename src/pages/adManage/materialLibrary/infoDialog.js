@@ -369,7 +369,7 @@ function App2(props) {
                             <TabPane tab={`第${i + 1}条`} key={i}>
                                 <div>
                                     {
-                                        (formRef.getFieldValue("type") != 3 && formRef.getFieldValue("type") != 2 && formRef.getFieldValue("type") != 6)
+                                        (formRef.getFieldValue("type") != 3 && formRef.getFieldValue("type") != 2 && formRef.getFieldValue("type") != 6 && formRef.getFieldValue("type") != 7)
                                         &&
                                         <Form.Item label='停留时长'>
                                             <InputNumber min={0} style={{ width: "200px" }} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime}

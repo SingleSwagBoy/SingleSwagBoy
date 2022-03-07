@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react'
-import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup, getPosition ,getApkList} from 'api'
+import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup, getPosition ,getApkList,getInfoGroup} from 'api'
 import { Radio, Popover, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, Switch, Checkbox, DatePicker, Row, Col } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
@@ -142,6 +142,8 @@ function App2(props) {
             setProduct(productList.data.data)
             let myApk = await getApkList({ page: { idPage: 9 } })
             setApkList(myApk.data)
+            message.loading('加载位置中', 2.5)
+            let getTableList = await getInfoGroup({ page: { pageSize: 9999 } })
             let positionList = await getPosition({ page: { idPage: 9 } })
             let data = positionList.data
             let formPosition = []
@@ -149,7 +151,7 @@ function App2(props) {
                 if (r.validPosition) {
                     let arr = r.validPosition.split(",")
                     arr.forEach((l, index) => {
-                        let hasOwn = getToolTip(props.lists, `${r.channelGroupId}:${l}`)
+                        let hasOwn = getToolTip(getTableList.data, `${r.channelGroupId}:${l}`)
                         formPosition.push({ key: `${r.channelGroupId}:${l}`, value: `${r.channelGroupId}-${r.name}:位置${l}`,own:hasOwn})
                     })
                 }

@@ -297,7 +297,7 @@ export default class adCreateModal extends Component {
                 >
                     {
                         adIndex == 3 &&
-                        <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={(e) => this.onModalCancelClick(e)} lists={this.state.lists} /></div>
+                        <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={(e) => this.onModalCancelClick(e)}/></div>
                     }
                     {
                         adIndex != 3 &&

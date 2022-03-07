@@ -29,7 +29,7 @@ function App2(props) {
         { key: 14, value: '视频（会员可投）' },
         { key: 3, value: '直播' },
         { key: 4, value: '支付' },
-        { key: 5, value: '三方sdk' },
+        // { key: 5, value: '三方sdk' },
         { key: 6, value: '轮播推荐' },
         { key: 7, value: '轮播推荐(自动填充)' },
         // { key: 8, value: '优惠券' },
@@ -40,12 +40,12 @@ function App2(props) {
     ]
     const jumpTypes = [
         { key: 1, value: '跳转到频道' },
-        { key: 2, value: '跳转到下载' },
-        { key: 3, value: '跳转到商品' },
-        { key: 4, value: '跳转到活动' },
-        { key: 5, value: '跳转到任务' },
+        // { key: 2, value: '跳转到下载' },
+        // { key: 3, value: '跳转到商品' },
+        // { key: 4, value: '跳转到活动' },
+        // { key: 5, value: '跳转到任务' },
         { key: 6, value: '跳转到菜单' },
-        { key: 7, value: '跳转到二维码' },
+        // { key: 7, value: '跳转到二维码' },
         { key: 8, value: '跳转到好看分类' },
     ]
     const goodLookTypes = [
@@ -92,7 +92,7 @@ function App2(props) {
                 if (props.table_data && props.table_data.content) {
                     let arr = props.table_data
                     arr.random = arr.random == 1 ? true : false
-                    if (arr.type == 6) {
+                    if (arr.type == 6 || arr.type == 7) {
                         arr.content[0].channel = Array.isArray(arr.content[0].channel) ? arr.content[0].channel : arr.content[0].channel.split(",")
                     }
                     if (arr.mode == 1) {
@@ -157,7 +157,7 @@ function App2(props) {
     }, [forceUpdateId])
     const submitFinish = (e) => {
         let obj = formRef.getFieldValue()
-        if (obj.type == 6) { //轮播推荐只会有一条数据
+        if (obj.type == 6 || obj.type == 7) { //轮播推荐只会有一条数据
             obj.content[0].channel = Array.isArray(obj.content[0].channel) ? obj.content[0].channel.join(",") : obj.content[0].channel
         }
         if (obj.mode == 1) {
@@ -228,7 +228,7 @@ function App2(props) {
     const add = () => {
         let arr = formRef.getFieldValue()
         if (formRef.getFieldValue("type") != 1 && formRef.getFieldValue("type") != 13 && formRef.getFieldValue("type") != 14 && formRef.getFieldValue("type") != 2 && arr.content.length == 1) return message.error("该类型已经达到上限")
-        if (arr.type == 5 || arr.type == 3 || arr.type == 6) {
+        if (arr.type == 3 || arr.type == 6 || arr.type == 7) {
             arr.content.push({
                 sdk: "dsjLive"
             })
@@ -288,7 +288,7 @@ function App2(props) {
                 <Select placeholder="类型" onChange={(e) => {
                     forceUpdatePages()
                     let arr = formRef.getFieldValue()
-                    if (e == 5 || e == 3 || e == 6) {
+                    if (e == 3 || e == 6 || e == 7) {
                         arr.content = [{ sdk: "dsjLive" }]
                     } else {
                         arr.content = [{}]
@@ -369,7 +369,7 @@ function App2(props) {
                             <TabPane tab={`第${i + 1}条`} key={i}>
                                 <div>
                                     {
-                                        (formRef.getFieldValue("type") != 5 && formRef.getFieldValue("type") != 3 && formRef.getFieldValue("type") != 2 && formRef.getFieldValue("type") != 6)
+                                        (formRef.getFieldValue("type") != 3 && formRef.getFieldValue("type") != 2 && formRef.getFieldValue("type") != 6)
                                         &&
                                         <Form.Item label='停留时长'>
                                             <InputNumber min={0} style={{ width: "200px" }} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime}
@@ -418,11 +418,11 @@ function App2(props) {
                                     }
                                     {
                                         //sdk的选择
-                                        (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13 || formRef.getFieldValue("type") === 5 || formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6)
+                                        (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13 || formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6 || formRef.getFieldValue("type") === 7)
                                         &&
                                         <>
                                             <Form.Item label='SDK'>
-                                                <Select style={{ width: "100%" }} placeholder='请选择sdk' disabled={formRef.getFieldValue("type") === 5 || formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6}
+                                                <Select style={{ width: "100%" }} placeholder='请选择sdk' disabled={formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6 || formRef.getFieldValue("type") === 7}
                                                     defaultValue={formRef.getFieldValue("content")[i].sdk}
                                                     key={formRef.getFieldValue("content")[i].sdk}
                                                     onChange={(e) => changeData(e, "sdk", i)}>
@@ -432,7 +432,7 @@ function App2(props) {
                                                 </Select>
                                             </Form.Item>
                                             {
-                                                formRef.getFieldValue("content")[i].sdk == "dsjLive" &&
+                                                formRef.getFieldValue("content")[i].sdk == "dsjLive" && formRef.getFieldValue("type") != 6 && formRef.getFieldValue("type") != 3 && formRef.getFieldValue("type") != 7 &&
                                                 <>
                                                     <Form.Item label='跳转类型'>
                                                         <Select style={{ width: "100%" }} placeholder='请选择跳转类型' allowClear

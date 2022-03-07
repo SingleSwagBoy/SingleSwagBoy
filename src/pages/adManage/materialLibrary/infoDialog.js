@@ -129,7 +129,7 @@ function App2(props) {
             }
         }
         if (name == '') {
-            return name
+            return "暂无选中"
         }
         return '此位置已被【' + name + '】选中'
     }

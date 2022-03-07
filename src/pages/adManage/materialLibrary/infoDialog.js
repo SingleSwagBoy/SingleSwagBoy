@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react'
-import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup, getPosition } from 'api'
+import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup, getPosition ,getApkList} from 'api'
 import { Radio, Popover, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, Switch, Checkbox, DatePicker, Row, Col } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
@@ -40,7 +40,7 @@ function App2(props) {
     ]
     const jumpTypes = [
         { key: 1, value: '跳转到频道' },
-        // { key: 2, value: '跳转到下载' },
+        { key: 2, value: '跳转到下载' },
         // { key: 3, value: '跳转到商品' },
         // { key: 4, value: '跳转到活动' },
         // { key: 5, value: '跳转到任务' },
@@ -82,6 +82,7 @@ function App2(props) {
     const [product, setProduct] = useState([])
     const [sdkList, setSdkList] = useState([])
     const [position, setPosition] = useState([])
+    const [apkList, setApkList] = useState([])
     const [isOpen, setIsOpen] = useState(false)
     const [channelList, setChannelList] = useState([])
     const [lists, setLists] = useState([])
@@ -139,6 +140,8 @@ function App2(props) {
             setSdkList(list.data)
             let productList = await requestProductSkuList({ productCategoryType: 10, page: { idPage: 9 } })
             setProduct(productList.data.data)
+            let myApk = await getApkList({ page: { idPage: 9 } })
+            setApkList(myApk.data)
             let positionList = await getPosition({ page: { idPage: 9 } })
             let data = positionList.data
             let formPosition = []
@@ -457,6 +460,24 @@ function App2(props) {
                                                                 {
                                                                     channelList.map((r, i) => {
                                                                         return <Option value={r.code} key={r.id}>{r.name + "----" + r.code}</Option>
+                                                                    })
+                                                                }
+                                                            </Select>
+                                                        </Form.Item>
+                                                    }
+                                                    {
+                                                        formRef.getFieldValue("content")[i].jumpType == 2 &&
+                                                        <Form.Item label='运营APK'>
+                                                            <Select style={{ width: "100%" }} placeholder='请选择运营APK' allowClear
+                                                                {...selectProps}
+                                                                defaultValue={formRef.getFieldValue("content")[i].apkId}
+                                                                key={formRef.getFieldValue("content")[i].apkId}
+                                                                onChange={(e) => changeData(e, "apkId", i)}
+                                                                onSearch={(e) => comChannel(e)}
+                                                            >
+                                                                {
+                                                                    apkList.map((r, i) => {
+                                                                        return <Option value={r.id} key={r.id}>{r.name}</Option>
                                                                     })
                                                                 }
                                                             </Select>

@@ -454,9 +454,9 @@ function App2(props) {
                                                         <Form.Item label='频道'>
                                                             <Select style={{ width: "100%" }} placeholder='请选择频道' allowClear
                                                                 {...selectProps}
-                                                                defaultValue={formRef.getFieldValue("content")[i].channel}
-                                                                key={formRef.getFieldValue("content")[i].channel}
-                                                                onChange={(e) => changeData(e, "channel", i)}
+                                                                defaultValue={formRef.getFieldValue("content")[i].jumpChannelCode}
+                                                                key={formRef.getFieldValue("content")[i].jumpChannelCode}
+                                                                onChange={(e) => changeData(e, "jumpChannelCode", i)}
                                                                 onSearch={(e) => comChannel(e)}
                                                             >
                                                                 {

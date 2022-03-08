@@ -219,14 +219,17 @@ export default class adCreateModal extends Component {
                                         let arr = table_title
                                         if (val.target.value == 3) {//信息流素材自定义表头
                                             arr = table_title.filter(item => item.key != "iconPicUrl" && item.key != "picUrl")
-                                            arr.splice(2, 0, {
-                                                title: '广告模式', dataIndex: 'mode', key: 'mode', width: 300,
-                                                render: (rowValue, row, index) => {
-                                                    return (
-                                                        <div>{rowValue == 1 ? "定向" : rowValue == 2 ? "不定向" : "未知"}</div>
-                                                    )
-                                                }
-                                            })
+                                            if(arr[2].dataIndex != "mode"){
+                                                arr.splice(2, 0, {
+                                                    title: '广告模式', dataIndex: 'mode', key: 'mode', width: 300,
+                                                    render: (rowValue, row, index) => {
+                                                        return (
+                                                            <div>{rowValue == 1 ? "定向" : rowValue == 2 ? "不定向" : "未知"}</div>
+                                                        )
+                                                    }
+                                                })
+                                            }
+                                            
                                         }
                                         this.setState({
                                             adIndex: val.target.value,

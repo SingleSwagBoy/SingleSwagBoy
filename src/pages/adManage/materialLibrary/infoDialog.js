@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react'
-import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup, getPosition ,getApkList,getInfoGroup} from 'api'
+import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup, getPosition ,getApkList,getInfoGroup,getMenuList} from 'api'
 import { Radio, Popover, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, Switch, Checkbox, DatePicker, Row, Col } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
@@ -53,17 +53,19 @@ function App2(props) {
         { key: 2, value: '电视相册' },
         // { key: 3, value: '公共相册' },
     ]
-    const jumpMenuTypes = [
-        { key: 1, value: '跳转到我的' },
-        // { key: 2, value: '跳转到手机' },
-        { key: 3, value: '跳转到自建' },
-        { key: 4, value: '跳转到设置' },
-        { key: 5, value: '跳转到帮助' },
-        { key: 6, value: '跳转到语音' },
-        { key: 7, value: '跳转到套餐' },
-        // { key: 8, value: '跳转到小剧场列表页' },
-        // { key: 100, value: '跳转到小剧场播放页' },
-    ]
+    const [jumpMenuTypes,setJumpMenuTypes] = useState(
+        [
+            { key: 1, value: '跳转到我的' },
+            // { key: 2, value: '跳转到H5' },
+            { key: 3, value: '跳转到自建' },
+            { key: 4, value: '跳转到设置' },
+            { key: 5, value: '跳转到帮助' },
+            { key: 6, value: '跳转到语音' },
+            { key: 7, value: '跳转到套餐' },
+            // { key: 8, value: '跳转到小剧场列表页' },
+            // { key: 100, value: '跳转到小剧场播放页' },
+        ]
+    )
     const apkLauTypes = [
         { key: 1, value: '腾讯' },
         { key: 2, value: '爱奇艺' },
@@ -142,7 +144,9 @@ function App2(props) {
             setProduct(productList.data.data)
             let myApk = await getApkList({ page: { idPage: 9 } })
             setApkList(myApk.data)
-            message.loading('加载位置中', 2.5)
+            if(props.table_data.mode == 1){
+                message.loading('加载位置中', 1.5)
+            }
             let getTableList = await getInfoGroup({ page: { pageSize: 9999 } })
             let positionList = await getPosition({ page: { idPage: 9 } })
             let data = positionList.data
@@ -157,6 +161,7 @@ function App2(props) {
                 }
             })
             setPosition(formPosition)
+            getMenuListFuc()
         }
         fetchData()
     }, [forceUpdateId])
@@ -283,6 +288,26 @@ function App2(props) {
             return
         }
         
+    }
+    const getMenuListFuc = () =>{
+        let params={
+            page: {currentPage: 1, pageSize: 9999}
+        }
+        getMenuList(params).then(res=>{
+            let arr = res.data.filter(item=>item.status == 1)
+            console.log(arr,"arr")
+            let list = []
+            arr.forEach((r,i)=>{
+                if(i == 0){
+                    list.push({key:21,value:r.name})
+                }else if(i == 1){
+                    list.push({key:22,value:r.name})
+                }else if(i == 2){
+                    list.push({key:23,value:r.name})
+                }
+            })
+            setJumpMenuTypes(jumpMenuTypes=>jumpMenuTypes.concat(list))
+        })
     }
     return (
         <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} form={formRef} onFinish={(e) => submitFinish(e)}>

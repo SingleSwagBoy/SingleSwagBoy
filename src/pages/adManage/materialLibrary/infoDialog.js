@@ -51,18 +51,18 @@ function App2(props) {
     const goodLookTypes = [
         { key: 1, value: '点歌台' },
         { key: 2, value: '电视相册' },
-        { key: 3, value: '公共相册' },
+        // { key: 3, value: '公共相册' },
     ]
     const jumpMenuTypes = [
-        { key: 1, value: '跳转到金币' },
-        { key: 2, value: '跳转到手机' },
+        { key: 1, value: '跳转到我的' },
+        // { key: 2, value: '跳转到手机' },
         { key: 3, value: '跳转到自建' },
         { key: 4, value: '跳转到设置' },
-        { key: 5, value: '跳转到联系' },
+        { key: 5, value: '跳转到帮助' },
         { key: 6, value: '跳转到语音' },
         { key: 7, value: '跳转到套餐' },
-        { key: 8, value: '跳转到小剧场列表页' },
-        { key: 100, value: '跳转到小剧场播放页' },
+        // { key: 8, value: '跳转到小剧场列表页' },
+        // { key: 100, value: '跳转到小剧场播放页' },
     ]
     const apkLauTypes = [
         { key: 1, value: '腾讯' },

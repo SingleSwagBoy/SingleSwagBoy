@@ -321,6 +321,7 @@ export default class adCreateModal extends Component {
                 <Modal visible={materialShow} title="素材" width={1500} transitionName="" maskClosable={false}
                     onCancel={() => that.onModalCancelClick()}
                     footer={null}
+                    zIndex={888}
                 >
                     {
                         adIndex == 3 &&

@@ -59,6 +59,7 @@ const RecommendConfig = lazy(() => import('pages/configManage/recommendConfig/in
 const WordsSwiperConfig = lazy(() => import('pages/configManage/wordsSwiperConfig/index.jsx'));
 const HomeBroadcast = lazy(() => import('pages/configManage/homeBroadcast/index.jsx'));
 const ChannelShield = lazy(() => import('pages/configManage/channelShield/index.jsx'));
+const ProgrammeManage = lazy(() => import('pages/configManage/programmeManage/index.jsx'));
 const LuckyDraw = lazy(() => import('pages/activeManagement/luckyDraw/index.jsx'))
 const GoodsConfig = lazy(() => import('pages/activeManagement/goodsConfig/index.jsx'))
 const mobileChannel = lazy(() => import('pages/mobileSubject/channel/index.jsx'))
@@ -68,6 +69,7 @@ const mobileChannelSubject = lazy(() => import('pages/mobileSubject/channelSubje
 const mobileChannelSubjectNew = lazy(() => import('pages/mobileSubject/channelSubjectNew/index.jsx'))
 const mobileEditSubject = lazy(() => import('pages/mobileSubject/editSubject/index.jsx'))
 const mobileEditSubjectNew = lazy(() => import('pages/mobileSubject/editSubjectNew/index.jsx'))
+const mobileGoodPlay = lazy(() => import('pages/mobileSubject/goodPlay/index.jsx'))
 
 const ConfigDoc = lazy(() => import('pages/generalConfig/wenanconfig/doc.jsx'));
 const OffineConfig = lazy(() => import('pages/generalConfig/offlineConfig/offlineConfig.jsx'));
@@ -153,6 +155,7 @@ const adminRoutes = [
     { name: '移动端节目单屏蔽', icon: UnorderedListOutlined, path: '/mms/config/channelShield', component: ChannelShield, code: "configManage", sub_code: 'channelShield' },
     // { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/config/tvRecommendConfig', component: TvRecommendConfig, code: "configManage", sub_code: 'tvRecommendConfig' },
     { name: '直播预告', icon: UnorderedListOutlined, path: '/mms/config/livePreview', component: LivePreview, code: "configManage", sub_code: 'livePreview' },
+    { name: '节目单管理', icon: UnorderedListOutlined, path: '/mms/configManage/programmeManage', component: ProgrammeManage, code: "configManage", sub_code: 'programmeManage' },
 
 
 
@@ -191,7 +194,8 @@ const adminRoutes = [
     { name: '频道专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/channelSubject', component: mobileChannelSubject, code: "mobileProject", sub_code: 'channelSubject' },
     { name: '新频道专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/channelSubjectNew', component: mobileChannelSubjectNew, code: "mobileProject", sub_code: 'channelSubjectNew' },
     { name: '编辑专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/editSubject/:id', component: mobileEditSubject, code: "mobileProject" }, //频道专题二级页面
-    { name: '新编辑专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/editSubjectNew/:id', component: mobileEditSubjectNew, code: "mobileProject" }, //频道专题二级页面
+    { name: '新编辑专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/editSubjectNew/:id', component: mobileEditSubjectNew, code: "mobileProject" }, //新频道专题二级页面
+    { name: '好剧专题', icon: UnorderedListOutlined, path: '/mms/mobileSubject/goodPlay', component: mobileGoodPlay, code: "mobileProject", sub_code: 'channelGoodPlay' },
 
     // 通用-配置管理
     { name: '文案管理', icon: UnorderedListOutlined, path: '/mms/generalConfig/doc', component: ConfigDoc, code: "generalMangement", sub_code: 'DocManager' },

@@ -517,6 +517,26 @@ export const updateActivityConfig = (params) => { return request2.post(`${baseUr
 export const delActivityConfig = (params) => { return request2.get(`${baseUrl}/mms/album/config/upload/guideActivity/del`,{params:params}); };          //引导上传照片活动配置 - 删
 export const syncActivityConfig = (params) => { return request2.get(`${baseUrl}/mms/album/config/upload/guideActivity/sync`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
 
+//  好剧专题
+export const specialList = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/list`,{params:params}); };       // 专题列表
+export const specialAdd = (params) => { return request.post(`${baseUrl}/mms/channel/home/special/add`,params); };       // 新增专题
+export const specialGetBaseInfo = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/getBaseInfo`,{params:params}); };       // 获取专题标题
+export const specialSetBaseInfo = (params) => { return request.post(`${baseUrl}/mms/channel/home/special/setBaseInfo`,params); };       // 设置专题标题
+export const specialStatus = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/status`,{params:params}); };       // 获取专题标题
+export const specialSync = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/sync`,{params:params}); };       // 专题同步
+export const specialUpdate = (params) => { return request.post(`${baseUrl}/mms/channel/home/special/update`,params); };       // 修改专题
+export const specialDelete = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/del`,{params:params}); };       // 专题删除
+export const specialChangepos = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/changepos`,{params:params}); };       // 设置专题排序
+export const specialResort = (params) => { return request.get(`${baseUrl}/mms/channel/home/special/resort`,{params:params}); };       // 专题重排序
+
+
+//移动端节目单屏蔽
+export const getCategories = (params) => { return request.get(`${baseUrl}/mms/channel/programs/getCategories`,{params:params}); };       // 节目类型 
+export const getlistAllPrograms = (params) => { return request.get(`${baseUrl}/mms/channel/programs/listAllPrograms`,{params:params}); };       // 列表-节目单
+export const getCategoriesDetail = (params) => { return request.get(`${baseUrl}/mms/channel/programs/${params.id}`,{params:params}); };       // 详情-节目单
+export const categoriesUpdate = (programeId,params) => { return request.put(`${baseUrl}/mms/channel/programs/${programeId}`, params) }; 
+
+
 // 马甲包
 export const getArmourPackage = (params) => { return request2.post(`${baseUrl}/mms/armourPackage/list`,params); };          //引导上传照片活动配置 - 缓存同步
 export const addArmourPackage = (params) => { return request2.post(`${baseUrl}/mms/armourPackage/create`,params); };          //引导上传照片活动配置 - 缓存同步
@@ -538,6 +558,7 @@ export const getconfigsSync = (params) => { return request.get(`${baseUrl}/mms/w
 export const listextraGet = (params) => { return request.get(`${baseUrl}/mms/wx/qrcode/listextra`, { params: params }); };     // 解锁二维码文案描述
 export const setextra = (params) => { return request.post(`${baseUrl}/mms/wx/qrcode/setextra`, params); };                 // 设置解锁二维码文案描述
 export const bigwechatsPublic = (params) => { return request.get(`${baseUrl}/mms/wx/qrcode/bigwechats`, { params: params }); };     // 公众号大号的列表
+
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

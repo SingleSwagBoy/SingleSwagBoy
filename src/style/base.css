@@ -24,3 +24,32 @@
     display: flex;
     flex-direction: row;
 }
+
+
+.flex-row-between{
+    display: flex;
+    flex-flow :row nowrap;
+    align-items :center;
+    justify-content :space-between;
+  }
+  .flex-row-items{
+    display: flex;
+    flex-flow :row nowrap;
+    align-items: center;
+  }
+  .flex-row-items2{
+    display: flex;
+    flex-flow :row nowrap;
+    align-items: flex-start;
+  }
+  .flex-row-all-center{
+    display: flex;
+    flex-flow :row nowrap;
+    align-items: center;
+    justify-content: center;
+  }
+  .flex-col-between{
+    display: flex;
+    flex-flow :row nowrap;
+    justify-content: space-between;
+  }

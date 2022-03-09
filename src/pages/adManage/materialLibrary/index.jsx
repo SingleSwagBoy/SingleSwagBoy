@@ -241,7 +241,7 @@ export default class adCreateModal extends Component {
                                     }}>
                                     <Radio.Button value="1">右键运营位广告</Radio.Button>
                                     <Radio.Button value="2">屏显广告</Radio.Button>
-                                    <Radio.Button value="3">信息流广告</Radio.Button>
+                                    {/* <Radio.Button value="3">信息流广告</Radio.Button> */}
                                 </Radio.Group>
                             </div>
                             <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center' }}>

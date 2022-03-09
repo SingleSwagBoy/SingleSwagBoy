@@ -46,7 +46,7 @@ export default class adGroup extends Component {
             dict_ad_type: [
                 { key: 1, value: '右键运营位' },
                 { key: 2, value: '屏显广告' },
-                { key: 11, value: '信息流广告' },
+                // { key: 11, value: '信息流广告' },
             ],
             //标签列表
             dict_target_list: [],

@@ -255,7 +255,7 @@ export default class GoodPlayDialog extends Component{
                     <Form.Item label="背景色" name='backgroundColor' rules={[{ required: true, message: '请填写背景色' }]}>
                         <Input placeholder='背景色' className="base-input-wrapper2"/>
                     </Form.Item>
-                    <Form.List name="contents" rules={[{ required: true, message: '内容板块' }]}>
+                    <Form.List name="contents" >
                         {(fields, { add, remove }) => (
                             <>
 

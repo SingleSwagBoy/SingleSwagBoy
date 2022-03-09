@@ -230,6 +230,24 @@ export default class adCreateModal extends Component {
                                                 })
                                             }
 
+                                        } else {
+                                            arr = table_title.filter(item => item.key != "mode")
+                                            if (arr[2].dataIndex != "iconPicUrl") {
+                                                arr.splice(2, 0, {
+                                                    title: '缩略图', dataIndex: 'iconPicUrl', key: 'iconPicUrl', width: 150,
+                                                    render: (rowValue, row, index) => {
+                                                        return (<Image width={50} src={rowValue} />)
+                                                    }
+                                                })
+                                            }
+                                            if (arr[3].dataIndex != "picUrl") {
+                                                arr.splice(3, 0, {
+                                                    title: '背景图', dataIndex: 'picUrl', key: 'picUrl', width: 150,
+                                                    render: (rowValue, row, index) => {
+                                                        return (<Image width={50} src={rowValue} />)
+                                                    }
+                                                })
+                                            }
                                         }
                                         this.setState({
                                             adIndex: val.target.value,

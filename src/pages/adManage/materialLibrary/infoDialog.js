@@ -161,6 +161,7 @@ function App2(props) {
             })
             setPosition(formPosition)
             getMenuListFuc()
+            getChannelList()
         }
         fetchData()
     }, [forceUpdateId])
@@ -257,7 +258,7 @@ function App2(props) {
     const getChannelList = (val) => {
         let params = {
             keywords: val,
-            page: { currentPage: 1, pageSize: 20 }
+            page: { currentPage: 1, pageSize: 999 }
         }
         getChannel(params).then(res => {
             if (res.data.errCode == 0 && res.data.data) {

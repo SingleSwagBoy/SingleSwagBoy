@@ -26,6 +26,7 @@ const MenuImage = lazy(() => import('pages/adManage/menuImage/menuImage.jsx'));
 const CustomAdTag = lazy(() => import('pages/adManage/customAdTag/index.jsx'));
 const AdGroup = lazy(() => import('pages/adManage/adGroup/adGroup.jsx'));
 const MaterialLibrary = lazy(() => import('pages/adManage/materialLibrary/index.jsx'));
+const PaySuccess = lazy(() => import('pages/adManage/paySuccess/index.jsx'));
 const Voting = lazy(() => import('pages/activeManagement/voting/index.jsx'))
 const ChannelLock = lazy(() => import('pages/channelManage/channelLock/index.jsx'))
 const AddressNews = lazy(() => import('pages/configManage/addressNews/index.jsx'))
@@ -84,7 +85,11 @@ const EnterImageConfig = lazy(() => import('pages/TVConfig/enterImageConfig/inde
 const GoodLooking = lazy(() => import('pages/TVConfig/goodLooking/index.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/TVConfig/ProgramAppConfig/index.jsx')); //电视节目单配置
 const TvRecommendConfig = lazy(() => import('pages/TVConfig/tvRecommendConfig/tvRecommendConfig.jsx'))      //Tv推荐配置
+const MenuConfig = lazy(() => import('pages/TVConfig/menuConfig/index.jsx'))      //Tv菜单配置
 const ChannelRiskRegion = lazy(() => import('pages/currencyChannel/channelRiskRegion/index.jsx'))      //风险地域
+const OfflineProgram = lazy(() => import('pages/offlineManage/program/index.jsx'))      //下线节目
+const OfflineProgramDetail = lazy(() => import('pages/offlineManage/program/detailIndex.jsx'))      //下线节目
+const RiskControl = lazy(() => import('pages/offlineManage/riskControl/index.jsx'))      //风险设备控制
 const ArmourList = lazy(() => import('pages/armourPackage/armourList/index.jsx'))      //马甲包管理
 
 const LivePreview = lazy(() => import('pages/configManage/livePreview/index.jsx'))
@@ -135,7 +140,8 @@ const adminRoutes = [
     { name: '菜单栏图片配置', component: MenuImage, path: '/mms/adManage/menuImage', icon: UnorderedListOutlined, code: "adManage", sub_code: 'menuImage' },
     { name: '自定义规则标签', component: CustomAdTag, path: '/mms/ad/customAdTag', icon: UnorderedListOutlined, code: "adManage", sub_code: 'customAdTag' },
     { name: '广告组', component: AdGroup, path: '/mms/adManage/adGroup', icon: UnorderedListOutlined, code: "adManage", sub_code: 'adGroup' },
-    { name: '素材库', component: MaterialLibrary, path: '/mms/adManage/materialLibrary', icon: UnorderedListOutlined, code: "adManage", sub_code: 'adGroup' },
+    { name: '素材库', component: MaterialLibrary, path: '/mms/adManage/materialLibrary', icon: UnorderedListOutlined, code: "adManage", sub_code: 'materialLibrary' },
+    { name: '支付成功页', component: PaySuccess, path: '/mms/adManage/paySuccess', icon: UnorderedListOutlined, code: "adManage", sub_code: 'paySuccess' },
 
     //用户权限相关
     { name: '角色列表', icon: UnorderedListOutlined, path: '/mms/sys/role', component: SysRole, code: "sessionManage", sub_code: 'sysRole' },
@@ -212,11 +218,16 @@ const adminRoutes = [
     { name: '好看分类', icon: UnorderedListOutlined, path: '/mms/TVConfig/goodLooking', component: GoodLooking, code: "tvConfigManagement", sub_code: 'goodLooking' },
     { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/programAppConfig', component: ProgramAppConfig, code: "tvConfigManagement", sub_code: 'programAppConfig' },
     { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/tvRecommendConfig', component: TvRecommendConfig, code: "tvConfigManagement", sub_code: 'tvRecommendConfig' },
+    { name: '菜单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/menuConfig', component: MenuConfig, code: "tvConfigManagement", sub_code: 'menuConfig' },
 
 
 
     //通用-频道管理
     { name: '频道风险地域', icon: UnorderedListOutlined, path: '/mms/currencyChannel/channelRiskRegion', component: ChannelRiskRegion, code: "currencyChannel", sub_code: 'channelRiskRegion' },
+    //通用-频道管理
+    { name: '下线节目', icon: UnorderedListOutlined, path: '/mms/offline/program', component: OfflineProgram, code: "offlineManage", sub_code: 'offlineProgram' },
+    { name: '下线节目详情列表', icon: UnorderedListOutlined, path: '/mms/offline/detail', component: OfflineProgramDetail, code: "offlineManage", sub_code: 'detail' },
+    { name: '风险设备控制', icon: UnorderedListOutlined, path: '/mms/offline/riskControl', component: RiskControl, code: "offlineManage", sub_code: 'riskControl' },
     //马甲包管理
     { name: '马甲包管理', icon: UnorderedListOutlined, path: '/mms/armourPackage/armourList', component: ArmourList, code: "armourPackage", sub_code: 'armourList' },
     //电视节目单配置

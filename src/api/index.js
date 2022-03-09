@@ -274,6 +274,16 @@ export const requestNewGroupList = (params) => { return request2.post(`${baseUrl
 export const requestNewGroupDelete = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/del`, params) };                                                                         //删除广告组
 export const requestNewGroupCopy = (params) => { return request2.post(`${baseUrl}/mms/ad/newGroup/copy`, params) };                                                                          //复制广告组
 
+//素材库
+export const getInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/get`, params) };                                                                          //信息流广告组
+export const addInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/add`, params) };                                                                          //信息流广告组
+export const updateInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/update`, params) };                                                                          //信息流广告组
+export const delInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/ad/info/group/del`, params) };                                                                          //信息流广告组
+export const getSdkList = (params) => { return request2.post(`${baseUrl}/mms/ad/sdk/get`, params) };                                                                          //信息流广告组
+export const getPosition = (params) => { return request2.post(`${baseUrl}/mms/ad/space/get`, params) };                                                                          //信息流广告组
+
+
+
 
 export const requestNewAdTagList = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/get`, { params: params }) };                                                                //新版 获取用户标签列表
 export const requestNewAdTagCreate = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/add`, params) };                                                                         //新版 创建用户标签数据
@@ -558,6 +568,40 @@ export const getconfigsSync = (params) => { return request.get(`${baseUrl}/mms/w
 export const listextraGet = (params) => { return request.get(`${baseUrl}/mms/wx/qrcode/listextra`, { params: params }); };     // 解锁二维码文案描述
 export const setextra = (params) => { return request.post(`${baseUrl}/mms/wx/qrcode/setextra`, params); };                 // 设置解锁二维码文案描述
 export const bigwechatsPublic = (params) => { return request.get(`${baseUrl}/mms/wx/qrcode/bigwechats`, { params: params }); };     // 公众号大号的列表
+//下线节目
+export const getOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/get`,params); };          //下线节目列表
+export const getApkList = (params) => { return request2.post(`${baseUrl}/mms/offline/apk/get`,params); };          //下线节目列表
+export const getOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/get`,params); };          //下线节目列表
+export const updateOfflineTime = (params) => { return request2.post(`${baseUrl}/mms/offline/schedule/update`,params); };          //下线节目列表
+export const delOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/del`,params); };          //删除频道
+export const addOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/add`,params); };          //删除频道
+export const updateOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/update`,params); };          //删除频道
+export const updateOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/update`,params); };          //删除频道
+export const addOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/add`,params); };          //删除频道
+export const delOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/del`,params); };          //删除频道
+export const syncOfflineProgram = (params) => { return request2.get(`${baseUrl}/mms/sync/offline`,{params:params}); };          //删除频道
+
+
+//风险设备
+export const getRiskConfig = (params) => { return request2.get(`${baseUrl}/mms/offline/program/risk/config`,{params:params}); };          //删除频道
+export const editRiskConfig = (params) => { return request2.post(`${baseUrl}/mms/offline/program/risk/config`,params); };          //删除频道
+
+//支付成功页面
+export const getAdSPList = (params) => { return request2.post(`${baseUrl}/mms/ad/adSP/list`,params); };          //查看支付成功列表
+export const addAdSPList = (params) => { return request2.post(`${baseUrl}/mms/ad/adSP/create`,params); };          //查看支付成功列表
+export const updateAdSPList = (params) => { return request2.post(`${baseUrl}/mms/ad/adSP/update`,params); };          //查看支付成功列表
+export const delAdSPList = (params) => { return request2.get(`${baseUrl}/mms/ad/adSP/del`,{params:params}); };          //查看支付成功列表
+export const syncAdSPList = (params) => { return request2.get(`${baseUrl}/mms/sync/ad`,{params:params}); };          //查看支付成功列表
+
+
+//tv菜单配置
+export const getMenuList = (params) => { return request2.post(`${baseUrl}/mms/tv/menu/list`,params); };          //菜单配置列表
+export const addMenuList = (params) => { return request2.post(`${baseUrl}/mms/tv/menu/create`,params); };          //菜单配置列表
+export const updateMenuList = (params) => { return request2.put(`${baseUrl}/mms/tv/menu/${params.id}`,params); };          //菜单配置列表
+export const delMenuList = (params) => { return request2.delete(`${baseUrl}/mms/tv/menu/${params.id}`,params); };          //菜单配置列表
+export const syncMenuList = (params) => { return request2.get(`${baseUrl}/mms/tv/menu/syncCache`,{params:params}); };          //菜单配置列表
+
+
 
 
 //广告-二维码套餐类型

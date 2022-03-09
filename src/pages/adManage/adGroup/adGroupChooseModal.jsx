@@ -15,7 +15,7 @@ import moment from 'moment';
 import '@/style/base.css';
 import {
     requestAdRightKey,   //获取广告素材 获取右下角广告素材
-    getScreen
+    getScreen,getInfoGroup
 } from 'api';
 
 let { RangePicker } = DatePicker;
@@ -198,10 +198,13 @@ export default class adCreateModal extends Component {
     }
 
     refreshList(index, tagList) {
+        console.log(index,"---------")
         if (index == 1) {
             this.requestAdRightKey(tagList)
-        } else {
+        } else if(index == 2){
             this.getScreen(tagList)
+        } else if(index == 11){
+            this.getInfoGroup(tagList)
         }
     }
     requestAdRightKey(tagList) {
@@ -240,6 +243,31 @@ export default class adCreateModal extends Component {
         };
         getScreen(obj).then(res => {
 
+            table_box.table_datas = res.data.filter(r => r.status == 1);
+            if (tagList.length > 0) {
+                table_box.table_datas.forEach(r => {
+                    tagList.forEach(l => {
+                        if (l.adId == r.id) {
+                            r.checked = true
+                        }
+                    })
+                })
+            }
+            that.setState({
+                table_box: table_box,
+            })
+        })
+    }
+    getInfoGroup(tagList) {
+        let that = this;
+        let { table_box } = that.state;
+
+        let obj = {
+            page: { currentPage: 1, pageSize: 10000 },
+            name: this.state.searchWords
+        };
+        getInfoGroup(obj).then(res => {
+            
             table_box.table_datas = res.data.filter(r => r.status == 1);
             if (tagList.length > 0) {
                 table_box.table_datas.forEach(r => {

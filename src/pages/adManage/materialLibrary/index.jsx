@@ -10,9 +10,10 @@
 
 import React, { Component } from 'react';
 
-import { Input, Form, DatePicker, Button, Table, Modal, Card, Switch, Select, message, Image, InputNumber } from 'antd';
+import { Input, Form, DatePicker, Button, Table, Modal, Card, Switch, Select, message, Image, InputNumber, Radio } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
+import util from "utils"
 import {
     requestAdRightKey,   //获取广告素材 获取右下角广告素材
     getScreen,
@@ -20,10 +21,11 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup,updateInfoGroup
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
+import InfoDialog from "./infoDialog"
 let { RangePicker } = DatePicker;
 let { Option } = Select;
 
@@ -49,6 +51,22 @@ export default class adCreateModal extends Component {
                 { key: 3, name: "小程序登陆" },
                 { key: 4, name: "支付广告" },
             ],
+            type: [
+                { key: 1, value: '图片' },
+                { key: 13, value: '图片（会员可投）' },
+                { key: 2, value: '视频' },
+                { key: 14, value: '视频（会员可投）' },
+                { key: 3, value: '直播' },
+                { key: 4, value: '支付' },
+                { key: 5, value: '三方sdk' },
+                { key: 6, value: '轮播推荐' },
+                { key: 7, value: '轮播推荐(自动填充)' },
+                { key: 8, value: '优惠券' },
+                { key: 9, value: '家庭号' },
+                { key: 10, value: '登录' },
+                { key: 11, value: 'H5' },
+                { key: 12, value: '小程序登录' }
+            ],
             tailLayout: {
                 wrapperCol: { offset: 16, span: 8 },
             },
@@ -61,9 +79,12 @@ export default class adCreateModal extends Component {
                     render: (rowValue, row, index) => {
                         return (
                             this.state.adIndex == 1 ?
-                                <div>{rowValue == 0 ? "通用" : rowValue == 1 ? "家庭号" : rowValue == 2 ? "公众号登陆" : rowValue == 3 ? "小程序登陆" : "未知"}</div>
+                                this.getType(rowValue, 1)
                                 :
-                                <div>{row.adType == 1 ? "普通级别" : row.adType == 2 ? "宣传内容" : "未知"}</div>
+                                this.state.adIndex == 2 ?
+                                    <div>{row.adType == 1 ? "普通级别" : row.adType == 2 ? "宣传内容" : "未知"}</div>
+                                    :
+                                    this.getType(rowValue, 3)
                         )
                     }
                 },
@@ -80,15 +101,14 @@ export default class adCreateModal extends Component {
                     }
                 },
                 {
-                    title: '时间', dataIndex: 'time', key: 'time',
+                    title: '时间', dataIndex: 'time', key: 'time', width: 300,
                     render: (rowValue, row, index) => {
-                        let dateFormat = 'YYYY-MM-DD HH:mm:ss';
-                        let time = [];
-                        if (row.startTime && row.endTime) {
-                            time = [moment(new Date(row.startTime)), moment(new Date(row.endTime)),]
-                        }
                         return (
-                            <RangePicker value={time} showTime format={dateFormat} disabled />
+                            <div>
+                                {row.startTime ? util.formatTime(row.startTime, "", "") : "未配置"}
+                                -
+                                {row.endTime ? util.formatTime(row.endTime, "", "") : "未配置"}
+                            </div>
                         )
                     }
                 },
@@ -104,8 +124,10 @@ export default class adCreateModal extends Component {
                                     else row.status = 2
                                     if (this.state.adIndex == 1) {
                                         this.adRightKeyUpdateState(row)
-                                    } else {
+                                    } else if(this.state.adIndex == 2){
                                         this.screenUpdateState(row)
+                                    }else{
+                                        this.updateInfoGroup(row)
                                     }
                                 }}
                             />
@@ -117,14 +139,18 @@ export default class adCreateModal extends Component {
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                                <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
-                                    if (this.state.adIndex == 1) {
-                                        this.adRightKeyCopy(row)
-                                    } else {
-                                        this.screenCopy(row)
-                                    }
-                                }}>复制</Button>
-                                <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
+                                {
+                                    this.state.adIndex != 3 &&
+                                    <Button Button size='small' style={{ marginLeft: 5 }} onClick={() => {
+                                        if (this.state.adIndex == 1) {
+                                            this.adRightKeyCopy(row)
+                                        } else {
+                                            this.screenCopy(row)
+                                        }
+                                    }}>复制</Button>
+                                }
+
+                                <Button Button size='small' style={{ marginLeft: 5 }} onClick={() => {
                                     console.log(row)
                                     // this.onCreateClick(row)
                                     this.setState({
@@ -137,18 +163,23 @@ export default class adCreateModal extends Component {
                                         obj.time = [moment(obj.startTime), moment(obj.endTime)]
                                         obj.djsEndTime = obj.djsEndTime ? moment(obj.djsEndTime) : ""
                                         obj.status = obj.status == 1 ? true : false
-                                        this.formRef.current.setFieldsValue(obj)
+                                        if (this.state.adIndex != 3) {
+                                            this.formRef.current.setFieldsValue(obj)
+                                        }
                                         this.forceUpdate()
                                     })
-                                }}>编辑</Button>
+                                }
+                                }> 编辑</Button>
                                 <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
                                     if (this.state.adIndex == 1) {
                                         this.adRightKeyDel(row.id)
-                                    } else {
+                                    } else if (this.state.adIndex == 2) {
                                         this.screenDel(row.id)
+                                    } else {
+                                        this.delInfoGroup(row.id)
                                     }
                                 }}>删除</Button>
-                            </div>
+                            </div >
                         );
                     }
                 },
@@ -170,7 +201,7 @@ export default class adCreateModal extends Component {
                         <div style={{ display: "flex" }}>
                             <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center' }}>
                                 <div>类型:</div>
-                                <Select allowClear placeholder="请选择类型" defaultValue={1}
+                                {/* <Select allowClear placeholder="请选择类型" defaultValue={1}
                                     onChange={(val) => {
                                         this.setState({
                                             adIndex: val,
@@ -182,7 +213,36 @@ export default class adCreateModal extends Component {
                                 >
                                     <Option value={1} key={1}>右键运营位广告</Option>
                                     <Option value={2} key={2}>屏显广告</Option>
-                                </Select>
+                                </Select> */}
+                                <Radio.Group defaultValue="1" size="large"
+                                    onChange={(val) => {
+                                        let arr = table_title
+                                        if (val.target.value == 3) {//信息流素材自定义表头
+                                            arr = table_title.filter(item => item.key != "iconPicUrl" && item.key != "picUrl")
+                                            if(arr[2].dataIndex != "mode"){
+                                                arr.splice(2, 0, {
+                                                    title: '广告模式', dataIndex: 'mode', key: 'mode', width: 300,
+                                                    render: (rowValue, row, index) => {
+                                                        return (
+                                                            <div>{rowValue == 1 ? "定向" : rowValue == 2 ? "不定向" : "未知"}</div>
+                                                        )
+                                                    }
+                                                })
+                                            }
+                                            
+                                        }
+                                        this.setState({
+                                            adIndex: val.target.value,
+                                            page: 1,
+                                            table_title: arr
+                                        }, () => {
+                                            this.refreshList(val.target.value)
+                                        })
+                                    }}>
+                                    <Radio.Button value="1">右键运营位广告</Radio.Button>
+                                    <Radio.Button value="2">屏显广告</Radio.Button>
+                                    <Radio.Button value="3">信息流广告</Radio.Button>
+                                </Radio.Group>
                             </div>
                             <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center' }}>
                                 <div>广告名称:</div>
@@ -206,11 +266,14 @@ export default class adCreateModal extends Component {
                         <div>
                             <Button type="primary" onClick={() => {
                                 this.setState({
+                                    currentItem: {},
                                     adIndex: this.state.adIndex,
                                     materialShow: true,
                                     source: "add",
                                 }, () => {
-                                    this.formRef.current.resetFields()
+                                    if (this.state.adIndex != 3) {
+                                        this.formRef.current.resetFields()
+                                    }
                                     this.forceUpdate()
                                 })
                             }}>新建</Button>
@@ -231,14 +294,20 @@ export default class adCreateModal extends Component {
                         }}
                     />
                 </Card>
-                <Modal visible={materialShow} title="素材" width={800} transitionName="" maskClosable={false}
+                <Modal visible={materialShow} title="素材" width={1500} transitionName="" maskClosable={false}
                     onCancel={() => that.onModalCancelClick()}
                     footer={null}
                 >
-                    <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef} onFinish={this.onModalConfirmClick.bind(this)}>
-                        {
-                            (that.formRef && that.formRef.current) ?
-                                adIndex == 1 ?
+                    {
+                        adIndex == 3 &&
+                        <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={(e) => this.onModalCancelClick(e)}/></div>
+                    }
+                    {
+                        adIndex != 3 &&
+                        <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef} onFinish={this.onModalConfirmClick.bind(this)}>
+                            {
+                                (that.formRef && that.formRef.current) &&
+                                    adIndex == 1 ?
                                     <div>
                                         <Form.Item label='名称' name='name' rules={[{ required: true }]}>
                                             <Input className="base-input-wrapper" placeholder="请输入广告名称" />
@@ -247,7 +316,7 @@ export default class adCreateModal extends Component {
                                             <InputNumber min={0} />
                                         </Form.Item>
                                         <Form.Item label='类型' name='type' rules={[{ required: true }]}>
-                                            <Select placeholder="请选择类型" onChange={()=>this.forceUpdate()}>
+                                            <Select placeholder="请选择类型" onChange={() => this.forceUpdate()}>
                                                 {this.state.typeList.map((item, index) => {
                                                     return <Option value={item.key} key={index}> {item.name}</Option>
                                                 })}
@@ -311,6 +380,7 @@ export default class adCreateModal extends Component {
                                         </Form.Item>
                                     </div>
                                     :
+
                                     <div>
                                         <Form.Item label='名称' name='name' rules={[{ required: true }]}>
                                             <Input className="base-input-wrapper" placeholder="请输入广告名称" />
@@ -352,12 +422,13 @@ export default class adCreateModal extends Component {
                                             </Button>
                                         </Form.Item>
                                     </div>
-                                : ""
-                        }
 
 
 
-                    </Form>
+                            }
+                        </Form>
+                    }
+
 
 
                 </Modal>
@@ -368,6 +439,24 @@ export default class adCreateModal extends Component {
     componentDidMount() {
         let that = this;
         that.refreshList(1);
+    }
+    getType(val, index) {
+        if (index == 1) {
+            let arr = this.state.typeList.filter(item => item.key == val)
+            if (arr.length > 0) {
+                return arr[0].name
+            } else {
+                return "未知"
+            }
+        } else {
+            let arr = this.state.type.filter(item => item.key == val)
+            if (arr.length > 0) {
+                return arr[0].value
+            } else {
+                return "未知"
+            }
+        }
+
     }
     getNewUrl(name, val) {
         if (privateData.inputTimeOutVal) {
@@ -392,9 +481,15 @@ export default class adCreateModal extends Component {
     }
 
     //弹出框取消按钮被点击
-    onModalCancelClick() {
+    onModalCancelClick(e) {
         let that = this;
-        this.formRef.current.resetFields()
+        console.log(e, "e")
+        if (e == 3) {
+            this.refreshList(3)
+        }
+        if (this.state.adIndex != 3) {
+            this.formRef.current.resetFields()
+        }
         that.setState({
             materialShow: false,
         })
@@ -426,8 +521,10 @@ export default class adCreateModal extends Component {
         if (index == 1) {
             this.requestAdRightKey()
             this.requestProductSkuList()
-        } else {
+        } else if (index == 2) {
             this.getScreen()
+        } else {
+            this.getInfoGroup()
         }
     }
     requestAdRightKey() {
@@ -440,8 +537,8 @@ export default class adCreateModal extends Component {
         };
         requestAdRightKey(obj).then(res => {
             that.setState({
-                lists: res.data,
-                total: res.page.totalCount
+                lists: res.data || [],
+                total: res.page ? res.page.totalCount : 0
             })
             this.forceUpdate()
         })
@@ -454,8 +551,22 @@ export default class adCreateModal extends Component {
         };
         getScreen(obj).then(res => {
             that.setState({
-                lists: res.data,
-                total: res.page.totalCount
+                lists: res.data || [],
+                total: res.page ? res.page.totalCount : 0
+            })
+            this.forceUpdate()
+        })
+    }
+    getInfoGroup() {
+        let that = this;
+        let obj = {
+            page: { currentPage: this.state.page, pageSize: this.state.pageSize },
+            name: this.state.searchWords
+        };
+        getInfoGroup(obj).then(res => {
+            that.setState({
+                lists: res.data || [],
+                total: res.page ? res.page.totalCount : 0
             })
             this.forceUpdate()
         })
@@ -468,12 +579,12 @@ export default class adCreateModal extends Component {
         };
         requestProductSkuList(obj).then(res => {
             console.log(res.data)
-            if(res.data.errCode == 0){
+            if (res.data.errCode == 0) {
                 that.setState({
                     rechargeList: res.data.data
                 })
             }
-           
+
 
         })
     }
@@ -490,7 +601,7 @@ export default class adCreateModal extends Component {
     //获取上传文件图片地址 
     getUploadFileImageUrlByType(type) {
         let that = this;
-        let image_url = that.formRef.current.getFieldValue(type);
+        let image_url = that.formRef.current && that.formRef.current.getFieldValue(type);
         return image_url ? image_url : '';
     }
     adRightKeyUpdateState(val) {
@@ -546,6 +657,21 @@ export default class adCreateModal extends Component {
                 screenDel({ id: id }).then(res => {
                     message.success("删除成功")
                     this.refreshList(2)
+                })
+            },
+            onCancel: () => {
+
+            }
+        })
+    }
+    delInfoGroup(id) {
+        Modal.confirm({
+            title: '删除此信息流素材',
+            content: '确认删除？',
+            onOk: () => {
+                delInfoGroup({ id: id }).then(res => {
+                    message.success("删除成功")
+                    this.refreshList(3)
                 })
             },
             onCancel: () => {
@@ -618,6 +744,15 @@ export default class adCreateModal extends Component {
         screenCopy(param).then(res => {
             message.success("复制成功")
             this.refreshList(2)
+        })
+    }
+    updateInfoGroup(val){
+        let params = {
+            ...val,
+        }
+        updateInfoGroup(params).then(res => {
+            message.success("更新成功")
+            this.onModalCancelClick(3)
         })
     }
 }

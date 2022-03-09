@@ -280,7 +280,7 @@ export default class adGroup extends Component {
 
                                     <Form.Item label="广告列表">
                                         <MyTagSelect style={{ width: '100%' }} tags={this.state.adList}
-                                            tag_select_id={this.state.tag_select_id} show_create={true} btns={["挑选素材", "手动新增"]}
+                                            tag_select_id={this.state.tag_select_id} show_create={true} btns={(this.state.adIndex==1||this.state.adIndex==2)?["挑选素材", "手动新增"]:["挑选素材"]}
                                             onTagCreateClick={(key) => that.onTagSelectClick(key)}
                                             onSelectIdChange={(index, id) => that.onTagSelectChange(index, id)}
                                             onTabsDeleteClick={(index, id) => { that.deleteTabChange(index, id) }}

@@ -144,9 +144,9 @@ function App2(props) {
             setProduct(productList.data.data)
             let myApk = await getApkList({ page: { idPage: 9 } })
             setApkList(myApk.data)
-            if(props.table_data.mode == 1){
-                message.loading('加载位置中', 1.5)
-            }
+            // if(props.table_data.mode == 1){
+            //     message.loading('加载位置中', 1.5)
+            // }
             let getTableList = await getInfoGroup({ page: { pageSize: 9999 } })
             let positionList = await getPosition({ page: { idPage: 9 } })
             let data = positionList.data

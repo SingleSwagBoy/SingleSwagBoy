@@ -62,6 +62,26 @@ function App2() {
       dataIndex: "apkId",
       key: "apkId"
     },
+    {
+      title: "运营标签",
+      dataIndex: "operatorTag",
+      key: "operatorTag",
+      render: (rowValue, row, index) => {
+        return (
+          <div>{getTagName(rowValue)}</div>
+        )
+      }
+    },
+    {
+      title: "风险标签",
+      dataIndex: "tag",
+      key: "tag",
+      render: (rowValue, row, index) => {
+        return (
+          <div>{getTagName(rowValue)}</div>
+        )
+      }
+    },
     // {
     //   title: "仅下线最新版本",
     //   dataIndex: "isOfflineLastestOnly",
@@ -226,6 +246,15 @@ function App2() {
   const getUploadFileImageUrlByType = (type) => {
     let image_url = formRef.getFieldValue(type);
     return image_url ? image_url : '';
+  }
+  //获取标签name
+  const getTagName = (val) =>{
+    let arr = tagList.filter(item=>item.code == val)
+    if(arr.length>0){
+      return arr[0].name
+    }else{
+      return "未配置"
+    }
   }
   return (
     <div className="loginVip">

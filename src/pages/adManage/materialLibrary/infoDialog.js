@@ -153,8 +153,8 @@ function App2(props) {
                 if (r.validPosition) {
                     let arr = r.validPosition.split(",")
                     arr.forEach((l, index) => {
-                        // let hasOwn = getToolTip(getTableList.data, `${r.channelGroupId}:${l}`)
-                        let hasOwn = ""
+                        let hasOwn = getToolTip(getTableList.data, `${r.channelGroupId}:${l}`)
+                        // let hasOwn = ""
                         formPosition.push({ key: `${r.channelGroupId}:${l}`, value: `${r.channelGroupId}-${r.name}:位置${l}`, own: hasOwn })
                     })
                 }
@@ -238,7 +238,7 @@ function App2(props) {
     const add = () => {
         let arr = formRef.getFieldValue()
         if (formRef.getFieldValue("type") != 1 && formRef.getFieldValue("type") != 13 && formRef.getFieldValue("type") != 14 && formRef.getFieldValue("type") != 2 && arr.content.length == 1) return message.error("该类型已经达到上限")
-        if (arr.type == 3 || arr.type == 6 || arr.type == 7) {
+        if (arr.type == 3 || arr.type == 6 || arr.type == 7 || arr.type == 2 || arr.type == 14) {
             arr.content.push({
                 sdk: "dsjLive"
             })

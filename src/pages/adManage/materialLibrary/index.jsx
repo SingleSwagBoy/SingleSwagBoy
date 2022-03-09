@@ -100,6 +100,7 @@ export default class adCreateModal extends Component {
                         return (<Image width={50} src={rowValue} />)
                     }
                 },
+                { title: '排序', dataIndex: 'sortData', key: 'sortData', },
                 {
                     title: '时间', dataIndex: 'time', key: 'time', width: 300,
                     render: (rowValue, row, index) => {
@@ -218,7 +219,7 @@ export default class adCreateModal extends Component {
                                     onChange={(val) => {
                                         let arr = table_title
                                         if (val.target.value == 3) {//信息流素材自定义表头
-                                            arr = table_title.filter(item => item.key != "iconPicUrl" && item.key != "picUrl")
+                                            arr = table_title.filter(item => item.key != "iconPicUrl" && item.key != "picUrl" && item.key != "sortData")
                                             if (arr[2].dataIndex != "mode") {
                                                 arr.splice(2, 0, {
                                                     title: '广告模式', dataIndex: 'mode', key: 'mode', width: 300,
@@ -246,6 +247,11 @@ export default class adCreateModal extends Component {
                                                     render: (rowValue, row, index) => {
                                                         return (<Image width={50} src={rowValue} />)
                                                     }
+                                                })
+                                            }
+                                            if (arr[4].dataIndex != "sortData") {
+                                                arr.splice(4, 0, {
+                                                    title: '排序', dataIndex: 'sortData', key: 'sortData', width: 150,
                                                 })
                                             }
                                         }

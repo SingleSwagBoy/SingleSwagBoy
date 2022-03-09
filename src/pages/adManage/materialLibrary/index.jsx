@@ -21,7 +21,7 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup,updateInfoGroup
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup, updateInfoGroup
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
@@ -124,9 +124,9 @@ export default class adCreateModal extends Component {
                                     else row.status = 2
                                     if (this.state.adIndex == 1) {
                                         this.adRightKeyUpdateState(row)
-                                    } else if(this.state.adIndex == 2){
+                                    } else if (this.state.adIndex == 2) {
                                         this.screenUpdateState(row)
-                                    }else{
+                                    } else {
                                         this.updateInfoGroup(row)
                                     }
                                 }}
@@ -219,7 +219,7 @@ export default class adCreateModal extends Component {
                                         let arr = table_title
                                         if (val.target.value == 3) {//信息流素材自定义表头
                                             arr = table_title.filter(item => item.key != "iconPicUrl" && item.key != "picUrl")
-                                            if(arr[2].dataIndex != "mode"){
+                                            if (arr[2].dataIndex != "mode") {
                                                 arr.splice(2, 0, {
                                                     title: '广告模式', dataIndex: 'mode', key: 'mode', width: 300,
                                                     render: (rowValue, row, index) => {
@@ -229,7 +229,7 @@ export default class adCreateModal extends Component {
                                                     }
                                                 })
                                             }
-                                            
+
                                         }
                                         this.setState({
                                             adIndex: val.target.value,
@@ -300,7 +300,7 @@ export default class adCreateModal extends Component {
                 >
                     {
                         adIndex == 3 &&
-                        <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={(e) => this.onModalCancelClick(e)}/></div>
+                        <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={(e) => this.onModalCancelClick(e)} /></div>
                     }
                     {
                         adIndex != 3 &&
@@ -333,7 +333,9 @@ export default class adCreateModal extends Component {
                                                 </Select>
                                             </Form.Item>
                                         }
-
+                                        <Form.Item label='排序' name='sortData' rules={[{ required: true }]}>
+                                            <InputNumber min={0} />
+                                        </Form.Item>
                                         <Form.Item label='倒计时结束时间' name="djsEndTime">
                                             <DatePicker showTime />
                                         </Form.Item>
@@ -384,6 +386,9 @@ export default class adCreateModal extends Component {
                                     <div>
                                         <Form.Item label='名称' name='name' rules={[{ required: true }]}>
                                             <Input className="base-input-wrapper" placeholder="请输入广告名称" />
+                                        </Form.Item>
+                                        <Form.Item label='排序' name='sortData' rules={[{ required: true }]}>
+                                            <InputNumber min={0} />
                                         </Form.Item>
                                         <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
                                             <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
@@ -746,7 +751,7 @@ export default class adCreateModal extends Component {
             this.refreshList(2)
         })
     }
-    updateInfoGroup(val){
+    updateInfoGroup(val) {
         let params = {
             ...val,
         }

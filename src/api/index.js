@@ -482,6 +482,8 @@ export const syncQrcodeConfig = (params) => { return request2.get(`${baseUrl}/mm
 export const saveMyWechatUser = (params) => { return request2.post(`${baseUrl}/mms/wx/qrcode/savereluser`,params); }; 
 export const getWechatList = (params) => { return request2.get(`${baseUrl}/mms/wx/qywechat/codes`,{params:params}); };  //获取企业微信列表
 export const getCount = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/listrelcount`,{params:params}); };  //企业微信客服解锁使用次数
+export const getexcluswitch = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/getexcluswitch`,{params:params}); };  //企业微信客服解锁
+export const setexcluswitch = (params) => { return request2.get(`${baseUrl}/mms/wx/qrcode/setexcluswitch`,{params:params}); };  //企业微信客服解锁使用次数
 
 
 // 易添加企业微信客服列表更新
@@ -533,6 +535,29 @@ export const getCategories = (params) => { return request.get(`${baseUrl}/mms/ch
 export const getlistAllPrograms = (params) => { return request.get(`${baseUrl}/mms/channel/programs/listAllPrograms`,{params:params}); };       // 列表-节目单
 export const getCategoriesDetail = (params) => { return request.get(`${baseUrl}/mms/channel/programs/${params.id}`,{params:params}); };       // 详情-节目单
 export const categoriesUpdate = (programeId,params) => { return request.put(`${baseUrl}/mms/channel/programs/${programeId}`, params) }; 
+
+
+// 马甲包
+export const getArmourPackage = (params) => { return request2.post(`${baseUrl}/mms/armourPackage/list`,params); };          //引导上传照片活动配置 - 缓存同步
+export const addArmourPackage = (params) => { return request2.post(`${baseUrl}/mms/armourPackage/create`,params); };          //引导上传照片活动配置 - 缓存同步
+export const delArmourPackage = (params) => { return request2.get(`${baseUrl}/mms/armourPackage/delete`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
+export const editArmourPackage = (params) => { return request2.post(`${baseUrl}/mms/armourPackage/edit`,params); };          //引导上传照片活动配置 - 缓存同步
+export const copyArmourPackage = (params) => { return request2.get(`${baseUrl}/mms/armourPackage/copy`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
+export const syncArmourPackage = (params) => { return request2.get(`${baseUrl}/mms/armourPackage/sync`,{params:params}); };          //引导上传照片活动配置 - 缓存同步
+
+
+//  微信登陆-专享配置
+export const getconfigsLogin = (params) => { return request.get(`${baseUrl}/mms/wx/exclusive/list`, { params: params }); };     // 解锁配置列表
+export const getconfigsstatus = (params) => { return request.get(`${baseUrl}/mms/wx/exclusive/status`, { params: params }); };     // 解锁配置上下线
+export const getconfigsAdd = (params) => { return request.post(`${baseUrl}/mms/wx/exclusive/add`, params); };                 // 解锁配置添加
+export const getconfigsUpdate = (params) => { return request.post(`${baseUrl}/mms/wx/exclusive/update`, params); };                 // 解锁配置更新
+export const getconfigsDelete = (params) => { return request.get(`${baseUrl}/mms/wx/exclusive/delete`, { params: params }); };     // 解锁配置删除
+export const getconfigsSync = (params) => { return request.get(`${baseUrl}/mms/wx/exclusive/sync`, { params: params }); };     // 解锁配置同步
+
+// 登录(专享)配置
+export const listextraGet = (params) => { return request.get(`${baseUrl}/mms/wx/qrcode/listextra`, { params: params }); };     // 解锁二维码文案描述
+export const setextra = (params) => { return request.post(`${baseUrl}/mms/wx/qrcode/setextra`, params); };                 // 设置解锁二维码文案描述
+export const bigwechatsPublic = (params) => { return request.get(`${baseUrl}/mms/wx/qrcode/bigwechats`, { params: params }); };     // 公众号大号的列表
 
 
 //广告-二维码套餐类型

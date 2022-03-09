@@ -20,6 +20,7 @@ class ImageUpload extends Component {
         action: `${baseUrl}${this.props.postUrl?this.props.postUrl:"/mms/file/upload?dir=ad"}`,//需要上传其他地址传过来，默认为ad
         headers: {
           authorization: JSON.parse(localStorage.getItem("user")).authorization,
+          userid:JSON.parse(localStorage.getItem("user")).userInfo.id,
         },
       },
     }

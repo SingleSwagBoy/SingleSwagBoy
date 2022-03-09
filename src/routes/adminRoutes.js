@@ -43,6 +43,7 @@ const PersonalSend = lazy(() => import('pages/weChatManage/personalSend/index.js
 const LoginVipConfig = lazy(() => import('pages/weChatManage/loginVipConfig/index.jsx'))
 const WechatAutoReply = lazy(() => import('pages/weChatManage/wechatAutoReply/index.jsx'))
 const WechatTag = lazy(() => import('pages/weChatManage/wechatTag/index.jsx'))
+const LockPersonConfig = lazy(() => import('pages/weChatManage/lockPersonConfig/index.jsx'))
 
 const EarnIncentiveTask = lazy(() => import('pages/earnManage/earnIncentiveTask/index.jsx'))
 const WithdrawalGoodsList = lazy(() => import('pages/earnManage/withdrawalGoodsList/index.jsx'))
@@ -83,6 +84,8 @@ const EnterImageConfig = lazy(() => import('pages/TVConfig/enterImageConfig/inde
 const GoodLooking = lazy(() => import('pages/TVConfig/goodLooking/index.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/TVConfig/ProgramAppConfig/index.jsx')); //电视节目单配置
 const TvRecommendConfig = lazy(() => import('pages/TVConfig/tvRecommendConfig/tvRecommendConfig.jsx'))      //Tv推荐配置
+const ChannelRiskRegion = lazy(() => import('pages/currencyChannel/channelRiskRegion/index.jsx'))      //风险地域
+const ArmourList = lazy(() => import('pages/armourPackage/armourList/index.jsx'))      //马甲包管理
 
 const LivePreview = lazy(() => import('pages/configManage/livePreview/index.jsx'))
 
@@ -166,6 +169,7 @@ const adminRoutes = [
     { name: '登录(专享)配置', icon: UnorderedListOutlined, path: '/mms/wx/loginVipConfig', component: LoginVipConfig, code: "WeChatManage", sub_code: 'loginVipConfig' },
     { name: '企业自动回复', icon: UnorderedListOutlined, path: '/mms/wx/wechatAutoReply', component: WechatAutoReply, code: "WeChatManage", sub_code: 'wechatAutoReply' },
     { name: '企微标签', icon: UnorderedListOutlined, path: '/mms/wx/wechatTag', component: WechatTag, code: "WeChatManage", sub_code: 'wechatTag' },
+    { name: '专享解锁人群配置', icon: UnorderedListOutlined, path: '/mms/wx/lockPersonConfig', component: LockPersonConfig, code: "WeChatManage", sub_code: 'lockPersonConfig' },
 
     //  赚赚管理
     { name: '赚赚激励任务', icon: UnorderedListOutlined, path: '/mms/earnManage/earnIncentiveTask', component: EarnIncentiveTask, code: "earnManage", sub_code: 'earnIncentiveTask' },
@@ -209,6 +213,12 @@ const adminRoutes = [
     { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/programAppConfig', component: ProgramAppConfig, code: "tvConfigManagement", sub_code: 'programAppConfig' },
     { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/tvRecommendConfig', component: TvRecommendConfig, code: "tvConfigManagement", sub_code: 'tvRecommendConfig' },
 
+
+
+    //通用-频道管理
+    { name: '频道风险地域', icon: UnorderedListOutlined, path: '/mms/currencyChannel/channelRiskRegion', component: ChannelRiskRegion, code: "currencyChannel", sub_code: 'channelRiskRegion' },
+    //马甲包管理
+    { name: '马甲包管理', icon: UnorderedListOutlined, path: '/mms/armourPackage/armourList', component: ArmourList, code: "armourPackage", sub_code: 'armourList' },
     //电视节目单配置
     //{ name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },
     //其他

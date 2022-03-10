@@ -69,10 +69,13 @@ function App2(props) {
           controlState.map((r, i) => {
             return (
               <p>
-                <Button type={i == 3 ? "primary" : i == 0 ? "ghost" : i == 1 ? "dashed" : i == 2 ? "" : ""}
-                  danger={i == 2 ? false : true} onClick={() => changeLine(r.key, val)}>
+                <Button style={{backgroundColor:i == 3 ? "#f56c6c" : i == 0 ? "#67c23a" : i == 1 ? "#409eff" : i == 2 ? "#7266ba" : "",color:"#fff"}}
+                  onClick={() => changeLine(r.key, val)}>
                   {r.value}
                 </Button>
+                {
+
+                }
               </p>
             )
 
@@ -99,7 +102,31 @@ function App2(props) {
       render: (rowValue, row, index) => {
         return (
           <Popover content={content(row)} trigger="focus">
-            <Button type={rowValue == 4 ? "primary" : rowValue == 1 ? "ghost" : rowValue == 2 ? "dashed" : rowValue == 3 ? "" : ""} danger={rowValue == 3 ? false : true} >{getBtnCont(rowValue)}</Button>
+            {
+              rowValue == 1 &&
+              <Button style={{"backgroundColor":"#67c23a",color:"#fff"}}>
+                {getBtnCont(rowValue)}
+              </Button>
+            }
+            {
+              rowValue == 2 &&
+              <Button style={{"backgroundColor":"#409eff",color:"#fff"}}>
+                {getBtnCont(rowValue)}
+              </Button>
+            }
+            {
+              rowValue == 3 &&
+              <Button style={{"backgroundColor":"#7266ba",color:"#fff"}}>
+                {getBtnCont(rowValue)}
+              </Button>
+            }
+            {
+              rowValue == 4 &&
+              <Button style={{"backgroundColor":"#f56c6c",color:"#fff"}}>
+                {getBtnCont(rowValue)}
+              </Button>
+            }
+
           </Popover>
         )
       }
@@ -185,7 +212,7 @@ function App2(props) {
     }
     fetchData()
   }, [forceUpdateId])
-  const changeSize = (page,pageSize) => {
+  const changeSize = (page, pageSize) => {
     setPage(page)
     setPageSize(pageSize)
     forceUpdate()
@@ -193,21 +220,21 @@ function App2(props) {
   const submitForm = (val) => {//表单提交
     console.log(currentItem, val)
     let list = currentItem ? Array.isArray(currentItem) ? currentItem : JSON.parse(currentItem) : []
-    if(list.length>0){
-      let diffList = val.scheduleList.filter(item=>list.some(l=>l.id != item.id))
-      let sameList = list.filter(item=>val.scheduleList.some(l=>l.id == item.id && item.deleted == 0))
-      let delList = list.filter(item=>item.deleted == 1)
+    if (list.length > 0) {
+      let diffList = val.scheduleList.filter(item => list.some(l => l.id != item.id))
+      let sameList = list.filter(item => val.scheduleList.some(l => l.id == item.id && item.deleted == 0))
+      let delList = list.filter(item => item.deleted == 1)
       let arr = []
-      sameList.forEach(r=>{
-        val.scheduleList.forEach(l=>{
-          if(r.id == l.id){
+      sameList.forEach(r => {
+        val.scheduleList.forEach(l => {
+          if (r.id == l.id) {
             r.startTime = l.time[0].valueOf()
             r.endTime = l.time[1].valueOf()
           }
         })
       })
-      diffList.forEach(r=>{
-        if(!r.deleted && r.deleted !=0){
+      diffList.forEach(r => {
+        if (!r.deleted && r.deleted != 0) {
           arr.push({
             programId: currentChannel.programId,
             channelId: currentChannel.channelId,
@@ -220,9 +247,9 @@ function App2(props) {
       let submitList = sameList.concat(arr.concat(delList))
       // return console.log(submitList,"submitList-----------")
       updateOffline(submitList)
-    }else{
+    } else {
       let arr = []
-      val.scheduleList.forEach(r=>{
+      val.scheduleList.forEach(r => {
         arr.push({
           programId: currentChannel.programId,
           channelId: currentChannel.channelId,
@@ -234,7 +261,7 @@ function App2(props) {
       // return console.log(arr,"arr11-----------")
       updateOffline(arr)
     }
-    
+
   }
   const updateOfflineFunc = (params) => {
     updateOfflineChannel(params).then(res => {

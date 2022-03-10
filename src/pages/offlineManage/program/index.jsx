@@ -390,7 +390,7 @@ function App2() {
                 formRef.getFieldValue("fullScreenStyle") == "1" &&
                 <>
 
-                  <Form.Item label="下线运营图" name="operaterPicUrl" rules={[{ required: true, message: '请输入下线运营图' }]}>
+                  <Form.Item label="下线运营图" name="operaterPicUrl">
                     <MyImageUpload
                       getUploadFileUrl={(file, newItem) => { getUploadFileUrl('operaterPicUrl', file, newItem) }}
                       imageUrl={getUploadFileImageUrlByType('operaterPicUrl')} />

@@ -260,9 +260,9 @@ export default class adGroup extends Component {
                                                 })
                                                 if (e.target.value == 1) {
                                                     this.requestAdRightKey(list.length > 0 ? list[0].adId : "")
-                                                } else if(e.target.value == 2){
+                                                } else if (e.target.value == 2) {
                                                     this.getScreen(list.length > 0 ? list[0].adId : "")
-                                                }else{
+                                                } else {
                                                     this.getInfoGroup(list.length > 0 ? list[0].adId : "")
                                                 }
                                                 this.forceUpdate()
@@ -280,7 +280,7 @@ export default class adGroup extends Component {
 
                                     <Form.Item label="广告列表">
                                         <MyTagSelect style={{ width: '100%' }} tags={this.state.adList}
-                                            tag_select_id={this.state.tag_select_id} show_create={true} btns={(this.state.adIndex==1||this.state.adIndex==2)?["挑选素材", "手动新增"]:["挑选素材"]}
+                                            tag_select_id={this.state.tag_select_id} show_create={true} btns={(this.state.adIndex == 1 || this.state.adIndex == 2) ? ["挑选素材", "手动新增"] : ["挑选素材"]}
                                             onTagCreateClick={(key) => that.onTagSelectClick(key)}
                                             onSelectIdChange={(index, id) => that.onTagSelectChange(index, id)}
                                             onTabsDeleteClick={(index, id) => { that.deleteTabChange(index, id) }}
@@ -300,10 +300,13 @@ export default class adGroup extends Component {
                                             <Image width={100} src={this.formRef.current.getFieldValue("detailIconPicUrl")} />
                                         </Form.Item>
                                     }
+                                    {
+                                        (this.state.adIndex == 1 || this.state.adIndex == 2) &&
+                                        <Form.Item label="背景图" name="detailPic">
+                                            <Image width={100} src={this.formRef.current.getFieldValue("detailPic")} />
+                                        </Form.Item>
+                                    }
 
-                                    <Form.Item label="背景图" name="detailPic">
-                                        <Image width={100} src={this.formRef.current.getFieldValue("detailPic")} />
-                                    </Form.Item>
                                     <Form.Item {...this.state.tailLayout}>
                                         <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
                                         <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
@@ -528,9 +531,9 @@ export default class adGroup extends Component {
         })
         if (this.state.adIndex == 1) {
             this.requestAdRightKey(id)
-        } else if(this.state.adIndex == 2){
+        } else if (this.state.adIndex == 2) {
             this.getScreen(id)
-        }else{
+        } else {
             this.getInfoGroup(id)
         }
 

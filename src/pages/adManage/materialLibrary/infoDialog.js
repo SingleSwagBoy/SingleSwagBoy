@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react'
-import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup, getPosition ,getApkList,getInfoGroup,getMenuList} from 'api'
+import { addInfoGroup, getSdkList, getChannel, requestProductSkuList, updateInfoGroup, getPosition, getApkList, getInfoGroup, getMenuList } from 'api'
 import { Radio, Popover, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, Switch, Checkbox, DatePicker, Row, Col } from 'antd'
 import { } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
 import { MySyncBtn, MyImageUpload } from "@/components/views.js"
 import util from 'utils'
+import "./index.css"
 let { Option } = Select;
 let { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -30,8 +31,8 @@ function App2(props) {
         { key: 3, value: '直播' },
         { key: 4, value: '支付' },
         // { key: 5, value: '三方sdk' },
-        { key: 6, value: '轮播推荐' },
-        { key: 7, value: '轮播推荐(自动填充)' },
+        { key: 6, value: '轮播推荐(会员非会员都可投)' },
+        { key: 7, value: '轮播推荐(自动填充，会员非会员都可投)' },
         // { key: 8, value: '优惠券' },
         { key: 9, value: '家庭号' },
         { key: 10, value: '登录' },
@@ -53,7 +54,7 @@ function App2(props) {
         { key: 2, value: '电视相册' },
         // { key: 3, value: '公共相册' },
     ]
-    const [jumpMenuTypes,setJumpMenuTypes] = useState(
+    const [jumpMenuTypes, setJumpMenuTypes] = useState(
         [
             { key: 1, value: '跳转到我的' },
             // { key: 2, value: '跳转到H5' },
@@ -119,7 +120,7 @@ function App2(props) {
         let sign = 0
         for (let i in arr) {
             for (let j in arr[i].position) {
-                let list = Array.isArray(arr[i].position)?arr[i].position[j]:arr[i].position.split(",")[j]
+                let list = Array.isArray(arr[i].position) ? arr[i].position[j] : arr[i].position.split(",")[j]
                 if (pos == list && arr[i].status == 1) {
                     if (sign === 0) {
                         name += arr[i].name
@@ -144,9 +145,6 @@ function App2(props) {
             setProduct(productList.data.data)
             let myApk = await getApkList({ page: { idPage: 9 } })
             setApkList(myApk.data)
-            // if(props.table_data.mode == 1){
-            //     message.loading('加载位置中', 1.5)
-            // }
             let getTableList = await getInfoGroup({ page: { pageSize: 9999 } })
             let positionList = await getPosition({ page: { idPage: 9 } })
             let data = positionList.data
@@ -156,12 +154,14 @@ function App2(props) {
                     let arr = r.validPosition.split(",")
                     arr.forEach((l, index) => {
                         let hasOwn = getToolTip(getTableList.data, `${r.channelGroupId}:${l}`)
-                        formPosition.push({ key: `${r.channelGroupId}:${l}`, value: `${r.channelGroupId}-${r.name}:位置${l}`,own:hasOwn})
+                        // let hasOwn = ""
+                        formPosition.push({ key: `${r.channelGroupId}:${l}`, value: `${r.channelGroupId}-${r.name}:位置${l}`, own: hasOwn })
                     })
                 }
             })
             setPosition(formPosition)
             getMenuListFuc()
+            getChannelList()
         }
         fetchData()
     }, [forceUpdateId])
@@ -238,7 +238,7 @@ function App2(props) {
     const add = () => {
         let arr = formRef.getFieldValue()
         if (formRef.getFieldValue("type") != 1 && formRef.getFieldValue("type") != 13 && formRef.getFieldValue("type") != 14 && formRef.getFieldValue("type") != 2 && arr.content.length == 1) return message.error("该类型已经达到上限")
-        if (arr.type == 3 || arr.type == 6 || arr.type == 7) {
+        if (arr.type == 3 || arr.type == 6 || arr.type == 7 || arr.type == 2 || arr.type == 14) {
             arr.content.push({
                 sdk: "dsjLive"
             })
@@ -258,7 +258,7 @@ function App2(props) {
     const getChannelList = (val) => {
         let params = {
             keywords: val,
-            page: { currentPage: 1, pageSize: 20 }
+            page: { currentPage: 1, pageSize: 999 }
         }
         getChannel(params).then(res => {
             if (res.data.errCode == 0 && res.data.data) {
@@ -280,34 +280,49 @@ function App2(props) {
     }
     // 位置被哪些选中了
     const content = (val) => {
-        if(val){
+        if (val) {
             return (
                 <div>{val}</div>
             )
-        }else{
+        } else {
             return
         }
-        
+
     }
-    const getMenuListFuc = () =>{
-        let params={
-            page: {currentPage: 1, pageSize: 9999}
+    const getMenuListFuc = () => {
+        let params = {
+            page: { currentPage: 1, pageSize: 9999 }
         }
-        getMenuList(params).then(res=>{
-            let arr = res.data.filter(item=>item.status == 1)
-            console.log(arr,"arr")
+        getMenuList(params).then(res => {
+            let arr = res.data.filter(item => item.status == 1)
+            console.log(arr, "arr")
             let list = []
-            arr.forEach((r,i)=>{
-                if(i == 0){
-                    list.push({key:21,value:r.name})
-                }else if(i == 1){
-                    list.push({key:22,value:r.name})
-                }else if(i == 2){
-                    list.push({key:23,value:r.name})
+            arr.forEach((r, i) => {
+                if (i == 0) {
+                    list.push({ key: 21, value: r.name })
+                } else if (i == 1) {
+                    list.push({ key: 22, value: r.name })
+                } else if (i == 2) {
+                    list.push({ key: 23, value: r.name })
                 }
             })
-            setJumpMenuTypes(jumpMenuTypes=>jumpMenuTypes.concat(list))
+            setJumpMenuTypes(jumpMenuTypes => jumpMenuTypes.concat(list))
         })
+    }
+    const getConfigName = (r,i) =>{
+        return (
+            <div style={{display:"flex",alignItems:"center"}}>
+                <div>配置{i+1}:</div>
+                {
+                    activeKey == i
+                    ?
+                    <Input className='tab_input' placeholder='请输入名称' defaultValue={`${(r.name || "")}`} onChange={(e)=> changeData(e, "name", i, 1)} key={r.name} />
+                    :
+                    <div>{r.name}</div>
+                }
+               
+            </div>
+        )
     }
     return (
         <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} form={formRef} onFinish={(e) => submitFinish(e)}>
@@ -318,7 +333,7 @@ function App2(props) {
                 <Select placeholder="类型" onChange={(e) => {
                     forceUpdatePages()
                     let arr = formRef.getFieldValue()
-                    if (e == 3 || e == 6 || e == 7) {
+                    if (e == 3 || e == 6 || e == 7 || e == 2 || e == 14) {
                         arr.content = [{ sdk: "dsjLive" }]
                     } else {
                         arr.content = [{}]
@@ -382,6 +397,7 @@ function App2(props) {
                 <div>
                     <Tabs
                         type="editable-card"
+                        className="my_tab"
                         onChange={(e) => {
                             setActiveKey(e)
                         }}
@@ -396,10 +412,10 @@ function App2(props) {
                         }}
                     >
                         {(formRef.getFieldValue().content || []).map((r, i) => (
-                            <TabPane tab={`第${i + 1}条`} key={i}>
+                            <TabPane tab={getConfigName(r,i)} key={i}>
                                 <div>
                                     {
-                                        (formRef.getFieldValue("type") != 3 && formRef.getFieldValue("type") != 2 && formRef.getFieldValue("type") != 6 && formRef.getFieldValue("type") != 7)
+                                        (formRef.getFieldValue("type") != 3 && formRef.getFieldValue("type") != 2 && formRef.getFieldValue("type") != 6 && formRef.getFieldValue("type") != 7 && formRef.getFieldValue("type") != 14)
                                         &&
                                         <Form.Item label='停留时长'>
                                             <InputNumber min={0} style={{ width: "200px" }} placeholder='请输入停留时长' key={formRef.getFieldValue("content")[i].showTime} defaultValue={formRef.getFieldValue("content")[i].showTime}
@@ -412,7 +428,7 @@ function App2(props) {
                                         (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13) &&
                                         <div>
                                             <Form.Item label='图片' >
-                                                <div style={{ display: "flex", alignItems: "center" }}>
+                                                <div style={{ display: "flex", alignItems: "flex-start" }}>
                                                     <Input placeholder='请上传图片' key={formRef.getFieldValue("content")[i].picUrl} defaultValue={formRef.getFieldValue("content")[i].picUrl}
                                                         onChange={(e) => changeData(e, "picUrl", i, 1)}
                                                     />
@@ -423,7 +439,7 @@ function App2(props) {
 
                                             </Form.Item>
                                             <Form.Item label='音频'>
-                                                <div style={{ display: "flex", alignItems: "center" }}>
+                                                <div style={{ display: "flex", alignItems: "flex-start" }}>
                                                     <Input placeholder='请上传音频' key={formRef.getFieldValue("content")[i].audioUrl} defaultValue={formRef.getFieldValue("content")[i].audioUrl}
                                                         onChange={(e) => changeData(e, "audioUrl", i, 1)}
                                                     />
@@ -448,11 +464,11 @@ function App2(props) {
                                     }
                                     {
                                         //sdk的选择
-                                        (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13 || formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6 || formRef.getFieldValue("type") === 7)
+                                        (formRef.getFieldValue("type") === 1 || formRef.getFieldValue("type") === 13 || formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6 || formRef.getFieldValue("type") === 7  || formRef.getFieldValue("type") === 2  || formRef.getFieldValue("type") === 14)
                                         &&
                                         <>
-                                            <Form.Item label='SDK'>
-                                                <Select style={{ width: "100%" }} placeholder='请选择sdk' disabled={formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6 || formRef.getFieldValue("type") === 7}
+                                            <Form.Item label='SDK' style={{ display: (formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6 || formRef.getFieldValue("type") === 7 || formRef.getFieldValue("type") === 2 || formRef.getFieldValue("type") === 14) ? "none" : "flex" }}>
+                                                <Select style={{ width: "100%" }} placeholder='请选择sdk' disabled={formRef.getFieldValue("type") === 3 || formRef.getFieldValue("type") === 6 || formRef.getFieldValue("type") === 7 || formRef.getFieldValue("type") === 2|| formRef.getFieldValue("type") === 14}
                                                     defaultValue={formRef.getFieldValue("content")[i].sdk}
                                                     key={formRef.getFieldValue("content")[i].sdk}
                                                     onChange={(e) => changeData(e, "sdk", i)}>
@@ -575,11 +591,14 @@ function App2(props) {
                                         (formRef.getFieldValue("type") === 2 || formRef.getFieldValue("type") === 14) &&
                                         <div>
                                             <Form.Item label='视频'>
-                                                <Input placeholder='请输入视频' key={formRef.getFieldValue("content")[i].videoUrl} defaultValue={formRef.getFieldValue("content")[i].videoUrl}
-                                                    onChange={(e) => changeData(e, "videoUrl", i, 1)}
-                                                />
-                                                <MyImageUpload
-                                                    getUploadFileUrl={(file, newItem) => { getUploadFileUrl('videoUrl', file, newItem, i) }} />
+                                                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                                                    <Input placeholder='请输入视频' key={formRef.getFieldValue("content")[i].videoUrl} defaultValue={formRef.getFieldValue("content")[i].videoUrl}
+                                                        onChange={(e) => changeData(e, "videoUrl", i, 1)}
+                                                    />
+                                                    <MyImageUpload
+                                                        getUploadFileUrl={(file, newItem) => { getUploadFileUrl('videoUrl', file, newItem, i) }} />
+                                                </div>
+
                                             </Form.Item>
                                             <Form.Item label='排序'>
                                                 <InputNumber style={{ width: "400px" }} min={0} placeholder='请输入排序' key={formRef.getFieldValue("content")[i].sort} defaultValue={formRef.getFieldValue("content")[i].sort}

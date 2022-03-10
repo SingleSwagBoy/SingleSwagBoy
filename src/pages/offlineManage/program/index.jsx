@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { getOfflineProgram, updateOfflineProgram, deleteConfig, addOfflineProgram, delOfflineProgram, requestNewAdTagList, getApkList } from 'api'
+import { getOfflineProgram, updateOfflineProgram, deleteConfig, addOfflineProgram, delOfflineProgram, requestNewAdTagList, getApkList, copyOfflineProgram } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, DatePicker, Switch, Divider } from 'antd'
 import { Link } from 'react-router-dom'
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons"
@@ -125,11 +125,13 @@ function App2() {
     {
       title: "操作",
       key: "action",
-      fixed: 'right', width: 300,
+      fixed: 'right', width: 350,
       render: (rowValue, row, index) => {
         return (
           <div>
+            <Button size="small" onClick={() => copyOfflineProgramFuc(row)}>复制</Button>
             <Button
+            style={{ margin: "0 0 0 10px" }}
               size="small"
               type="primary"
               onClick={() => {
@@ -220,6 +222,13 @@ function App2() {
       forceUpdate()
     })
   }
+  const copyOfflineProgramFuc = (params) => {
+    // return console.log(params)
+    copyOfflineProgram(params).then(res => {
+      message.success("复制成功")
+      forceUpdate()
+    })
+  }
   const delItem = (row) => {
     Modal.confirm({
       title: `确认删除该条数据吗？`,
@@ -248,11 +257,11 @@ function App2() {
     return image_url ? image_url : '';
   }
   //获取标签name
-  const getTagName = (val) =>{
-    let arr = tagList.filter(item=>item.code == val)
-    if(arr.length>0){
+  const getTagName = (val) => {
+    let arr = tagList.filter(item => item.code == val)
+    if (arr.length > 0) {
       return arr[0].name
-    }else{
+    } else {
       return "未配置"
     }
   }

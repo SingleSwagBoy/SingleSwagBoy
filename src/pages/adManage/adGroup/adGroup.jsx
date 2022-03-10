@@ -638,7 +638,7 @@ export default class adGroup extends Component {
             id: id
         }
         getInfoGroup(params).then(res => {
-            console.log('group_list', res.data);
+            // console.log('group_list', res.data);
             if (Array.isArray(res.data) && res.data.length > 0) {
                 let arr = res.data[0]
                 this.formRef.current.setFieldsValue({ "detailName": arr.name, "detailTime": [moment(arr.startTime), moment(arr.endTime)], "detailPic": arr.picUrl })

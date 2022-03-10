@@ -577,6 +577,7 @@ export const delOfflineChannel = (params) => { return request2.post(`${baseUrl}/
 export const addOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/add`,params); };          //删除频道
 export const updateOfflineChannel = (params) => { return request2.post(`${baseUrl}/mms/offline/channel/update`,params); };          //删除频道
 export const updateOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/update`,params); };          //删除频道
+export const copyOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/copy`,params); };          //删除频道
 export const addOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/add`,params); };          //删除频道
 export const delOfflineProgram = (params) => { return request2.post(`${baseUrl}/mms/offline/program/del`,params); };          //删除频道
 export const syncOfflineProgram = (params) => { return request2.get(`${baseUrl}/mms/sync/offline`,{params:params}); };          //删除频道

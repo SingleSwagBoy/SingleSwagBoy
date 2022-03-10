@@ -15,7 +15,7 @@ import moment from 'moment';
 import '@/style/base.css';
 import {
     requestAdRightKey,   //获取广告素材 获取右下角广告素材
-    getScreen,getInfoGroup
+    getScreen, getInfoGroup
 } from 'api';
 
 let { RangePicker } = DatePicker;
@@ -39,7 +39,23 @@ export default class adCreateModal extends Component {
             adIndex: 1,
             searchWords: "",
             tagList: [], //父组件传过来的已经被选择的素材
-            checkedList: []
+            checkedList: [],
+            type: [
+                { key: 1, value: '图片' },
+                { key: 13, value: '图片（会员可投）' },
+                { key: 2, value: '视频' },
+                { key: 14, value: '视频（会员可投）' },
+                { key: 3, value: '直播' },
+                { key: 4, value: '支付' },
+                { key: 5, value: '三方sdk' },
+                { key: 6, value: '轮播推荐' },
+                { key: 7, value: '轮播推荐(自动填充)' },
+                { key: 8, value: '优惠券' },
+                { key: 9, value: '家庭号' },
+                { key: 10, value: '登录' },
+                { key: 11, value: 'H5' },
+                { key: 12, value: '小程序登录' }
+            ],
         }
     }
     render() {
@@ -144,13 +160,17 @@ export default class adCreateModal extends Component {
                 render: (rowValue, row, index) => {
                     return (
                         <div>
-                        {
-                            adIndex == 1 
-                            ?  
-                            <div>{row.type == 0 ? "通用" : row.type == 1 ? "家庭号" : row.type == 2 ? "公众号登陆" : row.type == 3 ? "小程序登陆" : "未知"}</div>
-                            :
-                            <div>{rowValue == 1 ? "普通级别" : rowValue == 2 ? "宣传内容" : "未知"}</div>
-                        }
+                            {
+                                adIndex == 1
+                                    ?
+                                    <div>{row.type == 0 ? "通用" : row.type == 1 ? "家庭号" : row.type == 2 ? "公众号登陆" : row.type == 3 ? "小程序登陆" : "未知"}</div>
+                                    :
+                                    adIndex == 2
+                                        ?
+                                        <div>{rowValue == 1 ? "普通级别" : rowValue == 2 ? "宣传内容" : "未知"}</div>
+                                        :
+                                        this.getType(row.type)
+                            }
                         </div>
                     )
                 }
@@ -181,6 +201,11 @@ export default class adCreateModal extends Component {
                 }
             },
         ];
+        console.log(adIndex, "adIndex")
+        if (adIndex == 11) {
+            let arr = table_title.filter(item => item.dataIndex != "iconPicUrl" && item.dataIndex != "picUrl")
+            table_title = arr
+        }
 
         table_box.table_title = table_title;
         that.setState({
@@ -196,14 +221,22 @@ export default class adCreateModal extends Component {
         })
 
     }
+    getType(val) {
+        let arr = this.state.type.filter(item => item.key == val)
+        if (arr.length > 0) {
+            return arr[0].value
+        } else {
+            return "未知"
+        }
 
+    }
     refreshList(index, tagList) {
-        console.log(index,"---------")
+        console.log(index, "---------")
         if (index == 1) {
             this.requestAdRightKey(tagList)
-        } else if(index == 2){
+        } else if (index == 2) {
             this.getScreen(tagList)
-        } else if(index == 11){
+        } else if (index == 11) {
             this.getInfoGroup(tagList)
         }
     }
@@ -267,7 +300,7 @@ export default class adCreateModal extends Component {
             name: this.state.searchWords
         };
         getInfoGroup(obj).then(res => {
-            
+
             table_box.table_datas = res.data.filter(r => r.status == 1);
             if (tagList.length > 0) {
                 table_box.table_datas.forEach(r => {

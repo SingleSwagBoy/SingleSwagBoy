@@ -21,7 +21,7 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup,updateInfoGroup
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup, updateInfoGroup
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
@@ -100,6 +100,7 @@ export default class adCreateModal extends Component {
                         return (<Image width={50} src={rowValue} />)
                     }
                 },
+                { title: '排序', dataIndex: 'sortData', key: 'sortData', },
                 {
                     title: '时间', dataIndex: 'time', key: 'time', width: 300,
                     render: (rowValue, row, index) => {
@@ -124,9 +125,9 @@ export default class adCreateModal extends Component {
                                     else row.status = 2
                                     if (this.state.adIndex == 1) {
                                         this.adRightKeyUpdateState(row)
-                                    } else if(this.state.adIndex == 2){
+                                    } else if (this.state.adIndex == 2) {
                                         this.screenUpdateState(row)
-                                    }else{
+                                    } else {
                                         this.updateInfoGroup(row)
                                     }
                                 }}
@@ -218,8 +219,8 @@ export default class adCreateModal extends Component {
                                     onChange={(val) => {
                                         let arr = table_title
                                         if (val.target.value == 3) {//信息流素材自定义表头
-                                            arr = table_title.filter(item => item.key != "iconPicUrl" && item.key != "picUrl")
-                                            if(arr[2].dataIndex != "mode"){
+                                            arr = table_title.filter(item => item.key != "iconPicUrl" && item.key != "picUrl" && item.key != "sortData")
+                                            if (arr[2].dataIndex != "mode") {
                                                 arr.splice(2, 0, {
                                                     title: '广告模式', dataIndex: 'mode', key: 'mode', width: 300,
                                                     render: (rowValue, row, index) => {
@@ -229,7 +230,30 @@ export default class adCreateModal extends Component {
                                                     }
                                                 })
                                             }
-                                            
+
+                                        } else {
+                                            arr = table_title.filter(item => item.key != "mode")
+                                            if (arr[2].dataIndex != "iconPicUrl") {
+                                                arr.splice(2, 0, {
+                                                    title: '缩略图', dataIndex: 'iconPicUrl', key: 'iconPicUrl', width: 150,
+                                                    render: (rowValue, row, index) => {
+                                                        return (<Image width={50} src={rowValue} />)
+                                                    }
+                                                })
+                                            }
+                                            if (arr[3].dataIndex != "picUrl") {
+                                                arr.splice(3, 0, {
+                                                    title: '背景图', dataIndex: 'picUrl', key: 'picUrl', width: 150,
+                                                    render: (rowValue, row, index) => {
+                                                        return (<Image width={50} src={rowValue} />)
+                                                    }
+                                                })
+                                            }
+                                            if (arr[4].dataIndex != "sortData") {
+                                                arr.splice(4, 0, {
+                                                    title: '排序', dataIndex: 'sortData', key: 'sortData', width: 150,
+                                                })
+                                            }
                                         }
                                         this.setState({
                                             adIndex: val.target.value,
@@ -297,10 +321,11 @@ export default class adCreateModal extends Component {
                 <Modal visible={materialShow} title="素材" width={1500} transitionName="" maskClosable={false}
                     onCancel={() => that.onModalCancelClick()}
                     footer={null}
+                    zIndex={888}
                 >
                     {
                         adIndex == 3 &&
-                        <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={(e) => this.onModalCancelClick(e)}/></div>
+                        <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={(e) => this.onModalCancelClick(e)} /></div>
                     }
                     {
                         adIndex != 3 &&
@@ -333,7 +358,9 @@ export default class adCreateModal extends Component {
                                                 </Select>
                                             </Form.Item>
                                         }
-
+                                        <Form.Item label='排序' name='sortData' rules={[{ required: true }]}>
+                                            <InputNumber min={0} />
+                                        </Form.Item>
                                         <Form.Item label='倒计时结束时间' name="djsEndTime">
                                             <DatePicker showTime />
                                         </Form.Item>
@@ -384,6 +411,9 @@ export default class adCreateModal extends Component {
                                     <div>
                                         <Form.Item label='名称' name='name' rules={[{ required: true }]}>
                                             <Input className="base-input-wrapper" placeholder="请输入广告名称" />
+                                        </Form.Item>
+                                        <Form.Item label='排序' name='sortData' rules={[{ required: true }]}>
+                                            <InputNumber min={0} />
                                         </Form.Item>
                                         <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
                                             <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
@@ -746,7 +776,7 @@ export default class adCreateModal extends Component {
             this.refreshList(2)
         })
     }
-    updateInfoGroup(val){
+    updateInfoGroup(val) {
         let params = {
             ...val,
         }

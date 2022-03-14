@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-25 18:41:48
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-12-23 18:43:43
+ * @LastEditTime: 2022-03-14 17:58:01
  */
 
 import React, { Component } from 'react'
@@ -41,6 +41,7 @@ import {
     syncOfflineProgram,              //下线节目
     syncAdSPList,              //支付成功
     syncMenuList,              //菜单配置
+    requestApkConfigSync,               //同步apk配置
 
 } from 'api'
 
@@ -94,7 +95,8 @@ export default class SyncBtn extends Component {
         if (type === 30) return syncOfflineProgram();                                      //下线节目
         if (type === 31) return syncAdSPList();                                      //支付成功
         if (type === 32) return syncMenuList();                                      //菜单配置
-      
+        if (type === 33) return requestApkConfigSync();                                      //同步apk配置
+
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
     }

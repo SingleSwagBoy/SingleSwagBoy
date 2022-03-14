@@ -111,18 +111,19 @@ function App2() {
       key: "status",
       render: (rowValue, row, index) => {
         return (
-          <div key={index}>{<Switch
-            checkedChildren="有效"
-            unCheckedChildren="无效"
-            defaultChecked={rowValue == 1 ? true : false}
-            key={index}
-            onChange={(val) => {
-              let info = JSON.parse(JSON.stringify(row))
-              info.status = val ? 1 : 2
-              console.log(info.status, "info.status")
-              submitForm(info)
-            }}
-          />}</div>
+          <div key={index}>
+            {<Switch
+              checkedChildren="有效"
+              unCheckedChildren="无效"
+              defaultChecked={rowValue == 1 ? true : false}
+              key={row.id}
+              onChange={(val) => {
+                let info = JSON.parse(JSON.stringify(row))
+                info.status = val ? 1 : 2
+                console.log(info.status, "info.status")
+                submitForm(info)
+              }}
+            />}</div>
         )
       }
     },

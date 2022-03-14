@@ -111,11 +111,11 @@ function App2() {
       key: "status",
       render: (rowValue, row, index) => {
         return (
-          <div>{<Switch
+          <div key={index}>{<Switch
             checkedChildren="有效"
             unCheckedChildren="无效"
             defaultChecked={rowValue == 1 ? true : false}
-            key={rowValue}
+            key={index}
             onChange={(val) => {
               let info = JSON.parse(JSON.stringify(row))
               info.status = val ? 1 : 2

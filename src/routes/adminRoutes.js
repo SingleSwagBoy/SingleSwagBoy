@@ -3,7 +3,7 @@
  * @Author: HuangQS
  * @Date: 2021-08-20 16:06:46
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-12-23 14:42:56
+ * @LastEditTime: 2022-03-14 16:46:48
  */
 import { lazy } from 'react'
 import { UnorderedListOutlined, LineChartOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons'
@@ -78,6 +78,7 @@ const RiskAreaConfig = lazy(() => import('pages/generalConfig/riskAreaConfig/ris
 const TagConfig = lazy(() => import('pages/generalConfig/tagConfig/tagConfig.jsx'));
 const MiniConfig = lazy(() => import('pages/generalConfig/miniConfig/index.jsx'));
 const PuzzleRobot = lazy(() => import('pages/generalConfig/puzzleRobot/index.jsx'));
+const ApkConfig = lazy(() => import('pages/generalConfig/apkConfig/apkConfig.jsx'));
 
 const WhiteList = lazy(() => import('pages/TVConfig/whiteList/index.jsx'))
 const EnterChannelConfig = lazy(() => import('pages/TVConfig/enterChannelConfig/index.jsx'));
@@ -93,7 +94,6 @@ const RiskControl = lazy(() => import('pages/offlineManage/riskControl/index.jsx
 const ArmourList = lazy(() => import('pages/armourPackage/armourList/index.jsx'))      //马甲包管理
 
 const LivePreview = lazy(() => import('pages/configManage/livePreview/index.jsx'))
-
 
 //用户权限相关
 const SysRole = lazy(() => import('pages/sys/role/role.jsx'));
@@ -210,6 +210,7 @@ const adminRoutes = [
     { name: '标签配置', icon: UnorderedListOutlined, path: '/mms/generalConfig/tagConfig', component: TagConfig, code: "generalMangement", sub_code: 'tagConfig' },
     { name: '小程序配置', icon: UnorderedListOutlined, path: '/mms/generalConfig/miniConfig', component: MiniConfig, code: "generalMangement", sub_code: 'MiniConfig' },
     { name: '拼团机器人', icon: UnorderedListOutlined, path: '/mms/generalConfig/puzzleRobot', component: PuzzleRobot, code: "generalMangement", sub_code: 'puzzleRobot' },
+    { name: 'APK配置管理', icon: UnorderedListOutlined, path: '/mms/generalConfig/apkConfig', component: ApkConfig, code: "generalMangement", sub_code: 'apkConfig' },
 
     // TV端-配置管理
     { name: '白名单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/whiteList', component: WhiteList, code: "tvConfigManagement", sub_code: 'MiniConfig' },

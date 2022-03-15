@@ -2,7 +2,7 @@
  * @Author: HuangQS
  * @Date: 2021-10-26 17:19:51
  * @LastEditors: HuangQS
- * @LastEditTime: 2021-10-27 18:05:53
+ * @LastEditTime: 2022-03-14 17:54:46
  * @Description: 广告组手动选择弹出框
  */
 
@@ -142,7 +142,7 @@ export default class adCreateModal extends Component {
                             <div>
                                 {
                                     this.state.adIndex != 3 &&
-                                    <Button Button size='small' style={{ marginLeft: 5 }} onClick={() => {
+                                    <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
                                         if (this.state.adIndex == 1) {
                                             this.adRightKeyCopy(row)
                                         } else {
@@ -151,7 +151,7 @@ export default class adCreateModal extends Component {
                                     }}>复制</Button>
                                 }
 
-                                <Button Button size='small' style={{ marginLeft: 5 }} onClick={() => {
+                                <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
                                     console.log(row)
                                     // this.onCreateClick(row)
                                     this.setState({

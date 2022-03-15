@@ -157,11 +157,14 @@ class MyLayout extends Component {
                         <Select style={{ width: '100%' }} placeholder='快速搜索' showSearch onChange={(val) => that.props.history.push(val)}
                             filterOption={(input, option) => {
                                 if (!input) return true;
+                                input = input.toUpperCase();
+
                                 let children = option.children;
                                 if (children) {
                                     let key = children[1];
                                     let isFind = false;
-                                    isFind = `${key}`.indexOf(`${input}`) >= 0;
+                                    isFind = `${key}`.toUpperCase().indexOf(`${input}`) >= 0;
+                                    
                                     return isFind;
                                 }
                             }}>

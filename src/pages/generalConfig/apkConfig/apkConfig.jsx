@@ -2,13 +2,13 @@
  * @Author: HuangQS
  * @Date: 2022-03-14 16:22:05
  * @LastEditors: HuangQS
- * @LastEditTime: 2022-03-14 18:27:17
+ * @LastEditTime: 2022-03-15 13:52:25
  * @Description: 
  */
 
 import React, { useState, useEffect, useCallback, useReducer } from 'react'
 import { requestApkConfigAdd, requestApkConfigDelete, requestApkConfigList } from 'api'
-import { Alert, Button, Table, Modal, Form, Input } from 'antd'
+import { Alert, Button, Table, Modal, Form, Input, Pagination } from 'antd'
 import { MySyncBtn } from "@/components/views.js"
 import "./index.css"
 
@@ -17,6 +17,7 @@ function AppConfig(props) {
     const [formRef] = Form.useForm();
     const [forceUpdateId, forceUpdate] = useReducer(() => [], []);
     const [apkList, setApkList] = useState([]);
+    const [apkPage, setApkPage] = useState({ currentPage: 1, pageSize: 100, totalCount: 0 });
     const [isShowModal, setModal] = useState(false);
 
 
@@ -41,8 +42,9 @@ function AppConfig(props) {
 
         const fetchData = async () => {
             requestApkConfigList().then(res => {
-                console.log('res', res.data);
-                setApkList(res.data)
+                console.log('res', res.page);
+                setApkList(res.data);
+                setApkPage(res.page);
             })
         }
         fetchData();
@@ -65,6 +67,15 @@ function AppConfig(props) {
                 </div>
             } />
             <Table columns={tableTitles} dataSource={apkList} pagination={false} scroll={{ x: "80vw", y: '75vh' }} />
+
+            {/* {
+                apkPage &&
+                <div className="pagination-box">
+                    <Pagination current={apkPage.currentPage} pageSize={apkPage.pageSize} onChange={(page, pageSize) => onPageChange(page, pageSize)} total={apkPage.totalCount} />
+                </div>
+            } */}
+
+
 
             <Modal visible={isShowModal} footer={null} closable={false} width={800}>
                 <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} form={formRef} onFinish={(e) => submitFinish(e)}>
@@ -114,6 +125,11 @@ function AppConfig(props) {
                 })
             }
         })
+    }
+
+    //刷新页码
+    function onPageChange(page, pageSize) {
+        forceUpdate();
     }
 
 }

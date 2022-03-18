@@ -84,7 +84,7 @@ class MyLayout extends Component {
     getMenu() {
         let that = this;
         let base = "http://" + window.location.host;
-        let id = this.props.userInfo.id || 1
+        let id = Number(this.props.userInfo.id) || 1
         // if (base.indexOf("localhost") !== -1) {
         //     id = 1
         // } else if (window.location.host === "test2.cms.tvplus.club") {

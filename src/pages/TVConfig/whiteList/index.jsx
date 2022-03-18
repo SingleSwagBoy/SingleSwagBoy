@@ -165,7 +165,7 @@ export default class AddressNews extends Component {
                 >
                     <Table
                         dataSource={this.state.lists}
-                        // rowKey={i}
+                        rowKey={item => item.id}
                         loading={this.state.loading}
                         columns={this.state.columns} />
 

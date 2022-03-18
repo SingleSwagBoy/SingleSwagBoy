@@ -369,8 +369,31 @@ function App2() {
               <Form.Item label="上下线时间" name="time">
                 <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
               </Form.Item>
-              <Form.Item label="H5地址" name="webUrl" rules={[{ required: true, message: '请输入H5地址' }]}>
+              {/* <Form.Item label="H5地址" name="webUrl" rules={[{ required: true, message: '请输入H5地址' }]}>
                 <Input placeholder="请输入H5地址" />
+              </Form.Item> */}
+              <Form.Item label="H5地址" name="webUrl">
+                <div style={{ display: "flex", alignItems: "center" }}>
+
+                  <Input defaultValue={formRef.getFieldValue("webUrl")} key={formRef.getFieldValue("webUrl")}
+                    onChange={(e) => {
+                      if (privateData.inputTimeOutVal) {
+                        clearTimeout(privateData.inputTimeOutVal);
+                        privateData.inputTimeOutVal = null;
+                      }
+                      privateData.inputTimeOutVal = setTimeout(() => {
+                        if (!privateData.inputTimeOutVal) return;
+                        formRef.setFieldsValue({ webUrl: e.target.value })
+                        forceUpdatePages()
+                      }, 1000)
+                    }}
+                  />
+                  <MyImageUpload
+                    getUploadFileUrl={(file, newItem) => getUploadFileUrl('webUrl', file, newItem)}
+                    contents={"menu"}
+                    // imageUrl={getUploadFileImageUrlByType('webUrl')}
+                  />
+                </div>
               </Form.Item>
               <Form.Item label="标签" name="tags">
                 <Select mode={true} allowClear showSearch placeholder="请选择用户设备标签"

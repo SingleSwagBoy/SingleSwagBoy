@@ -69,7 +69,7 @@ function App2(props) {
           controlState.map((r, i) => {
             return (
               <p>
-                <Button style={{backgroundColor:i == 3 ? "#f56c6c" : i == 0 ? "#67c23a" : i == 1 ? "#409eff" : i == 2 ? "#7266ba" : "",color:"#fff"}}
+                <Button style={{ backgroundColor: i == 3 ? "#f56c6c" : i == 0 ? "#67c23a" : i == 1 ? "#409eff" : i == 2 ? "#7266ba" : "", color: "#fff" }}
                   onClick={() => changeLine(r.key, val)}>
                   {r.value}
                 </Button>
@@ -104,25 +104,25 @@ function App2(props) {
           <Popover content={content(row)} trigger="focus">
             {
               rowValue == 1 &&
-              <Button style={{"backgroundColor":"#67c23a",color:"#fff"}}>
+              <Button style={{ "backgroundColor": "#67c23a", color: "#fff" }}>
                 {getBtnCont(rowValue)}
               </Button>
             }
             {
               rowValue == 2 &&
-              <Button style={{"backgroundColor":"#409eff",color:"#fff"}}>
+              <Button style={{ "backgroundColor": "#409eff", color: "#fff" }}>
                 {getBtnCont(rowValue)}
               </Button>
             }
             {
               rowValue == 3 &&
-              <Button style={{"backgroundColor":"#7266ba",color:"#fff"}}>
+              <Button style={{ "backgroundColor": "#7266ba", color: "#fff" }}>
                 {getBtnCont(rowValue)}
               </Button>
             }
             {
               rowValue == 4 &&
-              <Button style={{"backgroundColor":"#f56c6c",color:"#fff"}}>
+              <Button style={{ "backgroundColor": "#f56c6c", color: "#fff" }}>
                 {getBtnCont(rowValue)}
               </Button>
             }
@@ -364,6 +364,34 @@ function App2(props) {
                 <Form.List name="scheduleList">
                   {(fields, { add, remove }) => (
                     <>
+                      <Form.Item>
+                        <Button type="primary" onClick={() => {
+                          let scheduleList = formRef.getFieldValue("scheduleList") || []
+                          console.log(scheduleList)
+                          if (scheduleList.length == 0) {
+                            scheduleList.push({
+                              time:[moment(new Date().getTime()),moment(new Date().getTime())]
+                            })
+                          }else{
+                            if(scheduleList[scheduleList.length-1].startTime){
+                              scheduleList.push({
+                                time:[moment(scheduleList[scheduleList.length-1].startTime+(24*60*60*1000)),moment(scheduleList[scheduleList.length-1].endTime+(24*60*60*1000))]
+                              })
+                            }else{
+                              scheduleList.push({
+                                time:[moment((scheduleList[scheduleList.length-1].time[0]).valueOf()+(24*60*60*1000)),moment((scheduleList[scheduleList.length-1].time[1]).valueOf()+(24*60*60*1000))]
+                              })
+                            }
+                           
+                          }
+                          console.log(scheduleList)
+                          formRef.setFieldsValue({scheduleList:scheduleList})
+                          // setCurrent(row)
+                          // add()
+                        }} block icon={<PlusOutlined />}>
+                          新增下线时刻表
+                        </Button>
+                      </Form.Item>
                       {fields.map((field, index) => (
                         <Space key={field.key} align="baseline">
                           <Form.Item
@@ -379,7 +407,8 @@ function App2(props) {
                           <MinusCircleOutlined onClick={() => {
                             if (!!currentItem) {
                               let arr = Array.isArray(currentItem) ? currentItem : JSON.parse(currentItem)
-                              if (arr.length > 0) {
+
+                              if (arr.length > 0 && arr[index]) {
                                 console.log(arr)
                                 arr[index].deleted = 1
                                 setCurrent(arr)
@@ -390,11 +419,7 @@ function App2(props) {
                         </Space>
                       ))}
 
-                      <Form.Item>
-                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                          新增下线时刻表
-                        </Button>
-                      </Form.Item>
+
                     </>
                   )}
                 </Form.List>

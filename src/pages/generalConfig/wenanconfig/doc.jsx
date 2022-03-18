@@ -183,11 +183,11 @@ export default class Doc extends Component {
                                 </Form.Item>
 
                                 <Form.Item label="参数" name='value' rules={[{ required: true, message: '请输入参数' }]}>
-                                    <Input style={{ width: 350 }} className="input-wrapper-from" placeholder="请输入参数" onBlur={(e) => {
+                                    <Input.TextArea style={{ width: 350 }} className="input-wrapper-from" placeholder="请输入参数" onBlur={(e) => {
                                         let new_value = e.target.value;
                                         that.formRef.current.setFieldsValue({ "value": new_value })
                                         that.forceUpdate();
-                                    }}></Input>
+                                    }}></Input.TextArea>
                                 </Form.Item>
                                 {
                                     that.formRef.current.getFieldValue("value") ?

@@ -51,20 +51,21 @@ class MyLayout extends Component {
         let that = this;
 
         //使用本地路由地址
-        if (window.localStorage.getItem("routesList_tmp")) {
-            let router = JSON.parse(window.localStorage.getItem("routesList_tmp"))
-            let localRouter = that.getLocalMenu(router);
+        // if (window.localStorage.getItem("routesList_tmp")) {
+        //     let router = JSON.parse(window.localStorage.getItem("routesList_tmp"))
+        //     let localRouter = that.getLocalMenu(router);
 
-            that.setState({
-                navRoutes: localRouter
-            }, () => {
-                that.parseSearchRouterList(localRouter);
-            })
-        }
-        //使用
-        else {
-            that.getMenu()
-        }
+        //     that.setState({
+        //         navRoutes: localRouter
+        //     }, () => {
+        //         that.parseSearchRouterList(localRouter);
+        //     })
+        // }
+        // //使用
+        // else {
+        //     that.getMenu()
+        // }
+        that.getMenu()
     }
     getLocalMenu(arr) { //获取本地存在的路径
         let localList = []
@@ -122,7 +123,7 @@ class MyLayout extends Component {
                 }
 
                 let localRouter = that.getLocalMenu(list);
-                console.log(list, "list")
+                // console.log(list, "list")
                 window.localStorage.setItem("routesList_tmp", JSON.stringify(list))
                 that.setState({
                     navRoutes: localRouter

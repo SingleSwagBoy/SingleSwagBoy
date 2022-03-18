@@ -17,7 +17,7 @@ class ImageUpload extends Component {
         listType:"picture-card",
         className:"avatar-uploader",
         showUploadList:false,
-        action: `${baseUrl}${this.props.postUrl?this.props.postUrl:"/mms/file/upload?dir=ad"}`,//需要上传其他地址传过来，默认为ad
+        action: `${baseUrl}${this.props.postUrl?this.props.postUrl:"/mms/file/upload?dir="+(this.props.contents||"ad")}`,//需要上传其他地址传过来，默认为ad(为oss上面的储存目录)
         headers: {
           authorization: JSON.parse(localStorage.getItem("user")).authorization,
           userid:JSON.parse(localStorage.getItem("user")).userInfo.id,

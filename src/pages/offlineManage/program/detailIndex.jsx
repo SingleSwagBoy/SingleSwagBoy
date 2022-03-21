@@ -218,12 +218,19 @@ function App2(props) {
     forceUpdate()
   }
   const submitForm = (val) => {//表单提交
-    console.log(currentItem, val)
+   
     let list = currentItem ? Array.isArray(currentItem) ? currentItem : JSON.parse(currentItem) : []
+    console.log(list, val)
     if (list.length > 0) {
-      let diffList = val.scheduleList.filter(item => list.some(l => l.id != item.id))
-      let sameList = list.filter(item => val.scheduleList.some(l => l.id == item.id && item.deleted == 0))
-      let delList = list.filter(item => item.deleted == 1)
+      let addList = val.scheduleList.filter(item => !item.id)
+      let diffList = list.filter(item => val.scheduleList.every(l => l.id != item.id))
+      let sameList = list.filter(item => val.scheduleList.some(l => l.id == item.id))
+      console.log(diffList,"diffList")
+      console.log(sameList,"sameList")
+      console.log(addList,"addList")
+      if(addList.length>0){
+        diffList.push(...addList)
+      }
       let arr = []
       sameList.forEach(r => {
         val.scheduleList.forEach(l => {
@@ -242,9 +249,12 @@ function App2(props) {
             endTime: r.time[1].valueOf(),
             deleted: 0
           })
+        }else{
+          r.deleted = 1
+          arr.push(r)
         }
       })
-      let submitList = sameList.concat(arr.concat(delList))
+      let submitList = sameList.concat(arr)
       // return console.log(submitList,"submitList-----------")
       updateOffline(submitList)
     } else {
@@ -405,15 +415,6 @@ function App2(props) {
                           </Form.Item>
 
                           <MinusCircleOutlined onClick={() => {
-                            if (!!currentItem) {
-                              let arr = Array.isArray(currentItem) ? currentItem : JSON.parse(currentItem)
-
-                              if (arr.length > 0 && arr[index]) {
-                                console.log(arr)
-                                arr[index].deleted = 1
-                                setCurrent(arr)
-                              }
-                            }
                             remove(field.name)
                           }} />
                         </Space>

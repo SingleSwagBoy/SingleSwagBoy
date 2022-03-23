@@ -37,7 +37,7 @@
 }
 .photo-item{
     width: 100px;
-    height: 100px;
+    /* height: 100px; */
     margin: 10px;
 }
 .pages-content{

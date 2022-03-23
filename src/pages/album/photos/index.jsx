@@ -103,6 +103,9 @@ export default class ProgrammeManage extends Component{
         getlistPhoto(params).then(res => {
             console.log("getlistAllPrograms",res)
             if(res.data.errCode==0){
+                if(res.data.data.length==0){
+                    message.error("未查找到数据");
+                }
                 this.setState({
                     photoList:res.data.data,
                     totalCount:res.data.totalCount,

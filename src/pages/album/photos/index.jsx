@@ -99,18 +99,6 @@ export default class ProgrammeManage extends Component{
                     photoList:res.data.data,
                     totalCount:res.data.totalCount,
                     totalPage:Math.ceil(res.data.totalCount/this.state.pageSize)
-                },()=>{
-                    console.log("totalPagetotalPage",this.state.totalPage);
-                    if(this.state.totalPage>=2){
-                        let _list=[];
-                        for(let i=1;i<=this.state.totalPage;i++){
-                            _list.push(i)
-                        }
-                        console.log("_list_list_list",_list)
-                        this.setState({
-                            pagesList:_list
-                        })
-                    }
                 })
             }
         })
@@ -129,7 +117,8 @@ export default class ProgrammeManage extends Component{
         console.log("page,size",page,size);
         this.setState({
             page:page,
-            pageSize:size
+            pageSize:size,
+            photoList:[]
         },()=>{
             this.getlistAllPrograms()
         })

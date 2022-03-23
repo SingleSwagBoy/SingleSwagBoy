@@ -609,7 +609,8 @@ export const requestApkConfigSync = (params) => { return request2.post(`${baseUr
 export const requestApkConfigDelete = (params) => { return request2.get(`${baseUrl}/mms/apk/delete`, { params: params }); };          //删除apk配置
 export const requestApkConfigList = (params) => { return request2.get(`${baseUrl}/mms/apk/list`, { params: params }); };              //apk配置列表
 
-
+// 获取用户相册照片
+export const getlistPhoto = (params) => { return request.post(`${baseUrl}/mms/album/listPhoto`, params); };                 // 解锁配置更新
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

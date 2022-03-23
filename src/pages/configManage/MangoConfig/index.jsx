@@ -1,12 +1,3 @@
-/*
- * @Author: HuangQS
- * @Date: 2021-10-26 17:19:51
- * @LastEditors: HuangQS
- * @LastEditTime: 2022-03-14 17:54:46
- * @Description: 广告组手动选择弹出框
- */
-
-
 
 import React, { Component } from 'react';
 
@@ -44,6 +35,12 @@ export default class adCreateModal extends Component {
             total: 10,
             lists: [],
             adIndex: 1,
+            titleTypes:[
+                { key: 0, name: "热门推荐" },
+                { key: 1, name: "电视剧推荐" },
+                { key: 2, name: "电影推荐" },
+                { key: 3, name: "综艺推荐" },
+            ],
             typeList: [
                 { key: 0, name: "通用" },
                 { key: 1, name: "家庭号" },

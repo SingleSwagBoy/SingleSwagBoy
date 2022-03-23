@@ -94,6 +94,7 @@ const RiskControl = lazy(() => import('pages/offlineManage/riskControl/index.jsx
 const ArmourList = lazy(() => import('pages/armourPackage/armourList/index.jsx'))      //马甲包管理
 
 const LivePreview = lazy(() => import('pages/configManage/livePreview/index.jsx'))
+const MangoConfig = lazy(() => import('pages/configManage/MangoConfig/index.jsx'));
 
 //用户权限相关
 const SysRole = lazy(() => import('pages/sys/role/role.jsx'));
@@ -162,6 +163,7 @@ const adminRoutes = [
     // { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/config/tvRecommendConfig', component: TvRecommendConfig, code: "configManage", sub_code: 'tvRecommendConfig' },
     { name: '直播预告', icon: UnorderedListOutlined, path: '/mms/config/livePreview', component: LivePreview, code: "configManage", sub_code: 'livePreview' },
     { name: '节目单管理', icon: UnorderedListOutlined, path: '/mms/configManage/programmeManage', component: ProgrammeManage, code: "configManage", sub_code: 'programmeManage' },
+    { name: '芒果专区配置', icon: UnorderedListOutlined, path: '/mms/configManage/MangoConfig', component: MangoConfig, code: "configManage", sub_code: 'mangoConfig' },
 
 
 

@@ -313,10 +313,13 @@ export default class adCreateModal extends Component {
                                                     "title": arr[0].subTitle,
                                                     "cover": arr[0].imgX,
                                                     "type":arr[0].type,
-                                                    "vid":arr[0].type==10?arr[0].cId:arr[0].vId,
+                                                    "vid":arr[0].vId,
                                                     "kind":arr[0].kind,
                                                     "category":arr[0].categoryType,
-                                                    "keyword":arr[0].keyword
+                                                    "keyword":arr[0].keyword,
+                                                    "cid":arr[0].cId,
+                                                    "serialNo":arr[0].serialNo,
+                                                    "count":arr[0].serialCount
                                                 });
                                                 this.forceUpdate();
                                             }

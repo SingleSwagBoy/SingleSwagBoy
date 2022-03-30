@@ -4,18 +4,14 @@ import React, { Component } from 'react';
 import { Input, Form, DatePicker, Button, Table, Modal, Card, Switch, Select, message, Image, InputNumber, Radio } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
+import "./style.css"
 import util from "utils"
 import {
-    requestAdRightKey,   //获取广告素材 获取右下角广告素材
-    getScreen,
-    adRightKeyUpdate,
-    screenUpdate,
-    screenDel,
-    adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup, updateInfoGroup
+    getMangoList,addMangoList,addMangoUpdate,delMango,getMangoSync,addMangosearch,updateMangoSort,getSortList
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
+import ImageUpload from "../../../components/ImageUpload/index" //图片组件
 //import InfoDialog from "./infoDialog"
 let { RangePicker } = DatePicker;
 let { Option } = Select;
@@ -23,23 +19,31 @@ let { Option } = Select;
 let privateData = {
     inputTimeOutVal: null
 };
+const normFile = (e) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+};
 export default class adCreateModal extends Component {
 
     constructor(props) {
         super(props);
         this.formRef = React.createRef();
+        this.formRefTwo = React.createRef();
         this.state = {
             materialShow: false,
             page: 1,
             pageSize: 10,
             total: 10,
+            format: 'YYYY-MM-DD HH:mm',
             lists: [],
             adIndex: 1,
             titleTypes:[
                 { key: 0, name: "热门推荐" },
-                { key: 1, name: "电视剧推荐" },
+                { key: 3, name: "电视剧推荐" },
                 { key: 2, name: "电影推荐" },
-                { key: 3, name: "综艺推荐" },
+                { key: 1, name: "综艺推荐" },
             ],
             typeList: [
                 { key: 0, name: "通用" },
@@ -48,87 +52,57 @@ export default class adCreateModal extends Component {
                 { key: 3, name: "小程序登陆" },
                 { key: 4, name: "支付广告" },
             ],
-            type: [
-                { key: 1, value: '图片' },
-                { key: 13, value: '图片（会员可投）' },
-                { key: 2, value: '视频' },
-                { key: 14, value: '视频（会员可投）' },
-                { key: 3, value: '直播' },
-                { key: 4, value: '支付' },
-                { key: 5, value: '三方sdk' },
-                { key: 6, value: '轮播推荐' },
-                { key: 7, value: '轮播推荐(自动填充)' },
-                { key: 8, value: '优惠券' },
-                { key: 9, value: '家庭号' },
-                { key: 10, value: '登录' },
-                { key: 11, value: 'H5' },
-                { key: 12, value: '小程序登录' }
+            typess: [
+                { key: 1, value: '综艺' },
+                { key: 2, value: '电影' },
+                { key: 3, value: '电视剧' },
+                { key: 4, value: '音乐' },
+                { key: 5, value: '动漫' },
+                { key: 6, value: '纪录片' },
+                { key: 7, value: '娱乐' },
+                { key: 8, value: '原创' },
+                { key: 9, value: '教育' },
+                { key: 10, value: '游戏' },
+                { key: 11, value: '体育' },
+                { key: 12, value: '生活' },
             ],
             tailLayout: {
-                wrapperCol: { offset: 16, span: 8 },
+                wrapperCol: { offset: 12, span: 16 },
             },
             rechargeList: [],
             currentItem: "",
             table_title: [
-                { title: '素材名称', dataIndex: 'name', key: 'name', width: 300, },
+                { title: '列表位置', dataIndex: 'location', key: 'location', width: 100,},
                 {
-                    title: '类型', dataIndex: 'type', key: 'type', width: 200,
+                    title: '剧集类别', dataIndex: 'category', key: 'category', width: 100,
                     render: (rowValue, row, index) => {
                         return (
-                            this.state.adIndex == 1 ?
-                                this.getType(rowValue, 1)
-                                :
-                                this.state.adIndex == 2 ?
-                                    <div>{row.adType == 1 ? "普通级别" : row.adType == 2 ? "宣传内容" : "未知"}</div>
-                                    :
-                                    this.getType(rowValue, 3)
+                            <div>{this.getProgrameType(rowValue)}</div>
                         )
                     }
                 },
+                { title: '剧集名称', dataIndex: 'name', key: 'name', width: 200,},
+                { title: '剧集标题', dataIndex: 'title', key: 'title', width: 200,},
                 {
-                    title: '缩略图', dataIndex: 'iconPicUrl', key: 'iconPicUrl', width: 150,
+                    title: '封面图', dataIndex: 'cover', key: 'cover', width: 150,
                     render: (rowValue, row, index) => {
                         return (<Image width={50} src={rowValue} />)
                     }
                 },
+                
                 {
-                    title: '背景图', dataIndex: 'picUrl', key: 'picUrl', width: 150,
-                    render: (rowValue, row, index) => {
-                        return (<Image width={50} src={rowValue} />)
-                    }
-                },
-                { title: '排序', dataIndex: 'sortData', key: 'sortData', },
-                {
-                    title: '时间', dataIndex: 'time', key: 'time', width: 300,
+                    title: '有效时间', dataIndex: 'time', key: 'time', width: 300,
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                                {row.startTime ? util.formatTime(row.startTime, "", "") : "未配置"}
-                                -
-                                {row.endTime ? util.formatTime(row.endTime, "", "") : "未配置"}
+                                
+                                {
+                                    (row.startTime=="" || row.startTime==0) &&  (row.endTime=="" || row.endTime==0) &&
+                                    <span>长期</span> ||
+                                    (row.startTime || row.endTime) &&
+                                    <span>{row.startTime ? util.formatTime(row.startTime, ".", "") : "未配置"}-{row.endTime ? util.formatTime(row.endTime, ".", "") : "未配置"}</span>
+                                }
                             </div>
-                        )
-                    }
-                },
-                {
-                    title: '状态', dataIndex: 'status', key: 'status',
-                    render: (rowValue, row, index) => {
-                        return (
-                            <Switch checkedChildren="有效" unCheckedChildren="无效"
-                                key={new Date().getTime()}
-                                defaultChecked={rowValue === 1 ? true : false}
-                                onChange={(val) => {
-                                    if (val) row.status = 1
-                                    else row.status = 2
-                                    if (this.state.adIndex == 1) {
-                                        this.adRightKeyUpdateState(row)
-                                    } else if (this.state.adIndex == 2) {
-                                        this.screenUpdateState(row)
-                                    } else {
-                                        this.updateInfoGroup(row)
-                                    }
-                                }}
-                            />
                         )
                     }
                 },
@@ -137,147 +111,109 @@ export default class adCreateModal extends Component {
                     render: (rowValue, row, index) => {
                         return (
                             <div>
-                                {
-                                    this.state.adIndex != 3 &&
-                                    <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
-                                        if (this.state.adIndex == 1) {
-                                            this.adRightKeyCopy(row)
-                                        } else {
-                                            this.screenCopy(row)
-                                        }
-                                    }}>复制</Button>
-                                }
-
                                 <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
                                     console.log(row)
-                                    // this.onCreateClick(row)
+                                    console.log("row.name",row.name)
+                                    //this.getProgrames(row.name)
                                     this.setState({
-                                        adIndex: this.state.adIndex,
                                         materialShow: true,
-                                        source: "upload",
+                                        editType:2,
                                         currentItem: row,
                                     }, () => {
                                         let obj = JSON.parse(JSON.stringify(row))
-                                        obj.time = [moment(obj.startTime), moment(obj.endTime)]
-                                        obj.djsEndTime = obj.djsEndTime ? moment(obj.djsEndTime) : ""
-                                        obj.status = obj.status == 1 ? true : false
-                                        if (this.state.adIndex != 3) {
-                                            this.formRef.current.setFieldsValue(obj)
+                                        if(obj.startTime==0 && obj.endTime==0){
+                                            obj.time = ["", ""]
+                                        }else{
+                                            obj.time = [moment(obj.startTime), moment(obj.endTime)]
                                         }
+                                        this.formRefTwo.current.setFieldsValue(obj)
                                         this.forceUpdate()
                                     })
                                 }
                                 }> 编辑</Button>
-                                <Button size='small' style={{ marginLeft: 5 }} onClick={() => {
-                                    if (this.state.adIndex == 1) {
-                                        this.adRightKeyDel(row.id)
-                                    } else if (this.state.adIndex == 2) {
-                                        this.screenDel(row.id)
-                                    } else {
-                                        this.delInfoGroup(row.id)
-                                    }
-                                }}>删除</Button>
+                                <Button size='small' style={{ marginLeft: 5 }} onClick={() => {this.deleteData(row)}}>删除</Button>
                             </div >
                         );
                     }
                 },
-            ]
-
+            ],
+            currentType:0,
+            isOpenModal:false,
+            allList:[],   // 所有的列表数据
+            showList:[],  // 当前显示的数据
+            titleAdd:"",  // 是否是新增title
+            tieleCurrentItem:"",  // 修改title,当前的数据
+            editType:1,  // 列表数据是否新增   1 是新增 2是编辑
+            selectProps: {
+                optionFilterProp: "children",
+                filterOption(input, option) {
+                    return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                },
+                showSearch() {
+                    console.log('onSearch')
+                }
+            },
+            searchProgram:[],  // 节目列表
+            showSortTable:false,  // 排序的弹框
+            sortTable:[], // 排序列表
+            sortTableBefore:[],
+            activityIndex: null,
+            skuColumns:[
+                {
+                    title: "顺序",
+                    dataIndex: "sequence",
+                    key: "sequence",
+                    render: (rowValue, row, index) => {
+                        return (
+                            this.state.activityIndex == index ?
+                                <div><InputNumber defaultValue={rowValue} step={10} min={0} onBlur={(e) => {
+                                    console.log(e)
+                                    console.log("row",row)
+                                    //this.sortChannelSport(e.target.value, row)
+                                    let _list=this.state.sortTableBefore.map(item=>{
+                                        if(item.indexId==row.indexId){
+                                            item.sequence=e.target.value*1
+                                        }
+                                        return item
+                                    })
+                                    console.log("_list",_list)
+                                    this.setState({
+                                        sortTableBefore:_list
+                                    },()=>{
+                                        console.log("this.state.sortTableBefore",this.state.sortTableBefore)
+                                    })
+                                    
+                                }}></InputNumber></div>
+                                :
+                                <div style={{ color: "#1890ff" }} onClick={() => this.setState({ activityIndex: index })}>{rowValue}</div>
+                        )
+                    }
+                },
+                {
+                    title: "tab名称",dataIndex: "name",key: "name",
+                },
+            ],
         }
     }
+    
     render() {
         let that = this;
-        let { table_title, lists, materialShow, adIndex } = that.state;
+        let { titleTypes,currentType,table_title, searchProgram, materialShow, format,showList ,editType,selectProps,sortTable,skuColumns} = that.state;
 
         return (
             <div>
                 <Card title={
                     <>
-                        {/* <Breadcrumb>
-                            <Breadcrumb.Item>素材库</Breadcrumb.Item>
-                        </Breadcrumb> */}
                         <div style={{ display: "flex" }}>
-                            <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center' }}>
-                                <div>类型:</div>
-                                {/* <Select allowClear placeholder="请选择类型" defaultValue={1}
-                                    onChange={(val) => {
-                                        this.setState({
-                                            adIndex: val,
-                                            page: 1
-                                        }, () => {
-                                            this.refreshList(val)
-                                        })
-                                    }}
-                                >
-                                    <Option value={1} key={1}>右键运营位广告</Option>
-                                    <Option value={2} key={2}>屏显广告</Option>
-                                </Select> */}
-                                <Radio.Group defaultValue="1" size="large"
-                                    onChange={(val) => {
-                                        let arr = table_title
-                                        if (val.target.value == 3) {//信息流素材自定义表头
-                                            arr = table_title.filter(item => item.key != "iconPicUrl" && item.key != "picUrl" && item.key != "sortData")
-                                            if (arr[2].dataIndex != "mode") {
-                                                arr.splice(2, 0, {
-                                                    title: '广告模式', dataIndex: 'mode', key: 'mode', width: 300,
-                                                    render: (rowValue, row, index) => {
-                                                        return (
-                                                            <div>{rowValue == 1 ? "定向" : rowValue == 2 ? "不定向" : "未知"}</div>
-                                                        )
-                                                    }
-                                                })
-                                            }
-
-                                        } else {
-                                            arr = table_title.filter(item => item.key != "mode")
-                                            if (arr[2].dataIndex != "iconPicUrl") {
-                                                arr.splice(2, 0, {
-                                                    title: '缩略图', dataIndex: 'iconPicUrl', key: 'iconPicUrl', width: 150,
-                                                    render: (rowValue, row, index) => {
-                                                        return (<Image width={50} src={rowValue} />)
-                                                    }
-                                                })
-                                            }
-                                            if (arr[3].dataIndex != "picUrl") {
-                                                arr.splice(3, 0, {
-                                                    title: '背景图', dataIndex: 'picUrl', key: 'picUrl', width: 150,
-                                                    render: (rowValue, row, index) => {
-                                                        return (<Image width={50} src={rowValue} />)
-                                                    }
-                                                })
-                                            }
-                                            if (arr[4].dataIndex != "sortData") {
-                                                arr.splice(4, 0, {
-                                                    title: '排序', dataIndex: 'sortData', key: 'sortData', width: 150,
-                                                })
-                                            }
-                                        }
-                                        this.setState({
-                                            adIndex: val.target.value,
-                                            page: 1,
-                                            table_title: arr
-                                        }, () => {
-                                            this.refreshList(val.target.value)
-                                        })
-                                    }}>
-                                    <Radio.Button value="1">右键运营位广告</Radio.Button>
-                                    <Radio.Button value="2">屏显广告</Radio.Button>
-                                    <Radio.Button value="3">信息流广告</Radio.Button>
-                                </Radio.Group>
-                            </div>
-                            <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center' }}>
-                                <div>广告名称:</div>
-                                <Input.Search allowClear placeholder="请输入广告名称"
-                                    onSearch={(val) => {
-                                        this.setState({
-                                            page: 1,
-                                            searchWords: val
-                                        }, () => {
-                                            this.refreshList(this.state.adIndex)
-                                        })
-
-                                    }}
-                                />
+                            <div className="everyBody" style={{ display: "flex", alignItems: 'center' }}>
+                                {
+                                    titleTypes.map((item,index)=>{
+                                        return (
+                                            <div className={`everyBody-item ${index==currentType?"everyBody-item-active":""}`} key={index} onClick={()=>{this.changeType(index)}}>{item.name}</div>
+                                        )
+                                    })
+                                }
+                     
                             </div>
                         </div>
 
@@ -285,179 +221,171 @@ export default class adCreateModal extends Component {
                 }
                     extra={
                         <div>
-                            <Button type="primary" onClick={() => {
+                            <Button type="primary" onClick={()=>{
+                                this.setState({
+                                    showSortTable:true
+                                },()=>{
+                                    this.getSort()
+                                })
+                            }}>tab顺序</Button>
+                            <Button type="primary" style={{ marginLeft: "10px" }} onClick={()=>{
+                                this.getTitle();
+                            }}>标题配置</Button>
+                            <Button type="primary" style={{ margin: "0 10px" }} onClick={() => {
                                 this.setState({
                                     currentItem: {},
-                                    adIndex: this.state.adIndex,
                                     materialShow: true,
-                                    source: "add",
+                                    editType: 1,
                                 }, () => {
-                                    if (this.state.adIndex != 3) {
-                                        this.formRef.current.resetFields()
-                                    }
+                                    this.formRefTwo.current.resetFields()
                                     this.forceUpdate()
                                 })
-                            }}>新建</Button>
-                            <MySyncBtn type={12} name={'同步缓存'} />
+                            }}>新增</Button>
+                            <Button type="primary" onClick={this.syncData.bind(this)}>同步缓存</Button>
                         </div>
                     }
                 >
                     <Table
                         columns={table_title}
-                        dataSource={lists}
+                        dataSource={showList}
                         pagination={false}
-                        scroll={{ x: 1500, y: '70vh' }}
-                        pagination={{
-                            current: this.state.page,
-                            pageSize: this.state.pageSize,
-                            total: this.state.total,
-                            onChange: this.changeSize,
-                        }}
+                        scroll={{ x: 1500 }}
                     />
                 </Card>
-                <Modal visible={materialShow} title="素材" width={1500} transitionName="" maskClosable={false}
+                <Modal visible={this.state.isOpenModal}  onCancel={() => {this.setState({isOpenModal:false})}}  footer={null}>
+                    {
+                        <Form name="mini" ref = {this.formRef} onFinish={this.submitForm.bind(this)}>
+                            <Form.Item label="标题配置" name="titleCategory">
+                                <Radio.Group
+                                    onChange={(e) => {
+                                        console.log(e)
+                                        this.formRef.current.setFieldsValue("titleCategory",e.target.value);
+                                        this.forceUpdate()
+                                    }}
+                                >
+                                    <Radio value={1}>文字</Radio>
+                                    <Radio value={2}>图片</Radio>
+                                </Radio.Group>
+                            </Form.Item>
+                            {
+                                this.formRef && this.formRef.current &&
+                                <div>
+                                    {
+                                        this.formRef.current.getFieldValue("titleCategory")==1 &&
+                                        <Form.Item name="title" rules={[{ required: true, message: '请填写标题名称' }]}>
+                                            <Input placeholder="请填写标题名称" />
+                                        </Form.Item>  ||
+                                        this.formRef.current.getFieldValue("titleCategory")==2 &&
+                                        <Form.Item label="上传图片" name="title" valuePropName="fileList" getValueFromEvent={normFile} >
+                                            <ImageUpload 
+                                            //getUploadFileUrl={this.getUploadFileUrl.bind(this)} 
+                                            getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('title', file, newItem) }}
+                                            imageUrl={this.formRef.current && this.formRef.current.getFieldValue("title")}/>
+                                        </Form.Item>
+                                    }
+                                </div>
+                            }
+                            
+                            <Form.Item {...this.state.tailLayout}>
+                                <Button style={{ margin: "0 20px" }} onClick={()=>{ this.setState({isOpenModal:false})}}>取消</Button>
+                                <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>提交</Button>
+                            </Form.Item>
+                        </Form>
+                    }
+                </Modal>
+                <Modal visible={materialShow} title={editType==1?"新增":"编辑"}  width={800} transitionName="" maskClosable={false}
                     onCancel={() => that.onModalCancelClick()}
                     footer={null}
                     zIndex={888}
                 >
                     {
-                        //adIndex == 3 &&
-                        // <div><InfoDialog table_data={this.state.currentItem} materialShow={materialShow} onModalCancelClick={(e) => this.onModalCancelClick(e)} /></div>
-                    }
-                    {
-                        adIndex != 3 &&
-                        <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRef} onFinish={this.onModalConfirmClick.bind(this)}>
-                            {
-                                (that.formRef && that.formRef.current) &&
-                                    adIndex == 1 ?
-                                    <div>
-                                        <Form.Item label='名称' name='name' rules={[{ required: true }]}>
-                                            <Input className="base-input-wrapper" placeholder="请输入广告名称" />
-                                        </Form.Item>
-                                        <Form.Item label='时长（s）' name='duration' rules={[{ required: true }]}>
-                                            <InputNumber min={0} />
-                                        </Form.Item>
-                                        <Form.Item label='类型' name='type' rules={[{ required: true }]}>
-                                            <Select placeholder="请选择类型" onChange={() => this.forceUpdate()}>
-                                                {this.state.typeList.map((item, index) => {
-                                                    return <Option value={item.key} key={index}> {item.name}</Option>
-                                                })}
-                                            </Select>
-                                        </Form.Item>
+                        <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={that.formRefTwo} onFinish={this.onModalConfirmClick.bind(this)}>
+                            <div>
+                                <div  className='form-g'>
+                                    <Form.Item  style={{marginLeft:"70px"}} label='剧集名称' name='name' rules={[{ required: true }]}>
+                                        <Select className="base-input-wrapper" allowClear {...selectProps} placeholder="频道搜索" onChange={(e)=>{
+                                            console.log("eeeeee",e);
+                                            let arr=searchProgram.filter(item=>item.title==e);
+                                            console.log("arr",arr);
+                                            if(arr.length>0){
+                                                this.formRefTwo.current.setFieldsValue({ 
+                                                    "name":arr[0].title,
+                                                    "title": arr[0].subTitle,
+                                                    "cover": arr[0].imgX,
+                                                    "type":arr[0].type,
+                                                    "vid":arr[0].type==10?arr[0].cId:arr[0].vId,
+                                                    "kind":arr[0].kind,
+                                                    "category":arr[0].categoryType,
+                                                    "keyword":arr[0].keyword
+                                                });
+                                                this.forceUpdate();
+                                            }
+                                        }} onSearch={(searchKey) => {
+                                            console.log("searchKeysearchKey",searchKey);
+                                            if (privateData.inputTimeOutVal) {
+                                                clearTimeout(privateData.inputTimeOutVal);
+                                                privateData.inputTimeOutVal = null;
+                                            }
+                                            privateData.inputTimeOutVal = setTimeout(() => {
+                                                if (!privateData.inputTimeOutVal) return;
+                                                this.getProgrames(searchKey)
+                                            }, 800)
+                                        }}>
+                                            {
+                                                searchProgram.map((item, index) => {  // + "----" + item.id
+                                                    return <Option value={item.title} key={item.id}>{item.title}</Option>
+                                                })
+                                            }
+                                        </Select>
+                                        
+                                    </Form.Item>
+                                    <div className='right-text'>
                                         {
-                                            that.formRef.current.getFieldValue("type") == 4
-                                            &&
-                                            <Form.Item label='支付套餐' name='pCode'>
-                                                <Select placeholder="请选择支付套餐">
-                                                    {this.state.rechargeList.map((item, index) => {
-                                                        return <Option value={item.skuCode} key={index}> {item.name}</Option>
-                                                    })}
-                                                </Select>
-                                            </Form.Item>
+                                            this.formRefTwo.current && this.formRefTwo.current.getFieldValue("category") &&
+                                            <span className='mar-left-10'>{this.getProgrameType(this.formRefTwo.current.getFieldValue("category"))}</span>
                                         }
-                                        <Form.Item label='排序' name='sortData' rules={[{ required: true }]}>
-                                            <InputNumber min={0} />
-                                        </Form.Item>
-                                        <Form.Item label='倒计时结束时间' name="djsEndTime">
-                                            <DatePicker showTime />
-                                        </Form.Item>
-                                        <Form.Item label='是否显示距离今日结束时间' name='jljr'>
-                                            <Select placeholder="是否显示距离今日结束时间">
-                                                <Option value={1} key={1}> 是</Option>
-                                                <Option value={0} key={0}> 否</Option>
-                                            </Select>
-                                        </Form.Item>
-                                        <Form.Item label='状态' name='status' valuePropName="checked">
-                                            <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
-                                        </Form.Item>
-                                        <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
-                                            <div>
-                                                <MyImageUpload
-                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
-                                                    imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
-                                                <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('picUrl')} key={that.getUploadFileImageUrlByType('picUrl') || ""}
-                                                    onChange={(e) => {
-                                                        this.getNewUrl("picUrl", e.target.value)
-                                                    }} />
-                                            </div>
-                                        </Form.Item>
-                                        <Form.Item label="缩略图" name="iconPicUrl" rules={[{ required: true }]}>
-                                            <div>
-                                                <MyImageUpload
-                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('iconPicUrl', file, newItem) }}
-                                                    imageUrl={that.getUploadFileImageUrlByType('iconPicUrl')} />
-                                                <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('iconPicUrl')} key={that.getUploadFileImageUrlByType('iconPicUrl') || ""}
-                                                    onChange={(e) => {
-                                                        this.getNewUrl("iconPicUrl", e.target.value)
-                                                    }}
-                                                />
-                                            </div>
-                                        </Form.Item>
-                                        <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
-                                            <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
-                                        </Form.Item>
-                                        <Form.Item {...this.state.tailLayout}>
-                                            <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
-                                            <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
-                                                确定
-                                            </Button>
-                                        </Form.Item>
+                                        {
+                                            this.formRefTwo.current && this.formRefTwo.current.getFieldValue("type") && this.formRefTwo.current.getFieldValue("type") == 10 &&
+                                            <span className='mar-left-10'>合集</span> ||
+                                            this.formRefTwo.current && this.formRefTwo.current.getFieldValue("type") && this.formRefTwo.current.getFieldValue("type") == 20 &&
+                                            <span className='mar-left-10'>分集</span> 
+                                        }
                                     </div>
-                                    :
-
-                                    <div>
-                                        <Form.Item label='名称' name='name' rules={[{ required: true }]}>
-                                            <Input className="base-input-wrapper" placeholder="请输入广告名称" />
-                                        </Form.Item>
-                                        <Form.Item label='排序' name='sortData' rules={[{ required: true }]}>
-                                            <InputNumber min={0} />
-                                        </Form.Item>
-                                        <Form.Item label="上下线时间" name='time' rules={[{ required: true }]}>
-                                            <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
-                                        </Form.Item>
-                                        <Form.Item label='状态' name='status' valuePropName="checked">
-                                            <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
-                                        </Form.Item>
-                                        <Form.Item label="背景图" name="picUrl" rules={[{ required: true }]}>
-
-                                            <div>
-                                                <MyImageUpload
-                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('picUrl', file, newItem) }}
-                                                    imageUrl={that.getUploadFileImageUrlByType('picUrl')} />
-                                                <Input.TextArea defaultValue={that.getUploadFileImageUrlByType('picUrl')} key={that.getUploadFileImageUrlByType('picUrl')}
-                                                    onChange={(e) => {
-                                                        this.getNewUrl("picUrl", e.target.value)
-                                                    }}
-                                                />
-                                            </div>
-                                        </Form.Item>
-                                        {/* <Form.Item label="缩略图" name="iconPicUrl" rules={[{ required: true }]}>
-                                                <MyImageUpload
-                                                    getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('iconPicUrl', file, newItem) }}
-                                                    imageUrl={that.getUploadFileImageUrlByType('iconPicUrl')} />
-                                            </Form.Item> */}
-                                        <Form.Item label="类型" name="adType" rules={[{ required: true }]}>
-                                            <Select placeholder="类型">
-                                                <Option value={1} key={1}>普通级别</Option>
-                                                <Option value={2} key={2}>宣传内容</Option>
-                                            </Select>
-                                        </Form.Item>
-                                        <Form.Item {...this.state.tailLayout}>
-                                            <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
-                                            <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
-                                                确定
-                                            </Button>
-                                        </Form.Item>
-                                    </div>
-
-
-
-                            }
+                                </div>
+                                <Form.Item label="副标题" name="title" >
+                                    <Input className="base-input-wrapper"  />
+                                </Form.Item>
+                                <Form.Item label="封面图" name="cover">
+                                    <MyImageUpload 
+                                        //getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('title', file, newItem,"formRefTwo") }}
+                                        getUploadFileUrl={(file, newItem) => { that.getUploadFileUrlTwo('cover', file, newItem) }}
+                                        imageUrl={this.formRefTwo.current && this.formRefTwo.current.getFieldValue("cover")} />
+                                </Form.Item>
+                                <Form.Item label="上下线时间" name='time'>
+                                    <RangePicker format={format} className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
+                                </Form.Item>
+                                <Form.Item label='列表位置' name='location' rules={[{ required: true }]}>
+                                    <InputNumber min={1} max={6} placeholder="输入1~6"/>
+                                </Form.Item>
+                                <Form.Item {...this.state.tailLayout}>
+                                    <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
+                                    <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                                        确定
+                                    </Button>
+                                </Form.Item>
+                            </div>
                         </Form>
                     }
-
-
-
+                </Modal>
+                <Modal visible={this.state.showSortTable}  onCancel={() => {this.cancenSort()}}  footer={null} width={500}>
+                    <Table bordered dataSource={sortTable} columns={skuColumns} pagination={false}>
+                    </Table>
+                    <div className='btns-modal'>
+                        <Button onClick={() => { this.cancenSort() }}>取消</Button>
+                        <Button type="primary" style={{ margin: "0 20px" }} onClick={()=>{this.changeSort()}}>
+                            确定
+                        </Button>
+                    </div>
                 </Modal>
             </div>
         )
@@ -465,321 +393,261 @@ export default class adCreateModal extends Component {
 
     componentDidMount() {
         let that = this;
-        that.refreshList(1);
+        that.getMangoList();
+        that.getProgrames("");
     }
-    getType(val, index) {
-        if (index == 1) {
-            let arr = this.state.typeList.filter(item => item.key == val)
-            if (arr.length > 0) {
-                return arr[0].name
-            } else {
-                return "未知"
-            }
-        } else {
-            let arr = this.state.type.filter(item => item.key == val)
-            if (arr.length > 0) {
-                return arr[0].value
-            } else {
-                return "未知"
-            }
-        }
-
-    }
-    getNewUrl(name, val) {
-        if (privateData.inputTimeOutVal) {
-            clearTimeout(privateData.inputTimeOutVal);
-            privateData.inputTimeOutVal = null;
-        }
-        privateData.inputTimeOutVal = setTimeout(() => {
-            if (!privateData.inputTimeOutVal) return;
-            this.formRef.current.setFieldsValue({ [name]: val })
-            this.forceUpdate()
-        }, 1000)
-    }
-    changeSize = (page, pageSize) => {
-        // 分页获取
+    cancenSort=()=>{  // 取消排序
         this.setState({
-            page,
-            pageSize
-        }, () => {
-            this.refreshList(this.state.adIndex)
+            showSortTable:false,
+            activityIndex:null
         })
-
     }
-
-    //弹出框取消按钮被点击
-    onModalCancelClick(e) {
-        let that = this;
-        console.log(e, "e")
-        if (e == 3) {
-            this.refreshList(3)
+    getSort=()=>{   // 获取排序列表
+        let params={
+            key:"MANGOTV.TAB"
         }
-        if (this.state.adIndex != 3) {
-            this.formRef.current.resetFields()
+        console.log(1234)
+        getSortList(params).then(res=>{
+            console.log("MANGOTV.TAB",res);
+            this.setState({
+                //showSortTable:true,
+                sortTable:res.data.tabs,
+                sortTableBefore:res.data.tabs
+            })
+        })
+    }
+    changeSort=()=>{
+        let params={
+            //key:"MANGOTV.TAB",
+            tabs:this.state.sortTableBefore
         }
-        that.setState({
+        updateMangoSort("MANGOTV.TAB",params).then(res=>{
+            console.log("addMangoUpdate",res)
+            message.success("修改成功")
+            this.cancenSort();
+        }).catch(err=>{
+            message.success(err)
+        })
+    }
+    getProgrames=(_title)=>{   // 模糊搜索视频库
+        let params={
+            title:_title,
+            page:{
+                currentPage:1,
+                pageSize:30
+            }
+        }
+        addMangosearch(params).then(res=>{
+            console.log("addMangosearch",res)
+            this.setState({
+                searchProgram:res.data.data
+            })
+        })
+    }
+    getMangoList=()=>{   // 获取数据列表
+        let params={
+            key:"MANGOTV.RESOURCE"
+        }
+        getMangoList(params).then(res=>{
+            console.log("MANGOTV.RESOURCE",res);
+            let _list=res.data.map(item=>{
+                if(item.startTime){
+                    item.startTime=item.startTime*1000
+                }
+                if(item.endTime){
+                    item.endTime=item.endTime*1000
+                }
+                return item
+            });
+            this.setState({
+                
+                allList:_list,
+                showList:_list.filter(item=> item.commandType==this.state.currentType)
+            },()=>{
+                console.log("this.state.showList",this.state.showList)
+            })
+        })
+    }
+    getTitle=()=>{   // 获取title
+        let params={
+            key:"MANGOTV.MODULE"
+        }
+        getMangoList(params).then(res=>{
+            console.log("MANGOTV.RESOURCE",res);
+            let arr=[];
+            let obj={};
+            let addStatus
+            arr=res.data.filter(item=>item.titleType==this.state.currentType);
+            if(arr.length>0){
+                obj=arr[0];
+                addStatus=false
+                this.setState({
+                    tieleCurrentItem:arr[0]
+                })
+            }else{
+                addStatus=true
+                obj={
+                    title:"",
+                    titleCategory:1,
+                    titleType:this.state.currentType
+                }
+            }
+            console.log("getMangoList=obj",obj)
+            this.setState({
+                isOpenModal:true,
+                titleAdd:addStatus
+            },()=>{
+                this.formRef.current.resetFields();
+                this.formRef.current.setFieldsValue(obj)
+                this.forceUpdate()
+            })
+        })
+    }
+    getProgrameType=(type)=>{
+        console.log("typegetProgrameType",type)
+        let arr=this.state.typess.filter(item=>item.key==type)
+        if(arr.length>0){
+            return arr[0].value
+        }else{
+            return ""
+        }
+    }
+    changeType=(type)=>{   //   切换type
+        if(type!=this.state.currentType){
+            this.setState({
+                currentType:type
+            },()=>{
+                this.getMangoList();
+            })
+        }
+    }
+    submitForm(obj){  // 修改title信息
+        console.log("submitForm",obj);
+        let params={
+            ...obj,
+            titleType:this.state.currentType,
+            key:"MANGOTV.MODULE"
+        }
+        console.log("params",params);
+        if(this.state.titleAdd==true){   // 新增title配置
+            addMangoList(params).then(res=>{
+                console.log("addMangoList",res)
+                this.setState({isOpenModal:false})
+                message.success("设置成功")
+            })
+        }else{  // 修改title配置
+            params.indexId=this.state.tieleCurrentItem.indexId;
+            addMangoUpdate(params).then(res=>{
+                console.log("addMangoUpdate",res)
+                this.setState({isOpenModal:false})
+                message.success("设置成功")
+            })
+        }
+    }
+    syncData=()=>{   // 同步缓存
+        let _list=["MANGOTV.RESOURCE","MANGOTV.MODULE","MANGOTV.TAB"]
+        for(let i=0;i<_list.length;i++){
+            let params={
+                key:_list[i]
+            }
+            getMangoSync(params).then(res=>{
+                console.log("getMangoSync",res)
+                if(_list[i]=="MANGOTV.TAB"){
+                    message.success("缓存同步成功");
+                }
+            })
+        }
+    }
+    deleteData=(obj)=>{
+        console.log("deleteData",obj)
+        Modal.confirm({
+            title: `确认删除该条数据吗？`,
+            onOk:()=>{
+                let params={
+                    key:"MANGOTV.RESOURCE",
+                    id:obj.indexId
+                }
+                delMango(params).then(res=>{
+                    console.log(res);
+                    message.success("删除成功");
+                    this.getMangoList();
+                })
+            },
+            onCancel: ()=>{
+            }
+        })
+    }
+    onModalCancelClick() {   //弹出框取消按钮被点击
+        this.formRefTwo.current.resetFields();
+        this.setState({
             materialShow: false,
         })
     }
-
     //弹出框确定按钮被点击
     onModalConfirmClick(val) {
-        let that = this;
-        that.setState({
-            materialShow: false
-        })
-        if (this.state.adIndex == 1) {
-            if (this.state.source == "upload") {
-                this.adRightKeyUpdate(val)
-            } else {
-                this.addAdRightKey(val)
-            }
-        } else {
-            if (this.state.source == "upload") {
-                this.screenUpdate(val)
-            } else {
-                this.addScreen(val)
-            }
+        console.log("val",val)
+        //console.log("parseInt(val.time[0].valueOf())",parseInt(val.time[0].valueOf()))
+        let obj=JSON.parse(JSON.stringify(val))
+        if(obj.cover==undefined){
+            obj.cover=""
         }
-
-        console.log(val)
-    }
-    refreshList(index) {
-        if (index == 1) {
-            this.requestAdRightKey()
-            this.requestProductSkuList()
-        } else if (index == 2) {
-            this.getScreen()
-        } else {
-            this.getInfoGroup()
+        if(obj.title==undefined){
+            obj.title=""
+        }
+        if(this.state.editType==1){   // 新增
+            let params={
+                ...this.formRefTwo.current.getFieldValue(),
+                ...obj,
+                key:"MANGOTV.RESOURCE",
+                startTime: (val.time && val.time[0]) ? parseInt(val.time[0].valueOf()/1000) : 0,
+                endTime: (val.time && val.time[1]) ? parseInt(val.time[1].valueOf()/1000) : 0,
+                commandType:this.state.currentType
+            }
+            console.log("params",params)
+            addMangoList(params).then(res=>{
+                console.log("addMangoList",res)
+                message.success("添加成功");
+                this.onModalCancelClick();
+                this.getMangoList();
+            })
+        }else{   // 编辑
+            let params={
+                ...this.state.currentItem,
+                ...this.formRefTwo.current.getFieldValue(),
+                ...obj,
+                key:"MANGOTV.RESOURCE",
+                startTime: (val.time && val.time[0]) ? parseInt(val.time[0].valueOf()/1000) : val.startTime,
+                endTime: (val.time && val.time[1]) ? parseInt(val.time[1].valueOf()/1000) : val.endTime,
+            }
+            console.log("params",params)
+            addMangoUpdate(params).then(res=>{
+                console.log("addMangoUpdate",res)
+                message.success("编辑成功");
+                this.onModalCancelClick();
+                this.getMangoList();
+            })
         }
     }
-    requestAdRightKey() {
-        let that = this;
-        let { table_box } = that.state;
-        console.log(table_box, "table_box")
-        let obj = {
-            page: { currentPage: this.state.page, pageSize: this.state.pageSize },
-            name: this.state.searchWords
-        };
-        requestAdRightKey(obj).then(res => {
-            that.setState({
-                lists: res.data || [],
-                total: res.page ? res.page.totalCount : 0
-            })
-            this.forceUpdate()
-        })
-    }
-    getScreen() {
-        let that = this;
-        let obj = {
-            page: { currentPage: this.state.page, pageSize: this.state.pageSize },
-            name: this.state.searchWords
-        };
-        getScreen(obj).then(res => {
-            that.setState({
-                lists: res.data || [],
-                total: res.page ? res.page.totalCount : 0
-            })
-            this.forceUpdate()
-        })
-    }
-    getInfoGroup() {
-        let that = this;
-        let obj = {
-            page: { currentPage: this.state.page, pageSize: this.state.pageSize },
-            name: this.state.searchWords
-        };
-        getInfoGroup(obj).then(res => {
-            that.setState({
-                lists: res.data || [],
-                total: res.page ? res.page.totalCount : 0
-            })
-            this.forceUpdate()
-        })
-    }
-    requestProductSkuList() {
-        let that = this;
-        let obj = {
-            page: { isPage: 9 },
-            productCategoryType: 10
-        };
-        requestProductSkuList(obj).then(res => {
-            console.log(res.data)
-            if (res.data.errCode == 0) {
-                that.setState({
-                    rechargeList: res.data.data
-                })
-            }
 
-
-        })
-    }
     //获取上传文件
     getUploadFileUrl(type, file, newItem) {
-        // console.log(type, file,newItem,"newItem")
+        console.log(type, file,newItem,"newItem")
         let that = this;
         let image_url = file;
         // let obj = {};
         // obj[type] = image_url;
+        //that.formRef.current.setFieldsValue({ [type]: image_url });
         that.formRef.current.setFieldsValue({ [type]: image_url });
         that.forceUpdate();
     }
-    //获取上传文件图片地址 
-    getUploadFileImageUrlByType(type) {
+    //获取上传文件
+    getUploadFileUrlTwo(type, file, newItem) {
+        console.log(type, file,newItem,"newItem")
         let that = this;
-        let image_url = that.formRef.current && that.formRef.current.getFieldValue(type);
-        return image_url ? image_url : '';
-    }
-    adRightKeyUpdateState(val) {
-        let params = {
-            ...val,
-        }
-        adRightKeyUpdate(params).then(res => {
-
-        })
-    }
-    screenUpdateState(val) {
-        let params = {
-            ...val,
-        }
-        screenUpdate(params).then(res => {
-
-        })
-    }
-    adRightKeyUpdate(val) {
-        let params = {
-            ...this.state.currentItem,
-            ...val,
-            startTime: val.time ? val.time[0].valueOf() : val.startTime,
-            endTime: val.time ? val.time[1].valueOf() : val.endTime,
-            djsEndTime: val.djsEndTime.valueOf(),
-            status: val.status ? 1 : 2
-        }
-        delete params.time
-        adRightKeyUpdate(params).then(res => {
-            message.success("修改成功")
-            this.refreshList(1)
-        })
-    }
-    screenUpdate(val) {
-        let params = {
-            ...this.state.currentItem,
-            ...val,
-            startTime: val.time ? val.time[0].valueOf() : val.startTime,
-            endTime: val.time ? val.time[1].valueOf() : val.endTime,
-            status: val.status ? 1 : 2
-        }
-        delete params.time
-        screenUpdate(params).then(res => {
-            message.success("修改成功")
-            this.refreshList(2)
-        })
-    }
-    screenDel(id) {
-        Modal.confirm({
-            title: '删除此屏显素材',
-            content: '确认删除？',
-            onOk: () => {
-                screenDel({ id: id }).then(res => {
-                    message.success("删除成功")
-                    this.refreshList(2)
-                })
-            },
-            onCancel: () => {
-
-            }
-        })
-    }
-    delInfoGroup(id) {
-        Modal.confirm({
-            title: '删除此信息流素材',
-            content: '确认删除？',
-            onOk: () => {
-                delInfoGroup({ id: id }).then(res => {
-                    message.success("删除成功")
-                    this.refreshList(3)
-                })
-            },
-            onCancel: () => {
-
-            }
-        })
-    }
-    adRightKeyDel(id) {
-        Modal.confirm({
-            title: '删除此右键运营位素材',
-            content: '确认删除？',
-            onOk: () => {
-                adRightKeyDel({ id: id }).then(res => {
-                    message.success("删除成功")
-                    if (this.state.lists.length == 1 && this.state.page > 1) {
-                        this.setState({
-                            page: this.state.page - 1
-                        }, () => {
-                            this.refreshList(1)
-                        })
-                    } else {
-                        this.refreshList(1)
-                    }
-
-                })
-            },
-            onCancel: () => {
-
-            }
-        })
-    }
-    addAdRightKey(val) {
-        let param = {
-            ...val,
-            startTime: val.time[0].valueOf(),
-            endTime: val.time[1].valueOf(),
-            djsEndTime: val.djsEndTime ? val.djsEndTime.valueOf() : "",
-            status: val.status ? 1 : 2
-        }
-        addAdRightKey(param).then(res => {
-            message.success("新增成功")
-            this.refreshList(1)
-        })
-    }
-    addScreen(val) {
-        let param = {
-            ...val,
-            startTime: val.time[0].valueOf(),
-            endTime: val.time[1].valueOf(),
-            status: val.status ? 1 : 2
-        }
-        addScreen(param).then(res => {
-            message.success("新增成功")
-            this.refreshList(2)
-        })
-    }
-    adRightKeyCopy(val) {
-        let param = {
-            ...val,
-        }
-        adRightKeyCopy(param).then(res => {
-            message.success("复制成功")
-            this.refreshList(1)
-        })
-    }
-    screenCopy(val) {
-        let param = {
-            ...val,
-        }
-        screenCopy(param).then(res => {
-            message.success("复制成功")
-            this.refreshList(2)
-        })
-    }
-    updateInfoGroup(val) {
-        let params = {
-            ...val,
-        }
-        updateInfoGroup(params).then(res => {
-            message.success("更新成功")
-            this.onModalCancelClick(3)
-        })
+        let image_url = file;
+        // let obj = {};
+        // obj[type] = image_url;
+        that.formRefTwo.current.setFieldsValue({ [type]: image_url });
+        that.forceUpdate();
     }
 }

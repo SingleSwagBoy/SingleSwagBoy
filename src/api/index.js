@@ -610,6 +610,16 @@ export const requestApkConfigDelete = (params) => { return request2.get(`${baseU
 export const requestApkConfigList = (params) => { return request2.get(`${baseUrl}/mms/apk/list`, { params: params }); };              //apk配置列表
 
 
+//芒果专区
+export const getMangoList = (params) => { return request2.get(`${baseUrl}/mms/config/common/list`,{params:params}); };                //芒果专区-相关模块数据-获取
+export const addMangoList = (params) => { return request2.post(`${baseUrl}/mms/config/common/add?key=${params.key}`,params); };       //芒果专区-相关模块数据-新建
+export const addMangoUpdate = (params) => { return request2.post(`${baseUrl}/mms/config/common/update?key=${params.key}&id=${params.indexId}`,params); };          //芒果专区-相关模块数据-更新
+export const delMango = (params) => { return request2.post(`${baseUrl}/mms/config/common/delete?key=${params.key}&id=${params.id}`,params); };          //芒果专区-相关模块数据-删除
+export const getMangoSync = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_slice?key=${params.key}`); };          //芒果专区-相关模块数据-缓存同步 ,{params:params}
+export const addMangosearch = (params) => { return request.post(`${baseUrl}/mms/mgtv/video/searchAll`,params); };       //媒资库视频模糊搜索
+export const updateMangoSort = (type,params) => { return request2.post(`${baseUrl}/mms/config/common/set?key=${type}`,params); };       //芒果专区-相关模块数据-新建
+export const getSortList = (params) => { return request2.get(`${baseUrl}/mms/config/common/get`,{params:params}); };                //芒果专区-相关模块数据-获取
+
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

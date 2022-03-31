@@ -209,7 +209,7 @@ export default class adCreateModal extends Component {
                                 {
                                     titleTypes.map((item,index)=>{
                                         return (
-                                            <div className={`everyBody-item ${index==currentType?"everyBody-item-active":""}`} key={index} onClick={()=>{this.changeType(index)}}>{item.name}</div>
+                                            <div className={`everyBody-item ${item.key==currentType?"everyBody-item-active":""}`} key={index} onClick={()=>{this.changeType(item.key)}}>{item.name}</div>
                                         )
                                     })
                                 }
@@ -516,6 +516,7 @@ export default class adCreateModal extends Component {
         }
     }
     changeType=(type)=>{   //   切换type
+        console.log("type",type)
         if(type!=this.state.currentType){
             this.setState({
                 currentType:type

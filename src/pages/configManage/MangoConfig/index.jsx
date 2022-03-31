@@ -442,9 +442,17 @@ export default class adCreateModal extends Component {
         }
         addMangosearch(params).then(res=>{
             console.log("addMangosearch",res)
-            this.setState({
-                searchProgram:res.data.data
-            })
+            if(res.data.errCode==0){
+                if(res.data.data){
+                    this.setState({
+                        searchProgram:res.data.data
+                    })
+                }
+                
+            }else{
+                console.log("res.data.msg",res.data.msg)
+                message.error(res.data.msg);
+            }
         })
     }
     getMangoList=()=>{   // 获取数据列表

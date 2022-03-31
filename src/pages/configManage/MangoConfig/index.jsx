@@ -276,7 +276,7 @@ export default class adCreateModal extends Component {
                                             <Input placeholder="请填写标题名称" />
                                         </Form.Item>  ||
                                         this.formRef.current.getFieldValue("titleCategory")==2 &&
-                                        <Form.Item label="上传图片" name="title" valuePropName="fileList" getValueFromEvent={normFile} >
+                                        <Form.Item label="上传图片" name="title" rules={[{ required: true}]} valuePropName="fileList" getValueFromEvent={normFile} >
                                             <ImageUpload 
                                             //getUploadFileUrl={this.getUploadFileUrl.bind(this)} 
                                             getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('title', file, newItem) }}
@@ -536,6 +536,17 @@ export default class adCreateModal extends Component {
     submitForm(obj){  // 修改title信息
         console.log("submitForm",obj);
         obj.title=obj.title.replace(/\s/g,"");
+        if(obj.title==""){
+            if(this.state.currentType==0){
+                obj.title="热门推荐"
+            }else if(this.state.currentType==1){
+                obj.title="综艺推荐"
+            }else if(this.state.currentType==2){
+                obj.title="电影推荐"
+            }else if(this.state.currentType==3){
+                obj.title="电视剧推荐"
+            }
+        }
         let params={
             ...obj,
             titleType:this.state.currentType,

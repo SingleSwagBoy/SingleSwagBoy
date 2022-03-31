@@ -535,6 +535,7 @@ export default class adCreateModal extends Component {
     }
     submitForm(obj){  // 修改title信息
         console.log("submitForm",obj);
+        obj.title=obj.title.replace(/\s/g,"");
         let params={
             ...obj,
             titleType:this.state.currentType,

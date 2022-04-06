@@ -171,7 +171,7 @@ export default class adCreateModal extends Component {
                                     console.log("row",row)
                                     //this.sortChannelSport(e.target.value, row)
                                     let _list=this.state.sortTableBefore.map(item=>{
-                                        if(item.indexId==row.indexId){
+                                        if(item.type==row.type){
                                             item.sequence=e.target.value*1
                                         }
                                         return item

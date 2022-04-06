@@ -624,6 +624,12 @@ export const addMangosearch = (params) => { return request.post(`${baseUrl}/mms/
 export const updateMangoSort = (type,params) => { return request2.post(`${baseUrl}/mms/config/common/set?key=${type}`,params); };       //芒果专区-相关模块数据-新建
 export const getSortList = (params) => { return request2.get(`${baseUrl}/mms/config/common/get`,{params:params}); };                //芒果专区-相关模块数据-获取
 
+//tv专题页配置
+export const getTopic = (params) => { return request2.get(`${baseUrl}/mms/channel/tvspecial/list`, {params:params}); };                 // 解锁配置更新
+export const addTopic = (params) => { return request2.post(`${baseUrl}/mms/channel/tvspecial/add`, params); };                 // 解锁配置更新
+export const updateTopic = (params) => { return request2.post(`${baseUrl}/mms/channel/tvspecial/update`, params); };                 // 解锁配置更新
+export const delTopic = (params) => { return request2.get(`${baseUrl}/mms/channel/tvspecial/del`, {params:params}); };                 // 解锁配置更新
+export const syncTopic = (params) => { return request2.get(`${baseUrl}/mms/channel/tvspecial/sync`, {params:params}); };                 // 解锁配置更新
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

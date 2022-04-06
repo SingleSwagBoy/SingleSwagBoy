@@ -1,7 +1,7 @@
 import React, { Component,useState, useEffect, useCallback  } from 'react'
 
 import { getlistPhoto } from 'api'
-import { Breadcrumb, Card, Image, Button, Table, Modal, message, DatePicker, Input, Form, Select, Checkbox,Switch,Radio } from 'antd'
+import { Breadcrumb, Card, Image, Button, Table, Modal, message, DatePicker, Input, Form, Select, Checkbox,Switch,Pagination } from 'antd'
 
 import { } from 'react-router-dom'
 import { } from "@ant-design/icons"
@@ -83,17 +83,6 @@ export default class ProgrammeManage extends Component{
     componentDidMount() {
         //this.getlistAllPrograms()
     }
-
-    changeSize = (page, pageSize) => {   // 分页
-        console.log(page, pageSize);
-        this.setState({
-            userId: this.state.searchName,
-            page: page,
-            pageSize: pageSize
-        }, () => {
-            this.getlistAllPrograms()
-        })
-    }
     getlistAllPrograms() {
         let params = {
             userId: this.state.searchName,
@@ -103,28 +92,20 @@ export default class ProgrammeManage extends Component{
         getlistPhoto(params).then(res => {
             console.log("getlistAllPrograms",res)
             if(res.data.errCode==0){
+                if(res.data.data.length==0){
+                    message.error("未查找到数据");
+                }
                 this.setState({
                     photoList:res.data.data,
                     totalCount:res.data.totalCount,
                     totalPage:Math.ceil(res.data.totalCount/this.state.pageSize)
-                },()=>{
-                    console.log("totalPagetotalPage",this.state.totalPage);
-                    if(this.state.totalPage>=2){
-                        let _list=[];
-                        for(let i=1;i<=this.state.totalPage;i++){
-                            _list.push(i)
-                        }
-                        console.log("_list_list_list",_list)
-                        this.setState({
-                            pagesList:_list
-                        })
-                    }
                 })
             }
         })
     }
     changePage(index){
         console.log("changePage",index)
+        document.getElementById("pagescontent1").scrollTop=0;
         this.setState({
             currentPage:index*1+1,
             page:index*1+1,
@@ -132,12 +113,22 @@ export default class ProgrammeManage extends Component{
             this.getlistAllPrograms();
         })
     }
+    changePagination=(page,size)=>{
+        console.log("page,size",page,size);
+        this.setState({
+            page:page,
+            pageSize:size,
+            photoList:[]
+        },()=>{
+            this.getlistAllPrograms()
+        })
+    }
 
     render(){
-        let {page,pageSize,total,photoList,pagesList,currentPage}=this.state
+        let {page,totalCount,pageSize,photoList,pagesList,currentPage}=this.state
         return (
             <div>
-                <Card title={
+                <Card id="pagescontent1" title={
                     <div className="cardTitle">
                         <div className="everyBody">
                             <Input.Search allowClear placeholder="请输入用户userId" onSearch={(val)=>{
@@ -166,7 +157,14 @@ export default class ProgrammeManage extends Component{
                             })
                         }
                     </div>
-                    <div className='pages-content'>
+                    
+                    {
+                        totalCount>0 &&
+                        <div className='pages-content'>
+                            <Pagination defaultCurrent={page} total={totalCount} defaultPageSize={pageSize} showQuickJumper={true} onChange={(page, pageSize)=>{this.changePagination(page,pageSize)}}/>
+                        </div>
+                    }
+                    {/* <div className='pages-content' id="pagescontent">
                         {
                             pagesList.length>0 && pagesList.map((item,index)=>{
                                 return (
@@ -176,7 +174,7 @@ export default class ProgrammeManage extends Component{
                                 )
                             })
                         }
-                    </div>
+                    </div> */}
                     
 
                 </Card>

@@ -42,6 +42,7 @@ import {
     syncAdSPList,              //支付成功
     syncMenuList,              //菜单配置
     requestApkConfigSync,               //同步apk配置
+    syncTopic,               //tv专题页面
 
 } from 'api'
 
@@ -96,6 +97,7 @@ export default class SyncBtn extends Component {
         if (type === 31) return syncAdSPList();                                      //支付成功
         if (type === 32) return syncMenuList();                                      //菜单配置
         if (type === 33) return requestApkConfigSync();                                      //同步apk配置
+        if (type === 34) return syncTopic();                                      //tv专题页面
 
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误

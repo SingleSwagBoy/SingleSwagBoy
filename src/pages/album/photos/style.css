@@ -36,12 +36,13 @@
     width: 100%;
 }
 .photo-item{
-    width: 100px;
+    width: 190px;
     /* height: 100px; */
     margin: 10px;
 }
 .pages-content{
     width: 100%;
+    margin-top: 20px;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-end;

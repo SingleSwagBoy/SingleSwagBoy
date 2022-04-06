@@ -628,6 +628,7 @@ export const delMine = (params) => { return request2.post(`${baseUrl}/mms/tv/myC
 export const getMineGrid = (params,query) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/${query.id}/list`, params); };                 // 我的配置删除
 export const addMineGrid = (params,query) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/${query.id}/add`, params); };                 // 我的配置删除
 export const editMineGrid = (params,query) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/${query.id}/edit`, params); };                 // 我的配置删除
+export const copyMineGrid = (params,query) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/${query.id}/copy`, params); };                 // 我的配置删除
 export const delMineGrid = (params) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/del`, params); };                 // 我的配置删除
 export const syncMineGrid = (params) => { return request2.get(`${baseUrl}/mms/tv/myCenter/grid/second/sync`, {params:params}); };                 // 我的配置删除
 

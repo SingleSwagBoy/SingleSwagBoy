@@ -87,6 +87,7 @@ const GoodLooking = lazy(() => import('pages/TVConfig/goodLooking/index.jsx'));
 const ProgramAppConfig = lazy(() => import('pages/TVConfig/ProgramAppConfig/index.jsx')); //电视节目单配置
 const TvRecommendConfig = lazy(() => import('pages/TVConfig/tvRecommendConfig/tvRecommendConfig.jsx'))      //Tv推荐配置
 const MenuConfig = lazy(() => import('pages/TVConfig/menuConfig/index.jsx'))      //Tv菜单配置
+const TopicConfig = lazy(() => import('pages/TVConfig/topicConfig/index.jsx'))      //Tv专题页配置
 const ChannelRiskRegion = lazy(() => import('pages/currencyChannel/channelRiskRegion/index.jsx'))      //风险地域
 const OfflineProgram = lazy(() => import('pages/offlineManage/program/index.jsx'))      //下线节目
 const OfflineProgramDetail = lazy(() => import('pages/offlineManage/program/detailIndex.jsx'))      //下线节目
@@ -222,6 +223,7 @@ const adminRoutes = [
     { name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/programAppConfig', component: ProgramAppConfig, code: "tvConfigManagement", sub_code: 'programAppConfig' },
     { name: 'TV推荐配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/tvRecommendConfig', component: TvRecommendConfig, code: "tvConfigManagement", sub_code: 'tvRecommendConfig' },
     { name: '菜单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/menuConfig', component: MenuConfig, code: "tvConfigManagement", sub_code: 'menuConfig' },
+    { name: 'TV专题页配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/topicConfig', component: TopicConfig, code: "tvConfigManagement", sub_code: 'topicConfig' },
 
 
 

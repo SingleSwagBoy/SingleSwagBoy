@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { getMineGrid, editMineGrid, addMineGrid, delMineGrid, requestNewAdTagList, getChannel, getProgramsList,copyMineGrid } from 'api'
+import { getMineGrid, editMineGrid, addMineGrid, delMineGrid, requestNewAdTagList, getChannel, getProgramsList, copyMineGrid } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, DatePicker, Divider, Space, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -90,22 +90,26 @@ function App2(props) {
       title: "类型",
       dataIndex: "type",
       key: "type",
+      render: (rowValue, row, index) => {
+        return (
+          <div>{getTypeName(rowValue)}</div>
+        )
+      }
     },
     {
       title: "跳转类型",
       dataIndex: "jumpType",
       key: "jumpType",
+      render: (rowValue, row, index) => {
+        return (
+          <div>{getJumpName(rowValue)}</div>
+        )
+      }
     },
     {
       title: "宽度",
       dataIndex: "width",
       key: "width",
-      // render: (rowValue, row, index) => {
-      //   return (
-      //     // 栏目类型 1=用户属性，2=观看历史，3=其他数据
-      //     <div>{rowValue == 1 ? "用户属性" : rowValue == 2 ? "观看历史" : rowValue == 3 ? "其他数据" : "未知"}</div>
-      //   )
-      // }
     },
     {
       title: "标签",
@@ -146,7 +150,7 @@ function App2(props) {
       render: (rowValue, row, index) => {
         return (
           <div>
-             <Button size="small" onClick={() => copyMineGridFunc(row)}>复制</Button>
+            <Button size="small" onClick={() => copyMineGridFunc(row)}>复制</Button>
             <Button size="small" type="primary" style={{ margin: " 0 10px" }}
               onClick={() => {
                 console.log(row)
@@ -222,7 +226,7 @@ function App2(props) {
     Modal.confirm({
       title: `确认复制该条数据吗？`,
       onOk: () => {
-        copyMineGrid({id:row.id},{ id: props.location.params.id }).then(res => {
+        copyMineGrid({ id: row.id }, { id: props.location.params.id }).then(res => {
           message.success("复制成功")
           forceUpdate()
         })
@@ -230,7 +234,7 @@ function App2(props) {
       onCancel: () => {
       }
     })
-    
+
   }
   const closeDialog = () => {
     formRef.resetFields()
@@ -262,6 +266,22 @@ function App2(props) {
       return arr[0].name
     } else {
       return ""
+    }
+  }
+  const getTypeName = (val) =>{
+    let arr = typeList.filter(item => item.key == val)
+    if (arr.length > 0) {
+      return arr[0].value
+    } else {
+      return "-"
+    }
+  }
+  const getJumpName = (val) =>{
+    let arr = jumpType.filter(item => item.key == val)
+    if (arr.length > 0) {
+      return arr[0].value
+    } else {
+      return "-"
     }
   }
   const getUploadFileUrl = (type, file, newItem) => {
@@ -420,10 +440,10 @@ function App2(props) {
                               getChannelList(val)
                             }, 1000)
                           }}
-                          onChange={(e)=>{
-                            let arr = channleList.filter(item=>item.code == e)
-                            if(arr.length>0){
-                              formRef.setFieldsValue({"picUrl":arr[0].posterUrl})
+                          onChange={(e) => {
+                            let arr = channleList.filter(item => item.code == e)
+                            if (arr.length > 0) {
+                              formRef.setFieldsValue({ "picUrl": arr[0].posterUrl })
                             }
                             forceUpdatePages()
                           }}
@@ -581,7 +601,7 @@ function App2(props) {
               {
                 formRef.getFieldValue("type") == 2 && //观看历史
                 <>
-                  <Form.Item label="-" style={{border:"1px dashed #ccc",padding:"10px"}}>
+                  <Form.Item label="-" style={{ border: "1px dashed #ccc", padding: "10px" }}>
                     <Form.Item label="频道" name="channelCode">
                       <Select
                         placeholder="请输入频道名称"

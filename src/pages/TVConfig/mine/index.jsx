@@ -202,7 +202,7 @@ function App2(props) {
       <Card title={
         <div>
           <Breadcrumb>
-            <Breadcrumb.Item>配置管理</Breadcrumb.Item>
+            <Breadcrumb.Item>我的</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       }

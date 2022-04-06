@@ -167,6 +167,9 @@ function App2(props) {
   ]
   useEffect(() => {//列表
     const fetchData = async () => {
+      if (!props.location.params) {
+        return props.history.go(-1)
+      }
       const list = await getMineGrid({ page: { currentPage: page, pageSize: pageSize } }, { id: props.location.params.id })
       setLists(list.data)
       setTotal(list.page.totalCount)
@@ -185,14 +188,18 @@ function App2(props) {
     if (source == "add") {
       let params = {
         ...val,
-        status: val.status ? 1 : 2
+        status: val.status ? 1 : 2,
+        startTime: val.time ? parseInt(val.time[0].valueOf() / 1000) : "",
+        endTime: val.time ? parseInt(val.time[1].valueOf() / 1000) : "",
       }
       addOfflineProgramFunc(params)
     } else if (source == "edit") {
       let params = {
         ...currentItem,
         ...val,
-        status: val.status ? 1 : 2
+        status: val.status ? 1 : 2,
+        startTime: val.time ? parseInt(val.time[0].valueOf() / 1000) : "",
+        endTime: val.time ? parseInt(val.time[1].valueOf() / 1000) : "",
       }
       updateOfflineProgramFunc(params)
     } else {
@@ -289,11 +296,13 @@ function App2(props) {
   return (
     <div className="loginVip">
       <Card title={
-        <div>
-          <Breadcrumb>
-            <Breadcrumb.Item>配置管理</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link to="/mms/TVConfig/mine">我的</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>详情</Breadcrumb.Item>
+
+        </Breadcrumb>
       }
         extra={
           <div>
@@ -456,55 +465,28 @@ function App2(props) {
                           placeholder="请输入菜单"
                           allowClear
                           {...selectProps}
-                          onSearch={(val) => {
-                            if (privateData.inputTimeOutVal) {
-                              clearTimeout(privateData.inputTimeOutVal);
-                              privateData.inputTimeOutVal = null;
-                            }
-                            privateData.inputTimeOutVal = setTimeout(() => {
-                              if (!privateData.inputTimeOutVal) return;
-                              getChannelList(val)
-                            }, 1000)
-                          }}
                         >
                           {
-                            channleList.map((r, i) => {
-                              return <Option value={r.code} key={i}>{r.name}------{r.code}</Option>
+                            util.jumpMenuTypes.map((r, i) => {
+                              return <Option value={r.key} key={i}>{r.value}</Option>
                             })
                           }
                         </Select>
                       </Form.Item>
                     </>
                   }
-                  {/*  
-              { key: 1, value: "跳转到频道" },
-    { key: 6, value: "跳转到菜单" },
-    { key: 8, value: "跳转到好看分类" },
-    { key: 16, value: "跳转到图片" },
-    { key: 11, value: "跳转到节目" },
-    { key: 14, value: "跳转到原生页" }, */}
                   {
                     formRef.getFieldValue("jumpType") == 8 &&
                     <>
                       <Form.Item label="好看分类" name="goodLookType">
                         <Select
-                          placeholder="请输入好看分类"
+                          placeholder="请输入菜单"
                           allowClear
                           {...selectProps}
-                          onSearch={(val) => {
-                            if (privateData.inputTimeOutVal) {
-                              clearTimeout(privateData.inputTimeOutVal);
-                              privateData.inputTimeOutVal = null;
-                            }
-                            privateData.inputTimeOutVal = setTimeout(() => {
-                              if (!privateData.inputTimeOutVal) return;
-                              getChannelList(val)
-                            }, 1000)
-                          }}
                         >
                           {
-                            channleList.map((r, i) => {
-                              return <Option value={r.code} key={i}>{r.name}------{r.code}</Option>
+                            util.goodLookTypes.map((r, i) => {
+                              return <Option value={r.key} key={i}>{r.value}</Option>
                             })
                           }
                         </Select>

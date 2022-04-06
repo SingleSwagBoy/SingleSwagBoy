@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { getMineGrid, editMineGrid, addMineGrid, delMineGrid, requestNewAdTagList, getChannel, getProgramsList } from 'api'
+import { getMineGrid, editMineGrid, addMineGrid, delMineGrid, requestNewAdTagList, getChannel, getProgramsList,copyMineGrid } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, DatePicker, Divider, Space, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -133,7 +133,6 @@ function App2(props) {
               onChange={(val) => {
                 let info = JSON.parse(JSON.stringify(row))
                 info.status = val ? 1 : 2
-                console.log(info.status, "info.status")
                 submitForm(info)
               }}
             />}</div>
@@ -143,16 +142,17 @@ function App2(props) {
     {
       title: "操作",
       key: "action",
-      fixed: 'right', width: 150,
+      fixed: 'right', width: 220,
       render: (rowValue, row, index) => {
         return (
           <div>
+             <Button size="small" onClick={() => copyMineGridFunc(row)}>复制</Button>
             <Button size="small" type="primary" style={{ margin: " 0 10px" }}
               onClick={() => {
                 console.log(row)
                 let arr = JSON.parse(JSON.stringify(row))
                 arr.status = row.status == 1 ? true : false
-                arr.time = [moment(arr.startTime * 1000), moment(arr.endTime * 1000)]
+                arr.time = [arr.startTime ? moment(arr.startTime * 1000) : 0, arr.endTime ? moment(arr.endTime * 1000) : 0]
                 setCurrent(row)
                 setOpen(true)
                 formRef.setFieldsValue(arr)
@@ -191,15 +191,17 @@ function App2(props) {
         status: val.status ? 1 : 2,
         startTime: val.time ? parseInt(val.time[0].valueOf() / 1000) : "",
         endTime: val.time ? parseInt(val.time[1].valueOf() / 1000) : "",
+        channelSpecial: val.channelSpecial ? 1 : 2
       }
       addOfflineProgramFunc(params)
     } else if (source == "edit") {
       let params = {
-        ...currentItem,
+        ...formRef.getFieldValue(),
         ...val,
         status: val.status ? 1 : 2,
-        startTime: val.time ? parseInt(val.time[0].valueOf() / 1000) : "",
-        endTime: val.time ? parseInt(val.time[1].valueOf() / 1000) : "",
+        startTime: val.time ? parseInt(val.time[0].valueOf() / 1000) : 0,
+        endTime: val.time ? parseInt(val.time[1].valueOf() / 1000) : 0,
+        channelSpecial: val.channelSpecial ? 1 : 2
       }
       updateOfflineProgramFunc(params)
     } else {
@@ -215,6 +217,20 @@ function App2(props) {
       message.success("新增成功")
       forceUpdate()
     })
+  }
+  const copyMineGridFunc = (row) => {
+    Modal.confirm({
+      title: `确认复制该条数据吗？`,
+      onOk: () => {
+        copyMineGrid({id:row.id},{ id: props.location.params.id }).then(res => {
+          message.success("复制成功")
+          forceUpdate()
+        })
+      },
+      onCancel: () => {
+      }
+    })
+    
   }
   const closeDialog = () => {
     formRef.resetFields()
@@ -404,6 +420,13 @@ function App2(props) {
                               getChannelList(val)
                             }, 1000)
                           }}
+                          onChange={(e)=>{
+                            let arr = channleList.filter(item=>item.code == e)
+                            if(arr.length>0){
+                              formRef.setFieldsValue({"picUrl":arr[0].posterUrl})
+                            }
+                            forceUpdatePages()
+                          }}
                         >
                           {
                             channleList.map((r, i) => {
@@ -414,7 +437,7 @@ function App2(props) {
                       </Form.Item>
                       {
                         formRef.getFieldValue("jumpType") == 11 &&
-                        <Form.Item label="请选择视频" name="channelName">
+                        <Form.Item label="请选择视频" name="">
                           <Select
                             placeholder="请选择视频"
                             allowClear
@@ -555,6 +578,46 @@ function App2(props) {
                   </Form.Item>
                 </>
               }
+              {
+                formRef.getFieldValue("type") == 2 && //观看历史
+                <>
+                  <Form.Item label="-" style={{border:"1px dashed #ccc",padding:"10px"}}>
+                    <Form.Item label="频道" name="channelCode">
+                      <Select
+                        placeholder="请输入频道名称"
+                        allowClear
+                        {...selectProps}
+                        onSearch={(val) => {
+                          if (privateData.inputTimeOutVal) {
+                            clearTimeout(privateData.inputTimeOutVal);
+                            privateData.inputTimeOutVal = null;
+                          }
+                          privateData.inputTimeOutVal = setTimeout(() => {
+                            if (!privateData.inputTimeOutVal) return;
+                            getChannelList(val)
+                          }, 1000)
+                        }}
+                      >
+                        {
+                          channleList.map((r, i) => {
+                            return <Option value={r.code} key={i}>{r.name}------{r.code}</Option>
+                          })
+                        }
+                      </Select>
+                    </Form.Item>
+                    <Form.Item label="位置" name="channelIndex">
+                      <InputNumber placeholder="请输入位置" style={{ width: "200px" }} min={0} />
+                    </Form.Item>
+                    <Form.Item label="类型" name="channelType">
+                      <Select allowClear placeholder="请选择类型">
+                        <Option value={1} key={1}>推荐频道</Option>
+                        <Option value={2} key={2}>填充频道</Option>
+                      </Select>
+                    </Form.Item>
+                  </Form.Item>
+
+                </>
+              }
 
 
 
@@ -583,7 +646,7 @@ function App2(props) {
                 <InputNumber placeholder="请输入高度" style={{ width: "200px" }} min={0} />
               </Form.Item>
               <Form.Item label="排序" name="sort">
-                <InputNumber placeholder="请输入位置" style={{ width: "200px" }} min={0} />
+                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
               </Form.Item>
               <Form.Item label="状态" name="status" valuePropName="checked">
                 <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>

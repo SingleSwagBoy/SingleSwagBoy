@@ -7,7 +7,7 @@ import '@/style/base.css';
 import "./style.css"
 import util from "utils"
 import {
-    getMangoList,addMangoList,addMangoUpdate,delMango,getMangoSync,addMangosearch,updateMangoSort,getSortList
+    getMangoList,addMangoList,addMangoUpdate,delMango,getMangoSync,addMangosearch,updateMangoSort,getSortList,getMangoSyncTab
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
@@ -569,7 +569,7 @@ export default class adCreateModal extends Component {
         }
     }
     syncData=()=>{   // 同步缓存
-        let _list=["MANGOTV.RESOURCE","MANGOTV.MODULE","MANGOTV.TAB"]
+        let _list=["MANGOTV.RESOURCE","MANGOTV.MODULE"]
         for(let i=0;i<_list.length;i++){
             let params={
                 key:_list[i]
@@ -581,6 +581,9 @@ export default class adCreateModal extends Component {
                 }
             })
         }
+        getMangoSyncTab({key:"MANGOTV.TAB"}).then(res=>{
+            console.log("getMangoSync MANGOTV.TAB",res)
+        })
     }
     deleteData=(obj)=>{
         console.log("deleteData",obj)

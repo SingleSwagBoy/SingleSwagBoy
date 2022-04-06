@@ -619,6 +619,7 @@ export const getMangoSync = (params) => { return request2.get(`${baseUrl}/mms/co
 export const addMangosearch = (params) => { return request.post(`${baseUrl}/mms/mgtv/video/searchAll`,params); };       //媒资库视频模糊搜索
 export const updateMangoSort = (type,params) => { return request2.post(`${baseUrl}/mms/config/common/set?key=${type}`,params); };       //芒果专区-相关模块数据-新建
 export const getSortList = (params) => { return request2.get(`${baseUrl}/mms/config/common/get`,{params:params}); };                //芒果专区-相关模块数据-获取
+export const getMangoSyncTab = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config?key=${params.key}`); };          //芒果专区-相关模块数据-tab排序缓存同步 ,{params:params}
 
 
 //广告-二维码套餐类型

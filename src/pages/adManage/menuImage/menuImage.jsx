@@ -203,6 +203,11 @@ export default class MenuImagePage extends Component {
                                     <Form.List name="productList">
                                         {(fields, { add, remove }) => (
                                             <>
+                                                <Form.Item>
+                                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                        新增套餐关联
+                                                    </Button>
+                                                </Form.Item>
                                                 <div style={{ display: "flex", flexWrap: "wrap" }}>
                                                     {
                                                         fields.map((field, index) => (
@@ -222,9 +227,9 @@ export default class MenuImagePage extends Component {
                                                                 {/* <div></div> */}
                                                                 <MinusCircleOutlined onClick={() => {
                                                                     remove(field.name)
-                                                                    if(index>0){
+                                                                    if (index > 0) {
                                                                         this.setState({ activeKey: index - 1 })
-                                                                    }else{
+                                                                    } else {
                                                                         this.setState({ activeKey: 0 })
                                                                     }
                                                                 }} style={{ position: "absolute", right: 0, top: "10px" }} />
@@ -271,11 +276,7 @@ export default class MenuImagePage extends Component {
 
                                                 ))}
 
-                                                <Form.Item>
-                                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                        新增
-                                                    </Button>
-                                                </Form.Item>
+
                                             </>
                                         )}
                                     </Form.List>
@@ -534,13 +535,13 @@ export default class MenuImagePage extends Component {
                 moment(obj.endTime)
             ]
             obj.status = obj.status === 1 ? true : false;
-            if(obj.productList && obj.productList.length>0){
+            if (obj.productList && obj.productList.length > 0) {
                 obj.productList.forEach(r => {
                     r.hddjs = r.hddjs == 1 ? true : false
                     r.jljr = r.jljr == 1 ? true : false
                 })
             }
-            
+
             that.formRef.current.resetFields();
             that.formRef.current.setFieldsValue(obj);
             that.forceUpdate();
@@ -607,13 +608,13 @@ export default class MenuImagePage extends Component {
         that.forceUpdate();
     }
     //获取上传文件图片地址 
-    getUploadFileImageUrlByType(type,index,source) {
+    getUploadFileImageUrlByType(type, index, source) {
         let that = this;
         let image_url;
-        if(source == "list" && that.formRef.current && that.formRef.current.getFieldValue("productList")[index]){
-            image_url  = that.formRef.current.getFieldValue("productList")[index][type]
-        }else{
-            image_url  = that.formRef.current.getFieldValue(type);
+        if (source == "list" && that.formRef.current && that.formRef.current.getFieldValue("productList")[index]) {
+            image_url = that.formRef.current.getFieldValue("productList")[index][type]
+        } else {
+            image_url = that.formRef.current.getFieldValue(type);
         }
         return image_url ? image_url : '';
     }

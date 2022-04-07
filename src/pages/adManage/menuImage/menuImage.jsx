@@ -231,7 +231,7 @@ export default class MenuImagePage extends Component {
                                                                         {...this.state.selectProps}
                                                                     >
                                                                         {rechargeList.map((item, index) => {
-                                                                            return <Option value={item.skuCode} key={item.skuCode}> {item.name}</Option>
+                                                                            return <Option value={item.skuCode} key={item.skuCode}> {item.nameNew}</Option>
                                                                         })}
                                                                     </Select>
                                                                 </Form.Item>

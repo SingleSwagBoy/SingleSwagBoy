@@ -8,11 +8,11 @@
 
 
 import React, { Component } from 'react'
-import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message ,Divider} from 'antd';
+import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message, Divider, Space } from 'antd';
 import { MyImageUpload, MyTagTypes, MySyncBtn } from '@/components/views.js';
 import moment from 'moment';
 import '@/style/base.css';
-
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import {
     requestConfigMenuImageList,                         //菜单栏配置 列表
     requestConfigMenuImageCreate,                       //菜单栏配置 新增
@@ -25,7 +25,6 @@ import {
 let { TextArea } = Input;
 let { Option } = Select;
 let { RangePicker } = DatePicker;
-
 export default class MenuImagePage extends Component {
 
     constructor(props) {
@@ -44,18 +43,18 @@ export default class MenuImagePage extends Component {
                 is_show: false,
                 title: '',
             },
-            page:1,
-            pageSize:50,
-            total:0,
-            positions:[{key:1,value:"左上"},{key:2,value:"左下"},{key:3,value:"中心"},{key:4,value:"右上"},{key:5,value:"右下"},{key:6,value:"垂直居中"},{key:7,value:"横向居中"}]
+            page: 1,
+            pageSize: 50,
+            total: 0,
+            positions: [{ key: 1, value: "左上" }, { key: 2, value: "左下" }, { key: 3, value: "中心" }, { key: 4, value: "右上" }, { key: 5, value: "右下" }, { key: 6, value: "垂直居中" }, { key: 7, value: "横向居中" }],
+            activeKey: 0,
         }
     }
 
 
     render() {
         let that = this;
-        let { table_box, modal_box , positions} = that.state;
-
+        let { table_box, modal_box, positions, activeKey } = that.state;
         return (
             <div>
                 <Alert className="alert-box" message="菜单栏图片配置" type="success" action={
@@ -65,13 +64,13 @@ export default class MenuImagePage extends Component {
                     </div>
                 } />
 
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }}
-                pagination={{
-                    current: this.state.page,
-                    pageSize: this.state.pageSize,
-                    total: this.state.total,
-                    onChange: this.changeSize,
-                }}
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} scroll={{ x: 1500, y: '75vh' }}
+                    pagination={{
+                        current: this.state.page,
+                        pageSize: this.state.pageSize,
+                        total: this.state.total,
+                        onChange: this.changeSize,
+                    }}
                 />
 
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
@@ -81,7 +80,7 @@ export default class MenuImagePage extends Component {
                     ]}
                 >
                     {/* <MyTagTypes is_old_tag_resouce={true} tag_name='tag' union_type="union_type" delivery_name="delivery_name"  onRef={(ref) => that.onTagTypesRefCallback(ref)} /> */}
-                    <MyTagTypes is_old_tag_resouce={false} tag_name='tag'  onRef={(ref) => that.onTagTypesRefCallback(ref)} />
+                    <MyTagTypes is_old_tag_resouce={false} tag_name='tag' onRef={(ref) => that.onTagTypesRefCallback(ref)} />
 
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
                         {
@@ -193,7 +192,32 @@ export default class MenuImagePage extends Component {
                                 <Form.Item label="纵向偏移量" name="yOffset">
                                     <Input className='base-input-wrapper' placeholder="例如:200" addonAfter="px" />
                                 </Form.Item>
-                                
+                                <Divider orientation="left">套餐关联</Divider>
+                                <Form.Item
+                                    label=""
+                                    wrapperCol={{offset: 6, span: 16 }}
+                                >
+                                    <Form.List name="productList">
+                                        {(fields, { add, remove }) => (
+                                            <>
+                                                {fields.map((field, index) => (
+                                                    <Space key={field.key} align="baseline">
+                                                        <Form.Item {...field} label="昵称" name={[field.name, 'name']} fieldKey={[field.fieldKey, 'name']} rules={[{ required: true, message: '昵称' }]}>
+                                                            <Input />
+                                                        </Form.Item>
+                                                        <MinusCircleOutlined onClick={() => remove(field.name)} />
+                                                    </Space>
+                                                ))}
+
+                                                <Form.Item>
+                                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                        新增
+                                                    </Button>
+                                                </Form.Item>
+                                            </>
+                                        )}
+                                    </Form.List>
+                                </Form.Item>
                             </div>
                         }
                     </Form>
@@ -209,10 +233,10 @@ export default class MenuImagePage extends Component {
     initData() {
         let that = this;
         //用户标签
-        let params={
-            page:{
-                pageSize:9999,
-                currentPage:1
+        let params = {
+            page: {
+                pageSize: 9999,
+                currentPage: 1
             }
         }
         requestNewAdTagList(params).then(res => {
@@ -238,7 +262,7 @@ export default class MenuImagePage extends Component {
 
         let table_title = [
             { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
-            { title: '名字', dataIndex: 'title', key: 'title', width: 200,ellipsis: true, },
+            { title: '名字', dataIndex: 'title', key: 'title', width: 200, ellipsis: true, },
             // { title: '数据上报key', dataIndex: 'name', key: 'name', width: 200, },
             {
                 title: '标签', dataIndex: 'tag', key: 'tag', width: 200,
@@ -311,18 +335,18 @@ export default class MenuImagePage extends Component {
         })
 
     }
-    getTag(val){
-        if(val){
-            let arr = this.state.dict_user_tags.filter(item=>val==item.code)
-            if(arr.length>0){
+    getTag(val) {
+        if (val) {
+            let arr = this.state.dict_user_tags.filter(item => val == item.code)
+            if (arr.length > 0) {
                 return arr[0].name
-            }else{
+            } else {
                 return "未配置"
             }
-        }else{
+        } else {
             return "未配置"
         }
-       
+
     }
 
     refreshList() {
@@ -335,9 +359,9 @@ export default class MenuImagePage extends Component {
             table_box: table_box,
         }, () => {
             let obj = {
-                page:{
-                    currentPage:this.state.page,
-                    pageSize:this.state.pageSize
+                page: {
+                    currentPage: this.state.page,
+                    pageSize: this.state.pageSize
                 }
             };
             requestConfigMenuImageList(obj)
@@ -357,7 +381,7 @@ export default class MenuImagePage extends Component {
                     table_box.table_datas = datas;
                     that.setState({
                         table_box: table_box,
-                        total:res.data.page.totalCount
+                        total: res.data.page.totalCount
                     })
                 })
         })
@@ -547,25 +571,25 @@ export default class MenuImagePage extends Component {
         let that = this;
         let ref_tag_types = that.state.ref_tag_types;
         let value = that.formRef.current.getFieldsValue();
-        console.log("value",value)
-        if(value.renewWindowWidth){
-            value.renewWindowWidth=parseInt(value.renewWindowWidth)
-        }else{
+        console.log("value", value)
+        if (value.renewWindowWidth) {
+            value.renewWindowWidth = parseInt(value.renewWindowWidth)
+        } else {
             delete value.renewWindowWidth
         }
-        if(value.renewWindowHeight){
-            value.renewWindowHeight=parseInt(value.renewWindowHeight)
-        }else{
+        if (value.renewWindowHeight) {
+            value.renewWindowHeight = parseInt(value.renewWindowHeight)
+        } else {
             delete value.renewWindowHeight
         }
-        if(value.xOffset){
-            value.xOffset=parseInt(value.xOffset)
-        }else{
+        if (value.xOffset) {
+            value.xOffset = parseInt(value.xOffset)
+        } else {
             delete value.xOffset
         }
-        if(value.yOffset){
-            value.yOffset=parseInt(value.yOffset)
-        }else{
+        if (value.yOffset) {
+            value.yOffset = parseInt(value.yOffset)
+        } else {
             delete value.yOffset
         }
         let obj = Object.assign({}, value, ref_tag_types.loadData());
@@ -665,16 +689,16 @@ export default class MenuImagePage extends Component {
                     if (that.formRef && that.formRef.current) {
                         that.formRef.current.resetFields();
                     }
-                    if(!id){
+                    if (!id) {
                         this.setState({
-                            page:1
-                        },()=>{
+                            page: 1
+                        }, () => {
                             that.refreshList();
                         })
-                    }else{
+                    } else {
                         that.refreshList();
                     }
-                   
+
                 })
             })
             .catch(res => {
@@ -699,5 +723,21 @@ export default class MenuImagePage extends Component {
             this.refreshList()
         })
 
+    }
+
+
+
+    onChange = activeKey => {
+        this.setState({ activeKey });
+    };
+
+    onEdit = (targetKey, action) => {
+        this[action](targetKey);
+    };
+    add() {
+        console.log(111)
+    };
+    remove(key) {
+        console.log(key)
     }
 }

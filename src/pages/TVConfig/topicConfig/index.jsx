@@ -92,7 +92,7 @@ function App2() {
                 // arr.time = 
                 arr.blocks.forEach(r => {
                   r.contents.forEach(l => {
-                    l.time = [moment(arr.start), moment(arr.end)]
+                    l.time = [moment(l.start * 1000), moment(l.end * 1000)]
                   })
                 })
                 console.log(arr, "arr")

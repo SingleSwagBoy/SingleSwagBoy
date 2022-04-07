@@ -157,7 +157,7 @@ function App2(props) {
                 let arr = JSON.parse(JSON.stringify(row))
                 arr.status = row.status == 1 ? true : false
                 arr.time = [arr.startTime ? moment(arr.startTime * 1000) : 0, arr.endTime ? moment(arr.endTime * 1000) : 0]
-                if(arr.channelCode){
+                if (arr.channelCode) {
                   getChannelList(arr.channelCode)
                 }
                 setCurrent(row)
@@ -271,7 +271,7 @@ function App2(props) {
       return ""
     }
   }
-  const getTypeName = (val) =>{
+  const getTypeName = (val) => {
     let arr = typeList.filter(item => item.key == val)
     if (arr.length > 0) {
       return arr[0].value
@@ -279,7 +279,7 @@ function App2(props) {
       return "-"
     }
   }
-  const getJumpName = (val) =>{
+  const getJumpName = (val) => {
     let arr = jumpType.filter(item => item.key == val)
     if (arr.length > 0) {
       return arr[0].value
@@ -333,20 +333,20 @@ function App2(props) {
     })
   }
   //获取类型下拉框的状态
-  const getState = (r) =>{
-    if(!props.location.params){
+  const getState = (r) => {
+    if (!props.location.params) {
       return props.history.go(-1)
     }
-    if(props.location.params.isHistory){ // 代表是历史类型
-      if(r.key != 2){
+    if (props.location.params.isHistory) { // 代表是历史类型
+      if (r.key != 2) {
         return true
-      }else{
+      } else {
         return false
       }
-    }else{//其他类型的，需要屏蔽观看历史options
-      if(r.key == 2){
+    } else {//其他类型的，需要屏蔽观看历史options
+      if (r.key == 2) {
         return true
-      }else{
+      } else {
         return false
       }
     }
@@ -623,7 +623,14 @@ function App2(props) {
               {
                 formRef.getFieldValue("type") == 2 && //观看历史
                 <>
-                  <Form.Item label="-" style={{ border: "1px dashed #ccc", padding: "10px" }}>
+
+                  <div style={{ border: "1px dashed #ccc", padding: "10px" }}>
+                    <Form.Item label="跳转类型" name="jumpType" rules={[{ required: true, message: '请输入跳转类型' }]}>
+                      <Select allowClear placeholder="请选择类型" onChange={() => forceUpdatePages()}>
+                        <Option value={1} key={1}>跳转到频道</Option>
+                        <Option value={11} key={11}>跳转到视频</Option>
+                      </Select>
+                    </Form.Item>
                     <Form.Item label="频道" name="channelCode">
                       <Select
                         placeholder="请输入频道名称"
@@ -647,6 +654,40 @@ function App2(props) {
                         }
                       </Select>
                     </Form.Item>
+                    {
+                      formRef.getFieldValue("jumpType") == 11 &&
+                      <Form.Item label="请选择视频" name="">
+                        <Select
+                          placeholder="请选择视频"
+                          allowClear
+                          {...selectProps}
+                          onSearch={(val) => {
+                            if (privateData.inputTimeOutVal) {
+                              clearTimeout(privateData.inputTimeOutVal);
+                              privateData.inputTimeOutVal = null;
+                            }
+                            privateData.inputTimeOutVal = setTimeout(() => {
+                              if (!privateData.inputTimeOutVal) return;
+                              getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
+                            }, 1000)
+                          }}
+                          onChange={(r) => {
+                            let info = defaultPrograms[r]
+                            formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
+                            forceUpdatePages()
+                          }}
+                        >
+                          {
+                            programsList.map((r, i) => {
+                              return (
+                                <Option value={r.value} key={r.value}>{r.label}</Option>
+                              )
+                            })
+                          }
+                        </Select>
+                      </Form.Item>
+                    }
+
                     <Form.Item label="位置" name="channelIndex">
                       <InputNumber placeholder="请输入位置" style={{ width: "200px" }} min={0} />
                     </Form.Item>
@@ -656,7 +697,7 @@ function App2(props) {
                         <Option value={2} key={2}>填充频道</Option>
                       </Select>
                     </Form.Item>
-                  </Form.Item>
+                  </div>
 
                 </>
               }

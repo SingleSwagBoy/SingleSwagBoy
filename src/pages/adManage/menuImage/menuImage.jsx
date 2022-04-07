@@ -45,6 +45,15 @@ export default class MenuImagePage extends Component {
                 is_show: false,
                 title: '',
             },
+            selectProps: {
+                optionFilterProp: "children",
+                filterOption(input, option) {
+                    return option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0
+                },
+                showSearch() {
+                    console.log('onSearch')
+                }
+            },
             page: 1,
             pageSize: 50,
             total: 0,
@@ -213,14 +222,16 @@ export default class MenuImagePage extends Component {
                                                         fields.map((field, index) => (
                                                             <div style={{ position: "relative" }} key={field.key}>
                                                                 <Form.Item {...field} name={[field.name, 'pCode']} fieldKey={[field.fieldKey, 'pCode']}>
-                                                                    <Select placeholder="请选择支付套餐" className={`${this.state.activeKey == index && "isActivite"}`}
+                                                                    <Select
+                                                                        placeholder="请选择支付套餐" style={{ minWidth: "200px" }} className={`${this.state.activeKey == index && "isActivite"}`}
                                                                         onClick={() => {
                                                                             this.setState({ activeKey: index })
                                                                             this.forceUpdate()
                                                                         }}
+                                                                        {...this.state.selectProps}
                                                                     >
                                                                         {rechargeList.map((item, index) => {
-                                                                            return <Option value={item.skuCode} key={index}> {item.name}</Option>
+                                                                            return <Option value={item.skuCode} key={item.skuCode}> {item.name}</Option>
                                                                         })}
                                                                     </Select>
                                                                 </Form.Item>

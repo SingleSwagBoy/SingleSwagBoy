@@ -157,6 +157,9 @@ function App2(props) {
                 let arr = JSON.parse(JSON.stringify(row))
                 arr.status = row.status == 1 ? true : false
                 arr.time = [arr.startTime ? moment(arr.startTime * 1000) : 0, arr.endTime ? moment(arr.endTime * 1000) : 0]
+                if(arr.channelCode){
+                  getChannelList(arr.channelCode)
+                }
                 setCurrent(row)
                 setOpen(true)
                 formRef.setFieldsValue(arr)

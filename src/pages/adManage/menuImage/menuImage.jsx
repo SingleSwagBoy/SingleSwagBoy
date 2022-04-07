@@ -205,7 +205,7 @@ export default class MenuImagePage extends Component {
                                             <>
                                                 <Form.Item>
                                                     <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                        新增
+                                                        新增套餐关联
                                                     </Button>
                                                 </Form.Item>
                                                 <div style={{ display: "flex", flexWrap: "wrap" }}>

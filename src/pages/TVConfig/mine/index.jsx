@@ -123,7 +123,7 @@ function App2(props) {
               }}
             >编辑</Button>
             {/* <Button size="small" style={{ margin: " 0 10px" }} onClick={() => props.history.push(`/mms/TVConfig/detail/${row.id}`)}>详情</Button> */}
-            <Button size="small" style={{ margin: " 0 10px" }} onClick={() => props.history.push({pathname: "/mms/TVConfig/detail",params:{id:row.id} })}>详情</Button>
+            <Button size="small" style={{ margin: " 0 10px" }} onClick={() => props.history.push({pathname: "/mms/TVConfig/detail",params:{id:row.id,isHistory:row.type == 2?true:false} })}>详情</Button>
             <Button danger size="small" onClick={() => delItem(row)}>删除</Button>
           </div>
         )

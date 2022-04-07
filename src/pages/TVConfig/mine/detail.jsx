@@ -332,6 +332,25 @@ function App2(props) {
       }
     })
   }
+  //获取类型下拉框的状态
+  const getState = (r) =>{
+    if(!props.location.params){
+      return props.history.go(-1)
+    }
+    if(props.location.params.isHistory){ // 代表是历史类型
+      if(r.key != 2){
+        return true
+      }else{
+        return false
+      }
+    }else{//其他类型的，需要屏蔽观看历史options
+      if(r.key == 2){
+        return true
+      }else{
+        return false
+      }
+    }
+  }
   return (
     <div className="loginVip">
       <Card title={
@@ -404,7 +423,7 @@ function App2(props) {
                 <Select allowClear placeholder="请选择类型" onChange={() => forceUpdatePages()}>
                   {
                     typeList.map((r, i) => {
-                      return <Option value={r.key} key={r.key}>{r.value}</Option>
+                      return <Option value={r.key} key={r.key} disabled={getState(r)}>{r.value}</Option>
                     })
                   }
                 </Select>

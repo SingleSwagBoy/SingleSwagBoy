@@ -220,7 +220,14 @@ export default class MenuImagePage extends Component {
                                                                     </Select>
                                                                 </Form.Item>
                                                                 {/* <div></div> */}
-                                                                <MinusCircleOutlined onClick={() => remove(field.name)} style={{ position: "absolute", right: 0, top: "10px" }} />
+                                                                <MinusCircleOutlined onClick={() => {
+                                                                    remove(field.name)
+                                                                    if(index>0){
+                                                                        this.setState({ activeKey: index - 1 })
+                                                                    }else{
+                                                                        this.setState({ activeKey: 0 })
+                                                                    }
+                                                                }} style={{ position: "absolute", right: 0, top: "10px" }} />
                                                             </div>
 
                                                         ))
@@ -230,7 +237,7 @@ export default class MenuImagePage extends Component {
                                                 {fields.map((field, index) => (
                                                     <>
                                                         {
-                                                            this.state.activeKey == index &&
+                                                            this.state.activeKey == index && that.formRef && that.formRef.current &&
                                                             <Space key={field.key} align="baseline" style={{ border: "1px dashed red", flexWrap: "wrap", padding: "10px 0" }}>
                                                                 <Form.Item {...field} label="字体大小" name={[field.name, 'fontSize']} fieldKey={[field.fieldKey, 'fontSize']} rules={[{ required: true, message: '字体大小' }]}>
                                                                     <InputNumber min={0} placeholder="请输入字体大小" />
@@ -527,10 +534,13 @@ export default class MenuImagePage extends Component {
                 moment(obj.endTime)
             ]
             obj.status = obj.status === 1 ? true : false;
-            obj.productList.forEach(r => {
-                r.hddjs = r.hddjs == 1 ? true : false
-                r.jljr = r.jljr == 1 ? true : false
-            })
+            if(obj.productList && obj.productList.length>0){
+                obj.productList.forEach(r => {
+                    r.hddjs = r.hddjs == 1 ? true : false
+                    r.jljr = r.jljr == 1 ? true : false
+                })
+            }
+            
             that.formRef.current.resetFields();
             that.formRef.current.setFieldsValue(obj);
             that.forceUpdate();
@@ -585,7 +595,7 @@ export default class MenuImagePage extends Component {
     getUploadFileUrl(type, file, newItem, index, source) {
         let that = this;
         let image_url = newItem.fileUrl;
-        if (source == "list") {
+        if (source == "list" && that.formRef.current && that.formRef.current.getFieldValue("productList")[index]) {
             let info = that.formRef.current.getFieldValue("productList")
             info[index][type] = image_url
             that.formRef.current.setFieldsValue({ productList: info })
@@ -600,7 +610,7 @@ export default class MenuImagePage extends Component {
     getUploadFileImageUrlByType(type,index,source) {
         let that = this;
         let image_url;
-        if(source == "list"){
+        if(source == "list" && that.formRef.current && that.formRef.current.getFieldValue("productList")[index]){
             image_url  = that.formRef.current.getFieldValue("productList")[index][type]
         }else{
             image_url  = that.formRef.current.getFieldValue(type);

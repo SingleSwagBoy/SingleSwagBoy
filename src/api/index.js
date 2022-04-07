@@ -644,6 +644,15 @@ export const copyMineGrid = (params,query) => { return request2.post(`${baseUrl}
 export const delMineGrid = (params) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/del`, params); };                 // 我的配置删除
 export const syncMineGrid = (params) => { return request2.get(`${baseUrl}/mms/tv/myCenter/grid/second/sync`, {params:params}); };                 // 我的配置删除
 
+
+//退出登录
+export const getLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/list`, {params:params}); };                 // 我的配置删除
+export const addLogout = (params) => { return request2.post(`${baseUrl}/mms/channel/logout/add`, params); };                 // 我的配置删除
+export const updateLogout = (params) => { return request2.post(`${baseUrl}/mms/channel/logout/update`, params); };                 // 我的配置删除
+export const delLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/del`, {params:params}); };                 // 我的配置删除
+export const syncLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/sync`, {params:params}); };                 // 我的配置删除
+export const changeLogoutState = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/status`, {params:params}); };                 // 我的配置删除
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

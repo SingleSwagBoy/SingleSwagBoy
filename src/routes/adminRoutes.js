@@ -90,6 +90,7 @@ const MenuConfig = lazy(() => import('pages/TVConfig/menuConfig/index.jsx'))    
 const TopicConfig = lazy(() => import('pages/TVConfig/topicConfig/index.jsx'))      //Tv专题页配置
 const Mine = lazy(() => import('pages/TVConfig/mine/index.jsx'))      //tv我的页面
 const MineDetail = lazy(() => import('pages/TVConfig/mine/detail.jsx'))      //tv我的页面
+const Logout = lazy(() => import('pages/TVConfig/logout/index.jsx'))      //tv退出登录
 const ChannelRiskRegion = lazy(() => import('pages/currencyChannel/channelRiskRegion/index.jsx'))      //风险地域
 const OfflineProgram = lazy(() => import('pages/offlineManage/program/index.jsx'))      //下线节目
 const OfflineProgramDetail = lazy(() => import('pages/offlineManage/program/detailIndex.jsx'))      //下线节目
@@ -230,6 +231,7 @@ const adminRoutes = [
     { name: 'TV专题页配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/topicConfig', component: TopicConfig, code: "tvConfigManagement", sub_code: 'topicConfig' },
     { name: '我的', icon: UnorderedListOutlined, path: '/mms/TVConfig/mine', component: Mine, code: "tvConfigManagement", sub_code: 'mine' },
     { name: '我的栅格配置列表', icon: UnorderedListOutlined, path: '/mms/TVConfig/detail', component: MineDetail, code: "tvConfigManagement", sub_code: 'mineDetail' },
+    { name: '退出登录', icon: UnorderedListOutlined, path: '/mms/TVConfig/logout', component: Logout, code: "tvConfigManagement", sub_code: 'logout' },
 
 
 

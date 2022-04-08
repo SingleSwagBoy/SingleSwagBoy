@@ -22,6 +22,7 @@ function App2() {
   const [openDailog, setOpen] = useState(false)
   const [channleList, setChannel] = useState([])
   const [programsList, setPrograms] = useState([])
+  const [defaultPro, setDefaultPro] = useState([])
   const [currentItem, setCurrent] = useState({})
   const [source, setSource] = useState("")
   const selectProps = {
@@ -119,10 +120,10 @@ function App2() {
   const submitForm = (val) => {//表单提交
     console.log(val)
     // return
-    val.blocks.forEach(r=>{
-      r.contents.forEach(l=>{
-        l.start = l.time[0]?parseInt(l.time[0].valueOf() / 1000):""
-        l.end = l.time[1]?parseInt(l.time[1].valueOf() / 1000):""
+    val.blocks.forEach(r => {
+      r.contents.forEach(l => {
+        l.start = l.time[0] ? parseInt(l.time[0].valueOf() / 1000) : ""
+        l.end = l.time[1] ? parseInt(l.time[1].valueOf() / 1000) : ""
       })
     })
     if (source == "add") {
@@ -132,9 +133,10 @@ function App2() {
       addOfflineProgramFunc(params)
     } else if (source == "edit") {
       let params = {
-        ...currentItem,
+        ...formRef.getFieldValue(),
         ...val,
       }
+      // return console.log(params, "params")
       updateOfflineProgramFunc(params)
     }
     closeDialog()
@@ -221,6 +223,7 @@ function App2() {
           b.push({ label: util.formatTime(value.start_time, "", 2) + " " + value.name + " " + value.channel_id, value: key })
         }
         setPrograms(b)
+        setDefaultPro(res.data.data)
         // this.setState({
         //   programGrounp: b,
         //   defaultProgram: res.data.data
@@ -396,7 +399,7 @@ function App2() {
 
                       {fields.map((field, index) => (
                         <>
-                          <Divider >板块{index + 1}</Divider>
+                          {/* <Divider key={index+fields.length}>板块{index + 1}</Divider> */}
 
                           <Space key={field.key} align="baseline" style={{ flexWrap: "wrap", alignItems: "flex-start" }} className="border_box">
                             <Form.Item {...field} label="标题" name={[field.name, 'titleType']} fieldKey={[field.fieldKey, 'titleType']}>
@@ -498,6 +501,16 @@ function App2() {
                                                     if (!privateData.inputTimeOutVal) return;
                                                     getProgramsListFunc(formRef.getFieldValue("blocks")[index].contents[i].channelCode, val)
                                                   }, 1000)
+                                                }}
+                                                onChange={(e) => {
+                                                  let arr = programsList.filter(item => item.value == e)
+                                                  if (arr.length > 0) {
+                                                    let info = formRef.getFieldValue("blocks")
+                                                    let obj = defaultPro[arr[0].value]
+                                                    info[index].contents[i].startTime = obj.start_time
+                                                    info[index].contents[i].endTime = obj.end_time
+                                                    formRef.setFieldsValue({ blocks: info })
+                                                  }
                                                 }}
                                               >
                                                 {

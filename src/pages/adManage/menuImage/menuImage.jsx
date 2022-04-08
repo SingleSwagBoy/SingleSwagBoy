@@ -277,7 +277,7 @@ export default class MenuImagePage extends Component {
                                                                             imageUrl={that.getUploadFileImageUrlByType('backgroundImage', index, "list")} />
                                                                     </Form.Item>
                                                                     <Form.Item name={[field.name, 'backgroundImage']} fieldKey={[field.fieldKey, 'backgroundImage']} >
-                                                                        <TextArea className="base-input-wrapper" placeholder="请上传背景图" onBlur={(e) => that.onInputBlurCallback("backgroundImage", e)} />
+                                                                        <TextArea className="base-input-wrapper" placeholder="请上传背景图" onBlur={(e) => that.onInputBlurCallback("backgroundImage", e,index,"list")} />
                                                                     </Form.Item>
                                                                 </Form.Item>
                                                             </Space>
@@ -630,11 +630,17 @@ export default class MenuImagePage extends Component {
         return image_url ? image_url : '';
     }
     //输入框失去焦点监听
-    onInputBlurCallback(type, e) {
+    onInputBlurCallback(type, e,index,source) {
         let that = this;
-        let obj = {};
-        obj[type] = e.target.value;
-        that.formRef.current.setFieldsValue(obj);
+        if(source == "list"){
+            let info = that.formRef.current.getFieldValue("productList")
+            info[index][type] = e.target.value;
+            that.formRef.current.setFieldsValue({productList:info})
+        }else{
+            let obj = {};
+            obj[type] = e.target.value;
+            that.formRef.current.setFieldsValue(obj);
+        }
         that.forceUpdate();
     }
 

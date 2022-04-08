@@ -115,7 +115,8 @@ function App2(props) {
               onClick={() => {
                 console.log(row)
                 let arr = JSON.parse(JSON.stringify(row))
-                arr.status = row.status == 1 ? true : false
+                // arr.status = row.status == 1 ? true : false
+                arr.isShowTitle = row.isShowTitle == 1 ? true : false
                 setCurrent(row)
                 setOpen(true)
                 formRef.setFieldsValue(arr)
@@ -148,14 +149,14 @@ function App2(props) {
     if (source == "add") {
       let params = {
         ...val,
-        status: val.status ? 1 : 2
+        isShowTitle: val.isShowTitle ? 1 : 2
       }
       addOfflineProgramFunc(params)
     } else if (source == "edit") {
       let params = {
         ...currentItem,
         ...val,
-        status: val.status ? 1 : 2
+        isShowTitle: val.isShowTitle ? 1 : 2
       }
       updateOfflineProgramFunc(params)
     }else{
@@ -248,7 +249,7 @@ function App2(props) {
               <Form.Item label="位置" name="sort">
                 <InputNumber placeholder="请输入位置" style={{ width: "200px" }} min={0} />
               </Form.Item>
-              <Form.Item label="显示标题" name="status" valuePropName="checked">
+              <Form.Item label="显示标题" name="isShowTitle" valuePropName="checked">
                 <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>
               </Form.Item>
               <Form.Item label="类型" name="type">

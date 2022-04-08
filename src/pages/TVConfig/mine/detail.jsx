@@ -479,7 +479,7 @@ function App2(props) {
                       </Form.Item>
                       {
                         formRef.getFieldValue("jumpType") == 11 &&
-                        <Form.Item label="请选择视频" name="">
+                        <Form.Item label="请选择视频" name="channelSubTitle">
                           <Select
                             placeholder="请选择视频"
                             allowClear
@@ -656,7 +656,7 @@ function App2(props) {
                     </Form.Item>
                     {
                       formRef.getFieldValue("jumpType") == 11 &&
-                      <Form.Item label="请选择视频" name="">
+                      <Form.Item label="请选择视频" name="channelSubTitle">
                         <Select
                           placeholder="请选择视频"
                           allowClear

@@ -310,31 +310,7 @@ function App2() {
                   </Select>
                 </Form.Item>
               }
-              {
-                formRef.getFieldValue("playType") == 2 &&
-                <Form.Item label="图片" name="playTarget" rules={[{ required: true, message: '请输入图片' }]}>
-                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "flex-start" }}>
 
-                    <Input.TextArea placeholder="请输入图片地址" defaultValue={getUploadFileImageUrlByType('playTarget')} key={getUploadFileImageUrlByType('playTarget')}
-                      onChange={(e) => {
-                        if (privateData.inputTimeOutVal) {
-                          clearTimeout(privateData.inputTimeOutVal);
-                          privateData.inputTimeOutVal = null;
-                        }
-                        privateData.inputTimeOutVal = setTimeout(() => {
-                          if (!privateData.inputTimeOutVal) return;
-                          formRef.setFieldsValue({ playTarget: e.target.value })
-                          forceUpdatePages()
-                        }, 1000)
-                      }}
-                    />
-                    <MyImageUpload
-                      getUploadFileUrl={(file, newItem) => { getUploadFileUrl('playTarget', file, newItem) }}
-                      imageUrl={getUploadFileImageUrlByType('playTarget')} />
-                  </div>
-
-                </Form.Item>
-              }
               {
                 formRef.getFieldValue("playType") == 3 &&
                 <Form.Item label="视频" name="playTarget" rules={[{ required: true, message: '请输入视频' }]}>
@@ -361,6 +337,28 @@ function App2() {
 
                 </Form.Item>
               }
+              <Form.Item label="封面图" name="cover" rules={[{ required: true, message: '请上传封面图' }]}>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "flex-start" }}>
+
+                  <Input.TextArea placeholder="请输入封面图地址" defaultValue={getUploadFileImageUrlByType('cover')} key={getUploadFileImageUrlByType('cover')}
+                    onChange={(e) => {
+                      if (privateData.inputTimeOutVal) {
+                        clearTimeout(privateData.inputTimeOutVal);
+                        privateData.inputTimeOutVal = null;
+                      }
+                      privateData.inputTimeOutVal = setTimeout(() => {
+                        if (!privateData.inputTimeOutVal) return;
+                        formRef.setFieldsValue({ cover: e.target.value })
+                        forceUpdatePages()
+                      }, 1000)
+                    }}
+                  />
+                  <MyImageUpload
+                    getUploadFileUrl={(file, newItem) => { getUploadFileUrl('cover', file, newItem) }}
+                    imageUrl={getUploadFileImageUrlByType('cover')} />
+                </div>
+
+              </Form.Item>
 
               <Form.Item label="播放器标题" name="playTitle" rules={[{ required: true, message: '请输入播放器标题' }]}>
                 <Input placeholder="请输入播放器标题" />

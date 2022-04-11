@@ -507,6 +507,7 @@ function App2() {
                                                     let obj = defaultPro[arr[0].value]
                                                     info[index].contents[i].startTime = obj.start_time
                                                     info[index].contents[i].endTime = obj.end_time
+                                                    info[index].contents[i].programName = obj.name
                                                     formRef.setFieldsValue({ blocks: info })
                                                   }
                                                 }}

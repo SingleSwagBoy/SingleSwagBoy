@@ -397,7 +397,7 @@ function App2() {
 
                       {fields.map((field, index) => (
                         <>
-                          {/* <Divider key={index+fields.length}>板块{index + 1}</Divider> */}
+                          <Divider key={index+fields.length}>板块{index + 1}</Divider>
 
                           <Space key={field.key} align="baseline" style={{ flexWrap: "wrap", alignItems: "flex-start" }} className="border_box">
                             <Form.Item {...field} label="标题" name={[field.name, 'titleType']} fieldKey={[field.fieldKey, 'titleType']}>
@@ -515,7 +515,7 @@ function App2() {
                                                 {
                                                   programsList.map((r, i) => {
                                                     return (
-                                                      <Option value={r.value} key={r.value}>{r.label}</Option>
+                                                      <Option value={r.value} key={i}>{r.label}</Option>
                                                     )
                                                   })
                                                 }

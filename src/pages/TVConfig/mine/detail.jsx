@@ -479,7 +479,7 @@ function App2(props) {
                       </Form.Item>
                       {
                         formRef.getFieldValue("jumpType") == 11 &&
-                        <Form.Item label="请选择视频" name="channelSubTitle">
+                        <Form.Item label="选择视频" name="channelSubTitle">
                           <Select
                             placeholder="请选择视频"
                             allowClear
@@ -496,6 +496,7 @@ function App2(props) {
                             }}
                             onChange={(r) => {
                               let info = defaultPrograms[r]
+                              console.log(info,"======info========")
                               formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
                               forceUpdatePages()
                             }}
@@ -595,18 +596,18 @@ function App2(props) {
                 <>
                   <Form.Item label="二维码尺寸" >
                     <Form.Item label="" name="qrWidth">
-                      <Input placeholder="请输入宽度" style={{ width: "200px" }} prefix="宽度" suffix="px" />
+                      <InputNumber placeholder="请输入宽度" style={{ width: "200px" }} prefix="宽度" suffix="px" min={0} />
                     </Form.Item>
                     <Form.Item label="" name="qrHeight">
-                      <Input placeholder="请输入高度" style={{ width: "200px" }} prefix="高度" suffix="px" />
+                      <InputNumber placeholder="请输入高度" style={{ width: "200px" }} prefix="高度" suffix="px" min={0} />
                     </Form.Item>
                   </Form.Item>
                   <Form.Item label="二维码坐标" >
                     <Form.Item label="" name="qrX">
-                      <Input placeholder="请输入横向坐标" style={{ width: "200px" }} prefix="横" suffix="px" />
+                      <InputNumber placeholder="请输入横向坐标" style={{ width: "200px" }} prefix="横" suffix="px" min={0} />
                     </Form.Item>
                     <Form.Item label="" name="qrY">
-                      <Input placeholder="请输入纵向坐标" style={{ width: "200px" }} prefix="纵" suffix="px" />
+                      <InputNumber placeholder="请输入纵向坐标" style={{ width: "200px" }} prefix="纵" suffix="px" min={0} />
                     </Form.Item>
                   </Form.Item>
                   <Form.Item label="二维码位置" name="position">
@@ -656,7 +657,7 @@ function App2(props) {
                     </Form.Item>
                     {
                       formRef.getFieldValue("jumpType") == 11 &&
-                      <Form.Item label="请选择视频" name="channelSubTitle">
+                      <Form.Item label="选择视频" name="channelSubTitle">
                         <Select
                           placeholder="请选择视频"
                           allowClear
@@ -673,6 +674,7 @@ function App2(props) {
                           }}
                           onChange={(r) => {
                             let info = defaultPrograms[r]
+                            console.log(info,"========info1=======")
                             formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
                             forceUpdatePages()
                           }}

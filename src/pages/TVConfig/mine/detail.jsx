@@ -196,8 +196,8 @@ function App2(props) {
       let params = {
         ...val,
         status: val.status ? 1 : 2,
-        startTime: val.time ? parseInt(val.time[0].valueOf() / 1000) : "",
-        endTime: val.time ? parseInt(val.time[1].valueOf() / 1000) : "",
+        startTime: val.time ? parseInt(val.time[0].valueOf() / 1000) : 0,
+        endTime: val.time ? parseInt(val.time[1].valueOf() / 1000) : 0,
         channelSpecial: val.channelSpecial ? 1 : 2
       }
       addOfflineProgramFunc(params)

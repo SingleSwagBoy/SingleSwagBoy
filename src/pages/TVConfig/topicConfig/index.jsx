@@ -430,9 +430,8 @@ function App2() {
                             </Form.Item>
                             <Form.Item {...field} label="列表类型" name={[field.name, 'composeType']} fieldKey={[field.fieldKey, 'composeType']}>
                               <Radio.Group style={{ width: "600px" }}>
-                                {/* 1=横排;2=双纵;3=首位高权重 */}
-                                <Radio value={1}>横排列表</Radio>
-                                <Radio value={2}>双纵列表</Radio>
+                                <Radio value={2}>横排列表</Radio>
+                                <Radio value={1}>双纵列表</Radio>
 
                               </Radio.Group>
                             </Form.Item>

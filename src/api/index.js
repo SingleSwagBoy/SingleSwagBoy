@@ -621,6 +621,9 @@ export const updateMangoSort = (type,params) => { return request2.post(`${baseUr
 export const getSortList = (params) => { return request2.get(`${baseUrl}/mms/config/common/get`,{params:params}); };                //芒果专区-相关模块数据-获取
 export const getMangoSyncTab = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config?key=${params.key}`); };          //芒果专区-相关模块数据-tab排序缓存同步 ,{params:params}
 
+// 获取用户相册照片
+export const getlistPhoto = (params) => { return request.post(`${baseUrl}/mms/album/listPhoto`, params); };                 // 解锁配置更新
+
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

@@ -1,0 +1,46 @@
+.my_tab .ant-tabs-tab{
+    /* min-width: 200px !important; */
+}
+.tab_input{
+    min-width: 200px !important;
+}
+
+.everyBody-item{
+    font-size: 16px;
+    color: #666;
+    /* color: #7C5853; */
+    margin-right: 30px;
+    position: relative;
+    cursor: pointer;
+}
+.everyBody-item-active{
+    color: #1890ff;
+}
+.everyBody-item-active::after{
+    position: absolute;
+    content: "";
+    z-index: 9;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #1890ff;
+    bottom: -8px;
+}
+.btns-modal{
+    margin-top: 20px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+}
+.mar-left-10{
+    margin-left: 10px;
+}
+.form-g{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+}
+.right-text{
+    margin-left: 40px;
+    line-height: 30px;
+}

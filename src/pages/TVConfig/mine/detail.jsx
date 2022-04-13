@@ -517,7 +517,7 @@ function App2(props) {
                       <Form.Item label="背景色" name="channelBackgroundColor" >
                         <Input placeholder="请输入背景色" />
                       </Form.Item>
-                      <Form.Item label="是否特殊频道" name="channelSpecial" valuePropName="checked">
+                      <Form.Item label="是否显示副标题" name="channelSpecial" valuePropName="checked">
                         <Switch checkedChildren="是" unCheckedChildren="不是" ></Switch>
                       </Form.Item>
                     </>
@@ -594,20 +594,20 @@ function App2(props) {
               {
                 formRef.getFieldValue("type") == 4 && //登录
                 <>
-                  <Form.Item label="二维码尺寸" >
-                    <Form.Item label="" name="qrWidth">
-                      <InputNumber placeholder="请输入宽度" style={{ width: "200px" }} prefix="宽度" suffix="px" min={0} />
+                  <Form.Item label="二维码尺寸">
+                    <Form.Item label="" name="qrWidth" style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
+                      <InputNumber addonBefore="宽度"  placeholder="请输入宽度" style={{ width: "200px" }}  suffix="px" min={0} />
                     </Form.Item>
-                    <Form.Item label="" name="qrHeight">
-                      <InputNumber placeholder="请输入高度" style={{ width: "200px" }} prefix="高度" suffix="px" min={0} />
+                    <Form.Item label="" name="qrHeight" style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
+                      <InputNumber addonBefore="高度" placeholder="请输入高度" style={{ width: "200px" }}  suffix="px" min={0} />
                     </Form.Item>
                   </Form.Item>
                   <Form.Item label="二维码坐标" >
-                    <Form.Item label="" name="qrX">
-                      <InputNumber placeholder="请输入横向坐标" style={{ width: "200px" }} prefix="横" suffix="px" min={0} />
+                    <Form.Item label="" name="qrX"   style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
+                      <InputNumber addonBefore="横向坐标" placeholder="请输入横向坐标" style={{ width: "200px" }}  suffix="px" min={0} />
                     </Form.Item>
-                    <Form.Item label="" name="qrY">
-                      <InputNumber placeholder="请输入纵向坐标" style={{ width: "200px" }} prefix="纵" suffix="px" min={0} />
+                    <Form.Item label="" name="qrY"   style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
+                      <InputNumber addonBefore="纵向坐标" placeholder="请输入纵向坐标" style={{ width: "200px" }}  suffix="px" min={0} />
                     </Form.Item>
                   </Form.Item>
                   <Form.Item label="二维码位置" name="position">

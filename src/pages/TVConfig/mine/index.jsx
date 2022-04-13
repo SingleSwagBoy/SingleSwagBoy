@@ -16,7 +16,7 @@ function App2(props) {
   const [forceUpdateId, forceUpdate] = useReducer(() => [], []);
   const [forceUpdatePage, forceUpdatePages] = useReducer(() => [], []);
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(100)
   const [total, setTotal] = useState(0)
   const [lists, setLists] = useState([])
   const layout = { labelCol: { span: 4 }, wrapperCol: { span: 20 } }

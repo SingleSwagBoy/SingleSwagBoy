@@ -200,7 +200,7 @@ export default class EarnIncentiveTask extends React.Component {
                     <Table
                         dataSource={lists}
                         scroll={{ x: 1200, y: '75vh' }}
-                        // rowKey={item=>item.indexId}
+                        rowKey={item=>item.id}
                         loading={loading}
                         columns={columns}
                         pagination={{
@@ -317,9 +317,10 @@ export default class EarnIncentiveTask extends React.Component {
             </div>
         )
     }
-    componentDidMount() {
-        this.getHkCategory();
-        this.requestNewAdTagList()
+    async componentDidMount() {
+        await this.requestNewAdTagList()
+        await this.getHkCategory();
+      
     }
     changeSize = (page, pageSize) => {   // 分页
         this.setState({
@@ -443,6 +444,9 @@ export default class EarnIncentiveTask extends React.Component {
         })
     }
     getTagsName(val) {
+        if(this.state.dict_user_tags.length == 0){
+            return "-"
+        }
         let arr = this.state.dict_user_tags.filter(r => r.code == val)
         if (arr.length > 0) {
             return arr[0].name

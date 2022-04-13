@@ -171,7 +171,7 @@ export default class EarnIncentiveTask extends React.Component {
                     <Table
                         dataSource={lists}
                         scroll={{ x: 1500, y: '75vh' }}
-                        // rowKey={item=>item.indexId}
+                        rowKey={item=>item.id}
                         loading={loading}
                         columns={columns}
                         pagination={{

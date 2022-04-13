@@ -48,7 +48,13 @@ export default class MenuImagePage extends Component {
             selectProps: {
                 optionFilterProp: "children",
                 filterOption(input, option) {
-                    return option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    // console.log(option.children,"option.children")
+                    if(option.children[0].toLowerCase().indexOf(input.toLowerCase()) >= 0){
+                        return option.children[0].toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }else{
+                        return option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                  
                 },
                 showSearch() {
                     console.log('onSearch')
@@ -231,7 +237,7 @@ export default class MenuImagePage extends Component {
                                                                         {...this.state.selectProps}
                                                                     >
                                                                         {rechargeList.map((item, index) => {
-                                                                            return <Option value={item.skuCode} key={item.skuCode}> {item.name}</Option>
+                                                                            return <Option value={item.skuCode} key={item.skuCode}>{item.name}{item.skuCode}</Option>
                                                                         })}
                                                                     </Select>
                                                                 </Form.Item>

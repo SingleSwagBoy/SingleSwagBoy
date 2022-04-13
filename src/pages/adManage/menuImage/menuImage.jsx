@@ -8,11 +8,12 @@
 
 
 import React, { Component } from 'react'
-import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message ,Divider} from 'antd';
+import { Input, InputNumber, Form, Select, DatePicker, Button, Table, Switch, Modal, Image, Alert, message, Divider, Space } from 'antd';
 import { MyImageUpload, MyTagTypes, MySyncBtn } from '@/components/views.js';
 import moment from 'moment';
 import '@/style/base.css';
-
+import './index.css'
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import {
     requestConfigMenuImageList,                         //菜单栏配置 列表
     requestConfigMenuImageCreate,                       //菜单栏配置 新增
@@ -20,12 +21,12 @@ import {
     requestConfigMenuImageDelete,                       //菜单栏配置 删除
     requestConfigMenuImageChangeState,                  //菜单栏配置 修改状态
     requestNewAdTagList,                                   //用户设备标签
+    requestProductSkuList,                              //菜单栏配置 获取sku 套餐列表
 } from 'api';
 
 let { TextArea } = Input;
 let { Option } = Select;
 let { RangePicker } = DatePicker;
-
 export default class MenuImagePage extends Component {
 
     constructor(props) {
@@ -44,18 +45,34 @@ export default class MenuImagePage extends Component {
                 is_show: false,
                 title: '',
             },
-            page:1,
-            pageSize:50,
-            total:0,
-            positions:[{key:1,value:"左上"},{key:2,value:"左下"},{key:3,value:"中心"},{key:4,value:"右上"},{key:5,value:"右下"},{key:6,value:"垂直居中"},{key:7,value:"横向居中"}]
+            selectProps: {
+                optionFilterProp: "children",
+                filterOption(input, option) {
+                    // console.log(option.children,"option.children")
+                    if(option.children[0].toLowerCase().indexOf(input.toLowerCase()) >= 0){
+                        return option.children[0].toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }else{
+                        return option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                  
+                },
+                showSearch() {
+                    console.log('onSearch')
+                }
+            },
+            page: 1,
+            pageSize: 50,
+            total: 0,
+            positions: [{ key: 1, value: "左上" }, { key: 2, value: "左下" }, { key: 3, value: "中心" }, { key: 4, value: "右上" }, { key: 5, value: "右下" }, { key: 6, value: "垂直居中" }, { key: 7, value: "横向居中" }],
+            activeKey: 0,
+            rechargeList: [],
         }
     }
 
 
     render() {
         let that = this;
-        let { table_box, modal_box , positions} = that.state;
-
+        let { table_box, modal_box, positions, activeKey, rechargeList } = that.state;
         return (
             <div>
                 <Alert className="alert-box" message="菜单栏图片配置" type="success" action={
@@ -65,13 +82,13 @@ export default class MenuImagePage extends Component {
                     </div>
                 } />
 
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }}
-                pagination={{
-                    current: this.state.page,
-                    pageSize: this.state.pageSize,
-                    total: this.state.total,
-                    onChange: this.changeSize,
-                }}
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} scroll={{ x: 1500, y: '75vh' }}
+                    pagination={{
+                        current: this.state.page,
+                        pageSize: this.state.pageSize,
+                        total: this.state.total,
+                        onChange: this.changeSize,
+                    }}
                 />
 
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={800} transitionName="" onCancel={() => that.onModalCancelClick()}
@@ -81,7 +98,7 @@ export default class MenuImagePage extends Component {
                     ]}
                 >
                     {/* <MyTagTypes is_old_tag_resouce={true} tag_name='tag' union_type="union_type" delivery_name="delivery_name"  onRef={(ref) => that.onTagTypesRefCallback(ref)} /> */}
-                    <MyTagTypes is_old_tag_resouce={false} tag_name='tag'  onRef={(ref) => that.onTagTypesRefCallback(ref)} />
+                    <MyTagTypes is_old_tag_resouce={false} tag_name='tag' onRef={(ref) => that.onTagTypesRefCallback(ref)} />
 
                     <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} ref={this.formRef}>
                         {
@@ -193,7 +210,94 @@ export default class MenuImagePage extends Component {
                                 <Form.Item label="纵向偏移量" name="yOffset">
                                     <Input className='base-input-wrapper' placeholder="例如:200" addonAfter="px" />
                                 </Form.Item>
-                                
+                                <Divider orientation="left">套餐关联</Divider>
+                                <Form.Item
+                                    label=""
+                                    wrapperCol={{ offset: 6, span: 16 }}
+                                >
+                                    <Form.List name="productList">
+                                        {(fields, { add, remove }) => (
+                                            <>
+                                                <Form.Item>
+                                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                        新增套餐关联
+                                                    </Button>
+                                                </Form.Item>
+                                                <div style={{ display: "flex", flexWrap: "wrap" }}>
+                                                    {
+                                                        fields.map((field, index) => (
+                                                            <div style={{ position: "relative" }} key={field.key}>
+                                                                <Form.Item {...field} name={[field.name, 'pCode']} fieldKey={[field.fieldKey, 'pCode']}>
+                                                                    <Select
+                                                                        placeholder="请选择支付套餐" style={{ minWidth: "200px" }} className={`${this.state.activeKey == index && "isActivite"}`}
+                                                                        onClick={() => {
+                                                                            this.setState({ activeKey: index })
+                                                                            this.forceUpdate()
+                                                                        }}
+                                                                        {...this.state.selectProps}
+                                                                    >
+                                                                        {rechargeList.map((item, index) => {
+                                                                            return <Option value={item.skuCode} key={item.skuCode}>{item.name}{item.skuCode}</Option>
+                                                                        })}
+                                                                    </Select>
+                                                                </Form.Item>
+                                                                {/* <div></div> */}
+                                                                <MinusCircleOutlined onClick={() => {
+                                                                    remove(field.name)
+                                                                    if (index > 0) {
+                                                                        this.setState({ activeKey: index - 1 })
+                                                                    } else {
+                                                                        this.setState({ activeKey: 0 })
+                                                                    }
+                                                                }} style={{ position: "absolute", right: 0, top: "10px" }} />
+                                                            </div>
+
+                                                        ))
+                                                    }
+                                                </div>
+
+                                                {fields.map((field, index) => (
+                                                    <>
+                                                        {
+                                                            this.state.activeKey == index && that.formRef && that.formRef.current &&
+                                                            <Space key={field.key} align="baseline" style={{ border: "1px dashed red", flexWrap: "wrap", padding: "10px 0" }}>
+                                                                <Form.Item {...field} label="字体大小" name={[field.name, 'fontSize']} fieldKey={[field.fieldKey, 'fontSize']} rules={[{ required: true, message: '字体大小' }]}>
+                                                                    <InputNumber min={0} placeholder="请输入字体大小" />
+                                                                </Form.Item>
+                                                                <Form.Item {...field} label="字体颜色" name={[field.name, 'fontColor']} fieldKey={[field.fieldKey, 'fontColor']} rules={[{ required: true, message: '字体颜色' }]}>
+                                                                    <Input />
+                                                                </Form.Item>
+                                                                <Form.Item {...field} label="倒计时背景" name={[field.name, 'djsBackgroundColor']} fieldKey={[field.fieldKey, 'djsBackgroundColor']} rules={[{ required: true, message: '倒计时背景' }]}>
+                                                                    <Input />
+                                                                </Form.Item>
+                                                                <Form.Item {...field} label="开启活动倒计时" name={[field.name, 'hddjs']} fieldKey={[field.fieldKey, 'hddjs']} valuePropName='checked'>
+                                                                    <Switch checkedChildren="是" unCheckedChildren="否" />
+                                                                </Form.Item>
+                                                                <Form.Item {...field} label="显示距今结束时间" name={[field.name, 'jljr']} fieldKey={[field.fieldKey, 'jljr']} valuePropName='checked'>
+                                                                    <Switch checkedChildren="是" unCheckedChildren="否" />
+                                                                </Form.Item>
+                                                                <Form.Item label="背景图"  >
+                                                                    <Form.Item name={[field.name, 'backgroundImage']} fieldKey={[field.fieldKey, 'backgroundImage']} >
+                                                                        <MyImageUpload
+                                                                            getUploadFileUrl={(file, newItem) => { that.getUploadFileUrl('backgroundImage', file, newItem, index, "list") }}
+                                                                            imageUrl={that.getUploadFileImageUrlByType('backgroundImage', index, "list")} />
+                                                                    </Form.Item>
+                                                                    <Form.Item name={[field.name, 'backgroundImage']} fieldKey={[field.fieldKey, 'backgroundImage']} >
+                                                                        <TextArea className="base-input-wrapper" placeholder="请上传背景图" onBlur={(e) => that.onInputBlurCallback("backgroundImage", e,index,"list")} />
+                                                                    </Form.Item>
+                                                                </Form.Item>
+                                                            </Space>
+
+                                                        }
+                                                    </>
+
+                                                ))}
+
+
+                                            </>
+                                        )}
+                                    </Form.List>
+                                </Form.Item>
                             </div>
                         }
                     </Form>
@@ -205,14 +309,15 @@ export default class MenuImagePage extends Component {
     componentDidMount() {
         let that = this;
         that.initData();
+        this.requestProductSkuList()
     }
     initData() {
         let that = this;
         //用户标签
-        let params={
-            page:{
-                pageSize:9999,
-                currentPage:1
+        let params = {
+            page: {
+                pageSize: 9999,
+                currentPage: 1
             }
         }
         requestNewAdTagList(params).then(res => {
@@ -232,13 +337,30 @@ export default class MenuImagePage extends Component {
             });
         });
     }
+    requestProductSkuList() {
+        let that = this;
+        let obj = {
+            page: { isPage: 9 },
+            productCategoryType: 10
+        };
+        requestProductSkuList(obj).then(res => {
+            console.log(res.data)
+            if (res.data.errCode == 0) {
+                that.setState({
+                    rechargeList: res.data.data
+                })
+            }
+
+
+        })
+    }
     initTitle() {
         let that = this;
         let dict_user_tags = that.state.dict_user_tags;
 
         let table_title = [
             { title: 'id', dataIndex: 'id', key: '_id', width: 80, },
-            { title: '名字', dataIndex: 'title', key: 'title', width: 200,ellipsis: true, },
+            { title: '名字', dataIndex: 'title', key: 'title', width: 200, ellipsis: true, },
             // { title: '数据上报key', dataIndex: 'name', key: 'name', width: 200, },
             {
                 title: '标签', dataIndex: 'tag', key: 'tag', width: 200,
@@ -311,18 +433,18 @@ export default class MenuImagePage extends Component {
         })
 
     }
-    getTag(val){
-        if(val){
-            let arr = this.state.dict_user_tags.filter(item=>val==item.code)
-            if(arr.length>0){
+    getTag(val) {
+        if (val) {
+            let arr = this.state.dict_user_tags.filter(item => val == item.code)
+            if (arr.length > 0) {
                 return arr[0].name
-            }else{
+            } else {
                 return "未配置"
             }
-        }else{
+        } else {
             return "未配置"
         }
-       
+
     }
 
     refreshList() {
@@ -335,9 +457,9 @@ export default class MenuImagePage extends Component {
             table_box: table_box,
         }, () => {
             let obj = {
-                page:{
-                    currentPage:this.state.page,
-                    pageSize:this.state.pageSize
+                page: {
+                    currentPage: this.state.page,
+                    pageSize: this.state.pageSize
                 }
             };
             requestConfigMenuImageList(obj)
@@ -357,7 +479,7 @@ export default class MenuImagePage extends Component {
                     table_box.table_datas = datas;
                     that.setState({
                         table_box: table_box,
-                        total:res.data.page.totalCount
+                        total: res.data.page.totalCount
                     })
                 })
         })
@@ -430,6 +552,13 @@ export default class MenuImagePage extends Component {
                 moment(obj.endTime)
             ]
             obj.status = obj.status === 1 ? true : false;
+            if (obj.productList && obj.productList.length > 0) {
+                obj.productList.forEach(r => {
+                    r.hddjs = r.hddjs == 1 ? true : false
+                    r.jljr = r.jljr == 1 ? true : false
+                })
+            }
+
             that.formRef.current.resetFields();
             that.formRef.current.setFieldsValue(obj);
             that.forceUpdate();
@@ -481,29 +610,43 @@ export default class MenuImagePage extends Component {
         })
     }
     //获取上传文件
-    getUploadFileUrl(type, file, newItem) {
+    getUploadFileUrl(type, file, newItem, index, source) {
         let that = this;
-
-
         let image_url = newItem.fileUrl;
-        let obj = {};
-        obj[type] = image_url;
-
-        that.formRef.current.setFieldsValue(obj);
+        if (source == "list" && that.formRef.current && that.formRef.current.getFieldValue("productList")[index]) {
+            let info = that.formRef.current.getFieldValue("productList")
+            info[index][type] = image_url
+            that.formRef.current.setFieldsValue({ productList: info })
+        } else {
+            let obj = {};
+            obj[type] = image_url;
+            that.formRef.current.setFieldsValue(obj);
+        }
         that.forceUpdate();
     }
     //获取上传文件图片地址 
-    getUploadFileImageUrlByType(type) {
+    getUploadFileImageUrlByType(type, index, source) {
         let that = this;
-        let image_url = that.formRef.current.getFieldValue(type);
+        let image_url;
+        if (source == "list" && that.formRef.current && that.formRef.current.getFieldValue("productList")[index]) {
+            image_url = that.formRef.current.getFieldValue("productList")[index][type]
+        } else {
+            image_url = that.formRef.current.getFieldValue(type);
+        }
         return image_url ? image_url : '';
     }
     //输入框失去焦点监听
-    onInputBlurCallback(type, e) {
+    onInputBlurCallback(type, e,index,source) {
         let that = this;
-        let obj = {};
-        obj[type] = e.target.value;
-        that.formRef.current.setFieldsValue(obj);
+        if(source == "list"){
+            let info = that.formRef.current.getFieldValue("productList")
+            info[index][type] = e.target.value;
+            that.formRef.current.setFieldsValue({productList:info})
+        }else{
+            let obj = {};
+            obj[type] = e.target.value;
+            that.formRef.current.setFieldsValue(obj);
+        }
         that.forceUpdate();
     }
 
@@ -547,25 +690,25 @@ export default class MenuImagePage extends Component {
         let that = this;
         let ref_tag_types = that.state.ref_tag_types;
         let value = that.formRef.current.getFieldsValue();
-        console.log("value",value)
-        if(value.renewWindowWidth){
-            value.renewWindowWidth=parseInt(value.renewWindowWidth)
-        }else{
+        console.log("value", value)
+        if (value.renewWindowWidth) {
+            value.renewWindowWidth = parseInt(value.renewWindowWidth)
+        } else {
             delete value.renewWindowWidth
         }
-        if(value.renewWindowHeight){
-            value.renewWindowHeight=parseInt(value.renewWindowHeight)
-        }else{
+        if (value.renewWindowHeight) {
+            value.renewWindowHeight = parseInt(value.renewWindowHeight)
+        } else {
             delete value.renewWindowHeight
         }
-        if(value.xOffset){
-            value.xOffset=parseInt(value.xOffset)
-        }else{
+        if (value.xOffset) {
+            value.xOffset = parseInt(value.xOffset)
+        } else {
             delete value.xOffset
         }
-        if(value.yOffset){
-            value.yOffset=parseInt(value.yOffset)
-        }else{
+        if (value.yOffset) {
+            value.yOffset = parseInt(value.yOffset)
+        } else {
             delete value.yOffset
         }
         let obj = Object.assign({}, value, ref_tag_types.loadData());
@@ -649,9 +792,14 @@ export default class MenuImagePage extends Component {
         } else {
             delete obj.fontSize;
         }
+        if (obj.productList && obj.productList.length > 0) {
+            obj.productList.forEach(r => {
+                r.hddjs = r.hddjs ? 1 : 2
+                r.jljr = r.jljr ? 1 : 2
+            })
+        }
 
-
-
+        // return console.log(obj,"-------obj--------")
         let id = obj.id;
         (id ? requestConfigMenuImageEidt(obj) : requestConfigMenuImageCreate(obj))
             .then(res => {
@@ -665,16 +813,16 @@ export default class MenuImagePage extends Component {
                     if (that.formRef && that.formRef.current) {
                         that.formRef.current.resetFields();
                     }
-                    if(!id){
+                    if (!id) {
                         this.setState({
-                            page:1
-                        },()=>{
+                            page: 1
+                        }, () => {
                             that.refreshList();
                         })
-                    }else{
+                    } else {
                         that.refreshList();
                     }
-                   
+
                 })
             })
             .catch(res => {
@@ -699,5 +847,21 @@ export default class MenuImagePage extends Component {
             this.refreshList()
         })
 
+    }
+
+
+
+    onChange = activeKey => {
+        this.setState({ activeKey });
+    };
+
+    onEdit = (targetKey, action) => {
+        this[action](targetKey);
+    };
+    add() {
+        console.log(111)
+    };
+    remove(key) {
+        console.log(key)
     }
 }

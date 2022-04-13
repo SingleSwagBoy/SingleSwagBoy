@@ -625,6 +625,34 @@ export const getMangoSyncTab = (params) => { return request2.get(`${baseUrl}/mms
 export const getlistPhoto = (params) => { return request.post(`${baseUrl}/mms/album/listPhoto`, params); };                 // 解锁配置更新
 
 
+//tv专题页配置
+export const getTopic = (params) => { return request2.get(`${baseUrl}/mms/channel/tvspecial/list`, {params:params}); };                 // 解锁配置更新
+export const addTopic = (params) => { return request2.post(`${baseUrl}/mms/channel/tvspecial/add`, params); };                 // 解锁配置更新
+export const updateTopic = (params) => { return request2.post(`${baseUrl}/mms/channel/tvspecial/update`, params); };                 // 解锁配置更新
+export const delTopic = (params) => { return request2.get(`${baseUrl}/mms/channel/tvspecial/del`, {params:params}); };                 // 解锁配置更新
+export const syncTopic = (params) => { return request2.get(`${baseUrl}/mms/channel/tvspecial/sync`, {params:params}); };                 // 解锁配置更新
+
+//我的配置
+export const getMine = (params) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/list`, params); };                 // 我的配置列表
+export const addMine = (params) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/add`, params); };                 // 我的配置增加
+export const editMine = (params) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/edit`, params); };                 // 我的配置编辑
+export const delMine = (params) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/del`, params); };                 // 我的配置删除
+export const getMineGrid = (params,query) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/${query.id}/list`, params); };                 // 我的配置删除
+export const addMineGrid = (params,query) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/${query.id}/add`, params); };                 // 我的配置删除
+export const editMineGrid = (params,query) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/${query.id}/edit`, params); };                 // 我的配置删除
+export const copyMineGrid = (params,query) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/${query.id}/copy`, params); };                 // 我的配置删除
+export const delMineGrid = (params) => { return request2.post(`${baseUrl}/mms/tv/myCenter/grid/second/del`, params); };                 // 我的配置删除
+export const syncMineGrid = (params) => { return request2.get(`${baseUrl}/mms/tv/myCenter/grid/second/sync`, {params:params}); };                 // 我的配置删除
+
+
+//退出登录
+export const getLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/list`, {params:params}); };                 // 我的配置删除
+export const addLogout = (params) => { return request2.post(`${baseUrl}/mms/channel/logout/add`, params); };                 // 我的配置删除
+export const updateLogout = (params) => { return request2.post(`${baseUrl}/mms/channel/logout/update`, params); };                 // 我的配置删除
+export const delLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/del`, {params:params}); };                 // 我的配置删除
+export const syncLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/sync`, {params:params}); };                 // 我的配置删除
+export const changeLogoutState = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/status`, {params:params}); };                 // 我的配置删除
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

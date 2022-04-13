@@ -1,0 +1,5 @@
+.isActivite .ant-select-selector{
+    background-color: red !important;
+    cursor: pointer;
+    color: #fff;
+}

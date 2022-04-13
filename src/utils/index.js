@@ -206,33 +206,33 @@ function setCursorPosition(ctrl, pos) {
 
 function operator() { //运算符号
   let operator = [{
-      "value": 1,
-      "name": "="
-    },
-    {
-      "value": 2,
-      "name": "!="
-    },
-    {
-      "value": 3,
-      "name": ">"
-    },
-    {
-      "value": 4,
-      "name": ">="
-    },
-    {
-      "value": 5,
-      "name": "<"
-    },
-    {
-      "value": 6,
-      "name": "<="
-    },
-    {
-      "value": 7,
-      "name": "in"
-    },
+    "value": 1,
+    "name": "="
+  },
+  {
+    "value": 2,
+    "name": "!="
+  },
+  {
+    "value": 3,
+    "name": ">"
+  },
+  {
+    "value": 4,
+    "name": ">="
+  },
+  {
+    "value": 5,
+    "name": "<"
+  },
+  {
+    "value": 6,
+    "name": "<="
+  },
+  {
+    "value": 7,
+    "name": "in"
+  },
   ]
   return operator
 }
@@ -261,10 +261,10 @@ function randomWord(randomFlag, min, max) {
 function getRandomArrayValue(arr, num) {
   var sData = arr.slice(0), i = arr.length, min = i - num, item, index;
   while (i-- > min) {
-      index = Math.floor((i + 1) * Math.random());
-      item = sData[index];
-      sData[index] = sData[i];
-      sData[i] = item;
+    index = Math.floor((i + 1) * Math.random());
+    item = sData[index];
+    sData[index] = sData[i];
+    sData[i] = item;
   }
   return sData.slice(min);
 }
@@ -281,7 +281,7 @@ function isNumber(val) { //判断是否是数字类型
   }
 }
 /* 限制数字输入框只能输入整数 */
- /* 限制数字输入框只能输入整数 */
+/* 限制数字输入框只能输入整数 */
 const limitNumber = value => {
   if (typeof value === 'string') {
     return !isNaN(Number(value)) ? value.replace(/^(0+)|[^\d]/g, '') : ''
@@ -291,6 +291,22 @@ const limitNumber = value => {
     return ''
   }
 }
+const goodLookTypes = [
+  { key: 1, value: '点歌台' },
+  { key: 2, value: '电视相册' },
+  // { key: 3, value: '公共相册' },
+]
+const jumpMenuTypes = [
+  { key: 1, value: '跳转到我的' },
+  // { key: 2, value: '跳转到H5' },
+  { key: 3, value: '跳转到自建' },
+  { key: 4, value: '跳转到设置' },
+  { key: 5, value: '跳转到帮助' },
+  { key: 6, value: '跳转到语音' },
+  { key: 7, value: '跳转到套餐' },
+  // { key: 8, value: '跳转到小剧场列表页' },
+  // { key: 100, value: '跳转到小剧场播放页' },
+]
 let objFun = {
   splitStr,
   GetUrlParam,
@@ -305,7 +321,9 @@ let objFun = {
   getValueFromEvent,
   isNumber,
   limitNumber,
-  getRandomArrayValue
+  getRandomArrayValue,
+  goodLookTypes,
+  jumpMenuTypes
 }
 
 export default objFun

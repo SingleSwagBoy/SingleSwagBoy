@@ -246,8 +246,8 @@ function App2(props) {
               <Form.Item label="间隙" name="space" rules={[{ required: true, message: '请输入间隙' }]}>
                 <InputNumber placeholder="请输入间隙" style={{ width: "200px" }} min={0} />
               </Form.Item>
-              <Form.Item label="位置" name="sort">
-                <InputNumber placeholder="请输入位置" style={{ width: "200px" }} min={0} />
+              <Form.Item label="排序" name="sort">
+                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
               </Form.Item>
               <Form.Item label="显示标题" name="isShowTitle" valuePropName="checked">
                 <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>

@@ -93,7 +93,7 @@ function App2() {
                 // arr.time = 
                 arr.blocks.forEach(r => {
                   r.contents.forEach(l => {
-                    l.time = [moment(l.start * 1000), moment(l.end * 1000)]
+                    l.time = [l.start?moment(l.start * 1000):0, l.end?moment(l.end * 1000):0]
                   })
                 })
                 console.log(arr, "arr")
@@ -123,8 +123,8 @@ function App2() {
     val.blocks.forEach(r => {
       if(r.contents.length>0){
         r.contents.forEach(l => {
-          l.start = l.time[0] ? parseInt(l.time[0].valueOf() / 1000) : ""
-          l.end = l.time[1] ? parseInt(l.time[1].valueOf() / 1000) : ""
+          l.start = (l.time && l.time[0]) ? parseInt(l.time[0].valueOf() / 1000) : 0
+          l.end = (l.time && l.time[1]) ? parseInt(l.time[1].valueOf() / 1000) : 0
         })
       }
      

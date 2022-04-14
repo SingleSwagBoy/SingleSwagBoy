@@ -693,44 +693,60 @@ function App2(props) {
                     {
                       formRef.getFieldValue("jumpType") == 11 &&
                       <Form.Item label="选择视频" name="channelSubTitle">
-                        <Select
-                          placeholder="请选择视频"
-                          allowClear
-                          {...selectProps}
-                          onSearch={(val) => {
-                            if (privateData.inputTimeOutVal) {
-                              clearTimeout(privateData.inputTimeOutVal);
-                              privateData.inputTimeOutVal = null;
-                            }
-                            privateData.inputTimeOutVal = setTimeout(() => {
-                              if (!privateData.inputTimeOutVal) return;
-                              let arr = channleList.filter(item => item.code == formRef.getFieldValue("channelCode"))
-                              if (arr.length > 0) {
-                                console.log(arr, "arr")
-                                if (arr[0].recommendType == 1) { //自建
-                                  getProgams(formRef.getFieldValue("channelCode"), val)
-                                } else {
-                                  getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
+                          <Select
+                            placeholder="请选择视频"
+                            allowClear
+                            {...selectProps}
+                            onSearch={(val) => {
+                              if (privateData.inputTimeOutVal) {
+                                clearTimeout(privateData.inputTimeOutVal);
+                                privateData.inputTimeOutVal = null;
+                              }
+                              privateData.inputTimeOutVal = setTimeout(() => {
+                                if (!privateData.inputTimeOutVal) return;
+                                let arr = channleList.filter(item => item.code == formRef.getFieldValue("channelCode"))
+                                if (arr.length > 0) {
+                                  console.log(arr, "arr")
+                                  if (arr[0].recommendType == 1) {
+                                    getProgams(formRef.getFieldValue("channelCode"), val)
+                                    setDefaultPrograms([])
+                                  } else {
+                                    getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
+                                  }
+                                }
+                              }, 1000)
+                            }}
+                            onChange={(r) => {
+                              let info = ""
+                              console.log(info, "======info========")
+                              if (defaultPrograms.length > 0) { //非自建
+                                info = defaultPrograms[r]
+                                formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
+                              } else { //自建频道
+                                info = programsList.filter(item => item.programId == r)
+                                if (info.length > 0) {
+                                  formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt/1000) })
                                 }
                               }
-                            }, 1000)
-                          }}
-                          onChange={(r) => {
-                            let info = defaultPrograms[r]
-                            console.log(info, "========info1=======")
-                            formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
-                            forceUpdatePages()
-                          }}
-                        >
-                          {
-                            programsList.map((r, i) => {
-                              return (
-                                <Option value={r.value} key={r.value}>{r.label}</Option>
-                              )
-                            })
-                          }
-                        </Select>
-                      </Form.Item>
+                              forceUpdatePages()
+                            }}
+                          >
+                            {
+                              programsList.map((r, i) => {
+                                if (r.label) {
+                                  return (
+                                    <Option value={r.value} key={r.value}>{r.label}</Option>
+                                  )
+                                } else {
+                                  return (
+                                    <Option value={r.programId} key={i}>{r.programName}</Option>
+                                  )
+                                }
+                              })
+                              
+                            }
+                          </Select>
+                        </Form.Item>
                     }
 
                     <Form.Item label="排序" name="channelIndex">

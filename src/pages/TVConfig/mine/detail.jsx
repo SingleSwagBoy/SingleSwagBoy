@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { getMineGrid, editMineGrid, addMineGrid, delMineGrid, requestNewAdTagList, getChannel, getProgramsList, copyMineGrid } from 'api'
+import { getMineGrid, editMineGrid, addMineGrid, delMineGrid, requestNewAdTagList, getChannel, getProgramsList, copyMineGrid, requestChannelRecommendSearchProgram } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, DatePicker, Divider, Space, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -332,6 +332,16 @@ function App2(props) {
       }
     })
   }
+  const getProgams = (id, val) => {
+    if (!val || !id) return
+    let param = {
+      keywords: val,
+      channelId: id
+    }
+    requestChannelRecommendSearchProgram(param).then(res => {
+      setPrograms(res.data)
+    })
+  }
   //获取类型下拉框的状态
   const getState = (r) => {
     if (!props.location.params) {
@@ -467,6 +477,7 @@ function App2(props) {
                             if (arr.length > 0) {
                               formRef.setFieldsValue({ "picUrl": arr[0].posterUrl })
                             }
+                            setPrograms([])
                             forceUpdatePages()
                           }}
                         >
@@ -491,22 +502,46 @@ function App2(props) {
                               }
                               privateData.inputTimeOutVal = setTimeout(() => {
                                 if (!privateData.inputTimeOutVal) return;
-                                getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
+                                let arr = channleList.filter(item => item.code == formRef.getFieldValue("channelCode"))
+                                if (arr.length > 0) {
+                                  console.log(arr, "arr")
+                                  if (arr[0].recommendType == 1) {
+                                    getProgams(formRef.getFieldValue("channelCode"), val)
+                                    setDefaultPrograms([])
+                                  } else {
+                                    getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
+                                  }
+                                }
                               }, 1000)
                             }}
                             onChange={(r) => {
-                              let info = defaultPrograms[r]
-                              console.log(info,"======info========")
-                              formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
+                              let info = ""
+                              console.log(info, "======info========")
+                              if (defaultPrograms.length > 0) { //非自建
+                                info = defaultPrograms[r]
+                                formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
+                              } else { //自建频道
+                                info = programsList.filter(item => item.programId == r)
+                                if (info.length > 0) {
+                                  formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt/1000) })
+                                }
+                              }
                               forceUpdatePages()
                             }}
                           >
                             {
                               programsList.map((r, i) => {
-                                return (
-                                  <Option value={r.value} key={r.value}>{r.label}</Option>
-                                )
+                                if (r.label) {
+                                  return (
+                                    <Option value={r.value} key={r.value}>{r.label}</Option>
+                                  )
+                                } else {
+                                  return (
+                                    <Option value={r.programId} key={i}>{r.programName}</Option>
+                                  )
+                                }
                               })
+                              
                             }
                           </Select>
                         </Form.Item>
@@ -596,18 +631,18 @@ function App2(props) {
                 <>
                   <Form.Item label="二维码尺寸">
                     <Form.Item label="" name="qrWidth" style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
-                      <InputNumber addonBefore="宽度"  placeholder="请输入宽度" style={{ width: "200px" }}  suffix="px" min={0} />
+                      <InputNumber addonBefore="宽度" placeholder="请输入宽度" style={{ width: "200px" }} suffix="px" min={0} />
                     </Form.Item>
                     <Form.Item label="" name="qrHeight" style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
-                      <InputNumber addonBefore="高度" placeholder="请输入高度" style={{ width: "200px" }}  suffix="px" min={0} />
+                      <InputNumber addonBefore="高度" placeholder="请输入高度" style={{ width: "200px" }} suffix="px" min={0} />
                     </Form.Item>
                   </Form.Item>
                   <Form.Item label="二维码坐标" >
-                    <Form.Item label="" name="qrX"   style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
-                      <InputNumber addonBefore="横向坐标" placeholder="请输入横向坐标" style={{ width: "200px" }}  suffix="px" min={0} />
+                    <Form.Item label="" name="qrX" style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
+                      <InputNumber addonBefore="横向坐标" placeholder="请输入横向坐标" style={{ width: "200px" }} suffix="px" min={0} />
                     </Form.Item>
-                    <Form.Item label="" name="qrY"   style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
-                      <InputNumber addonBefore="纵向坐标" placeholder="请输入纵向坐标" style={{ width: "200px" }}  suffix="px" min={0} />
+                    <Form.Item label="" name="qrY" style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
+                      <InputNumber addonBefore="纵向坐标" placeholder="请输入纵向坐标" style={{ width: "200px" }} suffix="px" min={0} />
                     </Form.Item>
                   </Form.Item>
                   <Form.Item label="二维码位置" name="position">
@@ -669,12 +704,20 @@ function App2(props) {
                             }
                             privateData.inputTimeOutVal = setTimeout(() => {
                               if (!privateData.inputTimeOutVal) return;
-                              getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
+                              let arr = channleList.filter(item => item.code == formRef.getFieldValue("channelCode"))
+                              if (arr.length > 0) {
+                                console.log(arr, "arr")
+                                if (arr[0].recommendType == 1) { //自建
+                                  getProgams(formRef.getFieldValue("channelCode"), val)
+                                } else {
+                                  getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
+                                }
+                              }
                             }, 1000)
                           }}
                           onChange={(r) => {
                             let info = defaultPrograms[r]
-                            console.log(info,"========info1=======")
+                            console.log(info, "========info1=======")
                             formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
                             forceUpdatePages()
                           }}

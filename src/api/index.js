@@ -610,10 +610,6 @@ export const requestApkConfigDelete = (params) => { return request2.get(`${baseU
 export const requestApkConfigList = (params) => { return request2.get(`${baseUrl}/mms/apk/list`, { params: params }); };              //apk配置列表
 
 
-// 获取用户相册照片
-export const getlistPhoto = (params) => { return request.post(`${baseUrl}/mms/album/listPhoto`, params); };                 // 解锁配置更新
-
-
 //芒果专区
 export const getMangoList = (params) => { return request2.get(`${baseUrl}/mms/config/common/list`,{params:params}); };                //芒果专区-相关模块数据-获取
 export const addMangoList = (params) => { return request2.post(`${baseUrl}/mms/config/common/add?key=${params.key}`,params); };       //芒果专区-相关模块数据-新建
@@ -624,6 +620,10 @@ export const addMangosearch = (params) => { return request.post(`${baseUrl}/mms/
 export const updateMangoSort = (type,params) => { return request2.post(`${baseUrl}/mms/config/common/set?key=${type}`,params); };       //芒果专区-相关模块数据-新建
 export const getSortList = (params) => { return request2.get(`${baseUrl}/mms/config/common/get`,{params:params}); };                //芒果专区-相关模块数据-获取
 export const getMangoSyncTab = (params) => { return request2.get(`${baseUrl}/mms/config/common/syn_config?key=${params.key}`); };          //芒果专区-相关模块数据-tab排序缓存同步 ,{params:params}
+
+// 获取用户相册照片
+export const getlistPhoto = (params) => { return request.post(`${baseUrl}/mms/album/listPhoto`, params); };                 // 解锁配置更新
+
 
 //tv专题页配置
 export const getTopic = (params) => { return request2.get(`${baseUrl}/mms/channel/tvspecial/list`, {params:params}); };                 // 解锁配置更新

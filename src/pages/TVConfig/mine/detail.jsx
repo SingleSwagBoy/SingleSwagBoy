@@ -733,8 +733,8 @@ function App2(props) {
                       </Form.Item>
                     }
 
-                    <Form.Item label="位置" name="channelIndex">
-                      <InputNumber placeholder="请输入位置" style={{ width: "200px" }} min={0} />
+                    <Form.Item label="排序" name="channelIndex">
+                      <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
                     </Form.Item>
                     <Form.Item label="类型" name="channelType">
                       <Select allowClear placeholder="请选择类型">

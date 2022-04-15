@@ -444,7 +444,7 @@ export default class EarnIncentiveTask extends React.Component {
 
                                                                 } else {
                                                                     r.msg_type = "Jump"
-                                                                    r.reply_info = [r]
+                                                                    // r.reply_info = [r]
                                                                     console.log(r,"==========r=========")
                                                                 }
                                                                 this.formRef.current.setFieldsValue(r)

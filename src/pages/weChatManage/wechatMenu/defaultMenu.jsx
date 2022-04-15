@@ -434,17 +434,20 @@ export default class EarnIncentiveTask extends React.Component {
                                                             <Menu.Item key={r.sort} onClick={(e) => {
                                                                 console.log(r)
                                                                 r.sort = `${menuIndex}-0`
-                                                                this.setState({
-                                                                    currentMenu: r
-                                                                }, () => {
-                                                                    if (r.type == "click") {
+                                                                this.state.currentMenu = r
+                                                                // this.setState({
+                                                                //     currentMenu: r
+                                                                // }, () => {
+                                                                    
+                                                                // })
+                                                                if (r.type == "click") {
 
-                                                                    } else {
-                                                                        r.msg_type = "Jump"
-                                                                        r.reply_info = [r]
-                                                                    }
-                                                                    this.formRef.current.setFieldsValue(r)
-                                                                })
+                                                                } else {
+                                                                    r.msg_type = "Jump"
+                                                                    r.reply_info = [r]
+                                                                    console.log(r,"==========r=========")
+                                                                }
+                                                                this.formRef.current.setFieldsValue(r)
 
 
                                                             }}>

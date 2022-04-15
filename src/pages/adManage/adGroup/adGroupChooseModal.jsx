@@ -31,7 +31,7 @@ export default class adCreateModal extends Component {
                 table_title: [],
                 table_datas: [],
             },
-
+            selectedRowKeys:[],
             modal_box: {
                 is_show: false,
                 title: '',
@@ -58,10 +58,18 @@ export default class adCreateModal extends Component {
             ],
         }
     }
+    onSelectChange = selectedRowKeys => {
+        console.log('selectedRowKeys changed: ', selectedRowKeys,this.state.table_box.table_datas);
+        let arr = this.state.table_box.table_datas.filter(item=>selectedRowKeys.some(l=>l == item.id))
+        this.setState({ selectedRowKeys,checkedList:arr });
+      };
     render() {
         let that = this;
-        let { table_box, modal_box } = that.state;
-
+        let { table_box, modal_box,selectedRowKeys } = that.state;
+        const rowSelection = {
+            selectedRowKeys,
+            onChange: this.onSelectChange,
+          };
         return (
             <div>
                 {modal_box &&
@@ -79,13 +87,13 @@ export default class adCreateModal extends Component {
                                         page: 1,
                                         searchWords: val
                                     }, () => {
-                                        this.refreshList(this.state.adIndex, this.state.checkedList)
+                                        this.refreshList(this.state.adIndex)
                                     })
 
                                 }}
                             />
                         </div>
-                        <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '70vh' }} />
+                        <Table columns={table_box.table_title} rowSelection={rowSelection}  rowKey={item => item.id} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '70vh' }} />
 
                     </Modal>
                 }
@@ -114,8 +122,6 @@ export default class adCreateModal extends Component {
     //弹出框确定按钮被点击
     onModalConfirmClick() {
         let that = this;
-        // let arr = this.state.table_box.table_datas
-        // let info = arr.filter(item => item.checked)
         this.props.onGetInfo(this.state.checkedList);
         that.setState({
             modal_box: {
@@ -133,27 +139,6 @@ export default class adCreateModal extends Component {
         modal_box.title = data.title;
 
         let table_title = [
-            {
-                title: '选择', dataIndex: 'choose', key: 'choose', width: 80,
-                render: (rowValue, row, index) => {
-                    return <Checkbox checked={row.checked} onChange={(e) => {
-                        let check = e.target.checked;
-                        let arr = this.state.checkedList
-                        if (check) {
-                            this.setState({
-                                checkedList: [...arr, row]
-                            })
-                        } else {
-                            this.setState({
-                                checkedList: arr.filter(r => r.id != row.id && r.adId != row.id)
-                            })
-                        }
-                        console.log(this.state.checkedList, "checkedList")
-                        row.checked = check;
-                        // that.forceUpdate();
-                    }} />
-                }
-            },
             { title: '素材名称', dataIndex: 'name', key: 'name', width: 300, },
             {
                 title: '类型', dataIndex: 'adType', key: 'adType', width: 200,
@@ -208,16 +193,21 @@ export default class adCreateModal extends Component {
         }
 
         table_box.table_title = table_title;
+        let selectedRowKeys = []
+        tagList.forEach(r=>{
+            selectedRowKeys.push(r.adId)
+        })
         that.setState({
             modal_box: modal_box,
             table_box: table_box,
             adIndex: adIndex,
             tagList: tagList,
             checkedList: tagList,
+            selectedRowKeys:selectedRowKeys,
             searchWords: "",
         }, () => {
             that.forceUpdate();
-            that.refreshList(adIndex, tagList);
+            that.refreshList(adIndex);
         })
 
     }
@@ -230,35 +220,25 @@ export default class adCreateModal extends Component {
         }
 
     }
-    refreshList(index, tagList) {
+    refreshList(index) {
         console.log(index, "---------")
         if (index == 1) {
-            this.requestAdRightKey(tagList)
+            this.requestAdRightKey()
         } else if (index == 2) {
-            this.getScreen(tagList)
+            this.getScreen()
         } else if (index == 11) {
-            this.getInfoGroup(tagList)
+            this.getInfoGroup()
         }
     }
-    requestAdRightKey(tagList) {
+    requestAdRightKey() {
         let that = this;
         let { table_box } = that.state;
-        console.log(tagList, "tagList")
         let obj = {
             page: { currentPage: 1, pageSize: 10000 },
             name: this.state.searchWords
         };
         requestAdRightKey(obj).then(res => {
             table_box.table_datas = res.data.filter(r => r.status == 1);
-            if (tagList.length > 0) {
-                table_box.table_datas.forEach(r => {
-                    tagList.forEach(l => {
-                        if (l.adId == r.id || l.id == r.id) {
-                            r.checked = true
-                        }
-                    })
-                })
-            }
             that.setState({
                 table_box: table_box,
             })
@@ -266,7 +246,7 @@ export default class adCreateModal extends Component {
             this.forceUpdate()
         })
     }
-    getScreen(tagList) {
+    getScreen() {
         let that = this;
         let { table_box } = that.state;
 
@@ -275,23 +255,13 @@ export default class adCreateModal extends Component {
             name: this.state.searchWords
         };
         getScreen(obj).then(res => {
-
             table_box.table_datas = res.data.filter(r => r.status == 1);
-            if (tagList.length > 0) {
-                table_box.table_datas.forEach(r => {
-                    tagList.forEach(l => {
-                        if (l.adId == r.id) {
-                            r.checked = true
-                        }
-                    })
-                })
-            }
             that.setState({
                 table_box: table_box,
             })
         })
     }
-    getInfoGroup(tagList) {
+    getInfoGroup() {
         let that = this;
         let { table_box } = that.state;
 
@@ -300,17 +270,7 @@ export default class adCreateModal extends Component {
             name: this.state.searchWords
         };
         getInfoGroup(obj).then(res => {
-
             table_box.table_datas = res.data.filter(r => r.status == 1);
-            if (tagList.length > 0) {
-                table_box.table_datas.forEach(r => {
-                    tagList.forEach(l => {
-                        if (l.adId == r.id) {
-                            r.checked = true
-                        }
-                    })
-                })
-            }
             that.setState({
                 table_box: table_box,
             })

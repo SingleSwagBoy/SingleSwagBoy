@@ -142,7 +142,7 @@ export default class tagConfig extends Component {
         let table_title = [
             { title: 'id', dataIndex: 'id', key: 'id', width: 80, },
             { title: '名称', dataIndex: 'name', key: 'name',  width: 200,},
-
+            { title: '标签code', dataIndex: 'code', key: 'code', width: 200,},
             { title: '描述', dataIndex: 'description', key: 'description',  },
             {
                 title: '状态', dataIndex: 'status', key: 'status', width: 100,
@@ -188,7 +188,7 @@ export default class tagConfig extends Component {
         //field集合
         requestAdFieldList({page:{pageSize:9999}}).then(res => {
             that.setState({
-                dict_field_list: res.data.filter(r=>r.type == 3 || r.type == 1),
+                dict_field_list: res.data.filter(r=>r.type == 3 || r.type == 1 || r.type == 5),
             }, () => {
                 that.forceUpdate();
             })

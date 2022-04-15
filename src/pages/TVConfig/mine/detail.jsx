@@ -490,7 +490,7 @@ function App2(props) {
                       </Form.Item>
                       {
                         formRef.getFieldValue("jumpType") == 11 &&
-                        <Form.Item label="选择视频" name="channelSubTitle">
+                        <Form.Item label="选择视频" name="programName">
                           <Select
                             placeholder="请选择视频"
                             allowClear
@@ -682,6 +682,13 @@ function App2(props) {
                             getChannelList(val)
                           }, 1000)
                         }}
+                        onChange={(e) => {
+                          let arr = channleList.filter(item => item.code == e)
+                          if (arr.length > 0) {
+                            formRef.setFieldsValue({ "picUrl": arr[0].posterUrl })
+                          }
+                          forceUpdatePages()
+                        }}
                       >
                         {
                           channleList.map((r, i) => {
@@ -692,7 +699,7 @@ function App2(props) {
                     </Form.Item>
                     {
                       formRef.getFieldValue("jumpType") == 11 &&
-                      <Form.Item label="选择视频" name="channelSubTitle">
+                      <Form.Item label="选择视频" name="programName">
                           <Select
                             placeholder="请选择视频"
                             allowClear

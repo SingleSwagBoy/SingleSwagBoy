@@ -14,7 +14,9 @@ import './tagConfigFormulas.css'
 import { PlusOutlined } from '@ant-design/icons';
 import { MyAddress } from '@/components/views.js';
 import Market from "@/components/market/index" //渠道组件
-
+let privateData = {
+    inputTimeOutVal: null
+};
 
 let { Option } = Select;
 
@@ -34,6 +36,15 @@ export default class tagConfig extends Component {
                 { "value": 7, "name": "in" },
                 { "value": 9, "name": "notin" },
             ],
+            selectProps: {
+                optionFilterProp: "children",
+                filterOption(input, option) {
+                  return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                },
+                showSearch() {
+                  console.log('onSearch')
+                }
+            },
         }
 
     }
@@ -135,7 +146,19 @@ export default class tagConfig extends Component {
                                                                                                     layer3item.field == "region" &&
                                                                                                     <MyAddress onCheckAddress={(e)=>this.onCheckAddress(e, layer1index, layer2index, layer3index, 'value')} defaultAddress={(layer3item.value && !Array.isArray(layer3item.value))?layer3item.value.split(","):layer3item.value} /> ||
                                                                                                     layer3item.field == "appid" && 
-                                                                                                    <Select placeholder="请选择" mode="multiple" allowClear onChange={(e)=>this.onCheckSelect(e, layer1index, layer2index, layer3index, 'value')} defaultValue={(layer3item.value && !Array.isArray(layer3item.value))?layer3item.value.split(","):layer3item.value}>
+                                                                                                    <Select placeholder="请选择" mode="multiple" {...this.state.selectProps}
+                                                                                                    onSearch={(val)=>{
+                                                                                                      console.log("val-----",val)
+                                                                                                      if (privateData.inputTimeOutVal) {
+                                                                                                        clearTimeout(privateData.inputTimeOutVal);
+                                                                                                        privateData.inputTimeOutVal = null;
+                                                                                                      }
+                                                                                                      privateData.inputTimeOutVal = setTimeout(() => {
+                                                                                                        if (!privateData.inputTimeOutVal) return;
+                                                                                                        this.getChangeList(val)
+
+                                                                                                      }, 1000)
+                                                                                                    }} allowClear onChange={(e)=>this.onCheckSelect(e, layer1index, layer2index, layer3index, 'value')} defaultValue={(layer3item.value && !Array.isArray(layer3item.value))?layer3item.value.split(","):layer3item.value}>
                                                                                                         {
                                                                                                             productList.map(r => {
                                                                                                                 return (
@@ -196,6 +219,9 @@ export default class tagConfig extends Component {
         }else{
             return false
         }
+    }
+    getChangeList=(_val)=>{
+        console.log("getChangeList获取的参数",_val)
     }
 
     // that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'field')

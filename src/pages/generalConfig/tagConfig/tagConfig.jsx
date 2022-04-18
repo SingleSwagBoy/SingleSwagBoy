@@ -19,6 +19,7 @@ import {
     requestNewAdTagDelete,                  //新版 删除用户标签数据
     requestDictionary,                      //获取 字典集
     requestAdFieldList,                     //获取 Field列表
+    getMyProduct,
 
 } from 'api';
 
@@ -54,12 +55,13 @@ export default class tagConfig extends Component {
             dict_field_list: [], //field列表
             //选择数据源
             dict_tag_index: [],
+            productList:[]
         }
 
     }
     render() {
         let that = this;
-        let { table_box, modal_box, dict_tag_index, dict_field_list } = that.state;
+        let { table_box, modal_box, dict_tag_index, dict_field_list ,productList} = that.state;
         return (
             <div>
                 <Alert className="alert-box" message="配置列表" type="success" action={
@@ -106,7 +108,7 @@ export default class tagConfig extends Component {
                                         且：多个规则同时满足。或：多个规则中选择其中一条符合的配置规则。
                                     </Form.Item>
                                     <Form.Item name='rule' >
-                                        <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} />
+                                        <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} productList={productList}/>
                                     </Form.Item>
                                 </Form.Item>
                                 <Form.Item label="计数" name='count' >
@@ -119,7 +121,6 @@ export default class tagConfig extends Component {
                                         </Button>
                                 </Form.Item>
 
-
                             </div>
                         }
                     </Form>
@@ -130,6 +131,19 @@ export default class tagConfig extends Component {
     componentDidMount() {
         let that = this;
         that.initData();
+        that.getProductList();
+    }
+    getProductList=()=>{
+        let params = {
+            page: { isPage: 9 },
+            prodType: 1
+        }
+        getMyProduct(params).then(res => {
+            console.log("getMyProduct-------getMyProduct",res)
+            this.setState({
+                productList: res.data.data
+            })
+        })
     }
     initData() {
         let that = this;
@@ -188,7 +202,7 @@ export default class tagConfig extends Component {
         //field集合
         requestAdFieldList({page:{pageSize:9999}}).then(res => {
             that.setState({
-                dict_field_list: res.data.filter(r=>r.type == 3 || r.type == 1 || r.type == 5),
+                dict_field_list: res.data.filter(r=>r.type != 2 && r.type != 4),
             }, () => {
                 that.forceUpdate();
             })

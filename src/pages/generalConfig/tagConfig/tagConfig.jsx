@@ -135,8 +135,7 @@ export default class tagConfig extends Component {
     }
     getProductList=()=>{
         let params = {
-            page: { isPage: 9 },
-            prodType: 1
+            page: { isPage: 9 }
         }
         getMyProduct(params).then(res => {
             console.log("getMyProduct-------getMyProduct",res)

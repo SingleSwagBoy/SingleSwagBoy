@@ -44,6 +44,7 @@ export default class tagConfig extends Component {
         let { id, formRef, dict_field, is_show_only ,productList} = that.props;      //is_show_only:仅作展示，数据不提供修改编辑
         console.log("dict_field=====dict_field",dict_field)
         let rules = formRef.current.getFieldValue(id);   //获取外部数据
+        console.log("rulesrulesrulesrules",rules)
 
 
         if (!rules) {

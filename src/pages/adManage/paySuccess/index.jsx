@@ -134,7 +134,7 @@ function App2() {
   }, [])
   useEffect(() => {//列表
     const fetchData = async () => {
-      //setLists([])
+      setLists([])
       const list = await getAdSPList({ page: { currentPage: 1, pageSize: 9999 } })
       setLists(list.data)
     }
@@ -161,6 +161,7 @@ function App2() {
         endTime: val.time ? parseInt(val.time[1].valueOf() / 1000) : val.endTime,
         status: val.status ? 1 : 2
       }
+      console.log("params",params)
       editArmour(params)
     } else {
       let params = {

@@ -451,11 +451,12 @@ export default class EarnIncentiveTask extends React.Component {
                                                                 if (r.type == "click") {
                                                                 } else {
                                                                     r.msg_type = "Jump"
+                                                                    let _obj=JSON.parse(JSON.stringify(r))
                                                                     if(Array.isArray(r.reply_info)==true && r.reply_info.length>0){
                                                                         console.log("isArray=true")
                                                                     }else{
                                                                         console.log("isArray=false")
-                                                                        r.reply_info = [r]
+                                                                        r.reply_info = [_obj]
                                                                     }
                                                                     console.log("r.msg_type =------")
                                                                 }

@@ -354,7 +354,13 @@ export default class EarnIncentiveTask extends React.Component {
                                                                                 this.formRef.current.setFieldsValue(l)
                                                                             } else {
                                                                                 l.msg_type = "Jump"
-                                                                                l.reply_info = [l]
+                                                                                //l.reply_info = [l]
+                                                                                if(Array.isArray(l.reply_info)==true && l.reply_info.length>0){
+                                                                                    console.log("isArray=true")
+                                                                                }else{
+                                                                                    console.log("isArray=false")
+                                                                                    l.reply_info = [l]
+                                                                                }
                                                                                 // l.name = l.name
                                                                                 this.formRef.current.setFieldsValue(l)
                                                                             }
@@ -441,7 +447,13 @@ export default class EarnIncentiveTask extends React.Component {
 
                                                                     } else {
                                                                         r.msg_type = "Jump"
-                                                                        r.reply_info = [r]
+                                                                        if(Array.isArray(r.reply_info)==true && r.reply_info.length>0){
+                                                                            console.log("isArray=true")
+                                                                        }else{
+                                                                            console.log("isArray=false")
+                                                                            r.reply_info = [r]
+                                                                        }
+                                                                        console.log("r.msg_type =------")
                                                                     }
                                                                     this.formRef.current.setFieldsValue(r)
                                                                 })

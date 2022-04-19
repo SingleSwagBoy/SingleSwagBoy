@@ -355,12 +355,12 @@ export default class EarnIncentiveTask extends React.Component {
                                                                             } else {
                                                                                 l.msg_type = "Jump"
                                                                                 //l.reply_info = [l]
-                                                                                if(Array.isArray(l.reply_info)==true && l.reply_info.length>0){
-                                                                                    console.log("isArray=true")
-                                                                                }else{
-                                                                                    console.log("isArray=false")
-                                                                                    l.reply_info = [l]
-                                                                                }
+                                                                                // if(Array.isArray(l.reply_info)==true && l.reply_info.length>0){
+                                                                                //     console.log("isArray=true")
+                                                                                // }else{
+                                                                                //     console.log("isArray=false")
+                                                                                //     l.reply_info = [l]
+                                                                                // }
                                                                                 // l.name = l.name
                                                                                 this.formRef.current.setFieldsValue(l)
                                                                             }

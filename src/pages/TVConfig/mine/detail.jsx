@@ -191,7 +191,7 @@ function App2(props) {
     forceUpdate()
   }
   const submitForm = (val) => {//表单提交
-    console.log(val)
+    console.log(val,formRef.getFieldValue(),"=====提交数据======")
     if (source == "add") {
       let params = {
         ...val,
@@ -490,7 +490,7 @@ function App2(props) {
                       </Form.Item>
                       {
                         formRef.getFieldValue("jumpType") == 11 &&
-                        <Form.Item label="选择视频" name="channelSubTitle">
+                        <Form.Item label="选择视频" name="programName">
                           <Select
                             placeholder="请选择视频"
                             allowClear
@@ -515,9 +515,8 @@ function App2(props) {
                               }, 1000)
                             }}
                             onChange={(r) => {
-                              let info = ""
-                              console.log(info, "======info========")
-                              if (defaultPrograms.length > 0) { //非自建
+                              let info;
+                              if (defaultPrograms[r]) { //非自建
                                 info = defaultPrograms[r]
                                 formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
                               } else { //自建频道
@@ -682,6 +681,13 @@ function App2(props) {
                             getChannelList(val)
                           }, 1000)
                         }}
+                        onChange={(e) => {
+                          let arr = channleList.filter(item => item.code == e)
+                          if (arr.length > 0) {
+                            formRef.setFieldsValue({ "picUrl": arr[0].posterUrl })
+                          }
+                          forceUpdatePages()
+                        }}
                       >
                         {
                           channleList.map((r, i) => {
@@ -692,7 +698,7 @@ function App2(props) {
                     </Form.Item>
                     {
                       formRef.getFieldValue("jumpType") == 11 &&
-                      <Form.Item label="选择视频" name="channelSubTitle">
+                      <Form.Item label="选择视频" name="programName">
                           <Select
                             placeholder="请选择视频"
                             allowClear
@@ -717,9 +723,8 @@ function App2(props) {
                               }, 1000)
                             }}
                             onChange={(r) => {
-                              let info = ""
-                              console.log(info, "======info========")
-                              if (defaultPrograms.length > 0) { //非自建
+                              let info;
+                              if (defaultPrograms[r]) { //非自建
                                 info = defaultPrograms[r]
                                 formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
                               } else { //自建频道

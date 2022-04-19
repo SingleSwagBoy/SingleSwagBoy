@@ -440,25 +440,24 @@ export default class EarnIncentiveTask extends React.Component {
                                                             <Menu.Item key={r.sort} onClick={(e) => {
                                                                 console.log(r)
                                                                 r.sort = `${menuIndex}-0`
-                                                                this.setState({
-                                                                    currentMenu: r
-                                                                }, () => {
-                                                                    if (r.type == "click") {
-
-                                                                    } else {
-                                                                        r.msg_type = "Jump"
-                                                                        if(Array.isArray(r.reply_info)==true && r.reply_info.length>0){
-                                                                            console.log("isArray=true")
-                                                                        }else{
-                                                                            console.log("isArray=false")
-                                                                            r.reply_info = [r]
-                                                                        }
-                                                                        console.log("r.msg_type =------")
+                                                                this.state.currentMenu = r
+                                                                // this.setState({
+                                                                //     currentMenu: r
+                                                                // }, () => {
+                                                                    
+                                                                // })
+                                                                if (r.type == "click") {
+                                                                } else {
+                                                                    r.msg_type = "Jump"
+                                                                    if(Array.isArray(r.reply_info)==true && r.reply_info.length>0){
+                                                                        console.log("isArray=true")
+                                                                    }else{
+                                                                        console.log("isArray=false")
+                                                                        r.reply_info = [r]
                                                                     }
-                                                                    this.formRef.current.setFieldsValue(r)
-                                                                })
-
-
+                                                                    console.log("r.msg_type =------")
+                                                                }
+                                                                this.formRef.current.setFieldsValue(r)
                                                             }}>
                                                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                                                     {

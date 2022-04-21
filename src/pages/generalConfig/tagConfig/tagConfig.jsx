@@ -55,7 +55,7 @@ export default class tagConfig extends Component {
             dict_field_list: [], //field列表
             //选择数据源
             dict_tag_index: [],
-            productList:[]
+            productList:[],
         }
 
     }
@@ -102,7 +102,9 @@ export default class tagConfig extends Component {
                                 <Form.Item label="标签描述" name='description' rules={[{ required: true }]} >
                                     <Input className="base-input-wrapper" placeholder="请输入标签描述" />
                                 </Form.Item>
-
+                                <Form.Item label="创建者" name='createUser' rules={[{ required: true }]} >
+                                    <Input className="base-input-wrapper" placeholder="请输入创作者" />
+                                </Form.Item>
                                 <Form.Item label="标签规则" rules={[{ required: true }]}>
                                     <Form.Item>
                                         且：多个规则同时满足。或：多个规则中选择其中一条符合的配置规则。
@@ -239,6 +241,8 @@ export default class tagConfig extends Component {
         }, () => {
             that.forceUpdate();
             that.formRef.current.resetFields();
+            let name = JSON.parse(localStorage.getItem('user')).userInfo.userName
+            that.formRef.current.setFieldsValue({createUser:name});
         })
     }
 
@@ -250,7 +254,7 @@ export default class tagConfig extends Component {
             modal_box: {
                 is_show: true,
                 title: '修改配置',
-            }
+            },
         }, () => {
             that.forceUpdate();
             let obj = Object.assign({}, item);

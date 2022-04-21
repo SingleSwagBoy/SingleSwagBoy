@@ -11,7 +11,8 @@ import React, { Component } from 'react';
 import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, message } from 'antd';
 import moment from 'moment';
 import '@/style/base.css';
-import { MySyncBtn,MyTagConfigFormulas } from '@/components/views.js';
+import "./index.css"
+import { MySyncBtn, MyTagConfigFormulas } from '@/components/views.js';
 import {
     requestNewAdTagList,                    //新版 获取用户标签列表
     requestNewAdTagCreate,                  //新版 创建用户标签数据
@@ -55,17 +56,37 @@ export default class tagConfig extends Component {
             dict_field_list: [], //field列表
             //选择数据源
             dict_tag_index: [],
-            productList:[]
+            productList: [],
+            tagList: []
         }
 
     }
     render() {
         let that = this;
-        let { table_box, modal_box, dict_tag_index, dict_field_list ,productList} = that.state;
+        let { table_box, modal_box, dict_tag_index, dict_field_list, productList, tagList } = that.state;
         return (
             <div>
                 <Alert className="alert-box" message="配置列表" type="success" action={
-                    <div>
+                    <div className='top_box'>
+                        <div className="everyBody">
+                            <div>名称:</div>
+                            <Input.Search allowClear
+                                onSearch={(val) => {
+                                    if (val) { //有值则变化
+                                        let arr = tagList.filter(item => item.name.includes(val))
+                                        table_box.table_datas = arr
+                                        this.setState({
+                                            table_box: table_box
+                                        })
+                                    } else { //没值就恢复默认列表
+                                        table_box.table_datas = tagList
+                                        this.setState({
+                                            table_box: table_box
+                                        })
+                                    }
+
+                                }} />
+                        </div>
                         <Button style={{ marginLeft: 5 }} onClick={() => that.onCreateClick()} >新增配置</Button>
                         <MySyncBtn type={10} name='同步缓存' />
                     </div>
@@ -73,11 +94,11 @@ export default class tagConfig extends Component {
                 <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={1500} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
                     style={{ top: 20 }} footer={null}
-                    // footer={[
-                    //     <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
-                    //     <Button onClick={() => that.onModalConfirmClick()} >保存</Button>
-                    // ]}
-                    >
+                // footer={[
+                //     <Button onClick={() => that.onModalCancelClick()}>取消</Button>,
+                //     <Button onClick={() => that.onModalConfirmClick()} >保存</Button>
+                // ]}
+                >
 
                     <Form labelCol={{ span: 3 }} wrapperCol={{ span: 20 }} ref={that.formRef} onFinish={this.onModalConfirmClick.bind(this)}>
                         {
@@ -102,23 +123,25 @@ export default class tagConfig extends Component {
                                 <Form.Item label="标签描述" name='description' rules={[{ required: true }]} >
                                     <Input className="base-input-wrapper" placeholder="请输入标签描述" />
                                 </Form.Item>
-
+                                <Form.Item label="创建者" name='createUser' rules={[{ required: true }]} >
+                                    <Input className="base-input-wrapper" placeholder="请输入创作者" />
+                                </Form.Item>
                                 <Form.Item label="标签规则" rules={[{ required: true }]}>
                                     <Form.Item>
                                         且：多个规则同时满足。或：多个规则中选择其中一条符合的配置规则。
                                     </Form.Item>
                                     <Form.Item name='rule' >
-                                        <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} productList={productList}/>
+                                        <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} productList={productList} />
                                     </Form.Item>
                                 </Form.Item>
                                 <Form.Item label="计数" name='count' >
                                     <Input className="base-input-wrapper" placeholder="计数" disabled />
                                 </Form.Item>
                                 <Form.Item {...this.state.tailLayout}>
-                                        <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
-                                        <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
-                                            确定
-                                        </Button>
+                                    <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
+                                    <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
+                                        确定
+                                    </Button>
                                 </Form.Item>
 
                             </div>
@@ -133,12 +156,12 @@ export default class tagConfig extends Component {
         that.initData();
         that.getProductList();
     }
-    getProductList=()=>{
+    getProductList = () => {
         let params = {
             page: { isPage: 9 }
         }
         getMyProduct(params).then(res => {
-            console.log("getMyProduct-------getMyProduct",res)
+            console.log("getMyProduct-------getMyProduct", res)
             this.setState({
                 productList: res.data.data
             })
@@ -154,9 +177,9 @@ export default class tagConfig extends Component {
 
         let table_title = [
             { title: 'id', dataIndex: 'id', key: 'id', width: 80, },
-            { title: '名称', dataIndex: 'name', key: 'name',  width: 200,},
-            { title: '标签code', dataIndex: 'code', key: 'code', width: 200,},
-            { title: '描述', dataIndex: 'description', key: 'description',  },
+            { title: '名称', dataIndex: 'name', key: 'name', width: 200, },
+            { title: '标签code', dataIndex: 'code', key: 'code', width: 200, },
+            { title: '描述', dataIndex: 'description', key: 'description', },
             {
                 title: '状态', dataIndex: 'status', key: 'status', width: 100,
                 render: (rowValue, row, index) => {
@@ -199,9 +222,9 @@ export default class tagConfig extends Component {
         })
 
         //field集合
-        requestAdFieldList({page:{pageSize:9999}}).then(res => {
+        requestAdFieldList({ page: { pageSize: 9999 } }).then(res => {
             that.setState({
-                dict_field_list: res.data.filter(r=>r.type != 2 && r.type != 4),
+                dict_field_list: res.data.filter(r => r.type != 2 && r.type != 4),
             }, () => {
                 that.forceUpdate();
             })
@@ -222,6 +245,7 @@ export default class tagConfig extends Component {
             table_box.table_datas = res.data;
             that.setState({
                 table_box: table_box,
+                tagList: res.data
             });
         })
 
@@ -239,6 +263,8 @@ export default class tagConfig extends Component {
         }, () => {
             that.forceUpdate();
             that.formRef.current.resetFields();
+            let name = JSON.parse(localStorage.getItem('user')).userInfo.userName
+            that.formRef.current.setFieldsValue({ createUser: name });
         })
     }
 
@@ -250,7 +276,7 @@ export default class tagConfig extends Component {
             modal_box: {
                 is_show: true,
                 title: '修改配置',
-            }
+            },
         }, () => {
             that.forceUpdate();
             let obj = Object.assign({}, item);
@@ -276,7 +302,7 @@ export default class tagConfig extends Component {
     }
     //item 复制 被点击
     onItemCopyClick(val) {
-        let params={
+        let params = {
             ...val
         }
         delete params.id
@@ -313,15 +339,15 @@ export default class tagConfig extends Component {
         let obj = Object.assign({}, value);
 
         let rule = obj.rule;
-        console.log(rule,"rule")
+        console.log(rule, "rule")
         if (!rule) {
             message.error('请填写规则后提交。')
             return;
         }
-        rule.forEach(r=>{
-            r.forEach(h=>{
-                h.forEach(l=>{
-                    if(l.value && Array.isArray(l.value)){
+        rule.forEach(r => {
+            r.forEach(h => {
+                h.forEach(l => {
+                    if (l.value && Array.isArray(l.value)) {
                         l.value = l.value.join(",")
                     }
                 })

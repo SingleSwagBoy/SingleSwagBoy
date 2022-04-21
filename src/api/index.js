@@ -186,6 +186,7 @@ export const requestOperateApk = (params) => { return request2.post(`${baseUrl}/
 export const requestChannelRecommendList = (params) => { return request2.post(`${baseUrl}/mms/tv/channelRecommend/list`, params); };                                    //频道管理-列表
 export const requestChannelRecommendSearchChannel = (params) => { return request2.get(`${baseUrl}/mms/tv/channelRecommend/searchChannel`, { params: params }); };       //频道管理-下拉搜索频道
 export const requestChannelRecommendSearchProgram = (params) => { return request2.get(`${baseUrl}/mms/tv/channelRecommend/searchProgram`, { params: params }); };       //频道推荐-下拉搜索节目视频
+export const selectSearch = (params) => { return request.get(`${baseUrl}/mms/tv/channelRecommend/searchProgram`, { params: params }); };       //频道推荐-下拉搜索节目视频
 export const requestChannelRecommendCreate = (params) => { return request2.post(`${baseUrl}/mms/tv/channelRecommend/create`, params); };                                //频道推荐-新增
 export const requestChannelRecommendEdit = (params) => { return request2.post(`${baseUrl}/mms/tv/channelRecommend/edit`, params); };                                    //频道推荐-编辑
 export const requestChannelRecommendDelete = (params) => { return request2.get(`${baseUrl}/mms/tv/channelRecommend/deleteItem`, { params: params }); };                 //频道推荐-删除

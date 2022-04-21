@@ -1,0 +1,11 @@
+.top_box{
+    display: flex;
+    align-items: center;
+}
+.top_box .everyBody{
+    display: flex;
+    align-items: center;
+}
+.top_box .everyBody>div{
+   width: 50px;
+}

@@ -525,7 +525,7 @@ function App2(props) {
                               } else { //自建频道
                                 info = programsList.filter(item => item.programId == r)
                                 if (info.length > 0) {
-                                  formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt / 1000) })
+                                  formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt / 1000),picUrl: info[0].programPic  })
                                 }
                               }
                               forceUpdatePages()
@@ -733,7 +733,9 @@ function App2(props) {
                             } else { //自建频道
                               info = programsList.filter(item => item.programId == r)
                               if (info.length > 0) {
-                                formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt / 1000) })
+                                formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt / 1000),picUrl: info[0].programPic })
+                                // picUrl
+                              
                               }
                             }
                             forceUpdatePages()

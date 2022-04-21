@@ -84,7 +84,7 @@ function App2() {
             checkedChildren="有效"
             unCheckedChildren="无效"
             defaultChecked={rowValue == 1 ? true : false}
-            key={rowValue}
+            // key={rowValue}
             onChange={(val) => {
               let info = JSON.parse(JSON.stringify(row))
               info.status = val ? 1 : 2
@@ -107,7 +107,7 @@ function App2() {
               size="small"
               type="primary"
               onClick={() => {
-                console.log(row)
+                console.log("row",row)
                 let arr = JSON.parse(JSON.stringify(row))
                 arr.time = [arr.startTime?moment(arr.startTime * 1000):0, arr.endTime?moment(arr.endTime * 1000):0]
                 arr.status = arr.status == 1 ? true : false
@@ -134,6 +134,7 @@ function App2() {
   }, [])
   useEffect(() => {//列表
     const fetchData = async () => {
+      setLists([])
       const list = await getAdSPList({ page: { currentPage: 1, pageSize: 9999 } })
       setLists(list.data)
     }
@@ -160,6 +161,7 @@ function App2() {
         endTime: val.time ? parseInt(val.time[1].valueOf() / 1000) : val.endTime,
         status: val.status ? 1 : 2
       }
+      console.log("params",params)
       editArmour(params)
     } else {
       let params = {
@@ -234,7 +236,7 @@ function App2() {
       <Card title={
         <div>
           <Breadcrumb>
-            <Breadcrumb.Item>马甲包管理</Breadcrumb.Item>
+            <Breadcrumb.Item>支付成功页</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       }
@@ -251,7 +253,7 @@ function App2() {
         <Table
           dataSource={lists}
           scroll={{ x: 1200, y: '75vh' }}
-          // rowKey={item=>item.indexId}
+          rowKey={item=>item.id}
           // loading={loading}
           columns={columns}
           pagination={{

@@ -14,7 +14,7 @@ class Market extends Component {
       dictList:[],
       checkData:[],
       onlyValue:[],//全选值
-      isFold:false
+      isFold:true
     }
     
   }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { getMineGrid, editMineGrid, addMineGrid, delMineGrid, requestNewAdTagList, getChannel, getProgramsList, copyMineGrid, requestChannelRecommendSearchProgram } from 'api'
+import { getMineGrid, editMineGrid, addMineGrid, delMineGrid, requestNewAdTagList, getChannel, getProgramsList, copyMineGrid, selectSearch } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, DatePicker, Divider, Space, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -191,7 +191,7 @@ function App2(props) {
     forceUpdate()
   }
   const submitForm = (val) => {//表单提交
-    console.log(val)
+    console.log(val, formRef.getFieldValue(), "=====提交数据======")
     if (source == "add") {
       let params = {
         ...val,
@@ -338,8 +338,10 @@ function App2(props) {
       keywords: val,
       channelId: id
     }
-    requestChannelRecommendSearchProgram(param).then(res => {
-      setPrograms(res.data)
+    selectSearch(param).then(res => {
+      if (res.data.errCode == 0 && res.data.data && res.data.data.length > 0) {
+        setPrograms(res.data.data)
+      }
     })
   }
   //获取类型下拉框的状态
@@ -496,6 +498,7 @@ function App2(props) {
                             allowClear
                             {...selectProps}
                             onSearch={(val) => {
+
                               if (privateData.inputTimeOutVal) {
                                 clearTimeout(privateData.inputTimeOutVal);
                                 privateData.inputTimeOutVal = null;
@@ -515,15 +518,14 @@ function App2(props) {
                               }, 1000)
                             }}
                             onChange={(r) => {
-                              let info = ""
-                              console.log(info, "======info========")
-                              if (defaultPrograms.length > 0) { //非自建
+                              let info;
+                              if (defaultPrograms[r]) { //非自建
                                 info = defaultPrograms[r]
                                 formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
                               } else { //自建频道
                                 info = programsList.filter(item => item.programId == r)
                                 if (info.length > 0) {
-                                  formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt/1000) })
+                                  formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt / 1000) })
                                 }
                               }
                               forceUpdatePages()
@@ -541,7 +543,7 @@ function App2(props) {
                                   )
                                 }
                               })
-                              
+
                             }
                           </Select>
                         </Form.Item>
@@ -700,60 +702,59 @@ function App2(props) {
                     {
                       formRef.getFieldValue("jumpType") == 11 &&
                       <Form.Item label="选择视频" name="programName">
-                          <Select
-                            placeholder="请选择视频"
-                            allowClear
-                            {...selectProps}
-                            onSearch={(val) => {
-                              if (privateData.inputTimeOutVal) {
-                                clearTimeout(privateData.inputTimeOutVal);
-                                privateData.inputTimeOutVal = null;
-                              }
-                              privateData.inputTimeOutVal = setTimeout(() => {
-                                if (!privateData.inputTimeOutVal) return;
-                                let arr = channleList.filter(item => item.code == formRef.getFieldValue("channelCode"))
-                                if (arr.length > 0) {
-                                  console.log(arr, "arr")
-                                  if (arr[0].recommendType == 1) {
-                                    getProgams(formRef.getFieldValue("channelCode"), val)
-                                    setDefaultPrograms([])
-                                  } else {
-                                    getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
-                                  }
-                                }
-                              }, 1000)
-                            }}
-                            onChange={(r) => {
-                              let info = ""
-                              console.log(info, "======info========")
-                              if (defaultPrograms.length > 0) { //非自建
-                                info = defaultPrograms[r]
-                                formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
-                              } else { //自建频道
-                                info = programsList.filter(item => item.programId == r)
-                                if (info.length > 0) {
-                                  formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt/1000) })
-                                }
-                              }
-                              forceUpdatePages()
-                            }}
-                          >
-                            {
-                              programsList.map((r, i) => {
-                                if (r.label) {
-                                  return (
-                                    <Option value={r.value} key={r.value}>{r.label}</Option>
-                                  )
-                                } else {
-                                  return (
-                                    <Option value={r.programId} key={i}>{r.programName}</Option>
-                                  )
-                                }
-                              })
-                              
+                        <Select
+                          placeholder="请选择视频"
+                          allowClear
+                          {...selectProps}
+                          onSearch={(val) => {
+                            if (privateData.inputTimeOutVal) {
+                              clearTimeout(privateData.inputTimeOutVal);
+                              privateData.inputTimeOutVal = null;
                             }
-                          </Select>
-                        </Form.Item>
+                            privateData.inputTimeOutVal = setTimeout(() => {
+                              if (!privateData.inputTimeOutVal) return;
+                              let arr = channleList.filter(item => item.code == formRef.getFieldValue("channelCode"))
+                              if (arr.length > 0) {
+                                console.log(arr, "arr")
+                                if (arr[0].recommendType == 1) {
+                                  getProgams(formRef.getFieldValue("channelCode"), val)
+                                  setDefaultPrograms([])
+                                } else {
+                                  getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
+                                }
+                              }
+                            }, 1000)
+                          }}
+                          onChange={(r) => {
+                            let info;
+                            if (defaultPrograms[r]) { //非自建
+                              info = defaultPrograms[r]
+                              formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
+                            } else { //自建频道
+                              info = programsList.filter(item => item.programId == r)
+                              if (info.length > 0) {
+                                formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt / 1000) })
+                              }
+                            }
+                            forceUpdatePages()
+                          }}
+                        >
+                          {
+                            programsList.map((r, i) => {
+                              if (r.label) {
+                                return (
+                                  <Option value={r.value} key={r.value}>{r.label}</Option>
+                                )
+                              } else {
+                                return (
+                                  <Option value={r.programId} key={i}>{r.programName}</Option>
+                                )
+                              }
+                            })
+
+                          }
+                        </Select>
+                      </Form.Item>
                     }
 
                     <Form.Item label="排序" name="channelIndex">

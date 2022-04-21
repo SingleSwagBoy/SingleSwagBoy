@@ -319,7 +319,7 @@ export default class EarnIncentiveTask extends React.Component {
     }
     async componentDidMount() {
         await this.requestNewAdTagList()
-        await this.getHkCategory();
+       
       
     }
     changeSize = (page, pageSize) => {   // 分页
@@ -438,9 +438,11 @@ export default class EarnIncentiveTask extends React.Component {
         requestNewAdTagList({ currentPage: 1, pageSize: 999999, }).then(res => {
             this.setState({
                 dict_user_tags: res.data,
-            }, () => {
+            },async () => {
                 this.forceUpdate();
+                await this.getHkCategory();
             });
+           
         })
     }
     getTagsName(val) {

@@ -280,7 +280,6 @@ export default class EarnIncentiveTask extends React.Component {
         )
     }
     async componentDidMount() {
-        await this.corptagtasks();
         await this.getWechatList()
         await this.requestNewAdTagList()
     }
@@ -315,6 +314,8 @@ export default class EarnIncentiveTask extends React.Component {
             console.log(res.data)
             this.setState({
                 wechatList: res.data
+            },async ()=>{
+                await this.corptagtasks();
             })
         })
     }

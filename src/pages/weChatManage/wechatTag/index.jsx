@@ -7,7 +7,7 @@
  */
 import React, { Component } from 'react'
 import { corptagtasks, addcorptagtask, delcorptagtask, corptagtaskstatus, requestNewAdTagList, getWechatList, getFansTag, getWechatUser, corptags } from 'api'
-import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Space, Alert } from 'antd'
+import { Breadcrumb, Card, Image, Button, message, Table, Modal, DatePicker, Input, Form, Select, InputNumber, Switch, Checkbox, Radio } from 'antd'
 import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import { MySyncBtn, MyImageUpload } from "@/components/views.js"
@@ -54,25 +54,15 @@ export default class EarnIncentiveTask extends React.Component {
             },
             columns: [
                 {
-                    title: "标签",
+                    title: "电视家标签",
                     dataIndex: "tagName",
                     key: "tagName",
-                    // render: (rowValue, row, index) => {
-                    //     return (
-                    //         <div>{this.getTagsName(rowValue)}</div>
-                    //     )
-                    // }
                 },
                 {
-                    title: "电视家用户标签",
+                    title: "企微标签",
                     dataIndex: "qyTagName",
                     key: "qyTagName",
                 },
-                // {
-                //     title: "标签人数",
-                //     dataIndex: "sucNum",
-                //     key: "sucNum",
-                // },
                 {
                     title: "公司",
                     dataIndex: "qywechatCode",
@@ -84,24 +74,12 @@ export default class EarnIncentiveTask extends React.Component {
                     }
                 },
                 {
-                    title: "状态",
-                    dataIndex: "status",
-                    key: "status",
+                    title: "类型",
+                    dataIndex: "isRealTime",
+                    key: "isRealTime",
                     render: (rowValue, row, index) => {
                         return (
-                            <div>
-                                {/* 0-未开始；1-进行中；2-已完成 */}
-                                {/* {rowValue === 1 ? "未开始" : rowValue === 2 ? "进行中" : rowValue === 3 ? "已完成" : "未知"} */}
-                                <Switch checkedChildren="有效" unCheckedChildren="无效" key={new Date().getTime()}
-                                    defaultChecked={rowValue == 1 ? true : false}
-                                    onChange={(val) => {
-                                        console.log(val)
-                                        let obj = JSON.parse(JSON.stringify(row))
-                                        obj.status = val ? 1 : 2
-                                        this.corptagtaskstatus(obj)
-                                    }}
-                                />
-                            </div>
+                            <div>{rowValue == 1 ? "一次性" : rowValue == 2 ? "实时" : "未知"}</div>
                         )
                     }
                 },
@@ -114,20 +92,11 @@ export default class EarnIncentiveTask extends React.Component {
                             <div>
                                 {/* 0-未开始；1-进行中；2-已完成 */}
                                 {rowValue === 0 ? "未开始" : rowValue === 1 ? "进行中" : rowValue === 2 ? "已完成" : "未知"}
-                                {/* <Switch checkedChildren="有效" unCheckedChildren="无效" key={new Date().getTime()}
-                                    defaultChecked={rowValue == 1 ? true : false}
-                                    onChange={(val) => {
-                                        console.log(val)
-                                        let obj = JSON.parse(JSON.stringify(row))
-                                        obj.state = val ? 1 : 0
-                                        this.corptagtaskstatus(obj)
-
-                                    }}
-                                /> */}
                             </div>
                         )
                     }
                 },
+
                 {
                     title: "操作",
                     key: "action",
@@ -178,7 +147,7 @@ export default class EarnIncentiveTask extends React.Component {
                     <Table
                         dataSource={lists}
                         scroll={{ x: 1200, y: '75vh' }}
-                        // rowKey={item=>item.indexId}
+                        rowKey={item => item.id}
                         loading={loading}
                         columns={columns}
                         pagination={{
@@ -203,6 +172,7 @@ export default class EarnIncentiveTask extends React.Component {
                                     onChange={(e) => {
                                         this.getWechatUser(e)
                                         this.corptags(e)
+                                        this.formRef.current.setFieldsValue({ userids: [] })
                                     }}
                                 >
                                     {wechatList.map((item, index) => (
@@ -210,16 +180,22 @@ export default class EarnIncentiveTask extends React.Component {
                                     ))}
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="电视家用户标签" name="qyTagId" rules={[{ required: true, message: '电视家用户标签' }]} >
-                                <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择电视家用户标签">
+                            <Form.Item label="类型" name="isRealTime" rules={[{ required: true, message: '请选择类型' }]}>
+                                <Radio.Group>
+                                    <Radio value={1}>一次性</Radio>
+                                    <Radio value={2}>实时（目前只支持电视家实时标签）</Radio>
+                                </Radio.Group>
+                            </Form.Item>
+                            <Form.Item label="企微标签" name="qyTagId" rules={[{ required: true, message: '电视家企微标签' }]} >
+                                <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择企微标签">
                                     {corptagsList.map((item, index) => (
                                         <Option value={item.tagId} key={index}>{item.tagName}</Option>
                                     ))}
                                 </Select>
                             </Form.Item>
 
-                            <Form.Item label='用户标签' name="tagCode" rules={[{ required: true, message: '请选择用户设备标签' }]}>
-                                <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择用户设备标签"
+                            <Form.Item label='电视家标签' name="tagCode" rules={[{ required: true, message: '请选择电视家标签' }]}>
+                                <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择电视家标签"
                                     filterOption={(input, option) => {
                                         if (!input) return true;
                                         let children = option.children;
@@ -240,32 +216,49 @@ export default class EarnIncentiveTask extends React.Component {
                                     ))}
                                 </Select>
                             </Form.Item>
+                            <Form.Item label="客服联系人">
+                                <Form.Item name="userids" rules={[{ required: true, message: '请选择客服联系人' }]} style={{ display: 'inline-flex', width: 'calc(50% - 8px)' }}>
+                                    <Select
+                                        placeholder="请选择客服联系人"
+                                        allowClear
+                                        mode="multiple"
+                                        {...this.state.selectProps}
+                                    >
+                                        {
+                                            allUserList.map((r, i) => {
+                                                return (
+                                                    <Option value={r.userid} key={i}>
+                                                        <img src={r.avatar} alt="" style={{ width: "20px" }} />
+                                                        {r.name}
+                                                        {r.limit ? "---" + r.limit : ""}
+                                                    </Option>
+                                                )
 
-                            <Form.Item label="客服联系人" name="userids" rules={[{ required: true, message: '请选择客服联系人' }]}>
-                                <Select
-                                    placeholder="请选择客服联系人"
-                                    allowClear
-                                    mode="multiple"
-                                    {...this.state.selectProps}
-                                >
-                                    {
-                                        allUserList.map((r, i) => {
-                                            return (
-                                                <Option value={r.userid} key={i}>
-                                                    <img src={r.avatar} alt="" style={{ width: "20px" }} />
-                                                    {r.name}
-                                                    {r.limit ? "---" + r.limit : ""}
-                                                </Option>
-                                            )
-
-                                        })
-                                    }
-
-                                </Select>
+                                            })
+                                        }
+                                    </Select>
+                                </Form.Item>
+                                {
+                                    this.formRef.current && this.formRef.current.getFieldsValue().qywechatCode &&
+                                    <Form.Item style={{ display: 'inline-flex', width: 'calc(50% - 50px)',marginLeft:"20px" }}>
+                                        <Checkbox onChange={(e) => {
+                                            if (e.target.checked) {
+                                                let arr = []
+                                                allUserList.forEach(r => {
+                                                    arr.push(r.userid)
+                                                })
+                                                this.formRef.current.setFieldsValue({ userids: arr })
+                                            }else{
+                                                this.formRef.current.setFieldsValue({ userids: [] })
+                                            }
+                                            this.forceUpdate()
+                                        }}>全选</Checkbox>
+                                    </Form.Item>
+                                }
                             </Form.Item>
-                            <Form.Item label="状态" name="status" valuePropName="checked">
+                            {/* <Form.Item label="状态" name="status" valuePropName="checked">
                                 <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
-                            </Form.Item>
+                            </Form.Item> */}
 
                             <Form.Item {...this.state.tailLayout}>
                                 <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
@@ -314,7 +307,7 @@ export default class EarnIncentiveTask extends React.Component {
             console.log(res.data)
             this.setState({
                 wechatList: res.data
-            },async ()=>{
+            }, async () => {
                 await this.corptagtasks();
             })
         })
@@ -342,13 +335,13 @@ export default class EarnIncentiveTask extends React.Component {
         })
     }
     addcorptagtask(val) {
-        let arr = this.state.corptagsList.filter(item=>item.tagId == val.qyTagId)
-        val.qyTagName = arr.length>0?arr[0].tagName : ""
-        let tagList = this.state.dict_user_tags.filter(item=>item.code == val.tagCode)
-        val.tagName = tagList.length>0?tagList[0].name : ""
+        let arr = this.state.corptagsList.filter(item => item.tagId == val.qyTagId)
+        val.qyTagName = arr.length > 0 ? arr[0].tagName : ""
+        let tagList = this.state.dict_user_tags.filter(item => item.code == val.tagCode)
+        val.tagName = tagList.length > 0 ? tagList[0].name : ""
         let params = {
             ...val,
-            status: val.status ? 1 : 2,
+            // status: val.status ? 1 : 2,
             qyuserids: Array.isArray(val.userids) ? val.userids.join(",") : ""
         }
         addcorptagtask(params).then(res => {
@@ -378,16 +371,16 @@ export default class EarnIncentiveTask extends React.Component {
             this.corptagtasks()
         })
     }
-    corptagtaskstatus(item) {
-        let params = {
-            id:item.id,
-            status:item.status
-        }
-        corptagtaskstatus(params).then(res => {
-            message.success("修改成功")
-            this.corptagtasks()
-        })
-    }
+    // corptagtaskstatus(item) {
+    //     let params = {
+    //         id: item.id,
+    //         status: item.status
+    //     }
+    //     corptagtaskstatus(params).then(res => {
+    //         message.success("修改成功")
+    //         this.corptagtasks()
+    //     })
+    // }
     // 获取用户标签
     requestNewAdTagList() {
         requestNewAdTagList({ currentPage: 1, pageSize: 999999, }).then(res => {

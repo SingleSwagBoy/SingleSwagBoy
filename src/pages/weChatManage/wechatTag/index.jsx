@@ -163,6 +163,7 @@ export default class EarnIncentiveTask extends React.Component {
                 <Modal title="新建" centered visible={entranceState} onCancel={() => {
                     this.setState({ entranceState: false })
                     this.formRef.current.resetFields()
+                    this.forceUpdate()
                 }} footer={null} width={1200}>
                     {
                         <Form {...layout}
@@ -263,7 +264,7 @@ export default class EarnIncentiveTask extends React.Component {
                             </Form.Item> */}
 
                             <Form.Item {...this.state.tailLayout}>
-                                <Button onClick={() => { this.setState({ entranceState: false }) }}>取消</Button>
+                                <Button onClick={() => { this.setState({ entranceState: false });this.formRef.current.resetFields() }}>取消</Button>
                                 <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
                                     确定
                                 </Button>

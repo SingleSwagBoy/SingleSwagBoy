@@ -87,8 +87,7 @@ class Market extends Component {
   }
   getDict(){ //获取产品线
     let params={
-      page:{isPage:9},
-      prodType:1
+      page:{isPage:9}
     }
     getDict(params).then(res=>{
       let arr = res.data.data

@@ -132,6 +132,8 @@ export default class EarnIncentiveTask extends React.Component {
                             {/* <Button type="primary"  onClick={this.getEarnTskList.bind(this)}>刷新</Button> */}
                             <Button type="primary" style={{ margin: "0 10px" }}
                                 onClick={() => {
+                                    let arr  = lists.filter(item=>item.taskStatus == 1)
+                                    if(arr.length>0)return message.error("有进行中的任务，暂时不允许添加")
                                     this.setState({
                                         source: "add",
                                         entranceState: true,

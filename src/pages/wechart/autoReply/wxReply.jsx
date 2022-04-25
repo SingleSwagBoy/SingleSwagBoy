@@ -62,7 +62,8 @@ export default class WxReply extends Component {
             dict_public_types_Login: [
                 { code: "dsj_server", id: 1, name: "电视家服务号", type: 1 },
                 { id: 2, code: "dsj_welfare", name: "电视家福利号", type: 1 },
-                { id: 4, code: "dsj_reader", name: "电视家权益号", type: 1 }
+                { id: 4, code: "dsj_reader", name: "电视家权益号", type: 1 },
+                { id: 5, code: "dsj_helper", name: "电视家助手", type: 1 }
             ],
             dict_status: [],                            //字典 状态类型
             table_box: {

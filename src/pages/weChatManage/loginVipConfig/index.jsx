@@ -46,8 +46,9 @@ export default class EarnIncentiveTask extends React.Component {
             wechatList: [],
             public_list: [
                 {  wxCode: "dsj_server",name:   "电视家服务号" },
-                {  wxCode: "dsj_welfare",name:   "电视家福利号", },
-                {  wxCode: "dsj_reader",name:   "电视家权益号",},
+                {  wxCode: "dsj_welfare",name:   "电视家福利号" },
+                {  wxCode: "dsj_reader",name:   "电视家权益号"},
+                {  wxCode: "dsj_helper",name:   "电视家助手"},
             ],
             activityCode: "",//当前激活的哪一个qywechatCode
             switchState:"",

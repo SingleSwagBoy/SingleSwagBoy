@@ -52,6 +52,15 @@ export default class EarnIncentiveTask extends React.Component {
                     console.log('onSearch')
                 }
             },
+            selectPropsTwo:{
+                optionFilterProp:"children",
+                filterOption(input, option){
+                  return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                },
+                showSearch(){
+                  console.log('onSearch')
+                }
+            },
             columns: [
                 {
                     title: "电视家标签",
@@ -190,7 +199,9 @@ export default class EarnIncentiveTask extends React.Component {
                                 </Radio.Group>
                             </Form.Item>
                             <Form.Item label="企微标签" name="qyTagId" rules={[{ required: true, message: '电视家企微标签' }]} >
-                                <Select className="base-input-wrapper" allowClear showSearch placeholder="请选择企微标签">
+                                <Select className="base-input-wrapper" tags allowClear showSearch placeholder="请选择企微标签" 
+                                    {...this.state.selectProps}
+                                >
                                     {corptagsList.map((item, index) => (
                                         <Option value={item.tagId} key={index}>{item.tagName}</Option>
                                     ))}
@@ -299,7 +310,7 @@ export default class EarnIncentiveTask extends React.Component {
     corptags(val) {
         let params = { qywechatCode: val }
         corptags(params).then(res => {
-            console.log(res.data)
+            console.log("corptags",res.data)
             this.setState({
                 corptagsList: res.data
             })

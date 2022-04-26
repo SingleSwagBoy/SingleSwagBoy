@@ -91,7 +91,7 @@ export default class tagConfig extends Component {
                         <MySyncBtn type={10} name='同步缓存' />
                     </div>
                 } />
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} rowKey={item => item.id} scroll={{ x: 1500, y: '75vh' }} />
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={1500} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
                     style={{ top: 20 }} footer={null}
                 // footer={[
@@ -348,8 +348,21 @@ export default class tagConfig extends Component {
             r.forEach(h => {
                 h.forEach(l => {
                     if (l.value && Array.isArray(l.value)) {
-                        l.value = l.value.join(",")
+                        let postAddress = l.value.filter(item => !item.includes("#"))
+                        console.log(l, "l")
+                        let arr = []
+                        if (l.field == "marketChannelName") {
+                            postAddress.forEach(m => {
+                                if (m.includes("-")) {
+                                    arr.push(m.split("-")[0])
+                                }
+                            })
+                        }else{
+                            arr = postAddress
+                        }
+                        l.value = arr.join(",")
                     }
+
                 })
             })
         })

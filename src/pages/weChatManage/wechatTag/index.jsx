@@ -52,15 +52,6 @@ export default class EarnIncentiveTask extends React.Component {
                     console.log('onSearch')
                 }
             },
-            selectPropsTwo:{
-                optionFilterProp:"children",
-                filterOption(input, option){
-                  return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                },
-                showSearch(){
-                  console.log('onSearch')
-                }
-            },
             columns: [
                 {
                     title: "电视家标签",

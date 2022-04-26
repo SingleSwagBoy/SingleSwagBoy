@@ -14,6 +14,7 @@ import './tagConfigFormulas.css'
 import { PlusOutlined } from '@ant-design/icons';
 import { MyAddress } from '@/components/views.js';
 import Market from "@/components/market/index" //渠道组件
+import MyMarket from "@/components/myMarket/index" //新渠道组件
 let privateData = {
     inputTimeOutVal: null
 };
@@ -53,9 +54,9 @@ export default class tagConfig extends Component {
         let that = this;
         let { dict_operator } = that.state;
         let { id, formRef, dict_field, is_show_only ,productList} = that.props;      //is_show_only:仅作展示，数据不提供修改编辑
-        console.log("dict_field=====dict_field",dict_field)
+        // console.log("dict_field=====dict_field",dict_field)
         let rules = formRef.current.getFieldValue(id);   //获取外部数据
-        console.log("rulesrulesrulesrules",rules)
+        // console.log("rulesrulesrulesrules",rules)
 
 
         if (!rules) {
@@ -168,8 +169,10 @@ export default class tagConfig extends Component {
                                                                                                         }
                                                                                                     </Select> ||
                                                                                                     layer3item.field == "marketChannelName" && 
-                                                                                                    <Market getMarketReturn={(e)=>{this.checkMark(e, layer1index, layer2index, layer3index, 'value')}}
-                                                                                                        checkData={(layer3item.value && !Array.isArray(layer3item.value))?layer3item.value.split(","):layer3item.value}/> ||
+                                                                                                    // <Market getMarketReturn={(e)=>{this.checkMark(e, layer1index, layer2index, layer3index, 'value')}}
+                                                                                                    //     checkData={(layer3item.value && !Array.isArray(layer3item.value))?layer3item.value.split(","):layer3item.value}/> 
+                                                                                                    <MyMarket onCheckMarket={(e)=>this.onCheckMarket(e, layer1index, layer2index, layer3index, 'value')} defaultMarket={(layer3item.value && !Array.isArray(layer3item.value))?layer3item.value.split(","):layer3item.value}  />
+                                                                                                        ||
                                                                                                     <Input value={layer3item.value} placeholder="取值" disabled={is_show_only} onChange={(e) => { that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'value') }} />
                                                                                                 }
                                                                                             </div>
@@ -456,5 +459,18 @@ export default class tagConfig extends Component {
         // this.setState({
         //     address: arr
         // })
+    }
+    onCheckMarket(value, layer1index, layer2index, layer3index, targetKey) {
+        console.log(value, layer1index, layer2index, layer3index, targetKey)
+        let that = this;
+        let { id, formRef } = that.props;
+        let rules = formRef.current.getFieldValue(id);
+        //更新参数
+        rules[layer1index][layer2index][layer3index][targetKey] = value ? value : "";
+
+        let obj = {};
+        obj[id] = rules;
+        formRef.current.setFieldsValue(obj);
+        that.forceUpdate();
     }
 }

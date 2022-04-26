@@ -224,7 +224,7 @@ export default class EarnIncentiveTask extends React.Component {
                                         if (!input) return true;
                                         let children = option.children;
                                         if (children) {
-                                            let key = children[2];
+                                            let key = children[2];  
                                             let isFind = false;
                                             isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
                                             if (!isFind) {

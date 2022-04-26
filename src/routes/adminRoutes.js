@@ -109,6 +109,8 @@ const SysPermission = lazy(() => import('pages/sys/permission/permission.jsx'));
 const ActivityConfig = lazy(() => import('pages/album/activityConfig/index.jsx'));
 const ViewPhotos = lazy(() => import('pages/album/photos/index.jsx'));
 
+//私域签到小程序
+const ScoreShop = lazy(() => import('pages/privateDomain/scoreShop/index.jsx'));
 
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
@@ -246,6 +248,10 @@ const adminRoutes = [
     //电视节目单配置
     //{ name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },
     //其他
+
+    //  私域签到小程序
+    { name: '积分商城', icon: UnorderedListOutlined, path: '/mms/privateDomain/scoreShop', component: ScoreShop, code: "signConfig", sub_code: 'scoreShop' },
+    
     { name: '没有权限', icon: UnorderedListOutlined, path: '/mms/noPermission', component: NoPermission, meta: { isNav: false, roles: '*' } }
 
 

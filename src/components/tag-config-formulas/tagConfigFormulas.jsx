@@ -219,6 +219,12 @@ export default class tagConfig extends Component {
             }else{
                 return true
             }
+        }else if(layer3item.field == "marketChannelName"){
+            if(item.value==7){
+                return false
+            }else{
+                return true
+            }
         }else{
             return false
         }

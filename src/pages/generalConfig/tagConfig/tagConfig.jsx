@@ -22,6 +22,7 @@ import {
     requestDictionary,                      //获取 字典集
     requestAdFieldList,                     //获取 Field列表
     getMyProduct,
+    requestNewAdTagRecord,                  //
 
 } from 'api';
 
@@ -136,9 +137,20 @@ export default class tagConfig extends Component {
                                         <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} productList={productList} />
                                     </Form.Item>
                                 </Form.Item>
-                                <Form.Item label="计数" name='count' >
+                                {/* <Form.Item label="计数" name='count' >
                                     <Input className="base-input-wrapper" placeholder="计数" disabled />
+                                </Form.Item> */}
+                                <Form.Item label="计数">
+                                    <Form.Item label="" name='count' style={{display:"inline-block",width:"40%"}}>
+                                        <Input className="base-input-wrapper" placeholder="计数" disabled />
+                                    </Form.Item>
+                                    <Form.Item label="" style={{display:"inline-block",width:"50%"}}>
+                                        <Button type='primary' onClick={() => this.requestNewAdTagRecord()}>获取实时</Button>
+                                    </Form.Item>
+
                                 </Form.Item>
+
+
                                 <Form.Item {...this.state.tailLayout}>
                                     <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
                                     <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
@@ -403,6 +415,14 @@ export default class tagConfig extends Component {
                 that.refreshList();
             })
 
+        })
+    }
+    requestNewAdTagRecord() {
+        let params = {
+            ...this.formRef.current.getFieldValue()
+        }
+        requestNewAdTagRecord(params).then(res => {
+            message.loading("计算中，请等待两分钟后再试")
         })
     }
 

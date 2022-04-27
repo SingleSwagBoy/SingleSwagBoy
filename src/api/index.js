@@ -288,10 +288,12 @@ export const getCorner = (params) => { return request2.post(`${baseUrl}/mms/ad/c
 
 
 
-
+//标签配置
 export const requestNewAdTagList = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/get`, { params: params }) };                                                                //新版 获取用户标签列表
+export const getGroup = (params) => { return request2.post(`${baseUrl}/mms/dict/cp/group/getInfo`, params) };                                                                //新版 获取用户标签列表
 export const requestNewAdTagCreate = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/add`, params) };                                                                         //新版 创建用户标签数据
 export const requestNewAdTagUpdate = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/update`, params) };                                                                      //新版 更新用户标签规则
+export const requestNewAdTagRecord = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/record`, params) };                                                                      //新版 更新用户标签规则
 export const requestNewAdTagDelete = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/del`, params) };                                                                         //新版 删除用户标签规则
 export const requestDictionary = (params) => { return request2.post(`${baseUrl}/mms/config/dictionary/get`, params) };                                                                      //获取 字典数据源
 export const requestAdFieldList = (params) => { return request2.post(`${baseUrl}/mms/dict/tagDic/get`, params) };                                                                           //获取Field列表

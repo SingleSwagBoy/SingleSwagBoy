@@ -6,7 +6,7 @@ import { } from '@ant-design/icons';
 import { } from 'react-router-dom'
 import { } from 'react-redux'
 
-class Address extends Component {
+class Market extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -30,7 +30,7 @@ class Address extends Component {
     let { defaultMarket } = this.props
     let arr = []
     let isArr = []
-    let marketList = defaultMarket.filter(item=>!item.includes("#"))
+    let marketList = (defaultMarket||[]).filter(item=>!item.includes("#"))
     if(marketList.length>0){
       marketList.forEach(r=>{
         if(r.includes("-")){
@@ -40,12 +40,10 @@ class Address extends Component {
         }
       })
     }
-    console.log(isArr,"defaultMarket")
     if (treeData.length > 0) {
       treeData.forEach((r, i) => {
         r.children.forEach((l, index) => {
           let list = l.cp.filter(item=>isArr.some(h=>item.code == h))
-          console.log(list,"list")
           if(list.length>0){
             list.forEach((b,j)=>{
               arr.push(b.marketId)
@@ -101,4 +99,4 @@ class Address extends Component {
   }
 }
 
-export default Address
+export default Market

@@ -12,6 +12,7 @@ import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, message }
 import moment from 'moment';
 import '@/style/base.css';
 import "./index.css"
+import util from 'utils'
 import { MySyncBtn, MyTagConfigFormulas } from '@/components/views.js';
 import {
     requestNewAdTagList,                    //新版 获取用户标签列表
@@ -26,6 +27,7 @@ import {
 
 let { RangePicker } = DatePicker;
 let { Option } = Select;
+
 
 export default class tagConfig extends Component {
     constructor(props) {
@@ -181,6 +183,14 @@ export default class tagConfig extends Component {
             { title: '标签code', dataIndex: 'code', key: 'code', width: 200, },
             { title: '描述', dataIndex: 'description', key: 'description', },
             {
+                title: '创建者', dataIndex: 'createUser', key: 'createUser',
+                render: (rowValue, row, index) => {
+                    return (
+                        <div>{decodeURIComponent(rowValue)}</div>
+                    )
+                }
+            },
+            {
                 title: '状态', dataIndex: 'status', key: 'status', width: 100,
                 render: (rowValue, row, index) => {
                     return (
@@ -264,7 +274,7 @@ export default class tagConfig extends Component {
             that.forceUpdate();
             that.formRef.current.resetFields();
             let name = JSON.parse(localStorage.getItem('user')).userInfo.userName
-            that.formRef.current.setFieldsValue({ createUser: name });
+            that.formRef.current.setFieldsValue({ createUser: decodeURIComponent(name) });
         })
     }
 
@@ -357,7 +367,7 @@ export default class tagConfig extends Component {
                                     arr.push(m.split("-")[0])
                                 }
                             })
-                        }else{
+                        } else {
                             arr = postAddress
                         }
                         l.value = arr.join(",")

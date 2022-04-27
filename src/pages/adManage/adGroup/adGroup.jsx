@@ -47,6 +47,7 @@ export default class adGroup extends Component {
                 { key: 1, value: '右键运营位' },
                 { key: 2, value: '屏显广告' },
                 { key: 11, value: '信息流广告' },
+                { key: 4, value: '右下角广告' },
             ],
             //标签列表
             dict_target_list: [],
@@ -134,7 +135,7 @@ export default class adGroup extends Component {
                                     <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
                                 ))}
                             </Select>
-                            <Select style={{ width: '200px', margin: "0 5px" }} allowClear showSearch placeholder="广告内容"
+                            <Select style={{ width: '200px', margin: "0 5px" }} allowClear showSearch placeholder="广告类型"
                                 onChange={(e) => { this.state.search.adType = e }}
                             >
                                 {
@@ -248,7 +249,7 @@ export default class adGroup extends Component {
                                 <div>
                                     <Divider>广告详情</Divider>
                                     <Form.Item label="广告类型" value={this.state.adIndex}>
-                                        <Radio.Group className="base-input-wrapper" defaultValue={this.state.adIndex} key={this.state.adIndex}
+                                        <Radio.Group defaultValue={this.state.adIndex} key={this.state.adIndex}
                                             onChange={(e) => {
                                                 this.formRef.current.setFieldsValue({ "detailName": "", "detailTime": "", "detailPic": "", "detailIconPicUrl": "" })
                                                 let arr = this.formRef.current.getFieldValue("content") ? JSON.parse(JSON.stringify(this.formRef.current.getFieldValue("content"))) : []

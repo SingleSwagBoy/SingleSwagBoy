@@ -21,7 +21,7 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup, updateInfoGroup
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup, updateInfoGroup, getCorner
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
@@ -75,7 +75,7 @@ export default class adCreateModal extends Component {
             table_title: [
                 { title: '素材名称', dataIndex: 'name', key: 'name', width: 300, },
                 {
-                    title: '类型', dataIndex: 'type', key: 'type', width: 200,
+                    title: '类型', dataIndex: 'type', key: 'type', 
                     render: (rowValue, row, index) => {
                         return (
                             this.state.adIndex == 1 ?
@@ -89,18 +89,18 @@ export default class adCreateModal extends Component {
                     }
                 },
                 {
-                    title: '缩略图', dataIndex: 'iconPicUrl', key: 'iconPicUrl', width: 150,
+                    title: '缩略图', dataIndex: 'iconPicUrl', key: 'iconPicUrl', width:80,
                     render: (rowValue, row, index) => {
                         return (<Image width={50} src={rowValue} />)
                     }
                 },
                 {
-                    title: '背景图', dataIndex: 'picUrl', key: 'picUrl', width: 150,
+                    title: '背景图', dataIndex: 'picUrl', key: 'picUrl',width:80,
                     render: (rowValue, row, index) => {
                         return (<Image width={50} src={rowValue} />)
                     }
                 },
-                { title: '排序', dataIndex: 'sortData', key: 'sortData', },
+                { title: '排序', dataIndex: 'sortData', key: 'sortData',width:60 },
                 {
                     title: '时间', dataIndex: 'time', key: 'time', width: 300,
                     render: (rowValue, row, index) => {
@@ -266,6 +266,7 @@ export default class adCreateModal extends Component {
                                     <Radio.Button value="1">右键运营位广告</Radio.Button>
                                     <Radio.Button value="2">屏显广告</Radio.Button>
                                     <Radio.Button value="3">信息流广告</Radio.Button>
+                                    <Radio.Button value="4">右下角广告</Radio.Button>
                                 </Radio.Group>
                             </div>
                             <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center' }}>
@@ -553,8 +554,10 @@ export default class adCreateModal extends Component {
             this.requestProductSkuList()
         } else if (index == 2) {
             this.getScreen()
-        } else {
+        } else if (index == 3) {
             this.getInfoGroup()
+        } else{
+            this.getCorner()
         }
     }
     requestAdRightKey() {
@@ -580,6 +583,34 @@ export default class adCreateModal extends Component {
             name: this.state.searchWords
         };
         getScreen(obj).then(res => {
+            that.setState({
+                lists: res.data || [],
+                total: res.page ? res.page.totalCount : 0
+            })
+            this.forceUpdate()
+        })
+    }
+    getInfoGroup() {
+        let that = this;
+        let obj = {
+            page: { currentPage: this.state.page, pageSize: this.state.pageSize },
+            name: this.state.searchWords
+        };
+        getInfoGroup(obj).then(res => {
+            that.setState({
+                lists: res.data || [],
+                total: res.page ? res.page.totalCount : 0
+            })
+            this.forceUpdate()
+        })
+    }
+    getCorner() {
+        let that = this;
+        let obj = {
+            page: { currentPage: this.state.page, pageSize: this.state.pageSize },
+            name: this.state.searchWords
+        };
+        getCorner(obj).then(res => {
             that.setState({
                 lists: res.data || [],
                 total: res.page ? res.page.totalCount : 0

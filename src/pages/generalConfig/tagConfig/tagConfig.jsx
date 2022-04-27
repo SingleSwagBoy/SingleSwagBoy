@@ -141,7 +141,7 @@ export default class tagConfig extends Component {
                                     <Input className="base-input-wrapper" placeholder="计数" disabled />
                                 </Form.Item> */}
                                 <Form.Item label="计数">
-                                    <Form.Item label="" name='count' style={{display:"inline-block",width:"40%"}}>
+                                    <Form.Item label="" name='count' style={{display:"inline-block"}}>
                                         <Input className="base-input-wrapper" placeholder="计数" disabled />
                                     </Form.Item>
                                     <Form.Item label="" style={{display:"inline-block",width:"50%"}}>

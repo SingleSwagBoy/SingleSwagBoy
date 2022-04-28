@@ -26,7 +26,8 @@ import {
     requestAdRightKey,                      ///右键运营位
     getScreen,//获取屏显广告
     baseUrl,
-    getInfoGroup
+    getInfoGroup, //信息流
+    getCorner, //右下角广告
 } from 'api';
 
 // import { util } from 'echarts';
@@ -107,7 +108,7 @@ export default class adGroup extends Component {
                     <div>
                         <div className="alert-box" style={{ width: "100%", display: "flex", flexWrap: "wrap", marginBottom: "20px" }}>
                             <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告组名称" onChange={(e) => { this.state.search.groupName = e.target.value }} />
-                            <RangePicker style={{ marginLeft: 5 }} style={{ width: '405px', marginLeft: 5 }} showTime placeholder={['上线时间', '下线时间']} onChange={(e) => {
+                            <RangePicker style={{ marginLeft: 5 }} style={{ width: '365px', marginLeft: 5 }} showTime placeholder={['上线时间', '下线时间']} onChange={(e) => {
                                 this.state.search.onlineTime = e ? parseInt(e[0].valueOf() / 1000) : ""
                                 this.state.search.offlineTime = e ? parseInt(e[1].valueOf() / 1000) : ""
                             }} />
@@ -263,8 +264,10 @@ export default class adGroup extends Component {
                                                     this.requestAdRightKey(list.length > 0 ? list[0].adId : "")
                                                 } else if (e.target.value == 2) {
                                                     this.getScreen(list.length > 0 ? list[0].adId : "")
-                                                } else {
+                                                } else if(e.target.value == 3){
                                                     this.getInfoGroup(list.length > 0 ? list[0].adId : "")
+                                                } else if(e.target.value == 4){
+                                                    this.getCorner(list.length > 0 ? list[0].adId : "")
                                                 }
                                                 this.forceUpdate()
                                             }}
@@ -534,8 +537,10 @@ export default class adGroup extends Component {
             this.requestAdRightKey(id)
         } else if (this.state.adIndex == 2) {
             this.getScreen(id)
-        } else {
+        } else if(this.state.adIndex == 11){
             this.getInfoGroup(id)
+        } else if(this.state.adIndex == 4){
+            this.getCorner(id)
         }
 
     }
@@ -642,6 +647,20 @@ export default class adGroup extends Component {
             id: id
         }
         getInfoGroup(params).then(res => {
+            // console.log('group_list', res.data);
+            if (Array.isArray(res.data) && res.data.length > 0) {
+                let arr = res.data[0]
+                this.formRef.current.setFieldsValue({ "detailName": arr.name, "detailTime": [moment(arr.startTime), moment(arr.endTime)], "detailPic": arr.picUrl })
+                this.forceUpdate()
+            }
+        })
+    }
+    getCorner(id) {
+        if (!id) return
+        let params = {
+            id: id
+        }
+        getCorner(params).then(res => {
             // console.log('group_list', res.data);
             if (Array.isArray(res.data) && res.data.length > 0) {
                 let arr = res.data[0]

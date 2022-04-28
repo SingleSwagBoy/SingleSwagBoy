@@ -15,7 +15,7 @@ import moment from 'moment';
 import '@/style/base.css';
 import {
     requestAdRightKey,   //获取广告素材 获取右下角广告素材
-    getScreen, getInfoGroup
+    getScreen, getInfoGroup, getCorner
 } from 'api';
 
 let { RangePicker } = DatePicker;
@@ -31,7 +31,7 @@ export default class adCreateModal extends Component {
                 table_title: [],
                 table_datas: [],
             },
-            selectedRowKeys:[],
+            selectedRowKeys: [],
             modal_box: {
                 is_show: false,
                 title: '',
@@ -59,17 +59,17 @@ export default class adCreateModal extends Component {
         }
     }
     onSelectChange = selectedRowKeys => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys,this.state.table_box.table_datas);
-        let arr = this.state.table_box.table_datas.filter(item=>selectedRowKeys.some(l=>l == item.id))
-        this.setState({ selectedRowKeys,checkedList:arr });
-      };
+        console.log('selectedRowKeys changed: ', selectedRowKeys, this.state.table_box.table_datas);
+        let arr = this.state.table_box.table_datas.filter(item => selectedRowKeys.some(l => l == item.id))
+        this.setState({ selectedRowKeys, checkedList: arr });
+    };
     render() {
         let that = this;
-        let { table_box, modal_box,selectedRowKeys } = that.state;
+        let { table_box, modal_box, selectedRowKeys } = that.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
-          };
+        };
         return (
             <div>
                 {modal_box &&
@@ -93,7 +93,7 @@ export default class adCreateModal extends Component {
                                 }}
                             />
                         </div>
-                        <Table columns={table_box.table_title} rowSelection={rowSelection}  rowKey={item => item.id} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '70vh' }} />
+                        <Table columns={table_box.table_title} rowSelection={rowSelection} rowKey={item => item.id} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '70vh' }} />
 
                     </Modal>
                 }
@@ -194,7 +194,7 @@ export default class adCreateModal extends Component {
 
         table_box.table_title = table_title;
         let selectedRowKeys = []
-        tagList.forEach(r=>{
+        tagList.forEach(r => {
             selectedRowKeys.push(r.adId)
         })
         that.setState({
@@ -203,7 +203,7 @@ export default class adCreateModal extends Component {
             adIndex: adIndex,
             tagList: tagList,
             checkedList: tagList,
-            selectedRowKeys:selectedRowKeys,
+            selectedRowKeys: selectedRowKeys,
             searchWords: "",
         }, () => {
             that.forceUpdate();
@@ -228,6 +228,8 @@ export default class adCreateModal extends Component {
             this.getScreen()
         } else if (index == 11) {
             this.getInfoGroup()
+        } else if (index == 4) {
+            this.getCorner()
         }
     }
     requestAdRightKey() {
@@ -270,6 +272,21 @@ export default class adCreateModal extends Component {
             name: this.state.searchWords
         };
         getInfoGroup(obj).then(res => {
+            table_box.table_datas = res.data.filter(r => r.status == 1);
+            that.setState({
+                table_box: table_box,
+            })
+        })
+    }
+    getCorner() {
+        let that = this;
+        let { table_box } = that.state;
+
+        let obj = {
+            page: { currentPage: 1, pageSize: 10000 },
+            name: this.state.searchWords
+        };
+        getCorner(obj).then(res => {
             table_box.table_datas = res.data.filter(r => r.status == 1);
             that.setState({
                 table_box: table_box,

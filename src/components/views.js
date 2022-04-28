@@ -15,6 +15,9 @@ export { default as MyMarketChannel } from "./market/index";                    
 export { default as MyArea } from "./area/area";                                    //地域组件[黄秋实]
 export { default as MyChannel } from "./channel/channel";                           //渠道组件[黄秋实] 不用单独配置 但必须要在外层包裹Form组件，反应速度更快，示例：[停服下线通知配置|offineConfig.jsx]
 export { default as MyTagSelect } from "./tag-select/tag-select";                   //标签选项列表
+export { default as JumpType } from "./jumpType/index";                             //选择类型[yzc]
+export { default as ChannelCom } from "./jumpType/channel";                             //频道类型[yzc]
+export { default as ProgramCom } from "./jumpType/program";                             //节目/视频类型[yzc]
 
 export { default as MyTagConfigFormulas } from "./tag-config-formulas/tagConfigFormulas";                   //标签选项列表
 

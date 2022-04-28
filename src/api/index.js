@@ -283,6 +283,13 @@ export const delInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/a
 export const getSdkList = (params) => { return request2.post(`${baseUrl}/mms/ad/sdk/get`, params) };                                                                          //信息流广告组
 export const getPosition = (params) => { return request2.post(`${baseUrl}/mms/ad/space/get`, params) };                                                                          //信息流广告组
 
+//右下角广告
+export const getCorner = (params) => { return request2.post(`${baseUrl}/mms/ad/corner/get`, params) };                                                                          //信息流广告组
+export const getChannelTag = (params) => { return request2.post(`${baseUrl}/mms/channel/tag/get`, params) };                                                                          //信息流广告组
+export const updateCorner = (params) => { return request2.post(`${baseUrl}/mms/ad/corner/update`, params) };                                                                          //信息流广告组
+export const addCorner = (params) => { return request2.post(`${baseUrl}/mms/ad/corner/add`, params) };                                                                          //信息流广告组
+export const delCorner = (params) => { return request2.post(`${baseUrl}/mms/ad/corner/del`, params) };                                                                          //信息流广告组
+
 
 
 //标签配置

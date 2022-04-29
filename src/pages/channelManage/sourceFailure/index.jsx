@@ -5,7 +5,8 @@ import { } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
 import ImageUpload from "../../../components/ImageUpload/index" //图片组件
-import { MySyncBtn } from "@/components/views.js"
+// import { MySyncBtn } from "@/components/views.js"
+import { ChannelCom, MySyncBtn } from "@/components/views.js"
 import util from 'utils'
 import "./style.css"
 const { Option } = Select;
@@ -251,6 +252,7 @@ export default class EarnIncentiveTask extends React.Component {
                             <Form.Item label="名称" name="name" >
                                 <Input placeholder="名称" />
                             </Form.Item>
+                            <ChannelCom formRef={this.formRef} channelCode={"channelCode"} multiple={"multiple"} />
                             <Form.Item label="用户标签" name="tag">
                                 <Select
                                     placeholder="请输入用户标签"
@@ -287,34 +289,31 @@ export default class EarnIncentiveTask extends React.Component {
                             {
                                 this.formRef.current && this.formRef.current.getFieldValue("type") == 1
                                     ?
-                                    <Form.Item label="频道名称" name="content" rules={[{ required: true, message: '请选择频道' }]}>
-                                        <Select
-                                            placeholder="请输入频道名称"
-                                            allowClear
-                                            mode="multiple"
-                                            {...this.state.selectProps}
-                                            onSearch={(val) => {
-                                                if (privateData.inputTimeOutVal) {
-                                                    clearTimeout(privateData.inputTimeOutVal);
-                                                    privateData.inputTimeOutVal = null;
-                                                }
-                                                privateData.inputTimeOutVal = setTimeout(() => {
-                                                    if (!privateData.inputTimeOutVal) return;
-                                                    this.getChannel(val)
-                                                }, 1000)
-                                            }}
-                                            onChange={(e) => {
-                                                console.log(e)
-                                                this.formRef.current.setFieldsValue({ "channelId": e })
-                                            }}
-                                        >
-                                            {
-                                                channelList.map((r, i) => {
-                                                    return <Option value={r.code} key={i}>{r.name}------{r.code}</Option>
-                                                })
-                                            }
-                                        </Select>
-                                    </Form.Item>
+                                    <ChannelCom formRef={this.formRef} channelCode={"content"} multiple={"multiple"} />
+                                    // <Form.Item label="推荐频道" name="content" rules={[{ required: true, message: '请选择推荐频道' }]}>
+                                    //     <Select
+                                    //         placeholder="请输入推荐频道"
+                                    //         allowClear
+                                    //         mode="multiple"
+                                    //         {...this.state.selectProps}
+                                    //         onSearch={(val) => {
+                                    //             if (privateData.inputTimeOutVal) {
+                                    //                 clearTimeout(privateData.inputTimeOutVal);
+                                    //                 privateData.inputTimeOutVal = null;
+                                    //             }
+                                    //             privateData.inputTimeOutVal = setTimeout(() => {
+                                    //                 if (!privateData.inputTimeOutVal) return;
+                                    //                 this.getChannel(val)
+                                    //             }, 1000)
+                                    //         }}
+                                    //     >
+                                    //         {
+                                    //             channelList.map((r, i) => {
+                                    //                 return <Option value={r.code} key={i}>{r.name}------{r.code}</Option>
+                                    //             })
+                                    //         }
+                                    //     </Select>
+                                    // </Form.Item>
                                     :
 
                                     this.formRef.current && this.formRef.current.getFieldValue("type") == 2 ?

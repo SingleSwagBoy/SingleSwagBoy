@@ -122,13 +122,13 @@ function App2(props) {
                         }
                         privateData.inputTimeOutVal = setTimeout(() => {
                             if (!privateData.inputTimeOutVal) return;
-                            let arr = channelList.filter(item => item.code == formRef.getFieldValue("jumpChannelCode"))
+                            let arr = channelList.filter(item => item.code == formRef.getFieldValue(props.channelCode))
                             if (arr.length > 0) {
                                 console.log(arr, "arr")
                                 if (arr[0].recommendType == 1) {
-                                    getProgams(formRef.getFieldValue("jumpChannelCode"), val)
+                                    getProgams(formRef.getFieldValue(props.channelCode), val)
                                 } else {
-                                    getProgramsListFunc(formRef.getFieldValue("jumpChannelCode"), val)
+                                    getProgramsListFunc(formRef.getFieldValue(props.channelCode), val)
                                 }
                             }
                         }, 1000)

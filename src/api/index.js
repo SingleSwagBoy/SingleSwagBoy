@@ -663,6 +663,14 @@ export const delLogout = (params) => { return request2.get(`${baseUrl}/mms/chann
 export const syncLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/sync`, {params:params}); };                 // 我的配置删除
 export const changeLogoutState = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/status`, {params:params}); };                 // 我的配置删除
 
+
+//频道搜索-->热门搜索
+export const getHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/list`, params); };                 // 频道搜索列表
+export const addHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/add`, params); };                 // 频道搜索增加
+export const editHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/edit`, params); };                 // 频道搜索编辑
+export const delHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/del`, params); };                 // 频道搜索删除
+export const syncHotChannel = (params) => { return request2.get(`${baseUrl}/mms/tv/hotRecommend/sync`, {params:params}); };                 // 频道搜索列表
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

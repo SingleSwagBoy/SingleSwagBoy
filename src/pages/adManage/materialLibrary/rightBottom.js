@@ -53,6 +53,15 @@ function App2(props) {
         { key: 4, value: '右上', },
         { key: 5, value: '右下', }
     ]
+    const dsjPositions = [
+        { key: 1, value: '左上', },
+        { key: 2, value: '左下', },
+        { key: 3, value: '中心', },
+        { key: 4, value: '右上', },
+        { key: 5, value: '右下', },
+        { key: 6, value: '垂直居中', },
+        { key: 7, value: '横向居中', }
+    ]
     const columns = [
         {
             title: "名称",
@@ -449,7 +458,7 @@ function App2(props) {
                             <Form.Item label="" name="time" className='line_flex'>
                                 <RangePicker className="base-input-wrapper" showTime placeholder={['上线时间', '下线时间']} />
                             </Form.Item>
-                            <Form.Item label='位置' name='djsPosition' className='line_flex'>
+                            <Form.Item label='位置' name='position' className='line_flex'>
                                 <Select className="input-wrapper-from" placeholder='位置'>
                                     {positions.map((item, index) => {
                                         return <Option value={item.key} key={item.key} name={item.value}>
@@ -508,13 +517,16 @@ function App2(props) {
                             />
                         }
 
-
-                        {/* <Form.Item label="排序" name="sortOrder">
-                            <InputNumber min={0} style={{ width: "200px" }} placeholder='请输入排序' />
-                        </Form.Item> */}
-                        <Form.Item label="是否参与循环" name="isLoop" valuePropName="checked">
-                            <Switch checkedChildren="是" unCheckedChildren="否" ></Switch>
+                        <Form.Item label="是否参与循环">
+                            <Form.Item label="" name="isLoop" valuePropName="checked" className='line_flex'>
+                                <Switch checkedChildren="是" unCheckedChildren="否" ></Switch>
+                            </Form.Item>
+                            <Form.Item label="排序" name="sortOrder" className='line_flex'>
+                                <InputNumber style={{ width: "200px" }} placeholder='请输入排序' />
+                            </Form.Item>
                         </Form.Item>
+
+
                         <Form.Item label='是否定时' name='isSetTime'>
                             <Radio.Group onChange={() => forceUpdatePages()}>
                                 <Radio value={1}>是</Radio>
@@ -616,8 +628,22 @@ function App2(props) {
                                         </Select>
                                     </Form.Item>
 
-                                    <Form.Item label="字体横坐标" name="fontX" className='line_flex'>
+                                    <Form.Item label="字体位置" name="djsPosition" className='line_flex'>
+                                        <Select className="input-wrapper-from" placeholder='位置'>
+                                            {dsjPositions.map((item, index) => {
+                                                return <Option value={item.key} key={item.key} name={item.value}>
+                                                    <div>{item.value}</div>
+                                                </Option>
+                                            })}
+                                        </Select>
+                                    </Form.Item>
+                                </Form.Item>
+                                <Form.Item label="字体横坐标" >
+                                    <Form.Item label="" name="fontX" className='line_flex'>
                                         <InputNumber placeholder="请输入字体横坐标" style={{ width: "150px" }} addonAfter="px" />
+                                    </Form.Item>
+                                    <Form.Item label="字体横坐标" name="fontY" className='line_flex'>
+                                        <InputNumber placeholder="请输入字体纵坐标" style={{ width: "150px" }} addonAfter="px" />
                                     </Form.Item>
                                 </Form.Item>
                             </>

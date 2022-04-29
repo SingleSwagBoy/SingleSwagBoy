@@ -16,7 +16,7 @@ import {
     requestConfigUpdateDoc,             //配置列表-更新配置
 } from 'api'
 import './doc_style.css'
-import { MySyncBtn } from '@/components/views.js';
+import { MySyncBtn,TagCom } from '@/components/views.js';
 
 let { TextArea } = Input;
 let { Option } = Select;
@@ -164,6 +164,7 @@ export default class Doc extends Component {
                                 <Form.Item label="key编码" name='code' rules={[{ required: true, message: '请输入编码' }]}  >
                                     <Input style={{ width: 350 }} className="input-wrapper-from" placeholder="请输入编码" />
                                 </Form.Item>
+                                <TagCom tagName={"tag"} />
                             </div>
                         }
                         {

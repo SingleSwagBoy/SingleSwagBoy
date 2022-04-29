@@ -18,6 +18,7 @@ export { default as MyTagSelect } from "./tag-select/tag-select";               
 export { default as JumpType } from "./jumpType/index";                             //选择类型[yzc]
 export { default as ChannelCom } from "./jumpType/channel";                             //频道类型[yzc]
 export { default as ProgramCom } from "./jumpType/program";                             //节目/视频类型[yzc]
+export { default as TagCom } from "./commonlyUsed/index";                             //标签[yzc]
 
 export { default as MyTagConfigFormulas } from "./tag-config-formulas/tagConfigFormulas";                   //标签选项列表
 

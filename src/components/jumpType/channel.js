@@ -56,7 +56,7 @@ function App2(props) {
         getChannel(params).then(res => {
             if (res.data.errCode == 0 && res.data.data) {
                 setChannelList(res.data.data)
-                props.onForceUpdatePages()
+                // props.onForceUpdatePages()
             }
         })
     }

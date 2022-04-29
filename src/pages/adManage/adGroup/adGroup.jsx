@@ -107,14 +107,14 @@ export default class adGroup extends Component {
                 >
                     <div>
                         <div className="alert-box" style={{ width: "100%", display: "flex", flexWrap: "wrap", marginBottom: "20px" }}>
-                            <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告组名称" onChange={(e) => { this.state.search.groupName = e.target.value }} />
-                            <RangePicker style={{ marginLeft: 5 }} style={{ width: '365px', marginLeft: 5 }} showTime placeholder={['上线时间', '下线时间']} onChange={(e) => {
+                            <Input style={{ width: '130px', marginLeft: 5 }} allowClear placeholder="搜索广告组名称" onChange={(e) => { this.state.search.groupName = e.target.value }} />
+                            <RangePicker style={{ marginLeft: 5 }} style={{ width: '240px', marginLeft: 5 }} placeholder={['上线时间', '下线时间']} onChange={(e) => {
                                 this.state.search.onlineTime = e ? parseInt(e[0].valueOf() / 1000) : ""
                                 this.state.search.offlineTime = e ? parseInt(e[1].valueOf() / 1000) : ""
                             }} />
-                            <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告名称" onChange={(e) => { this.state.search.adName = e.target.value }} />
-                            <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="广告内容" />
-                            <Select style={{ width: '200px', marginLeft: 5 }} allowClear showSearch placeholder="请选择标签"
+                            <Input style={{ width: '130px', marginLeft: 5 }} allowClear placeholder="搜索广告名称" onChange={(e) => { this.state.search.adName = e.target.value }} />
+                            <Input style={{ width: '130px', marginLeft: 5 }} allowClear placeholder="广告内容" />
+                            <Select style={{ width: '130px', marginLeft: 5 }} allowClear showSearch placeholder="请选择标签"
                                 onChange={(e) => { this.state.search.tag = e }}
                                 filterOption={(input, option) => {
                                     if (!input) return true;
@@ -136,7 +136,7 @@ export default class adGroup extends Component {
                                     <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
                                 ))}
                             </Select>
-                            <Select style={{ width: '200px', margin: "0 5px" }} allowClear showSearch placeholder="广告类型"
+                            <Select style={{ width: '130px', margin: "0 5px" }} allowClear showSearch placeholder="广告类型"
                                 onChange={(e) => { this.state.search.adType = e }}
                             >
                                 {

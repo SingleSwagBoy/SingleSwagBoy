@@ -129,7 +129,17 @@ function App2(props) {
                                     arr.programName = arr.channelSubTitle
                                 }
                                 arr.isLoop = arr.isLoop ? 1 : 2 //是否循环
-                                arr.setTimeVal = arr.timers == everyTime ? 2 : arr.timers ? 1 : null //定时设置
+                                if (arr.timers) {
+                                    if (arr.timers == everyTime) {
+                                        arr.setTimeVal = 2
+                                    } else {
+                                        arr.setTimeVal = 1
+                                    }
+                                    arr.isSetTime = 1
+                                } else {
+                                    arr.isSetTime = 2
+                                }
+                                // arr.setTimeVal = arr.timers == everyTime ? 2 : arr.timers ? 1 : null //定时设置
                                 arr.duration = arr.duration / 1000
                                 arr.interval = arr.interval / 1000 / 60
                                 arr.delayTime = arr.delayTime / 1000
@@ -233,6 +243,8 @@ function App2(props) {
                     list.push(moment(r.time).format("HH:mm"))
                 })
                 val.timers = list.join(",")
+            } else {
+                val.timers = ""
             }
         }
         let params = {
@@ -503,17 +515,36 @@ function App2(props) {
                         <Form.Item label="是否参与循环" name="isLoop" valuePropName="checked">
                             <Switch checkedChildren="是" unCheckedChildren="否" ></Switch>
                         </Form.Item>
-
-                        <Form.Item label='定时设置'>
-                            <Form.Item label='' name='setTimeVal' className='line_flex'>
-                                <Select className="input-wrapper-from" placeholder='定时设置' onChange={() => forceUpdatePages()}>
-                                    <Option value={1} key={1}>自定义</Option>
-                                    <Option value={2} key={2}>每小时</Option>
-                                </Select>
-                            </Form.Item>
+                        <Form.Item label='是否定时' name='isSetTime'>
+                            <Radio.Group onChange={() => forceUpdatePages()}>
+                                <Radio value={1}>是</Radio>
+                                <Radio value={2}>否</Radio>
+                            </Radio.Group>
                         </Form.Item>
                         {
-                            formRef.getFieldValue("setTimeVal") == 1 &&
+                            formRef.getFieldValue("isSetTime") == 1 &&
+                            <Form.Item label='定时设置'>
+                                <Form.Item label='' name='setTimeVal' className='line_flex'>
+                                    <Select className="input-wrapper-from" placeholder='定时设置' onChange={(e) => {
+                                        if (e == 2) {
+                                            let isA = []
+                                            everyTime.split(",").forEach(r => {
+                                                isA.push({ time: moment(r, "HH:mm") })
+                                            })
+                                            formRef.setFieldsValue({ timersList: isA })
+                                        } else {
+                                            formRef.setFieldsValue({ timersList: [] })
+                                        }
+                                        forceUpdatePages()
+                                    }}>
+                                        <Option value={1} key={1}>自定义</Option>
+                                        <Option value={2} key={2}>每小时</Option>
+                                    </Select>
+                                </Form.Item>
+                            </Form.Item>
+                        }
+                        {
+                            formRef.getFieldValue("isSetTime") == 1 && formRef.getFieldValue("setTimeVal") == 1 &&
                             <Form.Item label="自定义">
                                 <Form.List name="timersList">
                                     {(fields, { add, remove }) => (
@@ -640,7 +671,7 @@ function App2(props) {
                                 )}
                             </Form.List>
                         </Form.Item>
-                        <ChannelCom formRef={formRef} channelCode={"channels"} multiple={"multiple"} onForceUpdatePages={() => forceUpdatePages()} />
+                        <ChannelCom formRef={formRef} channelCode={"channels"} multiple={"multiple"} />
                         <Form.Item label="关联频道标签" name="channelTag">
                             <Select placeholder='选择关联频道标签' mode='multiple' allowClear>
                                 {

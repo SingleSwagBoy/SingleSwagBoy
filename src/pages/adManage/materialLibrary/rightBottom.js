@@ -67,16 +67,14 @@ function App2(props) {
             title: "名称",
             dataIndex: "name",
             key: "name",
-            width: 150,
         },
         {
             title: "排序",
             dataIndex: "sortOrder",
             key: "sortOrder",
-            width: 100,
         },
         {
-            title: '广告图预览', dataIndex: 'picUrl', key: 'picUrl', width: 120,
+            title: '广告图预览', dataIndex: 'picUrl', key: 'picUrl',
             render: (rowValue, row, index) => {
                 return (<Image width={100} src={rowValue} />)
             }
@@ -85,7 +83,7 @@ function App2(props) {
             title: "上下线时间",
             dataIndex: "time",
             key: "time",
-            width: 300,
+            width:300,
             render: (rowValue, row, index) => {
                 return (
                     <div>
@@ -642,7 +640,7 @@ function App2(props) {
                                     <Form.Item label="" name="fontX" className='line_flex'>
                                         <InputNumber placeholder="请输入字体横坐标" style={{ width: "150px" }} addonAfter="px" />
                                     </Form.Item>
-                                    <Form.Item label="字体横坐标" name="fontY" className='line_flex'>
+                                    <Form.Item label="字体纵坐标" name="fontY" className='line_flex'>
                                         <InputNumber placeholder="请输入字体纵坐标" style={{ width: "150px" }} addonAfter="px" />
                                     </Form.Item>
                                 </Form.Item>

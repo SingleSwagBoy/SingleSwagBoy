@@ -28,7 +28,8 @@ function App2() {
   const layout = { labelCol: { span: 4 }, wrapperCol: { span: 20 } }
   const tailLayout = { wrapperCol: { offset: 15, span: 40 } }
   const [formRef] = Form.useForm()
-  const [today,settoday]=useState("")
+  const [today,settoday]=useState("")  // 当前选中的日期
+  const [nowDate,setnowDate]=useState("")  // 当前选中的日期
 
   const [virList,setvirList]=useState([])  // 商品列表
   const [locales,setlocales]=useState({
@@ -94,7 +95,8 @@ function App2() {
 
   useEffect(() => {//列表
     const _today_=moment().format('YYYY-MM-DD');
-    settoday(_today_)
+    settoday(_today_);
+    setnowDate(_today_);
     console.log("_today_-------",_today_)
     const _month=_today_.split("-").join("").slice(0,6)
     console.log(_month)
@@ -216,6 +218,13 @@ const changeSelect=(e)=>{
     let _time=new Date(e);
     var date3 = time(_time);
     console.log("当前的日期是",date3.slice(0,4)+"-"+date3.slice(4,6)+"-"+date3.slice(6,8))
+    let _tt=new Date(nowDate).getTime();
+    let _curt=new Date(date3.slice(0,4)+"-"+date3.slice(4,6)+"-"+date3.slice(6,8)).getTime();
+    console.log("_tt:",_tt,"_curt",_curt)
+    if(_tt>_curt){
+        message.error("不能编辑过期的日期");
+        return
+    }
     settoday(date3.slice(0,4)+"-"+date3.slice(4,6)+"-"+date3.slice(6,8))
     if(virList.length==0){
         console.log("111111111")

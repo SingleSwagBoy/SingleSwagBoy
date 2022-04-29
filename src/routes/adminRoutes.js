@@ -111,6 +111,7 @@ const ViewPhotos = lazy(() => import('pages/album/photos/index.jsx'));
 
 //私域签到小程序
 const ScoreShop = lazy(() => import('pages/privateDomain/scoreShop/index.jsx'));
+const HotDay = lazy(() => import('pages/privateDomain/hotDay/index.jsx'));
 
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
@@ -251,6 +252,7 @@ const adminRoutes = [
 
     //  私域签到小程序
     { name: '积分商城', icon: UnorderedListOutlined, path: '/mms/privateDomain/scoreShop', component: ScoreShop, code: "signConfig", sub_code: 'scoreShop' },
+    { name: '热点日历', icon: UnorderedListOutlined, path: '/mms/privateDomain/hotDay', component: HotDay, code: "signConfig", sub_code: 'hotDay' },
     
     { name: '没有权限', icon: UnorderedListOutlined, path: '/mms/noPermission', component: NoPermission, meta: { isNav: false, roles: '*' } }
 

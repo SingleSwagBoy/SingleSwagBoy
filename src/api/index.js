@@ -654,6 +654,27 @@ export const delLogout = (params) => { return request2.get(`${baseUrl}/mms/chann
 export const syncLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/sync`, {params:params}); };                 // 我的配置删除
 export const changeLogoutState = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/status`, {params:params}); };                 // 我的配置删除
 
+// 私域小程序配置
+export const signGoodsList = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/goods`, {params:params}); };                 // 商品列表
+export const signGoodsDelete = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/goodsDel`, {params:params}); };            // 删除商
+export const signGoodsAdd = (params) => { return request2.post(`${baseUrl}/mms/pd/integral/goodsAdd`, params); };                 // 新增商品
+export const signGoodsEdit = (params) => { return request2.post(`${baseUrl}/mms/pd/integral/goodsEdit`, params); };                 // 编辑商品
+export const signCategory = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/category`, {params:params}); };            // 获取商品分类
+export const signCategoryAdd = (params) => { return request2.post(`${baseUrl}/mms/pd/integral/categoryAdd`, params); };                 // 添加商品分类
+export const signCategoryEdit = (params) => { return request2.post(`${baseUrl}/mms/pd/integral/categoryEdit`, params); };                 // 编辑商品分类
+export const signCategoryDel = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/categoryDel`, {params:params}); };            // 删除商品分类(检测下分类下是否有商品
+export const signRuleInfo = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/ruleInfo`, {params:params}); };                 // 规则配置
+export const signRuleEdit = (params) => { return request2.post(`${baseUrl}/mms/pd/integral/rule`, params); };                 // 修改规则配置
+export const signExtra = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/extra`, {params:params}); };                 // 获取额外配置
+export const signExtraEdit = (params) => { return request2.post(`${baseUrl}/mms/pd/integral/extraEdit`, params); };                 // 编辑额外配置
+export const signSync = (params) => { return request2.post(`${baseUrl}/mms/pd/integral/sync`, params); };                 // 同步缓存
+
+export const signCalendarList = (params) => { return request.get(`${baseUrl}/mms/pd/calendar/list`, {params:params}); };                 // 指定月份的热点事件
+export const signCalendarSave = (params) => { return request2.post(`${baseUrl}/mms/pd/calendar/save`, params); };                 // 增加/更新指定日期的热点事件配置
+export const signCalendarClear = (params) => { return request2.post(`${baseUrl}/mms/pd/calendar/clear?day=${params.day}`, params); };                 // 清空指定日期的热点数据
+export const signCalendarSync = (params) => { return request2.post(`${baseUrl}/mms/pd/calendar/sync?month=${params.month}`, params); };                 // 同步缓存
+
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

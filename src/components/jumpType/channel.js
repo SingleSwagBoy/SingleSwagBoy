@@ -62,11 +62,19 @@ function App2(props) {
     }
     return (
         <div>
-            <Form.Item label={props.formName} name={props.channelCode}  rules={[{ required:props.isRequired, message: `请选择${props.formName}` }]}>
-                <Select style={{ width: "100%" }} placeholder={`请选择${props.formName}`} allowClear mode={props.multiple}
+            <Form.Item label={props.formName||"频道"} name={props.channelCode}  rules={[{ required:props.isRequired, message: `请选择${props.formName||"频道"}` }]}>
+                <Select style={{ width: "100%" }} placeholder={`请选择${props.formName||"频道"}`} allowClear mode={props.multiple}
                     {...selectProps}
-                    onSearch={(e) => comChannel(1, e)
-                    }
+                    onSearch={(e) => comChannel(1, e)}
+                    onChange={(e)=>{
+                        //是否有联动 联动的字段props.linkData["form里面的字段","频道列表里面的字段"]
+                        if(props.isLink && props.linkData){
+                            let arr = channelList.filter(item=>item.code == e)
+                            console.log({[props.linkData[0]]:arr[0][props.linkData]})
+                            formRef.setFieldsValue({[props.linkData[0]]:arr[0][props.linkData[1]]})
+                            props.onForceUpdatePages()
+                        }
+                    }}
                 >
                     {
                         channelList.map((r, i) => {

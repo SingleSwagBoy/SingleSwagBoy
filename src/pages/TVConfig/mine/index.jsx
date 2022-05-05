@@ -93,7 +93,7 @@ function App2(props) {
       render: (rowValue, row, index) => {
         return (
           <div key={rowValue}>
-            {<Switch checkedChildren="有效" unCheckedChildren="无效" defaultChecked={rowValue == 1 ? true : false} 
+            {<Switch checkedChildren="有效" unCheckedChildren="无效" defaultChecked={rowValue == 1 ? true : false}
               onChange={(val) => {
                 let info = JSON.parse(JSON.stringify(row))
                 info.status = val ? 1 : 2
@@ -124,7 +124,7 @@ function App2(props) {
               }}
             >编辑</Button>
             {/* <Button size="small" style={{ margin: " 0 10px" }} onClick={() => props.history.push(`/mms/TVConfig/detail/${row.id}`)}>详情</Button> */}
-            <Button size="small" style={{ margin: " 0 10px" }} onClick={() => props.history.push({pathname: "/mms/TVConfig/detail",params:{id:row.id,isHistory:row.type == 2?true:false} })}>详情</Button>
+            <Button size="small" style={{ margin: " 0 10px" }} onClick={() => props.history.push({ pathname: "/mms/TVConfig/detail", params: { id: row.id, isHistory: row.type == 2 ? true : false } })}>详情</Button>
             <Button danger size="small" onClick={() => delItem(row)}>删除</Button>
           </div>
         )
@@ -159,7 +159,7 @@ function App2(props) {
         isShowTitle: val.isShowTitle ? 1 : 2
       }
       updateOfflineProgramFunc(params)
-    }else{
+    } else {
       let params = {
         ...val,
       }
@@ -197,7 +197,28 @@ function App2(props) {
       }
     })
   }
-  
+  const getUploadFileUrl = (type, file, newItem) => {
+    let that = this;
+    let image_url = newItem.fileUrl;
+    // 创建对象
+    // var img = new Image();
+    // // 改变图片的src
+    // img.src = image_url;
+    // // 加载完成执行
+    // img.onload = () => {
+    //   // 打印
+    //  console.log(img.width,img.height,"-------")
+    // };
+    let obj = {};
+    obj[type] = image_url;
+    console.log(obj)
+    formRef.setFieldsValue(obj);
+    forceUpdatePages()
+  }
+  const getUploadFileImageUrlByType = (type) => {
+    let image_url = formRef.getFieldValue(type);
+    return image_url ? image_url : '';
+  }
   return (
     <div className="loginVip">
       <Card title={
@@ -247,6 +268,33 @@ function App2(props) {
                 <InputNumber placeholder="请输入间隙" style={{ width: "200px" }} min={0} />
               </Form.Item>
               <Form.Item label="排序" name="sort">
+                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
+              </Form.Item>
+              <Form.Item label="打开图片地址" name="titleUrl">
+                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                  <Input.TextArea defaultValue={formRef.getFieldValue("titleUrl")} key={formRef.getFieldValue("titleUrl")}
+                    onChange={(e) => {
+                      if (privateData.inputTimeOutVal) {
+                        clearTimeout(privateData.inputTimeOutVal);
+                        privateData.inputTimeOutVal = null;
+                      }
+                      privateData.inputTimeOutVal = setTimeout(() => {
+                        if (!privateData.inputTimeOutVal) return;
+                        formRef.setFieldsValue({ titleUrl: e.target.value })
+                        forceUpdatePages()
+                      }, 1000)
+                    }}
+                  />
+                  <MyImageUpload
+                    getUploadFileUrl={(file, newItem) => getUploadFileUrl('titleUrl', file, newItem)}
+                    imageUrl={getUploadFileImageUrlByType('titleUrl')}
+                  />
+                </div>
+              </Form.Item>
+              <Form.Item label="图片宽" name="titleWidth">
+                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
+              </Form.Item>
+              <Form.Item label="图片高" name="titleHeight">
                 <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
               </Form.Item>
               <Form.Item label="显示标题" name="isShowTitle" valuePropName="checked">

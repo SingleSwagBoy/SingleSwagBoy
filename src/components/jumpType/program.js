@@ -33,7 +33,7 @@ function App2(props) {
     }
     useEffect(() => {//列表
         const fetchData = async () => {
-
+            getChannelList()
         }
         fetchData()
     }, [forceUpdateId])
@@ -96,9 +96,17 @@ function App2(props) {
         })
     }
     return (
+        // 参数
+        // formName：选择框的名称，string
+        // formProName：选择框的名称，string
+        // channelCode：表单里面频道的字段 string
+        // programName：表单里面视频or节目的字段 string
+        // isRequired：是否必填boolean
+        // multiple：是否多选boolean
+        // onForceUpdatePages ：更新Function
         <div>
-            <Form.Item label='频道' name={props.channelCode}>
-                <Select style={{ width: "100%" }} placeholder='请选择频道' allowClear
+            <Form.Item label='频道' name={props.channelCode} rules={[{ required: props.isRequired, message: `请选择${props.formName || "频道"}` }]}>
+                <Select style={{ width: "100%" }} placeholder='请选择频道' allowClear mode={props.multiple}
                     {...selectProps}
                     onSearch={(e) => comChannel(1, e)
                     }
@@ -110,10 +118,10 @@ function App2(props) {
                     }
                 </Select>
             </Form.Item>
-            <Form.Item label="选择视频" name={props.programName}>
+            <Form.Item label={`选择${props.formProName || "视频"}`} name={props.programName} rules={[{ required: props.isRequired, message: `请选择${props.formProName || "视频"}` }]}>
                 <Select
-                    placeholder="请选择视频"
-                    allowClear
+                    placeholder={`请选择${props.formProName || "视频"}`}
+                    allowClear mode={props.multiple}
                     {...selectProps}
                     onSearch={(val) => {
                         if (privateData.inputTimeOutVal) {

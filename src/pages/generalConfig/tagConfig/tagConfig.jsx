@@ -420,11 +420,13 @@ export default class tagConfig extends Component {
     requestNewAdTagRecord() {
         message.loading("计算中，请等待两分钟后再试")
         let params = {
-            ...this.formRef.current.getFieldValue()
+            ...this.formRef.current.getFieldValue(),
+            rule:JSON.stringify(this.formRef.current.getFieldValue("rule"))
         }
         requestNewAdTagRecord(params).then(res => {
             message.success("更新成功")
-            this.formRef.current.setFieldsValue({count:res.data})
+            console.log(res,"res.data")
+            this.formRef.current.setFieldsValue({count:res.data.data||0})
         })
     }
 

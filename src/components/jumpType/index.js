@@ -78,7 +78,7 @@ function App2(props) {
         const fetchData = async () => {
             let myApk = await getApkList({ page: { idPage: 9 } })
             setApkList(myApk.data)
-            getMenuListFuc()
+            // getMenuListFuc()
         }
         fetchData()
     }, [forceUpdateId])

@@ -145,7 +145,8 @@ export default class EarnIncentiveTask extends React.Component {
                                             let arr = JSON.parse(JSON.stringify(row))
                                             arr.time = [moment(arr.onlineTime * 1000), moment(arr.offlineTime * 1000)]
                                             arr.status = arr.status == 1 ? true : false
-                                            arr.content = arr.content ? arr.content.split(",") : ""
+                                            arr.content = arr.content ? arr.content.split(",") : []
+                                            arr.channelCodes = arr.channelCodes ? arr.channelCodes.split(",") : []
                                             this.formRef.current.setFieldsValue(arr)
                                             this.getChannel(arr.channelName)
                                             this.forceUpdate()
@@ -252,22 +253,12 @@ export default class EarnIncentiveTask extends React.Component {
                             <Form.Item label="名称" name="name" >
                                 <Input placeholder="名称" />
                             </Form.Item>
-                            <ChannelCom formRef={this.formRef} channelCode={"channelCode"} multiple={"multiple"} />
+                            <ChannelCom formRef={this.formRef} channelCode={"channelCodes"} multiple={"multiple"} formName={"失效频道"} />
                             <Form.Item label="用户标签" name="tag">
                                 <Select
                                     placeholder="请输入用户标签"
                                     allowClear
                                     {...this.state.selectProps}
-                                // onSearch={(val) => {
-                                //     if (privateData.inputTimeOutVal) {
-                                //         clearTimeout(privateData.inputTimeOutVal);
-                                //         privateData.inputTimeOutVal = null;
-                                //     }
-                                //     privateData.inputTimeOutVal = setTimeout(() => {
-                                //         if (!privateData.inputTimeOutVal) return;
-                                //         this.getChannel(val)
-                                //     }, 1000)
-                                // }}
                                 >
                                     {
                                         tagList.map((r, i) => {
@@ -289,33 +280,8 @@ export default class EarnIncentiveTask extends React.Component {
                             {
                                 this.formRef.current && this.formRef.current.getFieldValue("type") == 1
                                     ?
-                                    <ChannelCom formRef={this.formRef} channelCode={"content"} multiple={"multiple"} />
-                                    // <Form.Item label="推荐频道" name="content" rules={[{ required: true, message: '请选择推荐频道' }]}>
-                                    //     <Select
-                                    //         placeholder="请输入推荐频道"
-                                    //         allowClear
-                                    //         mode="multiple"
-                                    //         {...this.state.selectProps}
-                                    //         onSearch={(val) => {
-                                    //             if (privateData.inputTimeOutVal) {
-                                    //                 clearTimeout(privateData.inputTimeOutVal);
-                                    //                 privateData.inputTimeOutVal = null;
-                                    //             }
-                                    //             privateData.inputTimeOutVal = setTimeout(() => {
-                                    //                 if (!privateData.inputTimeOutVal) return;
-                                    //                 this.getChannel(val)
-                                    //             }, 1000)
-                                    //         }}
-                                    //     >
-                                    //         {
-                                    //             channelList.map((r, i) => {
-                                    //                 return <Option value={r.code} key={i}>{r.name}------{r.code}</Option>
-                                    //             })
-                                    //         }
-                                    //     </Select>
-                                    // </Form.Item>
+                                    <ChannelCom formRef={this.formRef} channelCode={"content"} multiple={"multiple"} formName={"推荐频道"} isRequired={true} />
                                     :
-
                                     this.formRef.current && this.formRef.current.getFieldValue("type") == 2 ?
                                         <Form.Item label="频道个数" name="count" >
                                             <InputNumber placeholder="频道个数" min={0} />
@@ -431,8 +397,8 @@ export default class EarnIncentiveTask extends React.Component {
             onlineTime: parseInt(val.time[0].valueOf() / 1000),
             offlineTime: parseInt(val.time[1].valueOf() / 1000),
             status: val.status ? 1 : 2,
-            content:val.type== 1?val.content?val.content.join(","):"":content.join(",")
-            // channelName: this.state.channelList.filter(r => r.code == val.channelId)[0].name
+            content:val.type== 1?val.content?val.content.join(","):"":content.join(","),
+            channelCodes:Array.isArray(val.channelCodes)?val.channelCodes.join(","):val.channelCodes,
         }
         addSource(params).then(res => {
             this.getSource()
@@ -460,7 +426,8 @@ export default class EarnIncentiveTask extends React.Component {
                 onlineTime: parseInt(val.time[0].valueOf() / 1000),
                 offlineTime: parseInt(val.time[1].valueOf() / 1000),
                 status: val.status ? 1 : 2,
-                content:val.type== 1?val.content?val.content.join(","):"": content.join(",")
+                content:val.type== 1?val.content?val.content.join(","):"": content.join(","),
+                channelCodes:Array.isArray(val.channelCodes)?val.channelCodes.join(","):val.channelCodes,
             }
         }
         // return console.log(params,"params")

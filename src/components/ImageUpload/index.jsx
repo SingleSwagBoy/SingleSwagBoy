@@ -43,7 +43,7 @@ class ImageUpload extends Component {
         getMarketReturn：选中后的数据回调
     */
     const { loading } = this.state;
-    let { imgSize } = this.props
+    let { formRef,width,height } = this.props
     const uploadButton = (
       <div>
         {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -67,13 +67,12 @@ class ImageUpload extends Component {
             if (info.file.status === 'done') {
               console.log(info)
               if (info.file.response.errCode === 0) {
-                if (imgSize) {
+                if (width && height) {//针对列表获取图片的宽高
                   let img = new Image()
                   img.src = info.file.response.data.fileUrl
                   img.onload = () => {
-                    this.props.getImageSize(img.width, img.height) //获取图片的宽高
+                    formRef.setFieldsValue({[width]:img.width,[height]:img.height})
                   }
-
                 }
                 this.props.getUploadFileUrl(info.file.response.data.fileUrl, info.file.response.data)
                 this.setState({ loading: false });

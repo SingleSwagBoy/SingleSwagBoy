@@ -215,11 +215,6 @@ function App2(props) {
     formRef.setFieldsValue(obj);
     forceUpdatePages()
   }
-  const getImageSize = (width, height) => {
-    console.log(width, height)
-    formRef.setFieldsValue({titleWidth:width,titleHeight:height});
-    forceUpdatePages()
-  }
   const getUploadFileImageUrlByType = (type) => {
     let image_url = formRef.getFieldValue(type);
     return image_url ? image_url : '';
@@ -292,8 +287,8 @@ function App2(props) {
                   />
                   <MyImageUpload
                     getUploadFileUrl={(file, newItem) => getUploadFileUrl('titleUrl', file, newItem)}
-                    imgSize = {true}
-                    getImageSize={(width, height) => getImageSize(width, height)}
+                    formRef = {formRef}
+                    width={"titleWidth"} height={"titleHeight"}
                     imageUrl={getUploadFileImageUrlByType('titleUrl')}
                   />
                 </div>

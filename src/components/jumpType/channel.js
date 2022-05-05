@@ -62,8 +62,8 @@ function App2(props) {
     }
     return (
         <div>
-            <Form.Item label='频道' name={props.channelCode}>
-                <Select style={{ width: "100%" }} placeholder='请选择频道' allowClear mode={props.multiple}
+            <Form.Item label={props.formName} name={props.channelCode}  rules={[{ required:props.isRequired, message: `请选择${props.formName}` }]}>
+                <Select style={{ width: "100%" }} placeholder={`请选择${props.formName}`} allowClear mode={props.multiple}
                     {...selectProps}
                     onSearch={(e) => comChannel(1, e)
                     }

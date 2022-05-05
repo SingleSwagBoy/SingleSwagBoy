@@ -258,7 +258,7 @@ function App2(props) {
                 </Select>
               </Form.Item>
               {
-                formRef.getFieldValue("type") == 1 && <ChannelCom formRef={formRef} channelCode={"channelCode"} />
+                formRef.getFieldValue("type") == 1 && <ChannelCom formRef={formRef} channelCode={"channelCode"} isLink={true} linkData={["channelSubTitle", "name"]}  onForceUpdatePages={() => forceUpdatePages()} />
               }
               {
                 formRef.getFieldValue("type") == 2 && <ProgramCom formRef={formRef} programName={"programName"} channelCode={"channelCode"} onForceUpdatePages={() => forceUpdatePages()} />

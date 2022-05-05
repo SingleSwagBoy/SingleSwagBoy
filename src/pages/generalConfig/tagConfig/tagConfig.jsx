@@ -144,9 +144,9 @@ export default class tagConfig extends Component {
                                     <Form.Item label="" name='count' style={{display:"inline-block"}}>
                                         <Input className="base-input-wrapper" placeholder="计数" disabled />
                                     </Form.Item>
-                                    {/* <Form.Item label="" style={{display:"inline-block",width:"50%"}}>
+                                    <Form.Item label="" style={{display:"inline-block",width:"50%"}}>
                                         <Button type='primary' onClick={() => this.requestNewAdTagRecord()}>获取实时</Button>
-                                    </Form.Item> */}
+                                    </Form.Item>
 
                                 </Form.Item>
 
@@ -418,11 +418,13 @@ export default class tagConfig extends Component {
         })
     }
     requestNewAdTagRecord() {
+        message.loading("计算中，请等待两分钟后再试")
         let params = {
             ...this.formRef.current.getFieldValue()
         }
         requestNewAdTagRecord(params).then(res => {
-            message.loading("计算中，请等待两分钟后再试")
+            message.success("更新成功")
+            this.formRef.current.setFieldsValue({count:res.data})
         })
     }
 

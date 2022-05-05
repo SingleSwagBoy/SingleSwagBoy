@@ -215,6 +215,11 @@ function App2(props) {
     formRef.setFieldsValue(obj);
     forceUpdatePages()
   }
+  const getImageSize = (width, height) => {
+    console.log(width, height)
+    formRef.setFieldsValue({titleWidth:width,titleHeight:height});
+    forceUpdatePages()
+  }
   const getUploadFileImageUrlByType = (type) => {
     let image_url = formRef.getFieldValue(type);
     return image_url ? image_url : '';
@@ -287,15 +292,17 @@ function App2(props) {
                   />
                   <MyImageUpload
                     getUploadFileUrl={(file, newItem) => getUploadFileUrl('titleUrl', file, newItem)}
+                    imgSize = {true}
+                    getImageSize={(width, height) => getImageSize(width, height)}
                     imageUrl={getUploadFileImageUrlByType('titleUrl')}
                   />
                 </div>
               </Form.Item>
               <Form.Item label="图片宽" name="titleWidth">
-                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
+                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} addonAfter="px" />
               </Form.Item>
               <Form.Item label="图片高" name="titleHeight">
-                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
+                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} addonAfter="px" />
               </Form.Item>
               <Form.Item label="显示标题" name="isShowTitle" valuePropName="checked">
                 <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>

@@ -128,6 +128,9 @@ function App2(props) {
                                 if (arr.type == 3) {
                                     getProduct() //请求套餐
                                 }
+                                if(arr.type == 23){
+                                    arr.programName = arr.channelSubTitle
+                                }
                                 arr.time = [moment(arr.startTime), moment(arr.endTime)] //上下线时间
                                 if (arr.djsEndTime) { //倒计时结束时间
                                     arr.djsEndTime = moment(arr.djsEndTime)

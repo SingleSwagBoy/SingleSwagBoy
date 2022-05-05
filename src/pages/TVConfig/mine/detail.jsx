@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { getMineGrid, editMineGrid, addMineGrid, delMineGrid, requestNewAdTagList, getChannel, getProgramsList, copyMineGrid, selectSearch } from 'api'
+import { getMineGrid, editMineGrid, addMineGrid, delMineGrid, requestNewAdTagList, getChannel, getProgramsList, copyMineGrid, selectSearch, getApkList } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, DatePicker, Divider, Space, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
-import { MySyncBtn, MyImageUpload } from "@/components/views.js"
+import { MySyncBtn, MyImageUpload, ChannelCom, ProgramCom } from "@/components/views.js"
 import util from 'utils'
 import "./style.css"
 const { Option } = Select;
@@ -30,6 +30,7 @@ function App2(props) {
   const [channleList, setChannel] = useState([])
   const [programsList, setPrograms] = useState([])
   const [defaultPrograms, setDefaultPrograms] = useState([])
+  const [apkList, setApkList] = useState([])
   const selectProps = {
     optionFilterProp: "children",
     // filterOption(input, option){
@@ -74,6 +75,7 @@ function App2(props) {
   ]
   const jumpType = [
     { key: 1, value: "跳转到频道" },
+    { key: 2, value: "跳转到下载" },
     { key: 6, value: "跳转到菜单" },
     { key: 8, value: "跳转到好看分类" },
     { key: 16, value: "跳转到图片" },
@@ -432,7 +434,8 @@ function App2(props) {
                 </Select>
               </Form.Item>
               <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型' }]}>
-                <Select allowClear placeholder="请选择类型" onChange={() => forceUpdatePages()}>
+                <Select allowClear placeholder="请选择类型" onChange={(e) => forceUpdatePages()
+                }>
                   {
                     typeList.map((r, i) => {
                       return <Option value={r.key} key={r.key} disabled={getState(r)}>{r.value}</Option>
@@ -448,7 +451,14 @@ function App2(props) {
                 formRef.getFieldValue("type") == 1 &&
                 <>
                   <Form.Item label="跳转类型" name="jumpType" rules={[{ required: true, message: '请输入跳转类型' }]}>
-                    <Select allowClear placeholder="请选择类型" onChange={() => forceUpdatePages()}>
+                    <Select allowClear placeholder="请选择类型" onChange={async(e) => {
+                      console.log(e)
+                      if (e == 2) {
+                        let myApk = await getApkList({ page: { idPage: 9 } })
+                        setApkList(myApk.data)
+                      }
+                      forceUpdatePages()
+                    }}>
                       {
                         jumpType.map((r, i) => {
                           return <Option value={r.key} key={r.key}>{r.value}</Option>
@@ -459,94 +469,14 @@ function App2(props) {
                   {
                     (formRef.getFieldValue("jumpType") == 1 || formRef.getFieldValue("jumpType") == 11) &&
                     <>
-                      <Form.Item label="频道" name="channelCode">
-                        <Select
-                          placeholder="请输入频道名称"
-                          allowClear
-                          {...selectProps}
-                          onSearch={(val) => {
-                            if (privateData.inputTimeOutVal) {
-                              clearTimeout(privateData.inputTimeOutVal);
-                              privateData.inputTimeOutVal = null;
-                            }
-                            privateData.inputTimeOutVal = setTimeout(() => {
-                              if (!privateData.inputTimeOutVal) return;
-                              getChannelList(val)
-                            }, 1000)
-                          }}
-                          onChange={(e) => {
-                            let arr = channleList.filter(item => item.code == e)
-                            if (arr.length > 0) {
-                              formRef.setFieldsValue({ "picUrl": arr[0].posterUrl })
-                            }
-                            setPrograms([])
-                            forceUpdatePages()
-                          }}
-                        >
-                          {
-                            channleList.map((r, i) => {
-                              return <Option value={r.code} key={i}>{r.name}------{r.code}</Option>
-                            })
-                          }
-                        </Select>
-                      </Form.Item>
+                      {
+                        formRef.getFieldValue("jumpType") == 1 &&
+                        <ChannelCom formRef={formRef} isLink={true} linkData={["channelSubTitle", "name"]} channelCode={"channelCode"} onForceUpdatePages={() => forceUpdatePages()} />
+                      }
                       {
                         formRef.getFieldValue("jumpType") == 11 &&
-                        <Form.Item label="选择视频" name="programName">
-                          <Select
-                            placeholder="请选择视频"
-                            allowClear
-                            {...selectProps}
-                            onSearch={(val) => {
+                        <ProgramCom formRef={formRef} programName={"programName"} channelCode={"channelCode"} onForceUpdatePages={() => forceUpdatePages()} />
 
-                              if (privateData.inputTimeOutVal) {
-                                clearTimeout(privateData.inputTimeOutVal);
-                                privateData.inputTimeOutVal = null;
-                              }
-                              privateData.inputTimeOutVal = setTimeout(() => {
-                                if (!privateData.inputTimeOutVal) return;
-                                let arr = channleList.filter(item => item.code == formRef.getFieldValue("channelCode"))
-                                if (arr.length > 0) {
-                                  console.log(arr, "arr")
-                                  if (arr[0].recommendType == 1) {
-                                    getProgams(formRef.getFieldValue("channelCode"), val)
-                                    setDefaultPrograms([])
-                                  } else {
-                                    getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
-                                  }
-                                }
-                              }, 1000)
-                            }}
-                            onChange={(r) => {
-                              let info;
-                              if (defaultPrograms[r]) { //非自建
-                                info = defaultPrograms[r]
-                                formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
-                              } else { //自建频道
-                                info = programsList.filter(item => item.programId == r)
-                                if (info.length > 0) {
-                                  formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt / 1000),picUrl: info[0].programPic  })
-                                }
-                              }
-                              forceUpdatePages()
-                            }}
-                          >
-                            {
-                              programsList.map((r, i) => {
-                                if (r.label) {
-                                  return (
-                                    <Option value={r.value} key={r.value}>{r.label}</Option>
-                                  )
-                                } else {
-                                  return (
-                                    <Option value={r.programId} key={i}>{r.programName}</Option>
-                                  )
-                                }
-                              })
-
-                            }
-                          </Select>
-                        </Form.Item>
                       }
                       <Form.Item label="副标题" name="channelSubTitle" >
                         <Input placeholder="请输入副标题" />
@@ -622,7 +552,19 @@ function App2(props) {
                       </Form.Item>
                     </>
                   }
-
+                  {
+                    //  下载apk
+                    formRef.getFieldValue("jumpType") == 2 &&
+                    <Form.Item label='运营APK' name="apkId">
+                      <Select style={{ width: "100%" }} placeholder='请选择频道' allowClear {...selectProps}>
+                        {
+                          apkList.map((r, i) => {
+                            return <Option value={r.id} key={r.id}>{r.name}</Option>
+                          })
+                        }
+                      </Select>
+                    </Form.Item>
+                  }
 
 
                 </>
@@ -669,94 +611,14 @@ function App2(props) {
                         <Option value={11} key={11}>跳转到视频</Option>
                       </Select>
                     </Form.Item>
-                    <Form.Item label="频道" name="channelCode">
-                      <Select
-                        placeholder="请输入频道名称"
-                        allowClear
-                        {...selectProps}
-                        onSearch={(val) => {
-                          if (privateData.inputTimeOutVal) {
-                            clearTimeout(privateData.inputTimeOutVal);
-                            privateData.inputTimeOutVal = null;
-                          }
-                          privateData.inputTimeOutVal = setTimeout(() => {
-                            if (!privateData.inputTimeOutVal) return;
-                            getChannelList(val)
-                          }, 1000)
-                        }}
-                        onChange={(e) => {
-                          let arr = channleList.filter(item => item.code == e)
-                          if (arr.length > 0) {
-                            formRef.setFieldsValue({ "picUrl": arr[0].posterUrl })
-                          }
-                          forceUpdatePages()
-                        }}
-                      >
-                        {
-                          channleList.map((r, i) => {
-                            return <Option value={r.code} key={i}>{r.name}------{r.code}</Option>
-                          })
-                        }
-                      </Select>
-                    </Form.Item>
+                    {
+                      formRef.getFieldValue("jumpType") == 1 && <ChannelCom formRef={formRef} channelCode={"channelCode"} />
+                    }
+
                     {
                       formRef.getFieldValue("jumpType") == 11 &&
-                      <Form.Item label="选择视频" name="programName">
-                        <Select
-                          placeholder="请选择视频"
-                          allowClear
-                          {...selectProps}
-                          onSearch={(val) => {
-                            if (privateData.inputTimeOutVal) {
-                              clearTimeout(privateData.inputTimeOutVal);
-                              privateData.inputTimeOutVal = null;
-                            }
-                            privateData.inputTimeOutVal = setTimeout(() => {
-                              if (!privateData.inputTimeOutVal) return;
-                              let arr = channleList.filter(item => item.code == formRef.getFieldValue("channelCode"))
-                              if (arr.length > 0) {
-                                console.log(arr, "arr")
-                                if (arr[0].recommendType == 1) {
-                                  getProgams(formRef.getFieldValue("channelCode"), val)
-                                  setDefaultPrograms([])
-                                } else {
-                                  getProgramsListFunc(formRef.getFieldValue("channelCode"), val)
-                                }
-                              }
-                            }, 1000)
-                          }}
-                          onChange={(r) => {
-                            let info;
-                            if (defaultPrograms[r]) { //非自建
-                              info = defaultPrograms[r]
-                              formRef.setFieldsValue({ channelSubTitle: info.name, channelStartTime: info.start_time, channelEndTime: info.end_time })
-                            } else { //自建频道
-                              info = programsList.filter(item => item.programId == r)
-                              if (info.length > 0) {
-                                formRef.setFieldsValue({ channelSubTitle: info[0].programName, channelStartTime: parseInt(info[0].startAt / 1000), channelEndTime: parseInt(info[0].endAt / 1000),picUrl: info[0].programPic })
-                                // picUrl
-                              
-                              }
-                            }
-                            forceUpdatePages()
-                          }}
-                        >
-                          {
-                            programsList.map((r, i) => {
-                              if (r.label) {
-                                return (
-                                  <Option value={r.value} key={r.value}>{r.label}</Option>
-                                )
-                              } else {
-                                return (
-                                  <Option value={r.programId} key={i}>{r.programName}</Option>
-                                )
-                              }
-                            })
+                      <ProgramCom formRef={formRef} programName={"programName"} channelCode={"channelCode"} onForceUpdatePages={() => forceUpdatePages()} />
 
-                          }
-                        </Select>
-                      </Form.Item>
                     }
 
                     <Form.Item label="排序" name="channelIndex">

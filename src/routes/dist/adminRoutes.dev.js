@@ -499,6 +499,11 @@ var ScoreShop = (0, _react.lazy)(function () {
   return Promise.resolve().then(function () {
     return _interopRequireWildcard(require('pages/privateDomain/scoreShop/index.jsx'));
   });
+});
+var HotDay = (0, _react.lazy)(function () {
+  return Promise.resolve().then(function () {
+    return _interopRequireWildcard(require('pages/privateDomain/hotDay/index.jsx'));
+  });
 }); // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 
@@ -1175,6 +1180,13 @@ var adminRoutes = [{
   component: ScoreShop,
   code: "signConfig",
   sub_code: 'scoreShop'
+}, {
+  name: '热点日历',
+  icon: _icons.UnorderedListOutlined,
+  path: '/mms/privateDomain/hotDay',
+  component: HotDay,
+  code: "signConfig",
+  sub_code: 'hotDay'
 }, {
   name: '没有权限',
   icon: _icons.UnorderedListOutlined,

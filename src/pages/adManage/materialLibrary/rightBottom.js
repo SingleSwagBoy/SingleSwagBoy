@@ -428,6 +428,7 @@ function App2(props) {
                                 />
                                 <MyImageUpload
                                     getUploadFileUrl={(file, newItem) => getUploadFileUrl('picUrl', file, newItem)}
+                                    formRef={formRef} width={"width"} height={"height"}
                                     imageUrl={getUploadFileImageUrlByType('picUrl')}
                                 />
                             </div>

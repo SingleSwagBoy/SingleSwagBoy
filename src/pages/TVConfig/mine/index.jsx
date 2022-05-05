@@ -287,15 +287,17 @@ function App2(props) {
                   />
                   <MyImageUpload
                     getUploadFileUrl={(file, newItem) => getUploadFileUrl('titleUrl', file, newItem)}
+                    formRef = {formRef}
+                    width={"titleWidth"} height={"titleHeight"}
                     imageUrl={getUploadFileImageUrlByType('titleUrl')}
                   />
                 </div>
               </Form.Item>
               <Form.Item label="图片宽" name="titleWidth">
-                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
+                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} addonAfter="px" />
               </Form.Item>
               <Form.Item label="图片高" name="titleHeight">
-                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
+                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} addonAfter="px" />
               </Form.Item>
               <Form.Item label="显示标题" name="isShowTitle" valuePropName="checked">
                 <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>

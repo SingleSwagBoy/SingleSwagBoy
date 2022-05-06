@@ -375,8 +375,8 @@ function App2(props) {
                             </Select>
                         </Form.Item>
                         {
-                            // 支付、小程序登录、公众号登录
-                            (formRef.getFieldValue("type") == 3 || formRef.getFieldValue("type") == 10 || formRef.getFieldValue("type") == 11) &&
+                            // 支付、小程序登录、公众号登录，家庭号
+                            (formRef.getFieldValue("type") == 3 || formRef.getFieldValue("type") == 9 || formRef.getFieldValue("type") == 10 || formRef.getFieldValue("type") == 11) &&
                             <>
                                 <Form.Item label="二维码尺寸" >
                                     <Form.Item label="" name="qrWidth" style={{ display: "inline-flex" }} >

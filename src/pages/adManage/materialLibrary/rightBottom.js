@@ -138,7 +138,7 @@ function App2(props) {
                                 if (arr.jumpType == 11) { //登录视频
                                     arr.programName = arr.channelSubTitle
                                 }
-                                arr.isLoop = arr.isLoop ? 1 : 2 //是否循环
+                                arr.isLoop = arr.isLoop == 1? true : false //是否循环
                                 if (arr.timers) {
                                     if (arr.timers == everyTime) {
                                         arr.setTimeVal = 2
@@ -472,10 +472,10 @@ function App2(props) {
                         </Form.Item>
                         <Form.Item label="图片宽">
                             <Form.Item label="" name="width" className='line_flex'>
-                                <InputNumber placeholder="请输入二维码尺寸" style={{ width: "150px" }} addonAfter="px" />
+                                <InputNumber placeholder="请输入二维码尺寸" style={{ width: "150px" }} addonAfter="px" min={0} />
                             </Form.Item>
                             <Form.Item label="图片高" name="height" className='line_flex'>
-                                <InputNumber placeholder="请输入二维码尺寸" style={{ width: "150px" }} addonAfter="px" />
+                                <InputNumber placeholder="请输入二维码尺寸" style={{ width: "150px" }} addonAfter="px" min={0} />
                             </Form.Item>
                         </Form.Item>
                         <Form.Item label="横向偏移">
@@ -488,18 +488,18 @@ function App2(props) {
                         </Form.Item>
                         <Form.Item label="显示时长（s）">
                             <Form.Item label="" name="duration" className='line_flex'>
-                                <InputNumber placeholder="请输入横向偏移" style={{ width: "150px" }} addonAfter="s" />
+                                <InputNumber placeholder="请输入横向偏移" style={{ width: "150px" }} addonAfter="s" min={0} />
                             </Form.Item>
                             <Form.Item label="显示次数" name="totalCount" className='line_flex'>
-                                <InputNumber placeholder="请输入纵向偏移" style={{ width: "150px" }} addonAfter="次" />
+                                <InputNumber placeholder="请输入纵向偏移" style={{ width: "150px" }} addonAfter="次" min={0} />
                             </Form.Item>
                         </Form.Item>
                         <Form.Item label="延迟时长（s）">
                             <Form.Item label="" name="delayTime" className='line_flex'>
-                                <InputNumber placeholder="请输入延迟时长（s）" style={{ width: "150px" }} addonAfter="s" />
+                                <InputNumber placeholder="请输入延迟时长（s）" style={{ width: "150px" }} addonAfter="s" min={0} />
                             </Form.Item>
                             <Form.Item label="间隔时长（m）" name="interval" className='line_flex'>
-                                <InputNumber placeholder="请输入间隔时长（m）" style={{ width: "150px" }} addonAfter="min" />
+                                <InputNumber placeholder="请输入间隔时长（m）" style={{ width: "150px" }} addonAfter="min" min={0} />
                             </Form.Item>
                         </Form.Item>
                         {/* 
@@ -701,7 +701,7 @@ function App2(props) {
                         </Form.Item>
                         <ChannelCom formRef={formRef} channelCode={"channels"} multiple={"multiple"} />
                         <Form.Item label="关联频道标签" name="channelTag">
-                            <Select placeholder='选择关联频道标签' mode='multiple' allowClear>
+                            <Select placeholder='选择关联频道标签' mode='multiple' allowClear {...selectProps}>
                                 {
                                     channelTag.map((r, i) => {
                                         return <Option value={String(r.id)} key={i}>{r.name}</Option>

@@ -111,7 +111,7 @@ export default class WxReply extends Component {
 
                 {/* ===================== 收到消息回复|被关注回复|首次扫码关注回复|已关注扫码回复 ===================== */}
                 {
-                    (menu_select_code === 'messageDefault' || menu_select_code === 'addFriend' || menu_select_code === 'scanSubscribe' || menu_select_code === 'scan' || menu_select_code === 'exclusiveScan') &&
+                    (menu_select_code === 'messageDefault' || menu_select_code === 'addFriend' || menu_select_code === 'scanSubscribe' || menu_select_code === 'scan' || menu_select_code === 'exclusiveScan' || menu_select_code === 'streamInvalidScan') &&
                     <div>
                         <Tooltip title='回复公众号类型' placement="left" color={'purple'}>
                             <Menu onClick={(item) => this.onMenuPublicTypeClick(item)} selectedKeys={[request_box.wxCode]} mode="horizontal">

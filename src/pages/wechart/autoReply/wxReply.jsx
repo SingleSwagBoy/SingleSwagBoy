@@ -38,6 +38,7 @@ export default class WxReply extends Component {
                 { index: "5", code: "scan", name: '第x次关注扫码回复' },
                 { index: "7", code: "exclusiveScan", name: '专享解锁回复' },
                 { index: "8", code: "loginScan", name: '登录回复' },
+                { index: "9", code: "streamInvalidScan", name: '源失效回复' },
             ],
             dict_rule_type: [
                 { key: 1, value: '全匹配' },
@@ -173,7 +174,8 @@ export default class WxReply extends Component {
                 tags.push(
                     { id: -1, code: 'default', name: '默认', },
                     { id: -2, code: 'nouserid', name: '无userid用户', },
-                    { id: -3, code: 'newuser', name: '首次登录', }
+                    { id: -3, code: 'newuser', name: '首次登录', },
+                    { id: -4, code: 'stream_no_login', name: '未登录', }
                 );
 
                 for (let i = 0, len = datas.length; i < len; i++) {

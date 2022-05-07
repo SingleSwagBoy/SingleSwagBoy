@@ -83,7 +83,7 @@ function App2(props) {
             title: "上下线时间",
             dataIndex: "time",
             key: "time",
-            width:300,
+            width: 300,
             render: (rowValue, row, index) => {
                 return (
                     <div>
@@ -128,7 +128,7 @@ function App2(props) {
                                 if (arr.type == 3) {
                                     getProduct() //请求套餐
                                 }
-                                if(arr.type == 23){
+                                if (arr.type == 23) {
                                     arr.programName = arr.channelSubTitle
                                 }
                                 arr.time = [moment(arr.startTime), moment(arr.endTime)] //上下线时间
@@ -138,7 +138,7 @@ function App2(props) {
                                 if (arr.jumpType == 11) { //登录视频
                                     arr.programName = arr.channelSubTitle
                                 }
-                                arr.isLoop = arr.isLoop == 1? true : false //是否循环
+                                arr.isLoop = arr.isLoop == 1 ? true : false //是否循环
                                 if (arr.timers) {
                                     if (arr.timers == everyTime) {
                                         arr.setTimeVal = 2
@@ -391,6 +391,14 @@ function App2(props) {
                                 </Form.Item>
 
                             </>
+
+                        }
+                        {
+                            // 家庭号
+                            formRef.getFieldValue("type") == 9 &&
+                            <Form.Item label="跳转二维码地址" name="qrCodeUrl">
+                                <Input placeholder="请输入跳转二维码地址" />
+                            </Form.Item>
 
                         }
                         {

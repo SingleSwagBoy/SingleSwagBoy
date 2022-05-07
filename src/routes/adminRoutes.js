@@ -108,6 +108,7 @@ const SysPermission = lazy(() => import('pages/sys/permission/permission.jsx'));
 //家庭相册
 const ActivityConfig = lazy(() => import('pages/album/activityConfig/index.jsx'));
 const ViewPhotos = lazy(() => import('pages/album/photos/index.jsx'));
+const ActivityManage = lazy(() => import('pages/album/activityManage/index.jsx'));
 
 //私域签到小程序
 const ScoreShop = lazy(() => import('pages/privateDomain/scoreShop/index.jsx'));
@@ -200,6 +201,7 @@ const adminRoutes = [
     //家庭相册
     { name: '传照片活动配置', icon: UnorderedListOutlined, path: '/mms/album/activityConfig', component: ActivityConfig, code: "Album", sub_code: 'activityConfig' },
     { name: '查看用户照片', icon: UnorderedListOutlined, path: '/mms/album/photos', component: ViewPhotos, code: "Album", sub_code: 'viewPhotos' },
+    { name: '活动管理', icon: UnorderedListOutlined, path: '/mms/album/activityManage', component: ActivityManage, code: "Album", sub_code: 'activityManage' },
     //套餐管理
     // { name: 'VIP会员套餐', icon: UnorderedListOutlined, path: '/mms/comboManage/vipCombo', component: VipCombo, code: "comboManage", sub_code: 'vipCombo' },
 

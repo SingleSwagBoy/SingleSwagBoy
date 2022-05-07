@@ -1,0 +1,11 @@
+.marsBox{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+.everyBody{
+    display: flex;
+    align-items: center;
+}

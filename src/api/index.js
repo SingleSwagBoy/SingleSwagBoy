@@ -656,6 +656,13 @@ export const delLogout = (params) => { return request2.get(`${baseUrl}/mms/chann
 export const syncLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/sync`, {params:params}); };                 // 我的配置删除
 export const changeLogoutState = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/status`, {params:params}); };                 // 我的配置删除
 
+//家庭相册活动管理
+export const getAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/list`,params); };                 // 我的配置删除
+export const addAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/add`, params); };                 // 我的配置删除
+export const updateAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/update`, params); };                 // 我的配置删除
+export const delAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/del`, {params:params}); };                 // 我的配置删除
+export const syncAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/sync`, {params:params}); };                 // 我的配置删除
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

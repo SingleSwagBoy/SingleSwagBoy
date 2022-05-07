@@ -59,7 +59,7 @@ function App2(props) {
             { key: 1, value: '跳转到我的' },
             // { key: 2, value: '跳转到H5' },
             { key: 3, value: '跳转到自建' },
-            { key: 4, value: '跳转到设置' },
+            // { key: 4, value: '跳转到设置' },
             { key: 5, value: '跳转到帮助' },
             { key: 6, value: '跳转到语音' },
             { key: 7, value: '跳转到套餐' },

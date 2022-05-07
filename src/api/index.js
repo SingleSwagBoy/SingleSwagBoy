@@ -718,7 +718,7 @@ export const requestJumpMenuTypes = () => {
             { key: 1, value: '跳转到金币' },
             { key: 2, value: '跳转到手机' },
             { key: 3, value: '跳转到自建' },
-            { key: 4, value: '跳转到设置' },
+            // { key: 4, value: '跳转到设置' },
             { key: 5, value: '跳转到联系' },
             { key: 6, value: '跳转到语音' },
             { key: 7, value: '跳转到套餐' },

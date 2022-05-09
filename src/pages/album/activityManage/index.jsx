@@ -92,7 +92,7 @@ function App2(props) {
               onChange={(val) => {
                 let info = JSON.parse(JSON.stringify(row))
                 info.status = val ? 1 : 2
-                // changeLogoutStateFunc(info)
+                updateFunc(info)
               }}
             />}</div>
         )
@@ -112,6 +112,11 @@ function App2(props) {
                 arr.time = [arr.startTime ? moment(arr.startTime * 1000) : 0, arr.endTime ? moment(arr.endTime * 1000) : 0]
                 arr.awardTime = arr.awardTime ? moment(arr.awardTime * 1000) : 0
                 arr.status = row.status == 1 ? true : false
+                let list = []
+                arr.demo.forEach(r => {
+                  list.push({ pic: r })
+                })
+                arr.imageList = list
                 // setCurrent(row)
                 setOpen(true)
                 formRef.setFieldsValue(arr)
@@ -126,7 +131,7 @@ function App2(props) {
   ]
   useEffect(() => {//列表
     const fetchData = async () => {
-      const list = await getAblum({title:searchWord, page: { currentPage: page, pageSize: pageSize } })
+      const list = await getAblum({ title: searchWord, page: { currentPage: page, pageSize: pageSize } })
       setLists(list.data)
       setTotal(list.totalCount)
     }
@@ -139,6 +144,11 @@ function App2(props) {
   }
   const submitForm = (val) => {//表单提交
     console.log(val)
+    let list = []
+    val.imageList.forEach(r=>{
+      list.push(r.pic)
+    })
+    val.demo = list
     let params = {
       ...formRef.getFieldValue(),
       ...val,
@@ -148,13 +158,13 @@ function App2(props) {
       awardTime: val.awardTime ? parseInt(val.awardTime.valueOf() / 1000) : 0,
     }
     if (source == "add") {
-      addOfflineProgramFunc(params)
+      addFunc(params)
     } else if (source == "edit") {
-      updateOfflineProgramFunc(params)
+      updateFunc(params)
     }
     closeDialog()
   }
-  const addOfflineProgramFunc = (params) => {
+  const addFunc = (params) => {
     addAblum(params).then(res => {
       message.success("新增成功")
       forceUpdate()
@@ -165,7 +175,7 @@ function App2(props) {
     setOpen(false)
     setSource("")
   }
-  const updateOfflineProgramFunc = (params) => {
+  const updateFunc = (params) => {
     updateAblum(params).then(res => {
       message.success("更新成功")
       forceUpdate()
@@ -184,18 +194,12 @@ function App2(props) {
       }
     })
   }
-  const getUploadFileUrl = (type, file, newItem) => {
-    let that = this;
+  const getUploadFileUrl = (type,file,newItem) => {
     let image_url = newItem.fileUrl;
-    let obj = {};
-    obj[type] = image_url;
-    console.log(obj)
-    formRef.setFieldsValue(obj);
+    let obj = formRef.getFieldValue(type)
+    obj.push({pic:image_url})
+    formRef.setFieldsValue({[type]:obj});
     forceUpdatePages()
-  }
-  const getUploadFileImageUrlByType = (type) => {
-    let image_url = formRef.getFieldValue(type);
-    return image_url ? image_url : '';
   }
   return (
     <div className="loginVip">
@@ -253,27 +257,37 @@ function App2(props) {
               <Form.Item label="活动规则" name="rule" rules={[{ required: true, message: '请输入活动规则' }]}>
                 <Input.TextArea placeholder="请输入活动规则" />
               </Form.Item>
-              {/* <Form.Item label="图片" name="background" rules={[{ required: true, message: '请输入名称' }]}>
-                <div style={{ display: "flex", alignItems: "flex-startTime" }}>
-                  <Input.TextArea defaultValue={formRef.getFieldValue("background")} key={formRef.getFieldValue("background")}
-                    onChange={(e) => {
-                      if (privateData.inputTimeOutVal) {
-                        clearTimeout(privateData.inputTimeOutVal);
-                        privateData.inputTimeOutVal = null;
-                      }
-                      privateData.inputTimeOutVal = setTimeout(() => {
-                        if (!privateData.inputTimeOutVal) return;
-                        formRef.setFieldsValue({ background: e.target.value })
-                        forceUpdatePages()
-                      }, 1000)
-                    }}
-                  />
-                  <MyImageUpload
-                    getUploadFileUrl={(file, newItem) => getUploadFileUrl('background', file, newItem)}
-                    imageUrl={getUploadFileImageUrlByType('background')}
-                  />
-                </div>
-              </Form.Item> */}
+              <Form.Item label='示范案例'>
+                <Form.List name="imageList" label='示范案例'>
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map((field, index) => (
+                        <div key={index} style={{display:"inline-flex"}}>
+                          <Form.Item  {...field} name={[field.name, 'pic']}
+                            fieldKey={[field.fieldKey, "pic"]} label="图片">
+                            <Image width={100} src={formRef.getFieldValue("imageList")[index].pic} />
+                          </Form.Item>
+                          <Button danger onClick={() => {
+                            remove(field.name)
+                          }} >删除</Button>
+                        </div>
+
+                      ))}
+                      <Form.Item>
+                        <MyImageUpload
+                          getUploadFileUrl={(file, newItem) => getUploadFileUrl("imageList",file, newItem)}
+                        />
+                        {/* <Button type="primary" onClick={() => {
+                          add()
+                        }} block icon={<PlusOutlined />}>
+                          新增投放时间段
+                        </Button> */}
+                      </Form.Item>
+
+                    </>
+                  )}
+                </Form.List>
+              </Form.Item>
               <Form.Item label="上下线时间" name='time' rules={[{ required: true, message: '请输入上下线时间' }]}>
                 <RangePicker showTime placeholder={['上线时间', '下线时间']} />
               </Form.Item>

@@ -121,12 +121,12 @@ export default class WinningNews extends Component {
         },
         {
           title: "发货状态",
-          dataIndex: "state",
-          key: "state",
+          dataIndex: "status",
+          key: "status",
           width:"5%",
           render: (rowValue,row,index) => {  // 1. 待发货 2 已发货
             return (
-              <span>{row.state === 1?"待发货":row.state === 2?"已发货":"-"}</span>
+              <span>{row.status === 1?"待发货":row.status === 2?"已发货":"-"}</span>
             )
           },
         },

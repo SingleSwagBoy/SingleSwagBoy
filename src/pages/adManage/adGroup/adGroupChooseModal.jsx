@@ -41,6 +41,7 @@ export default class adCreateModal extends Component {
             tagList: [], //父组件传过来的已经被选择的素材
             checkedList: [],
             type: [
+
                 { key: 1, value: '图片' },
                 { key: 13, value: '图片（会员可投）' },
                 { key: 2, value: '视频' },
@@ -56,6 +57,21 @@ export default class adCreateModal extends Component {
                 { key: 11, value: 'H5' },
                 { key: 12, value: '小程序登录' }
             ],
+            rightType: [
+                { key: 1, value: '图片' },
+                { key: 3, value: '支付' },
+                { key: 8, value: '宣传内容' },
+                { key: 9, value: '家庭号' },
+                { key: 10, value: '公众号登录' },
+                { key: 11, value: '小程序登录' },
+                { key: 23, value: '登录预约' },
+            ],
+            rightKey: [
+                { key: 0, value: '通用' },
+                { key: 1, value: '家庭号' },
+                { key: 2, value: '公众号登陆' },
+                { key: 3, value: '小程序登陆' },
+            ]
         }
     }
     onSelectChange = selectedRowKeys => {
@@ -134,7 +150,7 @@ export default class adCreateModal extends Component {
     //展示对话框
     showModal(data, adIndex, tagList) {
         let that = this;
-        let { table_box, modal_box } = that.state;
+        let { table_box, modal_box,type,rightType,rightKey } = that.state;
         modal_box.is_show = true;
         modal_box.title = data.title;
 
@@ -146,15 +162,17 @@ export default class adCreateModal extends Component {
                     return (
                         <div>
                             {
-                                adIndex == 1
-                                    ?
-                                    <div>{row.type == 0 ? "通用" : row.type == 1 ? "家庭号" : row.type == 2 ? "公众号登陆" : row.type == 3 ? "小程序登陆" : "未知"}</div>
-                                    :
-                                    adIndex == 2
-                                        ?
-                                        <div>{rowValue == 1 ? "普通级别" : rowValue == 2 ? "宣传内容" : "未知"}</div>
-                                        :
-                                        this.getType(row.type)
+                                adIndex == 1 && this.getType(rightKey,row.type)
+                            }
+                            {
+
+                                adIndex == 2 && <div>{rowValue == 1 ? "普通级别" : rowValue == 2 ? "宣传内容" : "未知"}</div>
+                            }
+                            {
+                                adIndex == 11 && this.getType(type,row.type)
+                            }
+                             {
+                                adIndex == 4 && this.getType(rightType,row.type)
                             }
                         </div>
                     )
@@ -211,8 +229,8 @@ export default class adCreateModal extends Component {
         })
 
     }
-    getType(val) {
-        let arr = this.state.type.filter(item => item.key == val)
+    getType(type,val) {
+        let arr = type.filter(item => item.key == val)
         if (arr.length > 0) {
             return arr[0].value
         } else {

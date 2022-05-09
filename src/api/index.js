@@ -690,12 +690,18 @@ export const signCalendarSave = (params) => { return request2.post(`${baseUrl}/m
 export const signCalendarClear = (params) => { return request2.post(`${baseUrl}/mms/pd/calendar/clear?day=${params.day}`, params); };                 // 清空指定日期的热点数据
 export const signCalendarSync = (params) => { return request2.post(`${baseUrl}/mms/pd/calendar/sync?month=${params.month}`, params); };                 // 同步缓存
 
+export const scoreExrecords = (params) => { return request.post(`${baseUrl}/mms/pd/integral/exrecords`, params) };   // 兑换记录
+export const scoreRecordEdit = (params) => { return request.post(`${baseUrl}/mms/pd/integral/recordEdit`, params) };   // 更新兑换记录
+
 //家庭相册活动管理
 export const getAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/list`,params); };                 // 我的配置删除
 export const addAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/add`, params); };                 // 我的配置删除
 export const updateAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/update`, params); };                 // 我的配置删除
 export const delAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/del`, {params:params}); };                 // 我的配置删除
 export const syncAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/sync`, {params:params}); };                 // 我的配置删除
+
+
+
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

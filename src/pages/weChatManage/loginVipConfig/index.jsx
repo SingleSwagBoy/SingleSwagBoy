@@ -408,7 +408,6 @@ export default class EarnIncentiveTask extends React.Component {
         this.setState({
             curentWindow:(window.location.host.includes("localhost") || window.location.host.includes("test") )?"test":"product"
         },()=>{console.log("this.state.curentWindow",this.state.curentWindow)})
-        this.getQrcodeConfig();
         this.requestNewAdTagList()
         this.getWechatList()
         this.getexcluswitch()
@@ -443,6 +442,8 @@ export default class EarnIncentiveTask extends React.Component {
         requestNewAdTagList({ currentPage: 1, pageSize: 999999, }).then(res => {
             this.setState({
                 tagList: res.data || [],
+            },()=>{
+                this.getQrcodeConfig();
             });
         })
     }

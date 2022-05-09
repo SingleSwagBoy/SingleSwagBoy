@@ -674,6 +674,9 @@ export const signCalendarSave = (params) => { return request2.post(`${baseUrl}/m
 export const signCalendarClear = (params) => { return request2.post(`${baseUrl}/mms/pd/calendar/clear?day=${params.day}`, params); };                 // 清空指定日期的热点数据
 export const signCalendarSync = (params) => { return request2.post(`${baseUrl}/mms/pd/calendar/sync?month=${params.month}`, params); };                 // 同步缓存
 
+export const scoreExrecords = (params) => { return request.post(`${baseUrl}/mms/pd/integral/exrecords`, params) };   // 兑换记录
+export const scoreRecordEdit = (params) => { return request.post(`${baseUrl}/mms/pd/integral/recordEdit`, params) };   // 更新兑换记录
+
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

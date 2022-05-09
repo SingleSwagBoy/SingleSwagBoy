@@ -411,11 +411,10 @@ const btnAsync=()=>{
       >
         <Table
           dataSource={virList}
-          //scroll={{ x: 1400, y: '75vh' }}
           rowKey={item => item.id}
-          // loading={loading}
           columns={columns}
         />
+        
         {/* 新增/编辑的弹框 */}
         <Modal title={source=='add'?"新增":source=='edit'?"编辑":""} centered visible={openDailog} onCancel={() => closeDialog()} footer={null} width={1000}>
           {
@@ -490,11 +489,9 @@ const btnAsync=()=>{
                 </Form.Item>
                 <Form.Item label="兑换积分" name="score" rules={[{ required: true, message: '请输入兑换积分' }]}>
                     <InputNumber min={1}  />
-                    {/* <span style={{marginLeft:"10px"}}>积分</span> */}
                 </Form.Item>
-                <Form.Item label="干预兑换数" name="robotNum" rules={[{ required: true, message: '请输入干预兑换数' }]}>
+                <Form.Item label="干预兑换数" name="robotNum">
                     <InputNumber min={0}  />
-                    {/* <span style={{marginLeft:"10px"}}>个</span> */}
                 </Form.Item>
 
               <Form.Item {...tailLayout}>
@@ -513,28 +510,6 @@ const btnAsync=()=>{
                 <Form.Item label="首次登录赠送" name="score" rules={[{ required: true, message: '请输入首次登录赠送' }]}>
                     <InputNumber min={1}  />
                 </Form.Item>
-                {/* <Form.Item label="商品类型" name="ruleType" rules={[{ required: true, message: '请选择商品类型' }]}>
-                    <Radio.Group defaultValue={1}
-                        onChange={(e)=>{
-                            console.log("ruleType",e)
-                            formRefRule.setFieldsValue({ ruleType: e.target.value })
-                            forceUpdatePages()
-                        }}
-                    >
-                        <Radio value={1}>积分规则</Radio>
-                        <Radio value={2}>兑换规则</Radio>
-                    </Radio.Group>
-                </Form.Item> */}
-                {/* {
-                    formRefRule.getFieldValue("ruleType") == 1 &&
-                    <Form.Item label="积分规则" name="scoreRule" rules={[{ required: true, message: '请填写积分规则' }]}>
-                        <TextArea rows={6} placeholder="这里填写积分规则" />
-                    </Form.Item> ||
-                    formRefRule.getFieldValue("ruleType") == 2 &&
-                    <Form.Item label="兑换规则" name="exchangeRule" rules={[{ required: true, message: '请填写兑换规则' }]}>
-                        <TextArea rows={6} placeholder="这里填写兑换规则" />
-                    </Form.Item>
-                } */}
                 <Form.Item label="积分规则" name="scoreRule" rules={[{ required: true, message: '请填写积分规则' }]}>
                     <TextArea rows={6} placeholder="这里填写积分规则" />
                 </Form.Item> 
@@ -549,6 +524,7 @@ const btnAsync=()=>{
             </Form>
         }
         </Modal>
+
         {/* 额外奖励的弹框 */}
         <Modal centered visible={openReward} onCancel={() => closeReward()} footer={null} width={700}>
         {
@@ -614,6 +590,7 @@ const btnAsync=()=>{
             </Form>
         }
         </Modal>
+
         {/* 商品分类的弹框 */}
         <Modal centered visible={openCategory} onCancel={() => closeCategory()} footer={null} width={700}>
             <Table bordered dataSource={sortTable} columns={sortColumns} pagination={false}>
@@ -626,6 +603,7 @@ const btnAsync=()=>{
                 </Button>
             </div>
         </Modal>
+
         {/* 添加分类的弹框 */}
         <Modal centered visible={addCategory} onCancel={() => closeaddCategory()} footer={null} width={700}>
         {
@@ -636,11 +614,6 @@ const btnAsync=()=>{
                 <Form.Item label="分类名称" name="name" rules={[{ required: true, message: '请输入分类名称' }]}>
                     <Input placeholder="请输入分类名称" />
                 </Form.Item>
-                <Form.Item label="商品数量" name="goodsNum" rules={[{ required: true, message: '请输入商品数量' }]}>
-                    <InputNumber min={0}/>
-                </Form.Item>
-                {/* {id:5,sort:5,name:"手机",sku:100}, */}
-
                 <Form.Item {...tailLayout}>
                     <Button onClick={() => closeaddCategory()}>取消</Button>
                     <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>确定</Button>

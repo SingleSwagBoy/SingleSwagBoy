@@ -161,7 +161,7 @@ function App2(props) {
                                 })
                                 arr.timersList = isA
                                 // 投放时间
-                                if (arr.channelDeliveryType == 1 && arr.deliveryTimeDaily.length > 0) {
+                                if (arr.deliveryTimeDaily.length > 0) {
                                     arr.deliveryTimeDaily.forEach(r => {
                                         r.myTime = [moment(r.startTime, "HH:mm"), moment(r.endTime, "HH:mm")]
                                     })

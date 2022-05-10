@@ -21,11 +21,12 @@ import {
     screenUpdate,
     screenDel,
     adRightKeyDel,
-    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup, updateInfoGroup
+    addAdRightKey, addScreen, screenCopy, adRightKeyCopy, requestProductSkuList, getInfoGroup, delInfoGroup, updateInfoGroup, getCorner
 } from 'api';
 import { MySyncBtn } from '@/components/views.js';
 import { MyImageUpload } from '@/components/views.js';
 import InfoDialog from "./infoDialog"
+import RightBottom from "./rightBottom"
 let { RangePicker } = DatePicker;
 let { Option } = Select;
 
@@ -44,6 +45,7 @@ export default class adCreateModal extends Component {
             total: 10,
             lists: [],
             adIndex: 1,
+            isOpen:false,//是否打开右下角广告
             typeList: [
                 { key: 0, name: "通用" },
                 { key: 1, name: "家庭号" },
@@ -75,7 +77,7 @@ export default class adCreateModal extends Component {
             table_title: [
                 { title: '素材名称', dataIndex: 'name', key: 'name', width: 300, },
                 {
-                    title: '类型', dataIndex: 'type', key: 'type', width: 200,
+                    title: '类型', dataIndex: 'type', key: 'type',width:100,
                     render: (rowValue, row, index) => {
                         return (
                             this.state.adIndex == 1 ?
@@ -89,18 +91,18 @@ export default class adCreateModal extends Component {
                     }
                 },
                 {
-                    title: '缩略图', dataIndex: 'iconPicUrl', key: 'iconPicUrl', width: 150,
+                    title: '缩略图', dataIndex: 'iconPicUrl', key: 'iconPicUrl', width: 80,
                     render: (rowValue, row, index) => {
                         return (<Image width={50} src={rowValue} />)
                     }
                 },
                 {
-                    title: '背景图', dataIndex: 'picUrl', key: 'picUrl', width: 150,
+                    title: '背景图', dataIndex: 'picUrl', key: 'picUrl', width: 80,
                     render: (rowValue, row, index) => {
                         return (<Image width={50} src={rowValue} />)
                     }
                 },
-                { title: '排序', dataIndex: 'sortData', key: 'sortData', },
+                { title: '排序', dataIndex: 'sortData', key: 'sortData', width: 60 },
                 {
                     title: '时间', dataIndex: 'time', key: 'time', width: 300,
                     render: (rowValue, row, index) => {
@@ -190,7 +192,7 @@ export default class adCreateModal extends Component {
     }
     render() {
         let that = this;
-        let { table_title, lists, materialShow, adIndex } = that.state;
+        let { table_title, lists, materialShow, adIndex,isOpen } = that.state;
 
         return (
             <div>
@@ -231,7 +233,10 @@ export default class adCreateModal extends Component {
                                                 })
                                             }
 
-                                        } else {
+                                        } else if (val.target.value == 4) { //右下角广告
+
+                                        }
+                                        else {
                                             arr = table_title.filter(item => item.key != "mode")
                                             if (arr[2].dataIndex != "iconPicUrl") {
                                                 arr.splice(2, 0, {
@@ -258,7 +263,8 @@ export default class adCreateModal extends Component {
                                         this.setState({
                                             adIndex: val.target.value,
                                             page: 1,
-                                            table_title: arr
+                                            table_title: arr,
+                                            isOpen:false,
                                         }, () => {
                                             this.refreshList(val.target.value)
                                         })
@@ -266,12 +272,16 @@ export default class adCreateModal extends Component {
                                     <Radio.Button value="1">右键运营位广告</Radio.Button>
                                     <Radio.Button value="2">屏显广告</Radio.Button>
                                     <Radio.Button value="3">信息流广告</Radio.Button>
+                                    <Radio.Button value="4">右下角广告</Radio.Button>
                                 </Radio.Group>
                             </div>
                             <div className="everyBody" style={{ display: "flex", marginLeft: "20px", alignItems: 'center' }}>
                                 <div>广告名称:</div>
                                 <Input.Search allowClear placeholder="请输入广告名称"
                                     onSearch={(val) => {
+                                        if(adIndex == 4){
+                                            return this.setState({searchWords:val}) //打开右下角的广告
+                                        }
                                         this.setState({
                                             page: 1,
                                             searchWords: val
@@ -289,13 +299,16 @@ export default class adCreateModal extends Component {
                     extra={
                         <div>
                             <Button type="primary" onClick={() => {
+                                if(adIndex == 4){
+                                    return this.setState({isOpen:true}) //打开右下角的广告
+                                }
                                 this.setState({
                                     currentItem: {},
-                                    adIndex: this.state.adIndex,
+                                    adIndex: adIndex,
                                     materialShow: true,
                                     source: "add",
                                 }, () => {
-                                    if (this.state.adIndex != 3) {
+                                    if (adIndex != 3) {
                                         this.formRef.current.resetFields()
                                     }
                                     this.forceUpdate()
@@ -305,18 +318,25 @@ export default class adCreateModal extends Component {
                         </div>
                     }
                 >
-                    <Table
-                        columns={table_title}
-                        dataSource={lists}
-                        pagination={false}
-                        scroll={{ x: 1500, y: '70vh' }}
-                        pagination={{
-                            current: this.state.page,
-                            pageSize: this.state.pageSize,
-                            total: this.state.total,
-                            onChange: this.changeSize,
-                        }}
-                    />
+                    {
+                        adIndex == 4 ?
+                            <RightBottom isOpen={isOpen} onCloseOpen={()=>this.setState({isOpen:false})} searchWords={this.state.searchWords} />
+                            :
+                            <Table
+                                columns={table_title}
+                                dataSource={lists}
+                                pagination={false}
+                                rowKey={item => item.id}
+                                scroll={{ x: 1300, y: '70vh' }}
+                                pagination={{
+                                    current: this.state.page,
+                                    pageSize: this.state.pageSize,
+                                    total: this.state.total,
+                                    onChange: this.changeSize,
+                                }}
+                            />
+                    }
+
                 </Card>
                 <Modal visible={materialShow} title="素材" width={1500} transitionName="" maskClosable={false}
                     onCancel={() => that.onModalCancelClick()}
@@ -553,7 +573,7 @@ export default class adCreateModal extends Component {
             this.requestProductSkuList()
         } else if (index == 2) {
             this.getScreen()
-        } else {
+        } else if (index == 3) {
             this.getInfoGroup()
         }
     }
@@ -580,6 +600,34 @@ export default class adCreateModal extends Component {
             name: this.state.searchWords
         };
         getScreen(obj).then(res => {
+            that.setState({
+                lists: res.data || [],
+                total: res.page ? res.page.totalCount : 0
+            })
+            this.forceUpdate()
+        })
+    }
+    getInfoGroup() {
+        let that = this;
+        let obj = {
+            page: { currentPage: this.state.page, pageSize: this.state.pageSize },
+            name: this.state.searchWords
+        };
+        getInfoGroup(obj).then(res => {
+            that.setState({
+                lists: res.data || [],
+                total: res.page ? res.page.totalCount : 0
+            })
+            this.forceUpdate()
+        })
+    }
+    getCorner() {
+        let that = this;
+        let obj = {
+            page: { currentPage: this.state.page, pageSize: this.state.pageSize },
+            name: this.state.searchWords
+        };
+        getCorner(obj).then(res => {
             that.setState({
                 lists: res.data || [],
                 total: res.page ? res.page.totalCount : 0

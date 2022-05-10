@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { getMine, editMine, addMine, delMine } from 'api'
+import { getList, updateList, addList, deleteConfig, requestNewAdTagList, getLockList } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, DatePicker, Divider, Space, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
@@ -13,10 +13,11 @@ let privateData = {
 };
 const { RangePicker } = DatePicker;
 function App2(props) {
+  const keyParams = "CHANNEL_GROUP_SIMPLE"
   const [forceUpdateId, forceUpdate] = useReducer(() => [], []);
   const [forceUpdatePage, forceUpdatePages] = useReducer(() => [], []);
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(100)
+  const [pageSize, setPageSize] = useState(10)
   const [total, setTotal] = useState(0)
   const [lists, setLists] = useState([])
   const layout = { labelCol: { span: 4 }, wrapperCol: { span: 20 } }
@@ -25,30 +26,30 @@ function App2(props) {
   const [openDailog, setOpen] = useState(false)
   const [currentItem, setCurrent] = useState({})
   const [source, setSource] = useState("")
+  const [tagList, setTagList] = useState([])
+  const [channelTemp, setChannelTemp] = useState([])
   const selectProps = {
     optionFilterProp: "children",
-    // filterOption(input, option){
-    //   return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-    // },
+    filterOption(input, option){
+      if (!input) return true;
+      let children = option.children;
+      if (children) {
+        let key = children[2];
+        let isFind = false;
+        isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+        if (!isFind) {
+          let code = children[0];
+          isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+        }
+  
+        return isFind;
+      }
+    },
     showSearch() {
       console.log('onSearch')
     }
   }
-  const filterOption = (input, option) => {
-    if (!input) return true;
-    let children = option.children;
-    if (children) {
-      let key = children[2];
-      let isFind = false;
-      isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
-      if (!isFind) {
-        let code = children[0];
-        isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
-      }
-
-      return isFind;
-    }
-  }
+ 
   const playContent = [
     { key: 1, value: "用户数据" },
     { key: 2, value: "观看历史" },
@@ -56,28 +57,32 @@ function App2(props) {
   ]
   const columns = [
     {
-      title: "标题",
+      title: "名称",
       dataIndex: "title",
       key: "title",
     },
     {
-      title: "高度",
-      dataIndex: "height",
-      key: "height",
-    },
-    {
-      title: "宽度间隙",
-      dataIndex: "space",
-      key: "space",
-    },
-    {
-      title: "类型",
-      dataIndex: "type",
-      key: "type",
+      title: "图片缩略图",
+      dataIndex: "titleUrl",
+      key: "titleUrl",
       render: (rowValue, row, index) => {
         return (
-          // 栏目类型 1=用户属性，2=观看历史，3=其他数据
-          <div>{rowValue == 1 ? "用户属性" : rowValue == 2 ? "观看历史" : rowValue == 3 ? "其他数据" : "未知"}</div>
+          <Image src={rowValue} width={100}></Image>
+        )
+      }
+    },
+    {
+      title: "频道组",
+      dataIndex: "groupName",
+      key: "groupName",
+    },
+    {
+      title: "标签",
+      dataIndex: "tag",
+      key: "tag",
+      render: (rowValue, row, index) => {
+        return (
+          <div>{getTagName(rowValue)}</div>
         )
       }
     },
@@ -97,8 +102,7 @@ function App2(props) {
               onChange={(val) => {
                 let info = JSON.parse(JSON.stringify(row))
                 info.status = val ? 1 : 2
-                console.log(info.status, "info.status")
-                submitForm(info)
+                updateOfflineProgramFunc(info)
               }}
             />}</div>
         )
@@ -111,20 +115,19 @@ function App2(props) {
       render: (rowValue, row, index) => {
         return (
           <div>
-            <Button size="small" type="primary"
+            <Button size="small" type="primary" style={{ margin: " 0 10px" }}
               onClick={() => {
                 console.log(row)
                 let arr = JSON.parse(JSON.stringify(row))
-                // arr.status = row.status == 1 ? true : false
-                arr.isShowTitle = row.isShowTitle == 1 ? true : false
+                arr.time = [arr.start ? moment(arr.start * 1000) : 0, arr.end ? moment(arr.end * 1000) : 0]
+                arr.status = row.status == 1 ? true : false
                 setCurrent(row)
                 setOpen(true)
                 formRef.setFieldsValue(arr)
                 setSource("edit")
               }}
             >编辑</Button>
-            {/* <Button size="small" style={{ margin: " 0 10px" }} onClick={() => props.history.push(`/mms/TVConfig/detail/${row.id}`)}>详情</Button> */}
-            <Button size="small" style={{ margin: " 0 10px" }} onClick={() => props.history.push({ pathname: "/mms/TVConfig/detail", params: { id: row.id, isHistory: row.type == 2 ? true : false } })}>详情</Button>
+
             <Button danger size="small" onClick={() => delItem(row)}>删除</Button>
           </div>
         )
@@ -133,42 +136,55 @@ function App2(props) {
   ]
   useEffect(() => {//列表
     const fetchData = async () => {
-      const list = await getMine({ page: { currentPage: page, pageSize: pageSize } })
-      setLists(list.data)
-      setTotal(list.page.totalCount)
+      const list = await getList({ key: keyParams })
+      setLists(list.data.data)
     }
     fetchData()
   }, [forceUpdateId])
+  useEffect(() => {//列表
+    const fetchData = async () => {
+      let arr = await requestNewAdTagList({ currentPage: 1, pageSize: 999999, })
+      setTagList(arr.data)
+      let temp = await getLockList({channelTemplateId: 0,name: "",page: {currentPage: 1, isPage: 9, pageSize: 1000},status: 1})
+      setChannelTemp(temp.data.data)
+    }
+    fetchData()
+  }, [])
   const changeSize = (page, pageSize) => {
     setPage(page)
     setPageSize(pageSize)
     forceUpdate()
   }
+  const getTagName = (name) => {
+    let arr = tagList.filter(item => item.code == name)
+    if (arr.length > 0) {
+      return arr[0].name
+    } else {
+      return "-"
+    }
+  }
   const submitForm = (val) => {//表单提交
     console.log(val)
+    let list = channelTemp.filter(item=>item.code == val.groupCode)
+    val.groupName = list[0].name
     if (source == "add") {
       let params = {
         ...val,
-        isShowTitle: val.isShowTitle ? 1 : 2
+        status: val.status ? 1 : 2,
       }
       addOfflineProgramFunc(params)
     } else if (source == "edit") {
       let params = {
-        ...currentItem,
+        ...formRef.getFieldValue(),
         ...val,
-        isShowTitle: val.isShowTitle ? 1 : 2
-      }
-      updateOfflineProgramFunc(params)
-    } else {
-      let params = {
-        ...val,
+        status: val.status ? 1 : 2,
       }
       updateOfflineProgramFunc(params)
     }
     closeDialog()
   }
   const addOfflineProgramFunc = (params) => {
-    addMine(params).then(res => {
+    addList({ key: keyParams }, params).then(res => {
       message.success("新增成功")
       forceUpdate()
     })
@@ -179,8 +195,8 @@ function App2(props) {
     setSource("")
   }
   const updateOfflineProgramFunc = (params) => {
-    editMine(params).then(res => {
-      message.success("更新成功")
+    updateList({key:keyParams,id:params.indexId},params).then(res => {
+      message.success("修改成功")
       forceUpdate()
     })
   }
@@ -188,7 +204,7 @@ function App2(props) {
     Modal.confirm({
       title: `确认删除该条数据吗？`,
       onOk: () => {
-        delMine({ id: row.id }).then(res => {
+        deleteConfig({ key: keyParams, id: row.indexId }).then(res => {
           message.success("删除成功")
           forceUpdate()
         })
@@ -200,15 +216,6 @@ function App2(props) {
   const getUploadFileUrl = (type, file, newItem) => {
     let that = this;
     let image_url = newItem.fileUrl;
-    // 创建对象
-    // var img = new Image();
-    // // 改变图片的src
-    // img.src = image_url;
-    // // 加载完成执行
-    // img.onload = () => {
-    //   // 打印
-    //  console.log(img.width,img.height,"-------")
-    // };
     let obj = {};
     obj[type] = image_url;
     console.log(obj)
@@ -224,7 +231,7 @@ function App2(props) {
       <Card title={
         <div>
           <Breadcrumb>
-            <Breadcrumb.Item>我的</Breadcrumb.Item>
+            <Breadcrumb.Item>简单模式</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       }
@@ -234,13 +241,13 @@ function App2(props) {
               setOpen(true)
               setSource("add")
             }}>新建</Button>
-            <MySyncBtn type={35} name='同步缓存' />
+            <MySyncBtn type={7} name='同步缓存' params={{key:keyParams}} />
           </div>
         }
       >
         <Table
           dataSource={lists}
-          scroll={{ x: 1000, y: '75vh' }}
+          scroll={{ x: 1200, y: '75vh' }}
           rowKey={item => item.id}
           // loading={loading}
           columns={columns}
@@ -258,19 +265,28 @@ function App2(props) {
               name="taskForm"
               form={formRef}
               onFinish={(e) => submitForm(e)}>
-              <Form.Item label="标题" name="title" rules={[{ required: true, message: '请输入标题' }]}>
-                <Input placeholder="请输入标题" />
+              <Form.Item label="名称" name="title" rules={[{ required: true, message: '请输入名称' }]}>
+                <Input placeholder="请输入名称" />
               </Form.Item>
-              <Form.Item label="高度" name="height" rules={[{ required: true, message: '请输入高度' }]}>
-                <InputNumber placeholder="请输入高度" style={{ width: "200px" }} min={0} suffix="PX" />
+              <Form.Item label="标签" name="tag">
+                <Select mode={true} allowClear showSearch placeholder="请选择用户设备标签" {...selectProps}>
+                  {
+                    tagList.map((item, index) => (
+                      <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>
+                    ))
+                  }
+                </Select>
               </Form.Item>
-              <Form.Item label="间隙" name="space" rules={[{ required: true, message: '请输入间隙' }]}>
-                <InputNumber placeholder="请输入间隙" style={{ width: "200px" }} min={0} />
+              <Form.Item label="关联频道组" name="groupCode" rules={[{ required: true, message: '请选择关联频道组' }]}>
+                <Select mode={true} allowClear showSearch placeholder="请选择关联频道组" {...selectProps}>
+                  {
+                    channelTemp.map((r, index) => {
+                      return <Option value={r.code} key={r.id}>{r.name +"----"+ r.code}</Option>
+                    })
+                  }
+                </Select>
               </Form.Item>
-              <Form.Item label="排序" name="sort">
-                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
-              </Form.Item>
-              <Form.Item label="打开图片地址" name="titleUrl">
+              <Form.Item label="图片" name="titleUrl">
                 <div style={{ display: "flex", alignItems: "flex-start" }}>
                   <Input.TextArea defaultValue={formRef.getFieldValue("titleUrl")} key={formRef.getFieldValue("titleUrl")}
                     onChange={(e) => {
@@ -287,31 +303,16 @@ function App2(props) {
                   />
                   <MyImageUpload
                     getUploadFileUrl={(file, newItem) => getUploadFileUrl('titleUrl', file, newItem)}
-                    formRef = {formRef}
-                    width={"titleWidth"} height={"titleHeight"}
                     imageUrl={getUploadFileImageUrlByType('titleUrl')}
                   />
                 </div>
               </Form.Item>
-              <Form.Item label="图片宽" name="titleWidth">
-                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} addonAfter="px" />
+              <Form.Item label="排序" name="sort">
+                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
               </Form.Item>
-              <Form.Item label="图片高" name="titleHeight">
-                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} addonAfter="px" />
+              <Form.Item label="状态" name="status" valuePropName="checked">
+                <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
               </Form.Item>
-              <Form.Item label="显示标题" name="isShowTitle" valuePropName="checked">
-                <Switch checkedChildren="开启" unCheckedChildren="关闭" ></Switch>
-              </Form.Item>
-              <Form.Item label="类型" name="type">
-                <Select allowClear placeholder="请选择类型" onChange={() => forceUpdatePages()}>
-                  {
-                    playContent.map((r, i) => {
-                      return <Option value={r.key} key={r.key}>{r.value}</Option>
-                    })
-                  }
-                </Select>
-              </Form.Item>
-
 
               <Form.Item {...tailLayout}>
                 <Button onClick={() => closeDialog()}>取消</Button>

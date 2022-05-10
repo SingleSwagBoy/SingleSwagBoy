@@ -32,6 +32,7 @@ const ChannelLock = lazy(() => import('pages/channelManage/channelLock/index.jsx
 const AddressNews = lazy(() => import('pages/configManage/addressNews/index.jsx'))
 const MarsBootIn= lazy(() => import('pages/channelManage/marsBootIn/index.jsx'))
 const SourceFailure= lazy(() => import('pages/channelManage/sourceFailure/index.jsx'))
+const ChannelSearch= lazy(() => import('pages/channelManage/channelSearch/index.jsx'))
 const WxReply = lazy(() => import('pages/wechart/autoReply/wxReply.jsx'));
 const wxTemplateMsg = lazy(() => import('pages/wechart/templateMsg/wxTemplateMsg.jsx'));
 const LoginManage = lazy(() => import('pages/adManage/loginManage/index.jsx'));
@@ -91,6 +92,7 @@ const TopicConfig = lazy(() => import('pages/TVConfig/topicConfig/index.jsx'))  
 const Mine = lazy(() => import('pages/TVConfig/mine/index.jsx'))      //tv我的页面
 const MineDetail = lazy(() => import('pages/TVConfig/mine/detail.jsx'))      //tv我的页面
 const Logout = lazy(() => import('pages/TVConfig/logout/index.jsx'))      //tv退出登录
+const Simple = lazy(() => import('pages/TVConfig/simple/index.jsx'))      //tv退出登录
 const ChannelRiskRegion = lazy(() => import('pages/currencyChannel/channelRiskRegion/index.jsx'))      //风险地域
 const OfflineProgram = lazy(() => import('pages/offlineManage/program/index.jsx'))      //下线节目
 const OfflineProgramDetail = lazy(() => import('pages/offlineManage/program/detailIndex.jsx'))      //下线节目
@@ -141,6 +143,7 @@ const adminRoutes = [
     { name: '专享台解锁', icon: UnorderedListOutlined, path: '/mms/channelManage/channelLock', component: ChannelLock, code: "channelManage", sub_code: 'channelLock' },
     { name: '火星开机进入', icon: UnorderedListOutlined, path: '/mms/channelManage/marsBootIn', component: MarsBootIn, code: "channelManage", sub_code: 'marsBootIn' },
     { name: '源失效推荐', icon: UnorderedListOutlined, path: '/mms/channelManage/sourceFailure', component: SourceFailure, code: "channelManage", sub_code: 'sourceFailure' },
+    { name: '频道搜索', icon: UnorderedListOutlined, path: '/mms/channelManage/channelSearch', component: ChannelSearch, code: "channelManage", sub_code: 'channelSearch' },
 
     //TV端-广告管理
     { name: '尝鲜版', component: Recommend, path: '/mms/adManage/recommend', icon: UnorderedListOutlined, code: "adManage", sub_code: 'Recommend' },
@@ -234,6 +237,7 @@ const adminRoutes = [
     { name: '我的', icon: UnorderedListOutlined, path: '/mms/TVConfig/mine', component: Mine, code: "tvConfigManagement", sub_code: 'mine' },
     { name: '我的栅格配置列表', icon: UnorderedListOutlined, path: '/mms/TVConfig/detail', component: MineDetail, code: "tvConfigManagement", sub_code: 'mineDetail' },
     { name: '退出登录', icon: UnorderedListOutlined, path: '/mms/TVConfig/logout', component: Logout, code: "tvConfigManagement", sub_code: 'logout' },
+    { name: '简单模式配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/simple', component: Simple, code: "tvConfigManagement", sub_code: 'simple' },
 
 
 

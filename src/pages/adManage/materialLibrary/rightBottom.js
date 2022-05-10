@@ -40,7 +40,7 @@ function App2(props) {
     const adType = [
         { key: 1, value: '图片' },
         { key: 3, value: '支付' },
-        { key: 8, value: '宣传内容' },
+        { key: 8, value: '宣传内容（会员可投）' },
         { key: 9, value: '家庭号' },
         { key: 10, value: '公众号登录' },
         { key: 11, value: '小程序登录' },

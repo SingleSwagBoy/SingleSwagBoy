@@ -16,8 +16,8 @@ function App2(props) {
     const [forceUpdateId, forceUpdate] = useReducer(() => [], []);
     const [forceUpdatePage, forceUpdatePages] = useReducer(() => [], []);
     const [page, setPage] = useState(1)
-    const [pageSize, setPageSize] = useState(9999)
-    const [total, setTotal] = useState(0)
+    const [pageSize, setPageSize] = useState(10)
+    const [total, setTotal] = useState(50)
     const [lists, setLists] = useState([])
     const [channelTag, setChannelTag] = useState([])
     // const [tagList, setTagList] = useState([])
@@ -192,8 +192,10 @@ function App2(props) {
     }, [props.isOpen])
     useEffect(() => {//列表
         const fetchData = async () => {
-            const list = await getCorner({ name: props.searchWords, page: { currentPage: 1, pageSize: 9999 } })
+            const list = await getCorner({ name: props.searchWords, page: { currentPage: page, pageSize: pageSize } })
+            console.log(list)
             setLists(list.data)
+            setTotal(list.page.totalCount)
         }
         fetchData()
     }, [forceUpdateId, props.searchWords])
@@ -204,8 +206,10 @@ function App2(props) {
         }
         fetchData()
     }, [])
-    const changeSize = (e) => {
-        console.log(e)
+    const changeSize = (page,pageSize) => {
+        setPage(page)
+        setPageSize(pageSize)
+        forceUpdate()
     }
     const getProduct = () => { //获取产品线
         let params = {

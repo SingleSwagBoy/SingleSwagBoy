@@ -54,7 +54,7 @@ function App2(props) {
       key: "type",
       render: (rowValue, row, index) => {
         return (
-          <div>{rowValue==1?"频道":rowValue==2?"节目":"未知"}</div>
+          <div>{rowValue==1?"频道":rowValue==2?"视频":"未知"}</div>
         )
       }
     },
@@ -254,7 +254,7 @@ function App2(props) {
               <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型' }]}>
                 <Select className="input-wrapper-from" placeholder='类型' onChange={(e) => forceUpdatePages()}>
                   <Option value={1} key={1}>频道</Option>
-                  <Option value={2} key={2}>节目</Option>
+                  <Option value={2} key={2}>视频</Option>
                 </Select>
               </Form.Item>
               {

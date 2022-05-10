@@ -504,6 +504,11 @@ var HotDay = (0, _react.lazy)(function () {
   return Promise.resolve().then(function () {
     return _interopRequireWildcard(require('pages/privateDomain/hotDay/index.jsx'));
   });
+});
+var Statistical = (0, _react.lazy)(function () {
+  return Promise.resolve().then(function () {
+    return _interopRequireWildcard(require('pages/privateDomain/statistical/index.jsx'));
+  });
 }); // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 
@@ -1187,6 +1192,13 @@ var adminRoutes = [{
   component: HotDay,
   code: "signConfig",
   sub_code: 'hotDay'
+}, {
+  name: '统计兑换',
+  icon: _icons.UnorderedListOutlined,
+  path: '/mms/privateDomain/statistical',
+  component: Statistical,
+  code: "signConfig",
+  sub_code: 'statistical'
 }, {
   name: '没有权限',
   icon: _icons.UnorderedListOutlined,

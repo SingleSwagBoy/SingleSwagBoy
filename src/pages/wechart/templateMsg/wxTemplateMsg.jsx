@@ -75,6 +75,7 @@ export default class WxPayTemplate extends Component {
             //模板类型 选择模板 1=支付模板，后续其他模板，需要不断的去添加
             tmpl_type: [
                 { key: 1, value: '支付模板' },
+                { key: 2, value: '预约模板' },
             ],
 
         }

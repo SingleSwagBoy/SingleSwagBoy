@@ -391,9 +391,15 @@ function App2() {
                   <MyImageUpload
                     getUploadFileUrl={(file, newItem) => getUploadFileUrl('webUrl', file, newItem)}
                     contents={"menu"}
-                    // imageUrl={getUploadFileImageUrlByType('webUrl')}
+                  // imageUrl={getUploadFileImageUrlByType('webUrl')}
                   />
                 </div>
+              </Form.Item>
+              <Form.Item label="菜单类型" name="type">
+                <Select mode={true} allowClear showSearch placeholder="请选择菜单类型">
+                  <Option value={1} key={1}>H5</Option>
+                  <Option value={2} key={2}>家庭相册</Option>
+                </Select>
               </Form.Item>
               <Form.Item label="标签" name="tags">
                 <Select mode={true} allowClear showSearch placeholder="请选择用户设备标签"

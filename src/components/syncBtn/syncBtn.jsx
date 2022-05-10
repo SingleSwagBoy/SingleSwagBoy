@@ -46,6 +46,7 @@ import {
     syncMineGrid,               //我的页面
     syncLogout,               //我的页面
     syncAblum,               //相册活动管理
+    syncHotChannel,               //频道搜索==》热门频道
 
 } from 'api'
 
@@ -57,7 +58,7 @@ export default class SyncBtn extends Component {
             sync_status: 0, //0：按钮名称 1：等待同步 2：正在同步 3：同步成功 4：同步失败
         }
     }
-    
+
     /**
      *  分类获取请求的数据
      * 
@@ -104,6 +105,7 @@ export default class SyncBtn extends Component {
         if (type === 35) return syncMineGrid();                                      //tv专题页面
         if (type === 36) return syncLogout();                                      //tv专题页面
         if (type === "ablumActivity") return syncAblum();                                      //相册活动管理
+        if (type === 37) return syncHotChannel();                                      //频道搜索==》热门频道
 
 
         return that.diasbleSync(); //防止报错 本地mock的返回方法 必定返回错误
@@ -113,7 +115,7 @@ export default class SyncBtn extends Component {
     render() {
         let that = this;
         let { sync_status } = that.state;
-        let { name, desc,size } = that.props;
+        let { name, desc, size } = that.props;
 
         return (
             <Tooltip title={`${desc ? desc : '你懂的，点一下，同步数据'}`} placement="top"  >

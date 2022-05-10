@@ -136,7 +136,7 @@ export default class wxReplyModalTags extends Component {
 
                                                 }
                                                 {
-                                                    (menu_type === 'messageDefault' || menu_type === 'addFriend' || menu_type === 'scanSubscribe' || menu_type === 'scan') &&
+                                                    (menu_type === 'messageDefault' || menu_type === 'addFriend' || menu_type === 'scanSubscribe' || menu_type === 'scan' || menu_type === 'streamInvalidScan') &&
                                                     <>
                                                         <div>标签：<span style={{ color: "#d4380d" }}>{item.code || ""}</span></div>
                                                         {/* <div>状态：<span style={{ color: "#d4380d" }}>{item.status == 1 ? "有效" : "无效"}</span></div> */}

@@ -54,7 +54,7 @@ function App2(props) {
       key: "type",
       render: (rowValue, row, index) => {
         return (
-          <div>{rowValue==1?"频道":rowValue==2?"视频":"未知"}</div>
+          <div>{rowValue == 1 ? "频道" : rowValue == 2 ? "视频" : "未知"}</div>
         )
       }
     },
@@ -258,10 +258,17 @@ function App2(props) {
                 </Select>
               </Form.Item>
               {
-                formRef.getFieldValue("type") == 1 && <ChannelCom formRef={formRef} channelCode={"channelCode"} isLink={true} linkData={["channelSubTitle", "name"]}  onForceUpdatePages={() => forceUpdatePages()} />
+                formRef.getFieldValue("type") == 1 && <ChannelCom formRef={formRef} channelCode={"channelCode"} isLink={true} linkData={["channelSubTitle", "name"]} onForceUpdatePages={() => forceUpdatePages()} />
               }
               {
-                formRef.getFieldValue("type") == 2 && <ProgramCom formRef={formRef} programName={"programName"} channelCode={"channelCode"} onForceUpdatePages={() => forceUpdatePages()} />
+                formRef.getFieldValue("type") == 2 &&
+                <>
+                  <ProgramCom formRef={formRef} programName={"programName"} channelCode={"channelCode"} onForceUpdatePages={() => forceUpdatePages()} />
+                  <Form.Item label="副标题" name="channelSubTitle" >
+                    <Input placeholder="请输入副标题" />
+                  </Form.Item>
+                </>
+
               }
               <Form.Item label="标签" name="tag">
                 <Select mode={true} allowClear showSearch placeholder="请选择用户设备标签" {...selectProps}>

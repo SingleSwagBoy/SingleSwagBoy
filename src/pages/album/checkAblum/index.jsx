@@ -30,7 +30,9 @@ function App2(props) {
   const [manual, setManual] = useState("")
   const [rejectReason, setRejectReason] = useState("")
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState("");
+  const [imageList, setImageList] = useState([]);
   // const { period } = props.location.params
   const [period, setPeriod] = useState("")
   const columns = [
@@ -57,7 +59,12 @@ function App2(props) {
       with: 150,
       render: (rowValue, row, index) => {
         return (
-          <Image src={rowValue} width={100} />
+          <Image src={rowValue} preview={{ visible: false }} width={100} onClick={async () => {
+            let imageList = await detailBillboard({ worksCode: row.worksCode })
+            setImageList(imageList.data)
+            if(imageList.data.length == 0)return message.error("暂无图片集")
+            setVisible(true)
+          }} />
         )
       }
     },
@@ -155,8 +162,8 @@ function App2(props) {
       let params = {
         period: period,
         keyword: searchWord,
-        machineCheckStatus:machine,
-        manualCheckStatus:manual,
+        machineCheckStatus: machine,
+        manualCheckStatus: manual,
         page: { currentPage: page, pageSize: pageSize }
       }
       const list = await getBillboard(params)
@@ -255,7 +262,7 @@ function App2(props) {
   }
   // 批量通过
   const allPass = () => {
-    if (selectedRowKeys.length == 0) return message.error("请选择数据")
+    if (selectedRowKeys.length == 0) return message.error("请选择批量数据")
     Modal.confirm({
       title: `确认批量通过这批数据吗？`,
       onOk: () => {
@@ -267,7 +274,7 @@ function App2(props) {
   }
   // 批量不通过
   const allReject = () => {
-    if (selectedRowKeys.length == 0) return message.error("请选择数据")
+    if (selectedRowKeys.length == 0) return message.error("请选择批量数据")
     Modal.confirm({
       title: `确认批量不通过这批数据吗？`,
       onOk: () => {
@@ -281,6 +288,10 @@ function App2(props) {
   }
   return (
     <div className="loginVip">
+      <Breadcrumb style={{ margin: "10px", cursor: "pointer" }}>
+        <Breadcrumb.Item onClick={() => props.history.go(-1)}>活动管理</Breadcrumb.Item>
+        <Breadcrumb.Item>作品审核</Breadcrumb.Item>
+      </Breadcrumb>
       <Card title={
         <div className="marsBox">
           <div className="everyBody">
@@ -296,7 +307,7 @@ function App2(props) {
           </div>
           <div className="everyBody">
             <div>机器初审:</div>
-            <Select placeholder="机器初审状态" style={{ width: "150px" }} allowClear onChange={(e) => {setMachine(e);forceUpdate()}}>
+            <Select placeholder="机器初审状态" style={{ width: "150px" }} allowClear onChange={(e) => { setMachine(e); forceUpdate() }}>
               <option value={1}>未审核</option>
               <option value={2}>审核通过</option>
               <option value={3}>审核不通过</option>
@@ -304,7 +315,7 @@ function App2(props) {
           </div>
           <div className="everyBody">
             <div>人工审核:</div>
-            <Select placeholder="人工审核状态" style={{ width: "150px" }} allowClear onChange={(e) => {setManual(e);forceUpdate()}}>
+            <Select placeholder="人工审核状态" style={{ width: "150px" }} allowClear onChange={(e) => { setManual(e); forceUpdate() }}>
               <option value={1}>未审核</option>
               <option value={2}>审核通过</option>
               <option value={3}>审核不通过</option>
@@ -353,13 +364,15 @@ function App2(props) {
               onFinish={(e) => submitForm(e)}>
               {
                 source == "edit" &&
-                <Form.Item label="作品编号" name="worksCode" rules={[{ required: true, message: '请输入作品编号' }]}>
-                  <Input placeholder="请输入作品编号" readOnly />
-                </Form.Item>
+                <>
+                  <Form.Item label="作品编号" name="worksCode" rules={[{ required: true, message: '请输入作品编号' }]}>
+                    <Input placeholder="请输入作品编号" readOnly />
+                  </Form.Item>
+                  <Form.Item label="用户编号" name="babyNo" rules={[{ required: true, message: '请输入作品编号' }]}>
+                    <Input placeholder="请输入作品编号" readOnly />
+                  </Form.Item>
+                </>
               }
-              {/* <Form.Item label="用户编号" name="babyNo" rules={[{ required: true, message: '请输入作品编号' }]}>
-                <Input placeholder="请输入作品编号" readOnly />
-              </Form.Item> */}
               <Form.Item label="萌娃姓名" name="babyName" rules={[{ required: true, message: '请输入萌娃姓名' }]}>
                 <Input placeholder="请输入萌娃姓名" />
               </Form.Item>
@@ -429,6 +442,15 @@ function App2(props) {
           setRejectReason(e.target.value)
         }} />
       </Modal>
+      <div style={{ display: 'none' }}>
+        <Image.PreviewGroup preview={{ visible, onVisibleChange: vis => setVisible(vis) }}>
+          {
+            imageList.map((r, i) => {
+              return <Image src={r} key={i} />
+            })
+          }
+        </Image.PreviewGroup>
+      </div>
     </div >
   )
 }

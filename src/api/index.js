@@ -677,6 +677,15 @@ export const editHotChannel = (params) => { return request2.post(`${baseUrl}/mms
 export const delHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/del`, params); };                 // 频道搜索删除
 export const syncHotChannel = (params) => { return request2.get(`${baseUrl}/mms/tv/hotRecommend/sync`, {params:params}); };                 // 频道搜索列表
 
+
+//家庭相册作品审核
+export const getBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/list`, params); };                 // 列表
+export const addBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/add`, params); };                 // 新增
+export const updateBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/update`, params); };                 // 修改
+export const checkBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/check`, params); };                 // 审核
+export const delBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/del`, params); };                 // 删除
+export const detailBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/detail`, params); };                 // 删除
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

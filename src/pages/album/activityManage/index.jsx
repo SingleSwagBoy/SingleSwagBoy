@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import { getAblum, updateAblum, addAblum, delAblum, } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, DatePicker, Divider, Space, Switch } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, Router } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
 import { MySyncBtn, MyImageUpload } from "@/components/views.js"
@@ -101,11 +101,11 @@ function App2(props) {
     {
       title: "操作",
       key: "action",
-      fixed: 'right', width: 200,
+      fixed: 'right', width: 250,
       render: (rowValue, row, index) => {
         return (
           <div>
-            <Button size="small" type="primary" style={{ margin: " 0 10px" }}
+            <Button size="small" type="primary"
               onClick={() => {
                 console.log(row)
                 let arr = JSON.parse(JSON.stringify(row))
@@ -123,6 +123,7 @@ function App2(props) {
                 setSource("edit")
               }}
             >编辑</Button>
+             <Button size="small" type="dashed" style={{ margin: " 0 10px" }} onClick={() => props.history.push({ pathname: "/mms/album/checkAblum", params: { period: row.period} })}>作品审核</Button>
             <Button danger size="small" onClick={() => delItem(row)}>删除</Button>
           </div>
         )
@@ -145,7 +146,7 @@ function App2(props) {
   const submitForm = (val) => {//表单提交
     console.log(val)
     let list = []
-    val.imageList.forEach(r=>{
+    val.imageList.forEach(r => {
       list.push(r.pic)
     })
     val.demo = list
@@ -194,11 +195,11 @@ function App2(props) {
       }
     })
   }
-  const getUploadFileUrl = (type,file,newItem) => {
+  const getUploadFileUrl = (type, file, newItem) => {
     let image_url = newItem.fileUrl;
     let obj = formRef.getFieldValue(type)
-    obj.push({pic:image_url})
-    formRef.setFieldsValue({[type]:obj});
+    obj.push({ pic: image_url })
+    formRef.setFieldsValue({ [type]: obj });
     forceUpdatePages()
   }
   return (
@@ -262,7 +263,7 @@ function App2(props) {
                   {(fields, { add, remove }) => (
                     <>
                       {fields.map((field, index) => (
-                        <div key={index} style={{display:"inline-flex"}}>
+                        <div key={index} style={{ display: "inline-flex" }}>
                           <Form.Item  {...field} name={[field.name, 'pic']}
                             fieldKey={[field.fieldKey, "pic"]} label="图片">
                             <Image width={100} src={formRef.getFieldValue("imageList")[index].pic} />
@@ -275,7 +276,7 @@ function App2(props) {
                       ))}
                       <Form.Item>
                         <MyImageUpload
-                          getUploadFileUrl={(file, newItem) => getUploadFileUrl("imageList",file, newItem)}
+                          getUploadFileUrl={(file, newItem) => getUploadFileUrl("imageList", file, newItem)}
                         />
                         {/* <Button type="primary" onClick={() => {
                           add()

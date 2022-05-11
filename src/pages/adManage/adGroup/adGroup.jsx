@@ -108,7 +108,7 @@ export default class adGroup extends Component {
                     <div>
                         <div className="alert-box" style={{ width: "100%", display: "flex", flexWrap: "wrap", marginBottom: "20px" }}>
                             <Input style={{ width: '130px', marginLeft: 5 }} allowClear placeholder="搜索广告组名称" onChange={(e) => { this.state.search.groupName = e.target.value }} />
-                            <RangePicker style={{ marginLeft: 5 }} style={{ width: '240px', marginLeft: 5 }} placeholder={['上线时间', '下线时间']} onChange={(e) => {
+                            <RangePicker style={{ width: '240px', marginLeft: 5 }} placeholder={['上线时间', '下线时间']} onChange={(e) => {
                                 this.state.search.onlineTime = e ? parseInt(e[0].valueOf() / 1000) : ""
                                 this.state.search.offlineTime = e ? parseInt(e[1].valueOf() / 1000) : ""
                             }} />

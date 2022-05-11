@@ -60,6 +60,7 @@ function App2(props) {
         // { key: 7, value: '跳转到二维码' },
         { key: 8, value: '跳转到好看分类' },
         { key: 11, value: '跳转到视频' },
+        { key: 14, value: '跳转到原生页' },
     ]
     const [jumpMenuTypes, setJumpMenuTypes] = useState(
         [

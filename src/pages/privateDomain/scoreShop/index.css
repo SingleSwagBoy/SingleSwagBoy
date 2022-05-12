@@ -1,0 +1,27 @@
+.btns-modal{
+    margin-top: 20px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+}
+.mar-left-10{
+    margin-left: 10px;
+}
+.form-g{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+}
+.right-text{
+    margin-left: 40px;
+    line-height: 30px;
+}
+.add-category{
+    text-align: center;
+    color: #1890ff;
+    margin-top: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    width: fit-content;
+    margin-left: 290px;
+}

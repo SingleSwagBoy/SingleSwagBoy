@@ -4,3 +4,7 @@
 .tab_input{
     min-width: 200px !important;
 }
+.line_flex{
+    display: inline-flex;
+    width: 50%;
+}

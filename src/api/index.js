@@ -283,12 +283,21 @@ export const delInfoGroup = (params) => { return request2.post(`${baseUrl}/mms/a
 export const getSdkList = (params) => { return request2.post(`${baseUrl}/mms/ad/sdk/get`, params) };                                                                          //信息流广告组
 export const getPosition = (params) => { return request2.post(`${baseUrl}/mms/ad/space/get`, params) };                                                                          //信息流广告组
 
+//右下角广告
+export const getCorner = (params) => { return request2.post(`${baseUrl}/mms/ad/corner/get`, params) };                                                                          //信息流广告组
+export const getChannelTag = (params) => { return request2.post(`${baseUrl}/mms/channel/tag/get`, params) };                                                                          //信息流广告组
+export const updateCorner = (params) => { return request2.post(`${baseUrl}/mms/ad/corner/update`, params) };                                                                          //信息流广告组
+export const addCorner = (params) => { return request2.post(`${baseUrl}/mms/ad/corner/add`, params) };                                                                          //信息流广告组
+export const delCorner = (params) => { return request2.post(`${baseUrl}/mms/ad/corner/del`, params) };                                                                          //信息流广告组
 
 
 
+//标签配置
 export const requestNewAdTagList = (params) => { return request2.get(`${baseUrl}/mms/ad/new/tag/get`, { params: params }) };                                                                //新版 获取用户标签列表
+export const getGroup = (params) => { return request2.post(`${baseUrl}/mms/dict/cp/group/getInfo`, params) };                                                                //新版 获取用户标签列表
 export const requestNewAdTagCreate = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/add`, params) };                                                                         //新版 创建用户标签数据
 export const requestNewAdTagUpdate = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/update`, params) };                                                                      //新版 更新用户标签规则
+export const requestNewAdTagRecord = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/record`, params) };                                                                      //新版 更新用户标签规则
 export const requestNewAdTagDelete = (params) => { return request2.post(`${baseUrl}/mms/ad/new/tag/del`, params) };                                                                         //新版 删除用户标签规则
 export const requestDictionary = (params) => { return request2.post(`${baseUrl}/mms/config/dictionary/get`, params) };                                                                      //获取 字典数据源
 export const requestAdFieldList = (params) => { return request2.post(`${baseUrl}/mms/dict/tagDic/get`, params) };                                                                           //获取Field列表
@@ -677,6 +686,12 @@ export const signCalendarSync = (params) => { return request2.post(`${baseUrl}/m
 export const scoreExrecords = (params) => { return request.post(`${baseUrl}/mms/pd/integral/exrecords`, params) };   // 兑换记录
 export const scoreRecordEdit = (params) => { return request.post(`${baseUrl}/mms/pd/integral/recordEdit`, params) };   // 更新兑换记录
 
+//频道搜索-->热门搜索
+export const getHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/list`, params); };                 // 频道搜索列表
+export const addHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/add`, params); };                 // 频道搜索增加
+export const editHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/edit`, params); };                 // 频道搜索编辑
+export const delHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/del`, params); };                 // 频道搜索删除
+export const syncHotChannel = (params) => { return request2.get(`${baseUrl}/mms/tv/hotRecommend/sync`, {params:params}); };                 // 频道搜索列表
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
@@ -725,7 +740,7 @@ export const requestJumpMenuTypes = () => {
             { key: 1, value: '跳转到金币' },
             { key: 2, value: '跳转到手机' },
             { key: 3, value: '跳转到自建' },
-            { key: 4, value: '跳转到设置' },
+            // { key: 4, value: '跳转到设置' },
             { key: 5, value: '跳转到联系' },
             { key: 6, value: '跳转到语音' },
             { key: 7, value: '跳转到套餐' },

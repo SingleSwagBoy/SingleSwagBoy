@@ -81,6 +81,9 @@ export default class WxTemplateMsgContent extends Component {
                         <div>#price# 套餐价格</div>
                         <div>#productDesc# 套餐描述</div>
                         <div>#adExpireTime# 权益到起时间</div>
+                        <div>#channelCode# 频道名称</div>
+                        <div>#programName# 节目名称</div>
+                        <div>#startTime# 开始时间</div>
                     </div>
                 }
 

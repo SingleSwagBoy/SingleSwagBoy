@@ -26,7 +26,8 @@ import {
     requestAdRightKey,                      ///右键运营位
     getScreen,//获取屏显广告
     baseUrl,
-    getInfoGroup
+    getInfoGroup, //信息流
+    getCorner, //右下角广告
 } from 'api';
 
 // import { util } from 'echarts';
@@ -47,6 +48,7 @@ export default class adGroup extends Component {
                 { key: 1, value: '右键运营位' },
                 { key: 2, value: '屏显广告' },
                 { key: 11, value: '信息流广告' },
+                { key: 4, value: '右下角广告' },
             ],
             //标签列表
             dict_target_list: [],
@@ -110,9 +112,9 @@ export default class adGroup extends Component {
                                 this.state.search.onlineTime = e ? parseInt(e[0].valueOf() / 1000) : ""
                                 this.state.search.offlineTime = e ? parseInt(e[1].valueOf() / 1000) : ""
                             }} />
-                            <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="搜索广告名称" onChange={(e) => { this.state.search.adName = e.target.value }} />
-                            <Input style={{ width: '200px', marginLeft: 5 }} allowClear placeholder="广告内容" />
-                            <Select style={{ width: '200px', marginLeft: 5 }} allowClear showSearch placeholder="请选择标签"
+                            <Input style={{ width: '130px', marginLeft: 5 }} allowClear placeholder="搜索广告名称" onChange={(e) => { this.state.search.adName = e.target.value }} />
+                            <Input style={{ width: '130px', marginLeft: 5 }} allowClear placeholder="广告内容" />
+                            <Select style={{ width: '130px', marginLeft: 5 }} allowClear showSearch placeholder="请选择标签"
                                 onChange={(e) => { this.state.search.tag = e }}
                                 filterOption={(input, option) => {
                                     if (!input) return true;
@@ -134,7 +136,7 @@ export default class adGroup extends Component {
                                     <Option value={item.code.toString()} key={item.code}>{item.code}-{item.name}</Option>
                                 ))}
                             </Select>
-                            <Select style={{ width: '200px', margin: "0 5px" }} allowClear showSearch placeholder="广告内容"
+                            <Select style={{ width: '130px', margin: "0 5px" }} allowClear showSearch placeholder="广告类型"
                                 onChange={(e) => { this.state.search.adType = e }}
                             >
                                 {
@@ -248,7 +250,7 @@ export default class adGroup extends Component {
                                 <div>
                                     <Divider>广告详情</Divider>
                                     <Form.Item label="广告类型" value={this.state.adIndex}>
-                                        <Radio.Group className="base-input-wrapper" defaultValue={this.state.adIndex} key={this.state.adIndex}
+                                        <Radio.Group defaultValue={this.state.adIndex} key={this.state.adIndex}
                                             onChange={(e) => {
                                                 this.formRef.current.setFieldsValue({ "detailName": "", "detailTime": "", "detailPic": "", "detailIconPicUrl": "" })
                                                 let arr = this.formRef.current.getFieldValue("content") ? JSON.parse(JSON.stringify(this.formRef.current.getFieldValue("content"))) : []
@@ -262,8 +264,10 @@ export default class adGroup extends Component {
                                                     this.requestAdRightKey(list.length > 0 ? list[0].adId : "")
                                                 } else if (e.target.value == 2) {
                                                     this.getScreen(list.length > 0 ? list[0].adId : "")
-                                                } else {
+                                                } else if(e.target.value == 3){
                                                     this.getInfoGroup(list.length > 0 ? list[0].adId : "")
+                                                } else if(e.target.value == 4){
+                                                    this.getCorner(list.length > 0 ? list[0].adId : "")
                                                 }
                                                 this.forceUpdate()
                                             }}
@@ -533,8 +537,10 @@ export default class adGroup extends Component {
             this.requestAdRightKey(id)
         } else if (this.state.adIndex == 2) {
             this.getScreen(id)
-        } else {
+        } else if(this.state.adIndex == 11){
             this.getInfoGroup(id)
+        } else if(this.state.adIndex == 4){
+            this.getCorner(id)
         }
 
     }
@@ -641,6 +647,20 @@ export default class adGroup extends Component {
             id: id
         }
         getInfoGroup(params).then(res => {
+            // console.log('group_list', res.data);
+            if (Array.isArray(res.data) && res.data.length > 0) {
+                let arr = res.data[0]
+                this.formRef.current.setFieldsValue({ "detailName": arr.name, "detailTime": [moment(arr.startTime), moment(arr.endTime)], "detailPic": arr.picUrl })
+                this.forceUpdate()
+            }
+        })
+    }
+    getCorner(id) {
+        if (!id) return
+        let params = {
+            id: id
+        }
+        getCorner(params).then(res => {
             // console.log('group_list', res.data);
             if (Array.isArray(res.data) && res.data.length > 0) {
                 let arr = res.data[0]

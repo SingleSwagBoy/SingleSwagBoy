@@ -16,7 +16,7 @@ import {
     requestConfigUpdateDoc,             //配置列表-更新配置
 } from 'api'
 import './doc_style.css'
-import { MySyncBtn } from '@/components/views.js';
+import { MySyncBtn,TagCom } from '@/components/views.js';
 
 let { TextArea } = Input;
 let { Option } = Select;
@@ -164,6 +164,7 @@ export default class Doc extends Component {
                                 <Form.Item label="key编码" name='code' rules={[{ required: true, message: '请输入编码' }]}  >
                                     <Input style={{ width: 350 }} className="input-wrapper-from" placeholder="请输入编码" />
                                 </Form.Item>
+                                <TagCom tagName={"tag"} />
                             </div>
                         }
                         {
@@ -310,19 +311,21 @@ export default class Doc extends Component {
             });
         }
         titles.push({
-            title: '操作', dataIndex: 'action', key: 'action', width: 160, fixed: 'right',
+            title: '操作', dataIndex: 'action', key: 'action', width: 200, fixed: 'right',
             render: (rowValue, row, index) => {
                 let params_count = layer_count === 0 ? row.keyCount : layer_count === 1 ? row.valueCount : '';
                 return (
                     <div>
-                        {/* <Button size='small' type="primary" type="link" onClick={() => { }}>复制</Button> */}
+                        {/* <Button size='small' type="primary" type="link" onClick={() =>this.onItemShowModalClick(row)}>编辑</Button> */}
                         {layer_count < 2 &&
                             <Badge count={params_count} size="small">
-                                <Button size='small' type="primary" type="link" onClick={() => this.onItemManagerClick(row)}>配置</Button>
+                                <Button size='small'  type="link" onClick={() => this.onItemManagerClick(row)}>配置</Button>
                             </Badge>
                         }
-                        {/* <Button size='small' type="primary" type="link" onClick={() => this.onItemEditClick(row)} style={{ marginLeft: 10 }}>{row.is_edit ? '保存' : '编辑'}</Button> */}
-                        <Button size='small' type="primary" type="link" style={{ marginLeft: 15 }} onClick={() => this.onItemDeleteClick(row)}>删除</Button>
+                        {
+                               table_box.table_layer.length === 1 && <Button size='small'  type="link" onClick={() => this.onItemEditClick(row)} style={{ marginLeft: 10 }}>{row.is_edit ? '保存' : '编辑'}</Button>
+                        }
+                        <Button size='small' type="link" style={{ marginLeft: 15 }} onClick={() => this.onItemDeleteClick(row)}>删除</Button>
                     </div>
                 )
             }
@@ -459,15 +462,18 @@ export default class Doc extends Component {
     //编辑按钮被点击
     onItemEditClick(item) {
         let that = this;
-        let is_edit = item.is_edit;
-        if (!is_edit) is_edit = false;
-        item.is_edit = !is_edit;
+        // let is_edit = item.is_edit;
+        // if (!is_edit) is_edit = false;
+        // item.is_edit = !is_edit;
+        let modal_box = that.state.modal_box;
+        modal_box.is_show = true;
+        that.formRef.current.setFieldsValue(item)
         that.forceUpdate();
 
         //保存
-        if (!item.is_edit) {
-            that.requestUpdateData(item);
-        }
+        // if (!item.is_edit) {
+        //     that.requestUpdateData(item);
+        // }
     }
     //弹出框OK被点击
     onModalOkClick() {

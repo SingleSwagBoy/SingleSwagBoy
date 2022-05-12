@@ -12,6 +12,7 @@ import { Input, Form, DatePicker, Button, Table, Modal, Alert, Select, message }
 import moment from 'moment';
 import '@/style/base.css';
 import "./index.css"
+import util from 'utils'
 import { MySyncBtn, MyTagConfigFormulas } from '@/components/views.js';
 import {
     requestNewAdTagList,                    //新版 获取用户标签列表
@@ -21,11 +22,13 @@ import {
     requestDictionary,                      //获取 字典集
     requestAdFieldList,                     //获取 Field列表
     getMyProduct,
+    requestNewAdTagRecord,                  //
 
 } from 'api';
 
 let { RangePicker } = DatePicker;
 let { Option } = Select;
+
 
 export default class tagConfig extends Component {
     constructor(props) {
@@ -91,7 +94,7 @@ export default class tagConfig extends Component {
                         <MySyncBtn type={10} name='同步缓存' />
                     </div>
                 } />
-                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} scroll={{ x: 1500, y: '75vh' }} />
+                <Table columns={table_box.table_title} dataSource={table_box.table_datas} pagination={false} rowKey={item => item.id} scroll={{ x: 1500, y: '75vh' }} />
                 <Modal visible={modal_box.is_show} title={modal_box.title} width={1500} transitionName="" maskClosable={false} onCancel={() => that.onModalCancelClick()}
                     style={{ top: 20 }} footer={null}
                 // footer={[
@@ -134,9 +137,20 @@ export default class tagConfig extends Component {
                                         <MyTagConfigFormulas formRef={that.formRef} dict_field={dict_field_list} productList={productList} />
                                     </Form.Item>
                                 </Form.Item>
-                                <Form.Item label="计数" name='count' >
+                                {/* <Form.Item label="计数" name='count' >
                                     <Input className="base-input-wrapper" placeholder="计数" disabled />
+                                </Form.Item> */}
+                                <Form.Item label="计数">
+                                    <Form.Item label="" name='count' style={{display:"inline-block"}}>
+                                        <Input className="base-input-wrapper" placeholder="计数" disabled />
+                                    </Form.Item>
+                                    <Form.Item label="" style={{display:"inline-block",width:"50%"}}>
+                                        <Button type='primary' onClick={() => this.requestNewAdTagRecord()}>获取实时</Button>
+                                    </Form.Item>
+
                                 </Form.Item>
+
+
                                 <Form.Item {...this.state.tailLayout}>
                                     <Button onClick={() => { this.onModalCancelClick() }}>取消</Button>
                                     <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>
@@ -180,6 +194,14 @@ export default class tagConfig extends Component {
             { title: '名称', dataIndex: 'name', key: 'name', width: 200, },
             { title: '标签code', dataIndex: 'code', key: 'code', width: 200, },
             { title: '描述', dataIndex: 'description', key: 'description', },
+            {
+                title: '创建者', dataIndex: 'createUser', key: 'createUser',
+                render: (rowValue, row, index) => {
+                    return (
+                        <div>{decodeURIComponent(rowValue)}</div>
+                    )
+                }
+            },
             {
                 title: '状态', dataIndex: 'status', key: 'status', width: 100,
                 render: (rowValue, row, index) => {
@@ -264,7 +286,7 @@ export default class tagConfig extends Component {
             that.forceUpdate();
             that.formRef.current.resetFields();
             let name = JSON.parse(localStorage.getItem('user')).userInfo.userName
-            that.formRef.current.setFieldsValue({ createUser: name });
+            that.formRef.current.setFieldsValue({ createUser: decodeURIComponent(name) });
         })
     }
 
@@ -348,8 +370,21 @@ export default class tagConfig extends Component {
             r.forEach(h => {
                 h.forEach(l => {
                     if (l.value && Array.isArray(l.value)) {
-                        l.value = l.value.join(",")
+                        let postAddress = l.value.filter(item => !item.includes("#"))
+                        console.log(l, "l")
+                        let arr = []
+                        if (l.field == "marketChannelName") {
+                            postAddress.forEach(m => {
+                                if (m.includes("-")) {
+                                    arr.push(m.split("-")[0])
+                                }
+                            })
+                        } else {
+                            arr = postAddress
+                        }
+                        l.value = arr.join(",")
                     }
+
                 })
             })
         })
@@ -380,6 +415,18 @@ export default class tagConfig extends Component {
                 that.refreshList();
             })
 
+        })
+    }
+    requestNewAdTagRecord() {
+        message.loading("计算中，请等待两分钟后再试")
+        let params = {
+            ...this.formRef.current.getFieldValue(),
+            rule:JSON.stringify(this.formRef.current.getFieldValue("rule"))
+        }
+        requestNewAdTagRecord(params).then(res => {
+            message.success("更新成功")
+            console.log(res,"res.data")
+            this.formRef.current.setFieldsValue({count:res.data.data||0})
         })
     }
 

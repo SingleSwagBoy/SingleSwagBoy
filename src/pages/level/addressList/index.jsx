@@ -32,7 +32,7 @@ export default class WinningNews extends Component {
         {id:1,name:"秒杀活动"},
         {id:2,name:"抽奖活动"},
         {id:3,name:"拼团实物套餐"},
-        {id:4,name:"私域兑换"},
+        // {id:4,name:"私域兑换"},
       ],
       screen:{}, //筛选对象
       layout: {

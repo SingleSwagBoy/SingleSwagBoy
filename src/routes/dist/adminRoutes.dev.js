@@ -509,6 +509,12 @@ var Statistical = (0, _react.lazy)(function () {
   return Promise.resolve().then(function () {
     return _interopRequireWildcard(require('pages/privateDomain/statistical/index.jsx'));
   });
+}); // 端午节活动-优惠券
+
+var Task = (0, _react.lazy)(function () {
+  return Promise.resolve().then(function () {
+    return _interopRequireWildcard(require('pages/activeManagement/task/index.jsx'));
+  });
 }); // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 
@@ -626,6 +632,14 @@ var adminRoutes = [{
   component: GoodsConfig,
   code: "ActiveManagement",
   sub_code: 'GoodsConfig'
+}, // 端午节活动-优惠券  
+{
+  name: '任务配置',
+  icon: _icons.UnorderedListOutlined,
+  path: '/mms/activeManagement/task',
+  component: Task,
+  code: "ActiveManagement",
+  sub_code: 'task'
 }, //频道管理
 {
   name: '专享台解锁',

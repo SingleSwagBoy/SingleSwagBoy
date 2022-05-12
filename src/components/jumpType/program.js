@@ -164,7 +164,7 @@ function App2(props) {
                                 )
                             } else {
                                 return (
-                                    <Option value={r.programId} key={i}>{r.programName}</Option>
+                                    <Option value={r.programId} key={i}>{util.formatTime(r.startAt, "", 2)} {r.programName}</Option>
                                 )
                             }
                         })

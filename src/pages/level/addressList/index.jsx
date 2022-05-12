@@ -56,7 +56,7 @@ export default class WinningNews extends Component {
           key: "activityType",
           width:130,
           render:(RowValue,row,index)=>{
-            return <span>{RowValue==1?'秒杀活动':RowValue==2?'抽奖活动':RowValue==3?"拼团实物套餐":""}</span>
+            return <span>{RowValue==1?'秒杀活动':RowValue==2?'抽奖活动':RowValue==3?"拼团实物套餐":"未知"}</span>
           }
         },
         {

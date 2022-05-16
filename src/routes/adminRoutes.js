@@ -118,6 +118,11 @@ const ScoreShop = lazy(() => import('pages/privateDomain/scoreShop/index.jsx'));
 const HotDay = lazy(() => import('pages/privateDomain/hotDay/index.jsx'));
 const Statistical = lazy(() => import('pages/privateDomain/statistical/index.jsx'));
 
+// 端午节活动-优惠券
+const Task = lazy(() => import('pages/activeManagement/task/index.jsx'));
+const Coupons = lazy(() => import('pages/activeManagement/coupons/index.jsx'));
+const GroupCoupons = lazy(() => import('pages/activeManagement/groupCoupons/index.jsx'));
+
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 const adminRoutes = [
@@ -143,6 +148,12 @@ const adminRoutes = [
     { name: '投票活动', icon: UnorderedListOutlined, path: '/mms/activeManagement/voting', component: Voting, code: "ActiveManagement", sub_code: 'Voting' },
     { name: '抽奖活动', icon: UnorderedListOutlined, path: '/mms/activeManagement/luckyDraw', component: LuckyDraw, code: "ActiveManagement", sub_code: 'LuckyDraw' },
     { name: '商品配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/goodsConfig', component: GoodsConfig, code: "ActiveManagement", sub_code: 'GoodsConfig' },
+    // 端午节活动-优惠券  
+    { name: '任务配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/task', component: Task, code: "ActiveManagement", sub_code: 'task' },
+    { name: '优惠券配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/coupons', component: Coupons, code: "ActiveManagement", sub_code: 'coupons' },
+    { name: '组合优惠券配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/groupCoupons', component: GroupCoupons, code: "ActiveManagement", sub_code: 'groupCoupons' },
+
+
     //频道管理
     { name: '专享台解锁', icon: UnorderedListOutlined, path: '/mms/channelManage/channelLock', component: ChannelLock, code: "channelManage", sub_code: 'channelLock' },
     { name: '火星开机进入', icon: UnorderedListOutlined, path: '/mms/channelManage/marsBootIn', component: MarsBootIn, code: "channelManage", sub_code: 'marsBootIn' },
@@ -263,6 +274,8 @@ const adminRoutes = [
     { name: '积分商城', icon: UnorderedListOutlined, path: '/mms/privateDomain/scoreShop', component: ScoreShop, code: "signConfig", sub_code: 'scoreShop' },
     { name: '热点日历', icon: UnorderedListOutlined, path: '/mms/privateDomain/hotDay', component: HotDay, code: "signConfig", sub_code: 'hotDay' },
     { name: '统计兑换', icon: UnorderedListOutlined, path: '/mms/privateDomain/statistical', component: Statistical, code: "signConfig", sub_code: 'statistical' },
+
+
     
     { name: '没有权限', icon: UnorderedListOutlined, path: '/mms/noPermission', component: NoPermission, meta: { isNav: false, roles: '*' } }
 

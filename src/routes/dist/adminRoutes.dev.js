@@ -140,6 +140,11 @@ var SourceFailure = (0, _react.lazy)(function () {
     return _interopRequireWildcard(require('pages/channelManage/sourceFailure/index.jsx'));
   });
 });
+var ChannelSearch = (0, _react.lazy)(function () {
+  return Promise.resolve().then(function () {
+    return _interopRequireWildcard(require('pages/channelManage/channelSearch/index.jsx'));
+  });
+});
 var WxReply = (0, _react.lazy)(function () {
   return Promise.resolve().then(function () {
     return _interopRequireWildcard(require('pages/wechart/autoReply/wxReply.jsx'));
@@ -422,6 +427,12 @@ var Logout = (0, _react.lazy)(function () {
   });
 }); //tv退出登录
 
+var Simple = (0, _react.lazy)(function () {
+  return Promise.resolve().then(function () {
+    return _interopRequireWildcard(require('pages/TVConfig/simple/index.jsx'));
+  });
+}); //tv退出登录
+
 var ChannelRiskRegion = (0, _react.lazy)(function () {
   return Promise.resolve().then(function () {
     return _interopRequireWildcard(require('pages/currencyChannel/channelRiskRegion/index.jsx'));
@@ -508,6 +519,22 @@ var HotDay = (0, _react.lazy)(function () {
 var Statistical = (0, _react.lazy)(function () {
   return Promise.resolve().then(function () {
     return _interopRequireWildcard(require('pages/privateDomain/statistical/index.jsx'));
+  });
+}); // 端午节活动-优惠券
+
+var Task = (0, _react.lazy)(function () {
+  return Promise.resolve().then(function () {
+    return _interopRequireWildcard(require('pages/activeManagement/task/index.jsx'));
+  });
+});
+var Coupons = (0, _react.lazy)(function () {
+  return Promise.resolve().then(function () {
+    return _interopRequireWildcard(require('pages/activeManagement/coupons/index.jsx'));
+  });
+});
+var GroupCoupons = (0, _react.lazy)(function () {
+  return Promise.resolve().then(function () {
+    return _interopRequireWildcard(require('pages/activeManagement/groupCoupons/index.jsx'));
   });
 }); // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
@@ -626,6 +653,28 @@ var adminRoutes = [{
   component: GoodsConfig,
   code: "ActiveManagement",
   sub_code: 'GoodsConfig'
+}, // 端午节活动-优惠券  
+{
+  name: '任务配置',
+  icon: _icons.UnorderedListOutlined,
+  path: '/mms/activeManagement/task',
+  component: Task,
+  code: "ActiveManagement",
+  sub_code: 'task'
+}, {
+  name: '优惠券配置',
+  icon: _icons.UnorderedListOutlined,
+  path: '/mms/activeManagement/coupons',
+  component: Coupons,
+  code: "ActiveManagement",
+  sub_code: 'coupons'
+}, {
+  name: '组合优惠券配置',
+  icon: _icons.UnorderedListOutlined,
+  path: '/mms/activeManagement/groupCoupons',
+  component: GroupCoupons,
+  code: "ActiveManagement",
+  sub_code: 'groupCoupons'
 }, //频道管理
 {
   name: '专享台解锁',
@@ -648,6 +697,13 @@ var adminRoutes = [{
   component: SourceFailure,
   code: "channelManage",
   sub_code: 'sourceFailure'
+}, {
+  name: '频道搜索',
+  icon: _icons.UnorderedListOutlined,
+  path: '/mms/channelManage/channelSearch',
+  component: ChannelSearch,
+  code: "channelManage",
+  sub_code: 'channelSearch'
 }, //TV端-广告管理
 {
   name: '尝鲜版',
@@ -1136,6 +1192,13 @@ var adminRoutes = [{
   component: Logout,
   code: "tvConfigManagement",
   sub_code: 'logout'
+}, {
+  name: '简单模式配置',
+  icon: _icons.UnorderedListOutlined,
+  path: '/mms/TVConfig/simple',
+  component: Simple,
+  code: "tvConfigManagement",
+  sub_code: 'simple'
 }, //通用-频道管理
 {
   name: '频道风险地域',

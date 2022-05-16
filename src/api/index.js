@@ -709,6 +709,21 @@ export const checkBillboard = (params) => { return request2.post(`${baseUrl}/mms
 export const delBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/del`, params); };                 // 删除
 export const detailBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/detail`, params); };                 // 删除
 
+// 优惠券配置
+export const couponConfigList = (params) => { return request2.post(`${baseUrl}/mms/couponConfig/list`, params); };                 // 列表
+export const couponConfigAdd = (params) => { return request2.post(`${baseUrl}/mms/couponConfig/add`, params); };                 // 新增
+export const couponConfigEdit = (params) => { return request2.post(`${baseUrl}/mms/couponConfig/edit`, params); };                 // 编辑
+export const couponConfigDel = (params) => { return request2.post(`${baseUrl}/mms/couponConfig/del`, params); };                 // 删除
+export const couponConfigSync = (params) => { return request2.get(`${baseUrl}/mms/couponConfig/sync`, {params:params}); };                 // 同步缓存
+
+// 组合优惠券配置
+export const GcouponConfigList = (params) => { return request2.post(`${baseUrl}/mms/couponSendConfig/list`, params); };                 // 列表
+export const GcouponConfigAdd = (params) => { return request2.post(`${baseUrl}/mms/couponSendConfig/add`, params); };                 // 新增
+export const GcouponConfigEdit = (params) => { return request2.post(`${baseUrl}/mms/couponSendConfig/edit`, params); };                 // 编辑
+export const GcouponConfigDel = (params) => { return request2.post(`${baseUrl}/mms/couponSendConfig/del`, params); };                 // 删除
+export const GcouponConfigSync = (params) => { return request2.get(`${baseUrl}/mms/couponSendConfig/sync`, {params:params}); };                 // 同步缓存
+
+
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型

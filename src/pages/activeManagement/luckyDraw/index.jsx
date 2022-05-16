@@ -74,7 +74,8 @@ class LuckyDraw extends React.Component {
                 // {key: 1, value: '大转盘'},
                 // {key: 2, value: '夺宝'},
                 // {key: 3, value: '兑换'},
-                {key: 1, value: '会员下单'}
+                {key: 1, value: '会员下单'},
+                {key: 2, value: '任务积分活动'},
             ],
             ac_type:[  // 活动类型
                 {key: 1, value: '会员下单'},

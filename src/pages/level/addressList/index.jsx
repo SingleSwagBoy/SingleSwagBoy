@@ -32,7 +32,7 @@ export default class WinningNews extends Component {
         {id:1,name:"秒杀活动"},
         {id:2,name:"抽奖活动"},
         {id:3,name:"拼团实物套餐"},
-        {id:4,name:"私域兑换"},
+        // {id:4,name:"私域兑换"},
       ],
       screen:{}, //筛选对象
       layout: {
@@ -56,7 +56,7 @@ export default class WinningNews extends Component {
           key: "activityType",
           width:130,
           render:(RowValue,row,index)=>{
-            return <span>{RowValue==1?'秒杀活动':RowValue==2?'抽奖活动':RowValue==3?"拼团实物套餐":RowValue==4?"私域兑换":""}</span>
+            return <span>{RowValue==1?'秒杀活动':RowValue==2?'抽奖活动':RowValue==3?"拼团实物套餐":"未知"}</span>
           }
         },
         {

@@ -118,6 +118,8 @@ const Statistical = lazy(() => import('pages/privateDomain/statistical/index.jsx
 
 // 端午节活动-优惠券
 const Task = lazy(() => import('pages/activeManagement/task/index.jsx'));
+const Coupons = lazy(() => import('pages/activeManagement/coupons/index.jsx'));
+const GroupCoupons = lazy(() => import('pages/activeManagement/groupCoupons/index.jsx'));
 
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
@@ -146,6 +148,8 @@ const adminRoutes = [
     { name: '商品配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/goodsConfig', component: GoodsConfig, code: "ActiveManagement", sub_code: 'GoodsConfig' },
     // 端午节活动-优惠券  
     { name: '任务配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/task', component: Task, code: "ActiveManagement", sub_code: 'task' },
+    { name: '优惠券配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/coupons', component: Coupons, code: "ActiveManagement", sub_code: 'coupons' },
+    { name: '组合优惠券配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/groupCoupons', component: GroupCoupons, code: "ActiveManagement", sub_code: 'groupCoupons' },
 
 
     //频道管理

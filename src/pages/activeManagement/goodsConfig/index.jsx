@@ -5,6 +5,7 @@ import {
     getPProductList,  // 商品列表
     addPActivityGoods, // 新增
     delgoodsList,  // 删除
+    couponConfigList
 } from 'api'
 import {Breadcrumb, Card, Image, Button, Table, Modal, message,Input, Form,Select,InputNumber,Switch,DatePicker,Divider} from 'antd'
 import {  } from 'react-router-dom'
@@ -59,8 +60,9 @@ class GoodsConfig extends React.Component {
                 {key:9,value:"2年",num:730},
             ],
             goodsTypes:[  // 商品类型
-                {key: 1, value: '金币'},{key: 2, value: '会员'},{key: 3, value: '实体'}
+                {key: 1, value: '金币'},{key: 2, value: '会员'},{key: 3, value: '实体'},{key: 4, value: '优惠券'}
             ],
+            coupons:[]
         }
     }
     render() { 
@@ -140,7 +142,31 @@ class GoodsConfig extends React.Component {
                                         </Select>
                                     </Form.Item> ||
                                     this.formRef.current.getFieldValue("type")==3 &&
-                                    <div></div>
+                                    <div></div> ||
+                                    this.formRef.current.getFieldValue("type")==4 &&
+                                    <Form.Item label="选择优惠券" name="num" rules={[{ required: true}]}>
+                                        <Select placeholder="选择优惠券" allowClear showSearch filterOption={(input, option) => {
+                                            if (!input) return true;
+                                            let children = option.children;
+                                            if (children) {
+                                                let key = children[2];
+                                                let isFind = false;
+                                                isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                if (!isFind) {
+                                                    let code = children[0];
+                                                    isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                                                }
+
+                                                return isFind;
+                                            }
+                                        }}>
+                                            {
+                                                this.state.coupons.map((item,index)=>{
+                                                    return <Option value={item.id} key={item.id}>{item.name}-{item.id}</Option>
+                                                })
+                                            }
+                                        </Select>
+                                    </Form.Item>
                                 }
                             </div>
                         }
@@ -163,6 +189,15 @@ class GoodsConfig extends React.Component {
     componentDidMount(){
         //this.getList();
         this.initColums();
+        this.getCoupons()
+    }
+    getCoupons(){
+        couponConfigList({page:{isPage:9}}).then(res=>{
+            console.log("couponConfigList",res);
+            this.setState({
+                coupons:res.data
+            })
+        })
     }
     getList(){   // 商品列表
         let params = {
@@ -318,6 +353,8 @@ class GoodsConfig extends React.Component {
                                 return <span>{rowValue}({vipOptions[i].value})</span>
                             }
                         }
+                    }else if(row.type==4){
+                        return <span>{rowValue}</span>
                     }
                 }
             },
@@ -334,7 +371,9 @@ class GoodsConfig extends React.Component {
                                 rowValue==2 && 
                                 <span>会员</span> ||
                                 rowValue==3 && 
-                                <span>实体</span>
+                                <span>实体</span> ||
+                                rowValue==4 && 
+                                <span>优惠券</span> 
                             }
                         </div>
                     )

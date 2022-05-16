@@ -167,8 +167,12 @@ function App2(props) {
         page: { currentPage: page, pageSize: pageSize }
       }
       const list = await getBillboard(params)
+      console.log(list,"list")
       setLists(list.data)
-      setTotal(list.totalCount)
+      if(list.page){
+        setTotal(list.page.totalCount)
+      }
+    
 
     }
     fetchData()
@@ -307,7 +311,7 @@ function App2(props) {
           </div>
           <div className="everyBody">
             <div>机器初审:</div>
-            <Select placeholder="机器初审状态" style={{ width: "150px" }} allowClear onChange={(e) => { setMachine(e); forceUpdate() }}>
+            <Select placeholder="机器初审状态" style={{ width: "150px" }} allowClear onChange={(e) => { setMachine(e);setPage(1); forceUpdate() }}>
               <option value={1}>未审核</option>
               <option value={2}>审核通过</option>
               <option value={3}>审核不通过</option>
@@ -315,7 +319,7 @@ function App2(props) {
           </div>
           <div className="everyBody">
             <div>人工审核:</div>
-            <Select placeholder="人工审核状态" style={{ width: "150px" }} allowClear onChange={(e) => { setManual(e); forceUpdate() }}>
+            <Select placeholder="人工审核状态" style={{ width: "150px" }} allowClear onChange={(e) => { setManual(e);setPage(1); forceUpdate() }}>
               <option value={1}>未审核</option>
               <option value={2}>审核通过</option>
               <option value={3}>审核不通过</option>
@@ -335,7 +339,7 @@ function App2(props) {
               setSource("add")
               setOpen(true)
             }}>创建作品</Button>
-            <Button type="primary" style={{ margin: "0 10px" }}>刷新</Button>
+            <Button type="primary" style={{ margin: "0 10px" }} onClick={()=> forceUpdate()}>刷新</Button>
           </div>
         }
       >

@@ -536,6 +536,11 @@ var GroupCoupons = (0, _react.lazy)(function () {
   return Promise.resolve().then(function () {
     return _interopRequireWildcard(require('pages/activeManagement/groupCoupons/index.jsx'));
   });
+});
+var TaskActivity = (0, _react.lazy)(function () {
+  return Promise.resolve().then(function () {
+    return _interopRequireWildcard(require('pages/activeManagement/taskActivity/index.jsx'));
+  });
 }); // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
 
@@ -675,6 +680,13 @@ var adminRoutes = [{
   component: GroupCoupons,
   code: "ActiveManagement",
   sub_code: 'groupCoupons'
+}, {
+  name: '任务活动',
+  icon: _icons.UnorderedListOutlined,
+  path: '/mms/activeManagement/taskActivity',
+  component: TaskActivity,
+  code: "ActiveManagement",
+  sub_code: 'taskActivity'
 }, //频道管理
 {
   name: '专享台解锁',

@@ -8,7 +8,7 @@ exports.requestNewGroupCreate = exports.esQuery = exports.delDIYTag = exports.up
 exports.syncWordsConfig = exports.setImageWordsConfig = exports.getImageWordsConfig = exports.delWordsConfig = exports.addWordsConfig = exports.uploadWordsConfig = exports.getWordsConfig = exports.setSuggestInfo = exports.getSuggestInfo = exports.syncSuggest = exports.updateSuggest = exports.addSuggest = exports.getSuggest = exports.delShortList = exports.updateShortList = exports.searchShortList = exports.addShortList = exports.syncProgramList = exports.delProgramList = exports.getProgramInfo = exports.getDetailProgram = exports.uploadProgramList = exports.addProgramList = exports.getShortList = exports.getProgramlist = exports.copySource = exports.syncSource = exports.delSource = exports.updateSource = exports.addSource = exports.getSource = exports.updateGoods = exports.addPActivityGoods = exports.delgoodsList = exports.getPProductList = exports.syncPActivity = exports.goodsRealStock = exports.removePActivity = exports.addPActivity = exports.updatePActivityStatus = exports.updatePActivity = exports.getPActivityList = exports.syncProgramAppConfig = exports.updateProgramAppConfig = exports.getProgramAppConfig = exports.syncWhite = exports.deleteWhite = exports.updateWhite = exports.listWhite = exports.addWhite = exports.syncZZShow = exports.saveZZShow = exports.getZZShow = exports.delRefresh = exports.changeRefresh = exports.addRefresh = exports.getRefresh = exports.rsZzItemList = exports.syncZzItemList = exports.changeZzItemList = exports.deleteZzItemList = exports.addZzItemList = exports.editZzItemList = exports.getZzItemList = exports.syncEarnTskList = exports.deleteEarnTskList = exports.updateEarnTskList = exports.addEarnTskList = exports.getEarnTskList = exports.adRightKeyCopy = exports.screenCopy = exports.adRightKeySync = exports.adRightKeyDel = exports.screenDel = exports.screenUpdate = exports.adRightKeyUpdate = exports.adListSync = exports.requestAdFieldList = exports.requestDictionary = exports.requestNewAdTagDelete = exports.requestNewAdTagRecord = exports.requestNewAdTagUpdate = exports.requestNewAdTagCreate = exports.getGroup = exports.requestNewAdTagList = exports.delCorner = exports.addCorner = exports.updateCorner = exports.getChannelTag = exports.getCorner = exports.getPosition = exports.getSdkList = exports.delInfoGroup = exports.updateInfoGroup = exports.addInfoGroup = exports.getInfoGroup = exports.requestNewGroupCopy = exports.requestNewGroupDelete = exports.requestNewGroupList = exports.requestNewGroupUpdate = void 0;
 exports.specialResort = exports.specialChangepos = exports.specialDelete = exports.specialUpdate = exports.specialSync = exports.specialStatus = exports.specialSetBaseInfo = exports.specialGetBaseInfo = exports.specialAdd = exports.specialList = exports.syncActivityConfig = exports.delActivityConfig = exports.updateActivityConfig = exports.addActivityConfig = exports.getActivityConfig = exports.addShieldList = exports.delShieldList = exports.getShieldList = exports.delcorptagtask = exports.corptagtaskstatus = exports.corptagtasks = exports.addcorptagtask = exports.corptags = exports.synctags = exports.uploadImage = exports.changeWelcome = exports.delWelcome = exports.saveWelcome = exports.addWelcome = exports.getWelcome = exports.setexcluswitch = exports.getexcluswitch = exports.getCount = exports.getWechatList = exports.saveMyWechatUser = exports.syncQrcodeConfig = exports.syncMyWechatUser = exports.getMyWechatUser = exports.getWechatUser = exports.saveQrcodeConfig = exports.getQrcodeConfig = exports.sortChannelSport = exports.syncChannelSport = exports.resetChannelSport = exports.delChannelSport = exports.addChannelSport = exports.getChannelSport = exports.syncHkCategory = exports.switchHkCategory = exports.changeHkCategory = exports.delHkCategory = exports.editHkCategory = exports.addHkCategory = exports.getHkCategory = exports.syncPowerBoot = exports.changePowerBoot = exports.delPowerBoot = exports.editPowerBoot = exports.addPowerBoot = exports.getPowerBoot = exports.syncEnterChannel = exports.uploadEnterChannel = exports.delEnterChannel = exports.getEnterChannel = exports.addEnterChannel = exports.delMarsList = exports.uploadMarsList = exports.addMarsList = exports.getMarsList = exports.getFansTag = exports.delFansTag = exports.updateFansTag = exports.addFansTag = exports.getFansTagList = exports.delSend = exports.reSend = exports.cancelSend = exports.everySend = exports.getSend = exports.wechatMaterialSend = exports.materialSend = exports.addSend = exports.preSend = exports.uploadWechatMenu = exports.setMenuState = exports.getWxlist = exports.delWechatMenu = exports.getWechatMenu = exports.addWechatMenu = exports.setHomeBaseInfo = exports.addTab = exports.getAllBaseInfo = exports.getHomeBaseInfo = exports.syncHomeList = exports.setStateHomeList = exports.getStateHomeList = exports.delHomeList = exports.addHomeList = exports.uploadHomeList = exports.getHomeList = void 0;
 exports.signCalendarSync = exports.signCalendarClear = exports.signCalendarSave = exports.signCalendarList = exports.signSync = exports.signExtraEdit = exports.signExtra = exports.signRuleEdit = exports.signRuleInfo = exports.signCategoryDel = exports.signCategoryEdit = exports.signCategoryAdd = exports.signCategory = exports.signGoodsEdit = exports.signGoodsAdd = exports.signGoodsDelete = exports.signGoodsList = exports.syncHotChannel = exports.delHotChannel = exports.editHotChannel = exports.addHotChannel = exports.getHotChannel = exports.changeLogoutState = exports.syncLogout = exports.delLogout = exports.updateLogout = exports.addLogout = exports.getLogout = exports.syncMineGrid = exports.delMineGrid = exports.copyMineGrid = exports.editMineGrid = exports.addMineGrid = exports.getMineGrid = exports.delMine = exports.editMine = exports.addMine = exports.getMine = exports.syncTopic = exports.delTopic = exports.updateTopic = exports.addTopic = exports.getTopic = exports.getlistPhoto = exports.getMangoSyncTab = exports.getSortList = exports.updateMangoSort = exports.addMangosearch = exports.getMangoSync = exports.delMango = exports.addMangoUpdate = exports.addMangoList = exports.getMangoList = exports.requestApkConfigList = exports.requestApkConfigDelete = exports.requestApkConfigSync = exports.requestApkConfigAdd = exports.syncMenuList = exports.delMenuList = exports.updateMenuList = exports.addMenuList = exports.getMenuList = exports.syncAdSPList = exports.delAdSPList = exports.updateAdSPList = exports.addAdSPList = exports.getAdSPList = exports.editRiskConfig = exports.getRiskConfig = exports.syncOfflineProgram = exports.delOfflineProgram = exports.addOfflineProgram = exports.copyOfflineProgram = exports.updateOfflineProgram = exports.updateOfflineChannel = exports.addOfflineChannel = exports.delOfflineChannel = exports.updateOfflineTime = exports.getOfflineChannel = exports.getApkList = exports.getOfflineProgram = exports.bigwechatsPublic = exports.setextra = exports.listextraGet = exports.getconfigsSync = exports.getconfigsDelete = exports.getconfigsUpdate = exports.getconfigsAdd = exports.getconfigsstatus = exports.getconfigsLogin = exports.syncArmourPackage = exports.copyArmourPackage = exports.editArmourPackage = exports.delArmourPackage = exports.addArmourPackage = exports.getArmourPackage = exports.categoriesUpdate = exports.getCategoriesDetail = exports.getlistAllPrograms = exports.getCategories = void 0;
-exports.requestDictStatus = exports.requestDeliveryTypes = exports.requestGoodLookTypes = exports.requestJumpMenuTypes = exports.requestJumpTypes = exports.requestQrcodeTypes = exports.GcouponConfigSync = exports.GcouponConfigDel = exports.GcouponConfigEdit = exports.GcouponConfigAdd = exports.GcouponConfigList = exports.couponConfigSync = exports.couponConfigDel = exports.couponConfigEdit = exports.couponConfigAdd = exports.couponConfigList = exports.detailBillboard = exports.delBillboard = exports.checkBillboard = exports.updateBillboard = exports.addBillboard = exports.getBillboard = exports.syncAblum = exports.delAblum = exports.updateAblum = exports.addAblum = exports.getAblum = exports.scoreRecordEdit = exports.scoreExrecords = void 0;
+exports.requestDictStatus = exports.requestDeliveryTypes = exports.requestGoodLookTypes = exports.requestJumpMenuTypes = exports.requestJumpTypes = exports.requestQrcodeTypes = exports.activitySync = exports.activityDelete = exports.activityEdit = exports.activityAdd = exports.activityList = exports.boatrewards = exports.taskDelete = exports.taskEdit = exports.taskAdd = exports.taskList = exports.GcouponConfigSync = exports.GcouponConfigDel = exports.GcouponConfigEdit = exports.GcouponConfigAdd = exports.GcouponConfigList = exports.couponConfigSync = exports.couponConfigDel = exports.couponConfigEdit = exports.couponConfigAdd = exports.couponConfigList = exports.detailBillboard = exports.delBillboard = exports.checkBillboard = exports.updateBillboard = exports.addBillboard = exports.getBillboard = exports.syncAblum = exports.delAblum = exports.updateAblum = exports.addAblum = exports.getAblum = exports.scoreRecordEdit = exports.scoreExrecords = void 0;
 
 var _request = _interopRequireDefault(require("utils/request.js"));
 
@@ -4142,12 +4142,92 @@ var GcouponConfigSync = function GcouponConfigSync(params) {
     params: params
   });
 }; // 同步缓存
+// 活动管理-任务配置
+
+
+exports.GcouponConfigSync = GcouponConfigSync;
+
+var taskList = function taskList(params) {
+  return _request["default"].get("".concat(baseUrl, "/mms/activity/boat/taskList"), {
+    params: params
+  });
+}; // 任务列表
+
+
+exports.taskList = taskList;
+
+var taskAdd = function taskAdd(params) {
+  return _request2["default"].post("".concat(baseUrl, "/mms/activity/boat/taskAdd"), params);
+}; // 任务添加
+
+
+exports.taskAdd = taskAdd;
+
+var taskEdit = function taskEdit(params) {
+  return _request2["default"].post("".concat(baseUrl, "/mms/activity/boat/taskEdit"), params);
+}; // 任务编辑
+
+
+exports.taskEdit = taskEdit;
+
+var taskDelete = function taskDelete(params) {
+  return _request2["default"].post("".concat(baseUrl, "/mms/activity/boat/taskDelete?id=").concat(params.id), params);
+}; // 任务删除
+// 任务活动
+
+
+exports.taskDelete = taskDelete;
+
+var boatrewards = function boatrewards(params) {
+  return _request["default"].get("".concat(baseUrl, "/mms/activity/boat/rewards"), {
+    params: params
+  });
+}; // 奖品
+
+
+exports.boatrewards = boatrewards;
+
+var activityList = function activityList(params) {
+  return _request["default"].get("".concat(baseUrl, "/mms/activity/boat/activityList"), {
+    params: params
+  });
+}; // 活动列表
+
+
+exports.activityList = activityList;
+
+var activityAdd = function activityAdd(params) {
+  return _request2["default"].post("".concat(baseUrl, "/mms/activity/boat/activityAdd"), params);
+}; // 活动添加
+
+
+exports.activityAdd = activityAdd;
+
+var activityEdit = function activityEdit(params) {
+  return _request2["default"].post("".concat(baseUrl, "/mms/activity/boat/activityEdit"), params);
+}; // 活动编辑
+
+
+exports.activityEdit = activityEdit;
+
+var activityDelete = function activityDelete(params) {
+  return _request2["default"].post("".concat(baseUrl, "/mms/activity/boat/activityDelete?id=").concat(params.id), params);
+}; // 活动删除
+
+
+exports.activityDelete = activityDelete;
+
+var activitySync = function activitySync(params) {
+  return _request["default"].get("".concat(baseUrl, "/mms/activity/boat/activitySync"), {
+    params: params
+  });
+}; // 活动同步
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========
 //二维码类型
 
 
-exports.GcouponConfigSync = GcouponConfigSync;
+exports.activitySync = activitySync;
 
 var requestQrcodeTypes = function requestQrcodeTypes() {
   return new Promise(function (resolve, reject) {

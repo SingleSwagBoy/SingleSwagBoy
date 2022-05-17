@@ -294,8 +294,8 @@ const closeDialog = () => {
                 </Form.Item>
                 {
                     formRef.getFieldValue("deductType") == 1 &&
-                    <Form.Item label="折扣" name="deductNum" rules={[{ required: true, message: '请输入折扣数' }]}>
-                        <InputNumber min={1} placeholder="N" max={9} />
+                    <Form.Item className='per-position' label="折扣百分比" name="deductNum" rules={[{ required: true, message: '请输入折扣数' }]}>
+                        <InputNumber min={10} placeholder="(实际价格=原价*xx%)" max={90} step={5}/>
                     </Form.Item> ||
                     formRef.getFieldValue("deductType") == 2 &&
                     <Form.Item label="直减" name="deductNum" rules={[{ required: true, message: '请输入直减金额' }]}>
@@ -342,7 +342,6 @@ const closeDialog = () => {
                         <Form.List name="products">
                         {(fields, { add, remove }) => (
                                 <>
-
                                     {fields.map((field, index) => (
                                         <>
                                             <div style={{ display: "flex" }}>
@@ -356,7 +355,6 @@ const closeDialog = () => {
                                                                     return <Option value={r.skuCode} key={r.id}>{r.name}---{r.skuCode}</Option>
                                                                 })
                                                             }
-
                                                         </Select>
                                                     </Form.Item>
                                                 </Space>

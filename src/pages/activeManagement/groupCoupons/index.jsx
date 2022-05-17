@@ -22,7 +22,7 @@ let activityIndex=null;
 
 
 const plainOptions = [
-    "tv","手机","小程序"
+    "tv端","小程序"
 ];
 const defaultCheckedList = [];
 function App2() {
@@ -58,7 +58,7 @@ function App2() {
     }
   }
   const [platType,setplatType]=useState([
-      {type:1,name:"全平台"},{type:2,name:"tv"},{type:3,name:"手机"},{type:4,name:"小程序"},
+      {type:1,name:"全平台"},{type:2,name:"tv端"},{type:4,name:"小程序"},
   ])
   const [couponList,setCouponList]=useState([])  // 优惠券列表
   const [openDailog, setOpen] = useState(false)  // 新增、编辑的弹框
@@ -96,17 +96,15 @@ function App2() {
                 console.log(row)
                 let obj = JSON.parse(JSON.stringify(row))
                 if(obj.platform==1){
-                    obj.platform=["tv","手机","小程序"]
+                    obj.platform=["tv端","小程序"]
                     setCheckedList(plainOptions)
                     setCheckAll(true)
                 }else{
                     let _arr=[]
                     if(obj.platform.includes("2")){
-                        _arr.push("tv")
+                        _arr.push("tv端")
                     }
-                    if(obj.platform.includes("3")){
-                        _arr.push("手机")
-                    }
+                    
                     if(obj.platform.includes("4")){
                         _arr.push("小程序")
                     }
@@ -167,11 +165,9 @@ function App2() {
     }else{
         let arr=[];
         if(_name.includes("2")){  // 2:tv, 3：手机, 4:小程序
-            arr.push("tv")
+            arr.push("tv端")
         }
-        if(_name.includes("3")){ 
-            arr.push("手机")
-        }
+        
         if(_name.includes("4")){  
             arr.push("小程序")
         }
@@ -204,15 +200,12 @@ const submitForm=(obj)=>{
             message.error("请选择领取平台");
             return
         }else{
-            if(checkedList.length==3){
+            if(checkedList.length==2){
                 params.platform="1"
             }else{
                 let arr=[]
-                if(checkedList.includes("tv")){  // 2:tv, 3：手机, 4:小程序
+                if(checkedList.includes("tv端")){  // 2:tv, 3：手机, 4:小程序
                     arr.push(2)
-                }
-                if(checkedList.includes("手机")){ 
-                    arr.push(3)
                 }
                 if(checkedList.includes("小程序")){ 
                     arr.push(4)
@@ -241,15 +234,12 @@ const submitForm=(obj)=>{
             message.error("请选择领取平台");
             return
         }else{
-            if(checkedList.length==3){
+            if(checkedList.length==2){
                 params.platform="1"
             }else{
                 let arr=[]
-                if(checkedList.includes("tv")){  // 2:tv, 3：手机, 4:小程序
+                if(checkedList.includes("tv端")){  // 2:tv, 3：手机, 4:小程序
                     arr.push(2)
-                }
-                if(checkedList.includes("手机")){ 
-                    arr.push(3)
                 }
                 if(checkedList.includes("小程序")){ 
                     arr.push(4)

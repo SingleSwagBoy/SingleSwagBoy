@@ -1,0 +1,16 @@
+.ant-input-number{
+    
+}
+.per-position .ant-input-number{
+    position: relative;
+    width: 200px !important;
+}
+.per-position .ant-input-number::after{
+    position: absolute;
+    z-index: 99;
+    content: "注意：折扣里面填写多少，就代表折扣多少，比如填写90，就是打9折";
+    top: 4px;
+    right: -450px;
+    color: red;
+    font-weight: bold;
+}

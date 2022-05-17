@@ -122,6 +122,7 @@ const Statistical = lazy(() => import('pages/privateDomain/statistical/index.jsx
 const Task = lazy(() => import('pages/activeManagement/task/index.jsx'));
 const Coupons = lazy(() => import('pages/activeManagement/coupons/index.jsx'));
 const GroupCoupons = lazy(() => import('pages/activeManagement/groupCoupons/index.jsx'));
+const TaskActivity = lazy(() => import('pages/activeManagement/taskActivity/index.jsx'));
 
 // advertising management
 // const Test = lazy(() =>import('pages/test/test.jsx'));
@@ -152,6 +153,7 @@ const adminRoutes = [
     { name: '任务配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/task', component: Task, code: "ActiveManagement", sub_code: 'task' },
     { name: '优惠券配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/coupons', component: Coupons, code: "ActiveManagement", sub_code: 'coupons' },
     { name: '组合优惠券配置', icon: UnorderedListOutlined, path: '/mms/activeManagement/groupCoupons', component: GroupCoupons, code: "ActiveManagement", sub_code: 'groupCoupons' },
+    { name: '任务活动', icon: UnorderedListOutlined, path: '/mms/activeManagement/taskActivity', component: TaskActivity, code: "ActiveManagement", sub_code: 'taskActivity' },
 
 
     //频道管理

@@ -365,8 +365,8 @@ const closeDialog = () => {
                     </Form.Item>
                     {
                         formRef.getFieldValue("oneHundred") == 2 && 
-                        <Form.Item className='space-rigjht' label="抽奖地址" name="hundredFift" rules={[{ required: true}]}>
-                            <Input placeholder="抽奖地址" />
+                        <Form.Item className='space-rigjht' label="抽奖活动id" name="hundredFift" rules={[{ required: true}]}>
+                            <InputNumber placeholder="抽奖活动id" />
                         </Form.Item> || 
                         formRef.getFieldValue("oneHundred") == 1 && 
                         <Form.Item className='space-rigjht' label="商品列表"  name="hundredrewardId">

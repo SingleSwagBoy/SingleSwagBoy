@@ -104,7 +104,6 @@ function App2() {
                     if(obj.platform.includes("2")){
                         _arr.push("tv端")
                     }
-                    
                     if(obj.platform.includes("4")){
                         _arr.push("小程序")
                     }
@@ -219,8 +218,10 @@ const submitForm=(obj)=>{
         GcouponConfigAdd(params).then(res=>{
             message.success("新增成功")
             setCheckedList([])
+            setIndeterminate(false);
             setOpen(false);
             setSource("")
+            setCheckAll(false)
             formRef.resetFields()
             forceUpdate()
         })
@@ -251,8 +252,10 @@ const submitForm=(obj)=>{
         GcouponConfigEdit(params).then(res=>{
             message.success("编辑成功")
             setCheckedList([])
+            setIndeterminate(false);
             setOpen(false);
             setSource("")
+            setCheckAll(false)
             formRef.resetFields()
             forceUpdate()
         })
@@ -265,6 +268,12 @@ const closeDialog = () => {
     setOpen(false)
     setSource("")
 }
+
+
+
+const [checkedList, setCheckedList] = useState([]);
+const [indeterminate, setIndeterminate] = useState(false);
+const [checkAll, setCheckAll] = useState(false);
 
 const onCheckAllChange = e => {
     console.log("onCheckAllChangeonCheckAllChangeonCheckAllChangeonCheckAllChange",e)
@@ -281,10 +290,6 @@ const onChange = list => {
     forceUpdatePages()
   };
 
-const [checkedList, setCheckedList] = useState([]);
-const [indeterminate, setIndeterminate] = useState(false);
-const [checkAll, setCheckAll] = useState(false);
-
 
 
   return (
@@ -298,6 +303,8 @@ const [checkAll, setCheckAll] = useState(false);
           <div>
             <Button type="primary" onClick={() => {
                 setCheckedList([])
+                setCheckAll(false);
+                setIndeterminate(false);
                 setOpen(true)
                 setSource("add")
             }}>新增</Button>

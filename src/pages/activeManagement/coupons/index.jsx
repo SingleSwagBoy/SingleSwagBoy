@@ -87,7 +87,7 @@ function App2() {
             </div>
           )
         }
-      },
+    },
     {title: "支持套餐",dataIndex: "range",key: "range",
       render: (rowValue, row, index) => {
         return (

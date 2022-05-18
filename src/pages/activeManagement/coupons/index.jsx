@@ -346,7 +346,7 @@ const closeDialog = () => {
                                         <>
                                             <div style={{ display: "flex" }}>
                                                 <Space key={field.key} align="baseline" style={{ flexWrap: "wrap" }}>
-                                                    <Form.Item {...field} name={[field.name,'skuCode']} fieldKey={[field.fieldKey, 'skuCode']}>
+                                                    <Form.Item {...field} name={[field.name,'skuCode']} rules={[{ required: true,message: '请选择套餐'}]} fieldKey={[field.fieldKey, 'skuCode']}>
                                                         <Select allowClear showSearch placeholder="请选择套餐" onChange={(e)=>{
                                                             console.log("e 请选择套餐 e",e)
                                                         }} style={{width:"200px"}} {...selectProps}>

@@ -29,6 +29,9 @@ function App2() {
   const layout = { labelCol: { span: 4 }, wrapperCol: { span: 20 } }
   const tailLayout = { wrapperCol: { offset: 15, span: 40 } }
   const [formRef] = Form.useForm()
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(50)
+  const [total, setTotal] = useState(0)
   const [virList,setvirList]=useState([])  // 任务列表
   const [productList,setproductList]=useState([])   // 套餐列表
   const [currentItem, setCurrent] = useState({})
@@ -157,9 +160,10 @@ function App2() {
 
   useEffect(() => {//列表
     const fetchData=async ()=>{
-        let res=await couponConfigList({})
+        let res=await couponConfigList({ currentPage: 1, pageSize: 50 })
         console.log("res",res)
         setvirList(res.data)
+        setTotal(res.page.totalCount)
     }
     fetchData();
   }, [forceUpdateId])
@@ -271,6 +275,11 @@ const closeDialog = () => {
           dataSource={virList}
           rowKey={item => item.id}
           columns={columns}
+          pagination={{
+            current: page,
+            pageSize: pageSize,
+            total: total
+          }}
         />
 
         {/* 新增/编辑的弹框 */}

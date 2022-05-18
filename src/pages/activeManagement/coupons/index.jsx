@@ -160,7 +160,7 @@ function App2() {
 
   useEffect(() => {//列表
     const fetchData=async ()=>{
-        let res=await couponConfigList({ currentPage: 1, pageSize: 50 })
+        let res=await couponConfigList({page:{currentPage: 1, pageSize: 50 } })
         console.log("res",res)
         setvirList(res.data)
         setTotal(res.page.totalCount)

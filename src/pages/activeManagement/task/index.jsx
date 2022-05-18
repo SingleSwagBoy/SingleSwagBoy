@@ -1,6 +1,6 @@
 // 活动管理-任务配置
 import React, { useState, useEffect, useReducer } from 'react'
-import { taskList,boatrewards,taskAdd,taskEdit,taskDelete } from 'api'
+import { taskList,boatrewards,taskAdd,taskEdit,taskDelete ,activitySync} from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, DatePicker , Space,Divider,Calendar,Badge } from 'antd'
 
 import { Link } from 'react-router-dom'
@@ -158,7 +158,11 @@ const closeDialog = () => {
               setOpen(true)
               setSource("add")
             }}>新增</Button>
-            <Button type="primary" style={{marginLeft:"10px"}}>同步缓存</Button>
+            <Button type="primary" style={{marginLeft:"10px"}} onClick={()=>{
+                activitySync({}).then(res=>{
+                    message.success("同步成功")
+                })
+            }}>同步缓存</Button>
           </div>
         }
       >

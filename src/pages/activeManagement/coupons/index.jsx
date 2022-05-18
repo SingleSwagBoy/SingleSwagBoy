@@ -81,13 +81,13 @@ function App2() {
             <div>
                 {
                     rowValue==1 &&
-                    <span>折扣-{row.deductNum}折</span> ||
-                    <span>直减-减{row.deductNum}</span>
+                    <span>折扣-{row.deductNum/10}折</span> ||
+                    <span>直减-减{row.deductNum/100}元</span>
                 }
             </div>
           )
         }
-      },
+    },
     {title: "支持套餐",dataIndex: "range",key: "range",
       render: (rowValue, row, index) => {
         return (

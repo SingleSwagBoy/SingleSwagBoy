@@ -663,12 +663,20 @@ export const delLogout = (params) => { return request2.get(`${baseUrl}/mms/chann
 export const syncLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/sync`, {params:params}); };                 // 我的配置删除
 export const changeLogoutState = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/status`, {params:params}); };                 // 我的配置删除
 
+
 //频道搜索-->热门搜索
 export const getHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/list`, params); };                 // 频道搜索列表
 export const addHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/add`, params); };                 // 频道搜索增加
 export const editHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/edit`, params); };                 // 频道搜索编辑
 export const delHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/del`, params); };                 // 频道搜索删除
 export const syncHotChannel = (params) => { return request2.get(`${baseUrl}/mms/tv/hotRecommend/sync`, {params:params}); };                 // 频道搜索列表
+
+//家庭相册活动管理
+export const getAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/list`,params); };                 // 我的配置删除
+export const addAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/add`, params); };                 // 我的配置删除
+export const updateAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/update`, params); };                 // 我的配置删除
+export const delAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/del`, {params:params}); };                 // 我的配置删除
+export const syncAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/sync`, {params:params}); };                 // 我的配置删除
 
 // 私域小程序配置
 export const signGoodsList = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/goods`, {params:params}); };                 // 商品列表
@@ -693,21 +701,6 @@ export const signCalendarSync = (params) => { return request2.post(`${baseUrl}/m
 export const scoreExrecords = (params) => { return request.post(`${baseUrl}/mms/pd/integral/exrecords`, params) };   // 兑换记录
 export const scoreRecordEdit = (params) => { return request.post(`${baseUrl}/mms/pd/integral/recordEdit`, params) };   // 更新兑换记录
 
-//家庭相册活动管理
-export const getAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/list`,params); };                 // 我的配置删除
-export const addAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/add`, params); };                 // 我的配置删除
-export const updateAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/update`, params); };                 // 我的配置删除
-export const delAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/del`, {params:params}); };                 // 我的配置删除
-export const syncAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/sync`, {params:params}); };                 // 我的配置删除
-
-
-//家庭相册作品审核
-export const getBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/list`, params); };                 // 列表
-export const addBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/add`, params); };                 // 新增
-export const updateBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/update`, params); };                 // 修改
-export const checkBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/check`, params); };                 // 审核
-export const delBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/del`, params); };                 // 删除
-export const detailBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/detail`, params); };                 // 删除
 
 // 优惠券配置
 export const couponConfigList = (params) => { return request2.post(`${baseUrl}/mms/couponConfig/list`, params); };                 // 列表
@@ -735,6 +728,15 @@ export const activityAdd = (params) => { return request2.post(`${baseUrl}/mms/ac
 export const activityEdit = (params) => { return request2.post(`${baseUrl}/mms/activity/boat/activityEdit`, params); };                 // 活动编辑
 export const activityDelete = (params) => { return request2.post(`${baseUrl}/mms/activity/boat/activityDelete?id=${params.id}`, params); };                 // 活动删除
 export const activitySync = (params) => { return request.get(`${baseUrl}/mms/activity/boat/activitySync`, {params:params}); };                 // 活动同步
+
+
+//家庭相册作品审核
+export const getBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/list`, params); };                 // 列表
+export const addBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/add`, params); };                 // 新增
+export const updateBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/update`, params); };                 // 修改
+export const checkBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/check`, params); };                 // 审核
+export const delBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/del`, params); };                 // 删除
+export const detailBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/detail`, params); };                 // 删除
 
 
 //广告-二维码套餐类型

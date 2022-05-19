@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { getHotChannel, editHotChannel, addHotChannel, delHotChannel, requestNewAdTagList, changeLogoutState } from 'api'
+import { getAblum, updateAblum, addAblum, delAblum, } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, DatePicker, Divider, Space, Switch } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, Router } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
-import { MySyncBtn, ChannelCom, ProgramCom } from "@/components/views.js"
+import { MySyncBtn, MyImageUpload } from "@/components/views.js"
 import util from 'utils'
 import "./style.css"
 const { Option } = Select;
@@ -23,12 +23,11 @@ function App2(props) {
   const [formRef] = Form.useForm()
   const tailLayout = { wrapperCol: { offset: 16, span: 48 } }
   const [openDailog, setOpen] = useState(false)
-  const [currentItem, setCurrent] = useState({})
+  const [searchWord, setSearchWord] = useState("")
   const [source, setSource] = useState("")
-  const [tagList, setTagList] = useState([])
   const selectProps = {
     optionFilterProp: "children",
-    filterOption(input, option) {
+    filterOption: (input, option) => {
       if (!input) return true;
       let children = option.children;
       if (children) {
@@ -49,37 +48,19 @@ function App2(props) {
   }
   const columns = [
     {
-      title: "类型",
-      dataIndex: "type",
-      key: "type",
-      render: (rowValue, row, index) => {
-        return (
-          <div>{rowValue == 1 ? "频道" : rowValue == 2 ? "视频" : "未知"}</div>
-        )
-      }
+      title: "编号",
+      dataIndex: "id",
+      key: "id",
+      width: 80,
     },
     {
-      title: "频道",
-      dataIndex: "channelCode",
-      key: "channelCode",
+      title: "活动主题",
+      dataIndex: "theme",
+      key: "theme",
     },
+
     {
-      title: "标签",
-      dataIndex: "tag",
-      key: "tag",
-      render: (rowValue, row, index) => {
-        return (
-          <div>{getTagName(rowValue)}</div>
-        )
-      }
-    },
-    {
-      title: "排序",
-      dataIndex: "sort",
-      key: "sort",
-    },
-    {
-      title: "上下线时间",
+      title: "活动上下线时间",
       dataIndex: "time",
       key: "time",
       width: 300,
@@ -89,6 +70,16 @@ function App2(props) {
           <div>{row.startTime ? util.formatTime(row.startTime, "") : "未配置"} - {row.endTime ? util.formatTime(row.endTime, "") : "未配置"}</div>
         )
       }
+    },
+    {
+      title: "活动奖品",
+      dataIndex: "prize",
+      key: "prize",
+    },
+    {
+      title: "活动规则",
+      dataIndex: "rule",
+      key: "rule",
     },
     {
       title: "状态",
@@ -110,26 +101,29 @@ function App2(props) {
     {
       title: "操作",
       key: "action",
-      fixed: 'right', width: 200,
+      fixed: 'right', width: 250,
       render: (rowValue, row, index) => {
         return (
           <div>
-            <Button size="small" type="primary" style={{ margin: " 0 10px" }}
+            <Button size="small" type="primary"
               onClick={() => {
                 console.log(row)
                 let arr = JSON.parse(JSON.stringify(row))
                 arr.time = [arr.startTime ? moment(arr.startTime * 1000) : 0, arr.endTime ? moment(arr.endTime * 1000) : 0]
+                arr.awardTime = arr.awardTime ? moment(arr.awardTime * 1000) : 0
                 arr.status = row.status == 1 ? true : false
-                // if (arr.type == 2 && arr.channelCode) {
-                //   arr.programName = arr.channelSubTitle
-                // }
-                setCurrent(row)
+                let list = []
+                arr.demo.forEach(r => {
+                  list.push({ pic: r })
+                })
+                arr.imageList = list
+                // setCurrent(row)
                 setOpen(true)
                 formRef.setFieldsValue(arr)
                 setSource("edit")
               }}
             >编辑</Button>
-
+             <Button size="small" type="dashed" style={{ margin: " 0 10px" }} onClick={() => props.history.push({ pathname: "/mms/album/checkAblum", params: { period: row.period} })}>作品审核</Button>
             <Button danger size="small" onClick={() => delItem(row)}>删除</Button>
           </div>
         )
@@ -138,42 +132,31 @@ function App2(props) {
   ]
   useEffect(() => {//列表
     const fetchData = async () => {
-      const list = await getHotChannel({ page: { currentPage: page, pageSize: pageSize } })
+      const list = await getAblum({ title: searchWord, page: { currentPage: page, pageSize: pageSize } })
       setLists(list.data)
-      setTotal(list.page.totalCount)
+      setTotal(list.totalCount)
     }
     fetchData()
   }, [forceUpdateId])
-  useEffect(() => {//列表
-    const fetchData = async () => {
-      let arr = await requestNewAdTagList({ currentPage: 1, pageSize: 999999, })
-      setTagList(arr.data)
-    }
-    fetchData()
-  }, [])
   const changeSize = (page, pageSize) => {
     setPage(page)
     setPageSize(pageSize)
     forceUpdate()
   }
-  const getTagName = (name) => {
-    let arr = tagList.filter(item => item.code == name)
-    if (arr.length > 0) {
-      return arr[0].name
-    } else {
-      return "-"
-    }
-  }
   const submitForm = (val) => {//表单提交
     console.log(val)
-    if (val.time) {
-      val.startTime = val.time ? parseInt(val.time[0].valueOf() / 1000) : 0;
-      val.endTime = val.time ? parseInt(val.time[1].valueOf() / 1000) : 0;
-    }
-    val.status = val.status ? 1 : 2
+    let list = []
+    val.imageList.forEach(r => {
+      list.push(r.pic)
+    })
+    val.demo = list
     let params = {
       ...formRef.getFieldValue(),
       ...val,
+      status: val.status ? 1 : 2,
+      startTime: val.time ? parseInt(val.time[0].valueOf() / 1000) : 0,
+      endTime: val.time ? parseInt(val.time[1].valueOf() / 1000) : 0,
+      awardTime: val.awardTime ? parseInt(val.awardTime.valueOf() / 1000) : 0,
     }
     if (source == "add") {
       addFunc(params)
@@ -183,7 +166,7 @@ function App2(props) {
     closeDialog()
   }
   const addFunc = (params) => {
-    addHotChannel(params).then(res => {
+    addAblum(params).then(res => {
       message.success("新增成功")
       forceUpdate()
     })
@@ -194,7 +177,7 @@ function App2(props) {
     setSource("")
   }
   const updateFunc = (params) => {
-    editHotChannel(params).then(res => {
+    updateAblum(params).then(res => {
       message.success("更新成功")
       forceUpdate()
     })
@@ -203,7 +186,7 @@ function App2(props) {
     Modal.confirm({
       title: `确认删除该条数据吗？`,
       onOk: () => {
-        delHotChannel({ id: row.id }).then(res => {
+        delAblum({ id: row.id }).then(res => {
           message.success("删除成功")
           forceUpdate()
         })
@@ -212,13 +195,28 @@ function App2(props) {
       }
     })
   }
+  const getUploadFileUrl = (type, file, newItem) => {
+    let image_url = newItem.fileUrl;
+    let obj = formRef.getFieldValue(type)
+    obj.push({ pic: image_url })
+    formRef.setFieldsValue({ [type]: obj });
+    forceUpdatePages()
+  }
   return (
     <div className="loginVip">
       <Card title={
-        <div>
-          <Breadcrumb>
-            <Breadcrumb.Item>频道搜索</Breadcrumb.Item>
-          </Breadcrumb>
+        <div className="marsBox">
+          <div className="everyBody">
+            <div>名称:</div>
+            <Input.Search
+              allowClear
+              onChange={(val) => {
+                setSearchWord(val.target.value)
+              }}
+              onSearch={(val) => {
+                forceUpdate()
+              }} />
+          </div>
         </div>
       }
         extra={
@@ -227,7 +225,7 @@ function App2(props) {
               setOpen(true)
               setSource("add")
             }}>新建</Button>
-            <MySyncBtn type={37} name='同步缓存' />
+            <MySyncBtn type={"ablumActivity"} name='同步缓存' />
           </div>
         }
       >
@@ -251,43 +249,61 @@ function App2(props) {
               name="taskForm"
               form={formRef}
               onFinish={(e) => submitForm(e)}>
-              <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型' }]}>
-                <Select className="input-wrapper-from" placeholder='类型' onChange={(e) => forceUpdatePages()}>
-                  <Option value={1} key={1}>频道</Option>
-                  <Option value={2} key={2}>视频</Option>
-                </Select>
+              <Form.Item label="活动主题" name="theme" rules={[{ required: true, message: '请输入活动主题' }]}>
+                <Input placeholder="请输入活动主题" />
               </Form.Item>
-              {
-                formRef.getFieldValue("type") == 1 && <ChannelCom formRef={formRef} channelCode={"channelCode"} isLink={true} linkData={["channelSubTitle", "name"]} onForceUpdatePages={() => forceUpdatePages()} />
-              }
-              {
-                formRef.getFieldValue("type") == 2 &&
-                <>
-                  <ProgramCom formRef={formRef} programName={"programName"} channelCode={"channelCode"} onForceUpdatePages={() => forceUpdatePages()} />
-                  <Form.Item label="副标题" name="channelSubTitle" >
-                    <Input placeholder="请输入副标题" />
-                  </Form.Item>
-                </>
+              <Form.Item label="活动奖品" name="prize" rules={[{ required: true, message: '请输入活动奖品' }]}>
+                <Input.TextArea placeholder="请输入活动奖品" />
+              </Form.Item>
+              <Form.Item label="活动规则" name="rule" rules={[{ required: true, message: '请输入活动规则' }]}>
+                <Input.TextArea placeholder="请输入活动规则" />
+              </Form.Item>
+              <Form.Item label='示范案例'>
+                <Form.List name="imageList" label='示范案例'>
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map((field, index) => (
+                        <div key={index} style={{ display: "inline-flex" }}>
+                          <Form.Item  {...field} name={[field.name, 'pic']}
+                            fieldKey={[field.fieldKey, "pic"]} label="图片">
+                            <Image width={100} src={formRef.getFieldValue("imageList")[index].pic} />
+                          </Form.Item>
+                          <Button danger onClick={() => {
+                            remove(field.name)
+                          }} >删除</Button>
+                        </div>
 
-              }
-              <Form.Item label="标签" name="tag">
-                <Select mode={true} allowClear showSearch placeholder="请选择用户设备标签" {...selectProps}>
-                  {
-                    tagList.map((item, index) => (
-                      <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>
-                    ))
-                  }
-                </Select>
+                      ))}
+                      <Form.Item>
+                        <MyImageUpload
+                          getUploadFileUrl={(file, newItem) => getUploadFileUrl("imageList", file, newItem)}
+                        />
+                        {/* <Button type="primary" onClick={() => {
+                          add()
+                        }} block icon={<PlusOutlined />}>
+                          新增投放时间段
+                        </Button> */}
+                      </Form.Item>
+
+                    </>
+                  )}
+                </Form.List>
               </Form.Item>
-              <Form.Item label="上下线时间" name='time'>
+              <Form.Item label="上下线时间" name='time' rules={[{ required: true, message: '请输入上下线时间' }]}>
                 <RangePicker showTime placeholder={['上线时间', '下线时间']} />
               </Form.Item>
-              <Form.Item label="排序" name="sort">
-                <InputNumber placeholder="请输入排序" style={{ width: "200px" }} min={0} />
+              <Form.Item label="领取时间" name='awardTime' rules={[{ required: true, message: '请输入领取时间' }]}>
+                <DatePicker placeholder="领取时间" showTime />
+              </Form.Item>
+              <Form.Item label="每天最多可投票数" name="voteLimit" rules={[{ required: true, message: '请输入每天最多可投票数' }]}>
+                <InputNumber min={0} placeholder="每天最多可投票数" />
               </Form.Item>
               <Form.Item label="状态" name="status" valuePropName="checked">
                 <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
               </Form.Item>
+
+
+
               <Form.Item {...tailLayout}>
                 <Button onClick={() => closeDialog()}>取消</Button>
                 <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>

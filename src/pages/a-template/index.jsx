@@ -1,10 +1,17 @@
+
+/*
+模版文件，
+*/
+
+
+
 import React, { useState, useEffect, useReducer } from 'react'
-import { getHotChannel, editHotChannel, addHotChannel, delHotChannel, requestNewAdTagList, changeLogoutState } from 'api'
+import { getFunc, update, add, delFunc, requestNewAdTagList,changeFunc } from 'api'
 import { Radio, Card, Breadcrumb, Image, Button, message, Table, Modal, Tabs, Input, Form, Select, InputNumber, DatePicker, Divider, Space, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import moment from 'moment';
-import { MySyncBtn, ChannelCom, ProgramCom } from "@/components/views.js"
+import { MySyncBtn, MyImageUpload } from "@/components/views.js"
 import util from 'utils'
 import "./style.css"
 const { Option } = Select;
@@ -28,40 +35,38 @@ function App2(props) {
   const [tagList, setTagList] = useState([])
   const selectProps = {
     optionFilterProp: "children",
-    filterOption(input, option) {
-      if (!input) return true;
-      let children = option.children;
-      if (children) {
-        let key = children[2];
-        let isFind = false;
-        isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
-        if (!isFind) {
-          let code = children[0];
-          isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
-        }
-
-        return isFind;
-      }
-    },
+    // filterOption(input, option){
+    //   return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    // },
     showSearch() {
       console.log('onSearch')
     }
   }
+  const filterOption = (input, option) => {
+    if (!input) return true;
+    let children = option.children;
+    if (children) {
+      let key = children[2];
+      let isFind = false;
+      isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+      if (!isFind) {
+        let code = children[0];
+        isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+      }
+
+      return isFind;
+    }
+  }
+  const playContent = [
+    { key: 1, value: "用户数据" },
+    { key: 2, value: "观看历史" },
+    { key: 3, value: "其他类型" },
+  ]
   const columns = [
     {
-      title: "类型",
-      dataIndex: "type",
-      key: "type",
-      render: (rowValue, row, index) => {
-        return (
-          <div>{rowValue == 1 ? "频道" : rowValue == 2 ? "视频" : "未知"}</div>
-        )
-      }
-    },
-    {
-      title: "频道",
-      dataIndex: "channelCode",
-      key: "channelCode",
+      title: "名称",
+      dataIndex: "name",
+      key: "name",
     },
     {
       title: "标签",
@@ -74,9 +79,14 @@ function App2(props) {
       }
     },
     {
-      title: "排序",
-      dataIndex: "sort",
-      key: "sort",
+      title: "图片缩略图",
+      dataIndex: "background",
+      key: "background",
+      render: (rowValue, row, index) => {
+        return (
+          <Image src={rowValue} width={100}></Image>
+        )
+      }
     },
     {
       title: "上下线时间",
@@ -86,7 +96,7 @@ function App2(props) {
       render: (rowValue, row, index) => {
         return (
           // 栏目类型 1=用户属性，2=观看历史，3=其他数据
-          <div>{row.startTime ? util.formatTime(row.startTime, "") : "未配置"} - {row.endTime ? util.formatTime(row.endTime, "") : "未配置"}</div>
+          <div>{row.start ? util.formatTime(row.start, "") : "未配置"} - {row.end ? util.formatTime(row.end, "") : "未配置"}</div>
         )
       }
     },
@@ -101,11 +111,16 @@ function App2(props) {
               onChange={(val) => {
                 let info = JSON.parse(JSON.stringify(row))
                 info.status = val ? 1 : 2
-                updateFunc(info)
+                changeFuncFunc(info)
               }}
             />}</div>
         )
       }
+    },
+    {
+      title: "排序",
+      dataIndex: "sort",
+      key: "sort",
     },
     {
       title: "操作",
@@ -118,11 +133,8 @@ function App2(props) {
               onClick={() => {
                 console.log(row)
                 let arr = JSON.parse(JSON.stringify(row))
-                arr.time = [arr.startTime ? moment(arr.startTime * 1000) : 0, arr.endTime ? moment(arr.endTime * 1000) : 0]
+                arr.time = [arr.start ? moment(arr.start * 1000) : 0, arr.end ? moment(arr.end * 1000) : 0]
                 arr.status = row.status == 1 ? true : false
-                // if (arr.type == 2 && arr.channelCode) {
-                //   arr.programName = arr.channelSubTitle
-                // }
                 setCurrent(row)
                 setOpen(true)
                 formRef.setFieldsValue(arr)
@@ -138,19 +150,14 @@ function App2(props) {
   ]
   useEffect(() => {//列表
     const fetchData = async () => {
-      const list = await getHotChannel({ page: { currentPage: page, pageSize: pageSize } })
+      const list = await getFunc({ page: { currentPage: page, pageSize: pageSize } })
       setLists(list.data)
       setTotal(list.page.totalCount)
-    }
-    fetchData()
-  }, [forceUpdateId])
-  useEffect(() => {//列表
-    const fetchData = async () => {
       let arr = await requestNewAdTagList({ currentPage: 1, pageSize: 999999, })
       setTagList(arr.data)
     }
     fetchData()
-  }, [])
+  }, [forceUpdateId])
   const changeSize = (page, pageSize) => {
     setPage(page)
     setPageSize(pageSize)
@@ -166,14 +173,12 @@ function App2(props) {
   }
   const submitForm = (val) => {//表单提交
     console.log(val)
-    if (val.time) {
-      val.startTime = val.time ? parseInt(val.time[0].valueOf() / 1000) : 0;
-      val.endTime = val.time ? parseInt(val.time[1].valueOf() / 1000) : 0;
-    }
-    val.status = val.status ? 1 : 2
     let params = {
       ...formRef.getFieldValue(),
       ...val,
+      status: val.status ? 1 : 2,
+      start: val.time ? parseInt(val.time[0].valueOf() / 1000) : 0,
+      end: val.time ? parseInt(val.time[1].valueOf() / 1000) : 0,
     }
     if (source == "add") {
       addFunc(params)
@@ -183,7 +188,7 @@ function App2(props) {
     closeDialog()
   }
   const addFunc = (params) => {
-    addHotChannel(params).then(res => {
+    add(params).then(res => {
       message.success("新增成功")
       forceUpdate()
     })
@@ -194,7 +199,7 @@ function App2(props) {
     setSource("")
   }
   const updateFunc = (params) => {
-    editHotChannel(params).then(res => {
+    update(params).then(res => {
       message.success("更新成功")
       forceUpdate()
     })
@@ -203,7 +208,7 @@ function App2(props) {
     Modal.confirm({
       title: `确认删除该条数据吗？`,
       onOk: () => {
-        delHotChannel({ id: row.id }).then(res => {
+        delFunc({ id: row.id }).then(res => {
           message.success("删除成功")
           forceUpdate()
         })
@@ -212,12 +217,35 @@ function App2(props) {
       }
     })
   }
+  const changeFuncFunc = (item) =>{
+    let params = {
+      id:item.id,
+      status:item.status
+    }
+    changeFunc(params).then(res => {
+      message.success("修改成功")
+      forceUpdate()
+    })
+  }
+  const getUploadFileUrl = (type, file, newItem) => {
+    let that = this;
+    let image_url = newItem.fileUrl;
+    let obj = {};
+    obj[type] = image_url;
+    console.log(obj)
+    formRef.setFieldsValue(obj);
+    forceUpdatePages()
+  }
+  const getUploadFileImageUrlByType = (type) => {
+    let image_url = formRef.getFieldValue(type);
+    return image_url ? image_url : '';
+  }
   return (
     <div className="loginVip">
       <Card title={
         <div>
           <Breadcrumb>
-            <Breadcrumb.Item>频道搜索</Breadcrumb.Item>
+            <Breadcrumb.Item>退出登录（重新进入）</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       }
@@ -227,13 +255,13 @@ function App2(props) {
               setOpen(true)
               setSource("add")
             }}>新建</Button>
-            <MySyncBtn type={37} name='同步缓存' />
+            <MySyncBtn type={36} name='同步缓存' />
           </div>
         }
       >
         <Table
           dataSource={lists}
-          scroll={{ x: 1000, y: '75vh' }}
+          scroll={{ x: 1300, y: '75vh' }}
           rowKey={item => item.id}
           // loading={loading}
           columns={columns}
@@ -251,33 +279,53 @@ function App2(props) {
               name="taskForm"
               form={formRef}
               onFinish={(e) => submitForm(e)}>
-              <Form.Item label="类型" name="type" rules={[{ required: true, message: '请输入类型' }]}>
-                <Select className="input-wrapper-from" placeholder='类型' onChange={(e) => forceUpdatePages()}>
-                  <Option value={1} key={1}>频道</Option>
-                  <Option value={2} key={2}>视频</Option>
-                </Select>
+              <Form.Item label="名称" name="name" rules={[{ required: true, message: '请输入名称' }]}>
+                <Input placeholder="请输入名称" />
               </Form.Item>
-              {
-                formRef.getFieldValue("type") == 1 && <ChannelCom formRef={formRef} channelCode={"channelCode"} isLink={true} linkData={["channelSubTitle", "name"]} onForceUpdatePages={() => forceUpdatePages()} />
-              }
-              {
-                formRef.getFieldValue("type") == 2 &&
-                <>
-                  <ProgramCom formRef={formRef} programName={"programName"} channelCode={"channelCode"} onForceUpdatePages={() => forceUpdatePages()} />
-                  <Form.Item label="副标题" name="channelSubTitle" >
-                    <Input placeholder="请输入副标题" />
-                  </Form.Item>
-                </>
-
-              }
               <Form.Item label="标签" name="tag">
-                <Select mode={true} allowClear showSearch placeholder="请选择用户设备标签" {...selectProps}>
+                <Select mode={true} allowClear showSearch placeholder="请选择用户设备标签"
+                  filterOption={(input, option) => {
+                    if (!input) return true;
+                    let children = option.children;
+                    if (children) {
+                      let key = children[2];
+                      let isFind = false;
+                      isFind = `${key}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                      if (!isFind) {
+                        let code = children[0];
+                        isFind = `${code}`.toLowerCase().indexOf(`${input}`.toLowerCase()) >= 0;
+                      }
+
+                      return isFind;
+                    }
+                  }}>
                   {
                     tagList.map((item, index) => (
                       <Option value={item.code.toString()} key={item.code}>{item.name}-{item.code}</Option>
                     ))
                   }
                 </Select>
+              </Form.Item>
+              <Form.Item label="图片" name="background" rules={[{ required: true, message: '请输入名称' }]}>
+                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                  <Input.TextArea defaultValue={formRef.getFieldValue("background")} key={formRef.getFieldValue("background")}
+                    onChange={(e) => {
+                      if (privateData.inputTimeOutVal) {
+                        clearTimeout(privateData.inputTimeOutVal);
+                        privateData.inputTimeOutVal = null;
+                      }
+                      privateData.inputTimeOutVal = setTimeout(() => {
+                        if (!privateData.inputTimeOutVal) return;
+                        formRef.setFieldsValue({ background: e.target.value })
+                        forceUpdatePages()
+                      }, 1000)
+                    }}
+                  />
+                  <MyImageUpload
+                    getUploadFileUrl={(file, newItem) => getUploadFileUrl('background', file, newItem)}
+                    imageUrl={getUploadFileImageUrlByType('background')}
+                  />
+                </div>
               </Form.Item>
               <Form.Item label="上下线时间" name='time'>
                 <RangePicker showTime placeholder={['上线时间', '下线时间']} />
@@ -288,6 +336,9 @@ function App2(props) {
               <Form.Item label="状态" name="status" valuePropName="checked">
                 <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>
               </Form.Item>
+
+
+
               <Form.Item {...tailLayout}>
                 <Button onClick={() => closeDialog()}>取消</Button>
                 <Button htmlType="submit" type="primary" style={{ margin: "0 20px" }}>

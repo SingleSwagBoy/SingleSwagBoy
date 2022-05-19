@@ -45,6 +45,7 @@ import {
     syncTopic,               //tv专题页面
     syncMineGrid,               //我的页面
     syncLogout,               //我的页面
+    syncAblum,               //相册活动管理
     syncHotChannel,               //频道搜索==》热门频道
 
 } from 'api'
@@ -103,6 +104,7 @@ export default class SyncBtn extends Component {
         if (type === 34) return syncTopic();                                      //tv专题页面
         if (type === 35) return syncMineGrid();                                      //tv专题页面
         if (type === 36) return syncLogout();                                      //tv专题页面
+        if (type === "ablumActivity") return syncAblum();                                      //相册活动管理
         if (type === 37) return syncHotChannel();                                      //频道搜索==》热门频道
 
 

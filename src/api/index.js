@@ -663,6 +663,12 @@ export const delLogout = (params) => { return request2.get(`${baseUrl}/mms/chann
 export const syncLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/sync`, {params:params}); };                 // 我的配置删除
 export const changeLogoutState = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/status`, {params:params}); };                 // 我的配置删除
 
+//家庭相册活动管理
+export const getAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/list`,params); };                 // 我的配置删除
+export const addAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/add`, params); };                 // 我的配置删除
+export const updateAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/update`, params); };                 // 我的配置删除
+export const delAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/del`, {params:params}); };                 // 我的配置删除
+export const syncAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/sync`, {params:params}); };                 // 我的配置删除
 // 私域小程序配置
 export const signGoodsList = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/goods`, {params:params}); };                 // 商品列表
 export const signGoodsDelete = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/goodsDel`, {params:params}); };            // 删除商
@@ -692,6 +698,15 @@ export const addHotChannel = (params) => { return request2.post(`${baseUrl}/mms/
 export const editHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/edit`, params); };                 // 频道搜索编辑
 export const delHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/del`, params); };                 // 频道搜索删除
 export const syncHotChannel = (params) => { return request2.get(`${baseUrl}/mms/tv/hotRecommend/sync`, {params:params}); };                 // 频道搜索列表
+
+
+//家庭相册作品审核
+export const getBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/list`, params); };                 // 列表
+export const addBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/add`, params); };                 // 新增
+export const updateBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/update`, params); };                 // 修改
+export const checkBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/check`, params); };                 // 审核
+export const delBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/del`, params); };                 // 删除
+export const detailBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/detail`, params); };                 // 删除
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

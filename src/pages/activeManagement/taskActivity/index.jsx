@@ -392,7 +392,7 @@ const closeDialog = () => {
                                         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "flex-start" }}>
                                             <Space key={field.key} align="baseline" style={{ flexWrap: "wrap" }}>
                                                 <Form.Item label="进度%" {...field} name={[field.name,'percent']} fieldKey={[field.fieldKey, 'percent']}>
-                                                    <InputNumber placeholder='%' min={0} step={10} />
+                                                    <InputNumber min={0} step={10} />
                                                 </Form.Item>
                                                 <Form.Item label="奖励" {...field} name={[field.name,'rewardId']} fieldKey={[field.fieldKey, 'rewardId']}>
                                                     <Select allowClear showSearch placeholder="请选择" onChange={(e)=>{

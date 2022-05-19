@@ -1,0 +1,47 @@
+.events {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .events .ant-badge-status {
+    width: 100%;
+    overflow: hidden;
+    font-size: 12px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .notes-month {
+    font-size: 28px;
+    text-align: center;
+  }
+  .notes-month section {
+    font-size: 28px;
+  }
+  .date-wrapp{
+      width: 560px !important;
+  }
+  .date-my-form{
+    width: 500px;
+  }
+  .content-wwrap{
+      width: 100%;
+  }
+
+  .ant-picker-calendar-mode-switch{
+      display: none !important;
+  }
+  .ant-card-body{
+      
+  }
+  .ant-picker-cell{
+      height: 80px !important;
+  }
+  .ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-content{
+      height: 64px !important;
+  }
+  .date-my-form-title{
+      text-align: center;
+      color: #1890ff;
+      font-size: 24px;
+      margin-bottom: 20px;
+  }

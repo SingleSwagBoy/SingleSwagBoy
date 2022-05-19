@@ -210,9 +210,14 @@ const submitForm=(obj)=>{
     if(obj.progressRewards){
         obj.progressRewards=obj.progressRewards.map((item,index)=>{
             item.rewardId=item.rewardId*1;
+            if(item.percent!=100){
+                console.log("budengyu    100")
+                item.rewardType=1
+            }
             return item
         })
     }
+    console.log("obj.progressRewards",obj.progressRewards)
     if(obj.time){
         obj.start= (obj.time && obj.time[0]) ? parseInt(obj.time[0].valueOf()/1000) : 0
         obj.end= (obj.time && obj.time[1]) ? parseInt(obj.time[1].valueOf()/1000) : 0

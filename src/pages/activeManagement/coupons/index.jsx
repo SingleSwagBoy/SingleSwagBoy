@@ -118,6 +118,8 @@ function App2() {
                 let obj = JSON.parse(JSON.stringify(row))
                 if(obj.startTime==0 && obj.endTime==0){
                     obj.time = ["", ""]
+                }else if(obj.startTime==null && obj.endTime==null){
+                    obj.time = ["", ""]
                 }else{
                     obj.time = [moment(obj.startTime*1000), moment(obj.endTime*1000)]
                 }

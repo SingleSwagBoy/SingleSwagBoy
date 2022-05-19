@@ -197,7 +197,7 @@ function App2(props) {
   }
   const getUploadFileUrl = (type, file, newItem) => {
     let image_url = newItem.fileUrl;
-    let obj = formRef.getFieldValue(type)
+    let obj = formRef.getFieldValue(type) || []
     obj.push({ pic: image_url })
     formRef.setFieldsValue({ [type]: obj });
     forceUpdatePages()

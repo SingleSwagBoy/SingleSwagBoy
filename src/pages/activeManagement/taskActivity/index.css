@@ -1,0 +1,15 @@
+.my-space{
+    width: 100% !important;
+}
+.my-space .ant-space-item{
+    width: 45% !important;
+}
+.my-space .ant-space-item .ant-form-item{
+    padding-left: 120px !important;
+}
+.my-space .ant-space-item .ant-form-item .ant-form-item-control{
+    margin-left: 40px;
+}
+.space-rigjht{
+    padding-left: 40px !important;
+}

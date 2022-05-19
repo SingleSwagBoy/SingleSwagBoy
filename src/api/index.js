@@ -699,6 +699,33 @@ export const editHotChannel = (params) => { return request2.post(`${baseUrl}/mms
 export const delHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/del`, params); };                 // 频道搜索删除
 export const syncHotChannel = (params) => { return request2.get(`${baseUrl}/mms/tv/hotRecommend/sync`, {params:params}); };                 // 频道搜索列表
 
+// 优惠券配置
+export const couponConfigList = (params) => { return request2.post(`${baseUrl}/mms/couponConfig/list`, params); };                 // 列表
+export const couponConfigAdd = (params) => { return request2.post(`${baseUrl}/mms/couponConfig/add`, params); };                 // 新增
+export const couponConfigEdit = (params) => { return request2.post(`${baseUrl}/mms/couponConfig/edit`, params); };                 // 编辑
+export const couponConfigDel = (params) => { return request2.post(`${baseUrl}/mms/couponConfig/del`, params); };                 // 删除
+export const couponConfigSync = (params) => { return request2.get(`${baseUrl}/mms/couponConfig/sync`, {params:params}); };                 // 同步缓存
+
+// 组合优惠券配置
+export const GcouponConfigList = (params) => { return request2.post(`${baseUrl}/mms/couponSendConfig/list`, params); };                 // 列表
+export const GcouponConfigAdd = (params) => { return request2.post(`${baseUrl}/mms/couponSendConfig/add`, params); };                 // 新增
+export const GcouponConfigEdit = (params) => { return request2.post(`${baseUrl}/mms/couponSendConfig/edit`, params); };                 // 编辑
+export const GcouponConfigDel = (params) => { return request2.post(`${baseUrl}/mms/couponSendConfig/del`, params); };                 // 删除
+export const GcouponConfigSync = (params) => { return request2.get(`${baseUrl}/mms/couponSendConfig/sync`, {params:params}); };                 // 同步缓存
+
+// 活动管理-任务配置
+export const taskList = (params) => { return request.get(`${baseUrl}/mms/activity/boat/taskList`, {params:params}); };                 // 任务列表
+export const taskAdd = (params) => { return request2.post(`${baseUrl}/mms/activity/boat/taskAdd`, params); };                 // 任务添加
+export const taskEdit = (params) => { return request2.post(`${baseUrl}/mms/activity/boat/taskEdit`, params); };                 // 任务编辑
+export const taskDelete = (params) => { return request2.post(`${baseUrl}/mms/activity/boat/taskDelete?id=${params.id}`, params); };                 // 任务删除
+// 任务活动
+export const boatrewards = (params) => { return request.get(`${baseUrl}/mms/activity/boat/rewards`, {params:params}); };                 // 奖品
+export const activityList = (params) => { return request.get(`${baseUrl}/mms/activity/boat/activityList`, {params:params}); };                 // 活动列表
+export const activityAdd = (params) => { return request2.post(`${baseUrl}/mms/activity/boat/activityAdd`, params); };                 // 活动添加
+export const activityEdit = (params) => { return request2.post(`${baseUrl}/mms/activity/boat/activityEdit`, params); };                 // 活动编辑
+export const activityDelete = (params) => { return request2.post(`${baseUrl}/mms/activity/boat/activityDelete?id=${params.id}`, params); };                 // 活动删除
+export const activitySync = (params) => { return request.get(`${baseUrl}/mms/activity/boat/activitySync`, {params:params}); };                 // 活动同步
+
 
 //家庭相册作品审核
 export const getBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/list`, params); };                 // 列表
@@ -707,6 +734,7 @@ export const updateBillboard = (params) => { return request2.post(`${baseUrl}/mm
 export const checkBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/check`, params); };                 // 审核
 export const delBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/del`, params); };                 // 删除
 export const detailBillboard = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/works/detail`, params); };                 // 删除
+
 
 //广告-二维码套餐类型
 //========== 基础数据 老CMS平台中数据整理 ==========

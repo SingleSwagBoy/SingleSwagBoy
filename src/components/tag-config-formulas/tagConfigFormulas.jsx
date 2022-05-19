@@ -36,6 +36,8 @@ export default class tagConfig extends Component {
                 { "value": 6, "name": "<=" },
                 { "value": 7, "name": "in" },
                 { "value": 9, "name": "notin" },
+                { "value": 10, "name": "exist" },
+                { "value": 11, "name": "notExist" },
             ],
             selectProps: {
                 optionFilterProp: "children",
@@ -141,8 +143,9 @@ export default class tagConfig extends Component {
                                                                                                     })}
                                                                                                 </Select>
                                                                                             </div>
-
-                                                                                            <div className="formula-item" style={{ width: 300 }}>
+                                                                                            {
+                                                                                                (layer3item.oper != 10 && layer3item.oper != 11)  &&
+                                                                                                <div className="formula-item" style={{ width: 300 }}>
                                                                                                 {
                                                                                                     layer3item.field == "region" &&
                                                                                                     <MyAddress onCheckAddress={(e)=>this.onCheckAddress(e, layer1index, layer2index, layer3index, 'value')} defaultAddress={(layer3item.value && !Array.isArray(layer3item.value))?layer3item.value.split(","):layer3item.value} /> ||
@@ -176,6 +179,9 @@ export default class tagConfig extends Component {
                                                                                                     <Input value={layer3item.value} placeholder="取值" disabled={is_show_only} onChange={(e) => { that.onInputBlurClick(e, layer1index, layer2index, layer3index, 'value') }} />
                                                                                                 }
                                                                                             </div>
+                                                                                            }
+
+                                                                                            
 
                                                                                             {!is_show_only && <Button disabled={is_show_only} onClick={() => { that.onItemDeleteClick('第三层', layer1index, layer2index, layer3index) }}>删除</Button>}
                                                                                         </div>
@@ -311,6 +317,7 @@ export default class tagConfig extends Component {
     }
     //运算符控件被选择
     onOperatorSelectChange(e, layer1index, layer2index, layer3index, targetKey) {
+        console.log("e, layer1index, layer2index, layer3index, targetKey",e, layer1index, layer2index, layer3index, targetKey)
         let that = this;
         let { id, formRef } = that.props;
         let rules = formRef.current.getFieldValue(id);

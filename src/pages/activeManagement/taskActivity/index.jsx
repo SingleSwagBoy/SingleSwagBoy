@@ -439,6 +439,7 @@ const closeDialog = () => {
                             <>
                                 {fields.map((field, index) => (
                                     <>
+                                    <Divider></Divider>
                                         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "flex-start" }}>
                                             <Space key={field.key} align="baseline" style={{ flexWrap: "wrap" }}>
                                                 <Form.Item label="排序" {...field} name={[field.name,'sort']} fieldKey={[field.fieldKey, 'sort']}>

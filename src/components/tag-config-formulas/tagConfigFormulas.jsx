@@ -36,6 +36,8 @@ export default class tagConfig extends Component {
                 { "value": 6, "name": "<=" },
                 { "value": 7, "name": "in" },
                 { "value": 9, "name": "notin" },
+                { "value": 10, "name": "exist" },
+                { "value": 11, "name": "notExist" },
             ],
             selectProps: {
                 optionFilterProp: "children",

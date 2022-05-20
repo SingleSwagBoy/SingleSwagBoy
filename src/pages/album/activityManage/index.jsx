@@ -80,6 +80,7 @@ function App2(props) {
       title: "活动规则",
       dataIndex: "rule",
       key: "rule",
+      ellipsis: true,
     },
     {
       title: "状态",

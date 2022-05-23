@@ -396,6 +396,9 @@ export default class WxReplyModal extends Component {
                                                     <Tooltip title='系统将自动转化为[金额]' placement='top'>
                                                         <Button size='small' onClick={() => that.onUserTargetClick('#cbmoney#')} style={{ marginLeft: 3,marginTop:3, }}>#金额#</Button>
                                                     </Tooltip>
+                                                    <Tooltip title='系统将自动转化为[用户unionid]' placement='top'>
+                                                        <Button size='small' onClick={() => that.onUserTargetClick('#unionid#')}>#用户unionid#</Button>
+                                                    </Tooltip>
                                                 </Form.Item>
                                             }
                                             {

@@ -149,14 +149,14 @@ function AppConfig(props) {
 
             <Modal title={source=='add'?"新增":source=='edit'?"编辑":""} visible={isShowModal} footer={null} closable={false} width={800}>
                 <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} form={formRef} onFinish={(e) => submitFinish(e)}>
-                    <Form.Item label='来源' name='from' rules={[{ required: true }]}>
-                        <Input className="base-input-wrapper" placeholder="请输入配置来源" />
+                    <Form.Item label='来源' name='from' rules={[{ required: true }]} >
+                        <Input className="base-input-wrapper" placeholder="请输入配置来源" disabled={source=='edit'?true:false}/>
+                    </Form.Item>
+                    <Form.Item label='key' name='key' rules={[{ required: true }]} >
+                        <Input className="base-input-wrapper" placeholder="请输入配置Key" disabled={source=='edit'?true:false}/>
                     </Form.Item>
                     <Form.Item label='备注' name='desc' rules={[{ required: true }]}>
                         <Input className="base-input-wrapper" placeholder="请输入配置备注" />
-                    </Form.Item>
-                    <Form.Item label='key' name='key' rules={[{ required: true }]}>
-                        <Input className="base-input-wrapper" placeholder="请输入配置Key" />
                     </Form.Item>
                     <Form.Item label="状态" name="status" valuePropName="checked">
                         <Switch checkedChildren="有效" unCheckedChildren="无效" ></Switch>

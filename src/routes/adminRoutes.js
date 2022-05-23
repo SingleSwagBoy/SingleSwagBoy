@@ -242,7 +242,7 @@ const adminRoutes = [
     { name: '标签配置', icon: UnorderedListOutlined, path: '/mms/generalConfig/tagConfig', component: TagConfig, code: "generalMangement", sub_code: 'tagConfig' },
     { name: '小程序配置', icon: UnorderedListOutlined, path: '/mms/generalConfig/miniConfig', component: MiniConfig, code: "generalMangement", sub_code: 'MiniConfig' },
     { name: '拼团机器人', icon: UnorderedListOutlined, path: '/mms/generalConfig/puzzleRobot', component: PuzzleRobot, code: "generalMangement", sub_code: 'puzzleRobot' },
-    { name: 'APK配置管理', icon: UnorderedListOutlined, path: '/mms/generalConfig/apkConfig', component: ApkConfig, code: "generalMangement", sub_code: 'apkConfig' },
+    { name: '第三方授权', icon: UnorderedListOutlined, path: '/mms/generalConfig/apkConfig', component: ApkConfig, code: "generalMangement", sub_code: 'apkConfig' },
 
     // TV端-配置管理
     { name: '白名单配置', icon: UnorderedListOutlined, path: '/mms/TVConfig/whiteList', component: WhiteList, code: "tvConfigManagement", sub_code: 'MiniConfig' },

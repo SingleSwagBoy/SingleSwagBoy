@@ -618,6 +618,7 @@ export const requestApkConfigAdd = (params) => { return request2.post(`${baseUrl
 export const requestApkConfigSync = (params) => { return request2.post(`${baseUrl}/mms/apk/sync`, params); };             //同步apk配置
 export const requestApkConfigDelete = (params) => { return request2.get(`${baseUrl}/mms/apk/delete`, { params: params }); };          //删除apk配置
 export const requestApkConfigList = (params) => { return request2.get(`${baseUrl}/mms/apk/list`, { params: params }); };              //apk配置列表
+export const requestApkConfigupdate = (params) => { return request2.post(`${baseUrl}/mms/apk/update`, params); };               //更新APK
 
 
 //芒果专区

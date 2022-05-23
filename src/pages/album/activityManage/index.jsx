@@ -80,6 +80,7 @@ function App2(props) {
       title: "活动规则",
       dataIndex: "rule",
       key: "rule",
+      ellipsis: true,
     },
     {
       title: "状态",
@@ -197,7 +198,7 @@ function App2(props) {
   }
   const getUploadFileUrl = (type, file, newItem) => {
     let image_url = newItem.fileUrl;
-    let obj = formRef.getFieldValue(type)
+    let obj = formRef.getFieldValue(type) || []
     obj.push({ pic: image_url })
     formRef.setFieldsValue({ [type]: obj });
     forceUpdatePages()

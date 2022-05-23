@@ -618,6 +618,7 @@ export const requestApkConfigAdd = (params) => { return request2.post(`${baseUrl
 export const requestApkConfigSync = (params) => { return request2.post(`${baseUrl}/mms/apk/sync`, params); };             //同步apk配置
 export const requestApkConfigDelete = (params) => { return request2.get(`${baseUrl}/mms/apk/delete`, { params: params }); };          //删除apk配置
 export const requestApkConfigList = (params) => { return request2.get(`${baseUrl}/mms/apk/list`, { params: params }); };              //apk配置列表
+export const requestApkConfigupdate = (params) => { return request2.post(`${baseUrl}/mms/apk/update`, params); };               //更新APK
 
 
 //芒果专区
@@ -663,12 +664,21 @@ export const delLogout = (params) => { return request2.get(`${baseUrl}/mms/chann
 export const syncLogout = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/sync`, {params:params}); };                 // 我的配置删除
 export const changeLogoutState = (params) => { return request2.get(`${baseUrl}/mms/channel/logout/status`, {params:params}); };                 // 我的配置删除
 
+
+//频道搜索-->热门搜索
+export const getHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/list`, params); };                 // 频道搜索列表
+export const addHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/add`, params); };                 // 频道搜索增加
+export const editHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/edit`, params); };                 // 频道搜索编辑
+export const delHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/del`, params); };                 // 频道搜索删除
+export const syncHotChannel = (params) => { return request2.get(`${baseUrl}/mms/tv/hotRecommend/sync`, {params:params}); };                 // 频道搜索列表
+
 //家庭相册活动管理
 export const getAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/list`,params); };                 // 我的配置删除
 export const addAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/add`, params); };                 // 我的配置删除
 export const updateAblum = (params) => { return request2.post(`${baseUrl}/mms/album/activity/billboard/update`, params); };                 // 我的配置删除
 export const delAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/del`, {params:params}); };                 // 我的配置删除
 export const syncAblum = (params) => { return request2.get(`${baseUrl}/mms/album/activity/billboard/sync`, {params:params}); };                 // 我的配置删除
+
 // 私域小程序配置
 export const signGoodsList = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/goods`, {params:params}); };                 // 商品列表
 export const signGoodsDelete = (params) => { return request2.get(`${baseUrl}/mms/pd/integral/goodsDel`, {params:params}); };            // 删除商
@@ -692,12 +702,6 @@ export const signCalendarSync = (params) => { return request2.post(`${baseUrl}/m
 export const scoreExrecords = (params) => { return request.post(`${baseUrl}/mms/pd/integral/exrecords`, params) };   // 兑换记录
 export const scoreRecordEdit = (params) => { return request.post(`${baseUrl}/mms/pd/integral/recordEdit`, params) };   // 更新兑换记录
 
-//频道搜索-->热门搜索
-export const getHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/list`, params); };                 // 频道搜索列表
-export const addHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/add`, params); };                 // 频道搜索增加
-export const editHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/edit`, params); };                 // 频道搜索编辑
-export const delHotChannel = (params) => { return request2.post(`${baseUrl}/mms/tv/hotRecommend/del`, params); };                 // 频道搜索删除
-export const syncHotChannel = (params) => { return request2.get(`${baseUrl}/mms/tv/hotRecommend/sync`, {params:params}); };                 // 频道搜索列表
 
 // 优惠券配置
 export const couponConfigList = (params) => { return request2.post(`${baseUrl}/mms/couponConfig/list`, params); };                 // 列表

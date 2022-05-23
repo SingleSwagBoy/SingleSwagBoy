@@ -132,7 +132,7 @@ class GoodsConfig extends React.Component {
                                         <InputNumber placeholder="请输入金币数量"/>
                                     </Form.Item> ||
                                     this.formRef.current.getFieldValue("type")==2 &&
-                                    <Form.Item label="会员天数" name="days" rules={[{ required: true}]}>
+                                    <Form.Item label="会员天数" name="num" rules={[{ required: true}]}>
                                         <Select placeholder="请选择类别" dropdownMatchSelectWidth={true} allowClear>
                                             {
                                                 vipOptions.map((item,index)=>{

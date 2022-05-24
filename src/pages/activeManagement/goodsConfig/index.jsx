@@ -136,7 +136,7 @@ class GoodsConfig extends React.Component {
                                         <Select placeholder="请选择类别" dropdownMatchSelectWidth={true} allowClear>
                                             {
                                                 vipOptions.map((item,index)=>{
-                                                    return <Option value={item.key} key={item.key} name={item.value}>{item.value}</Option>
+                                                    return <Option value={item.num} key={item.key} name={item.value}>{item.value}</Option>
                                                 })
                                             }
                                         </Select>

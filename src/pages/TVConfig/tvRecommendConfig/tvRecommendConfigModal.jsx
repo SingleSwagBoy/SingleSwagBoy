@@ -398,9 +398,6 @@ export default class recommendModal extends Component {
                     )
                 }
             },
-            // { title: '推荐的频道', dataIndex: 'channelId', key: 'channelId', width: 200, },
-            // { title: 'tv端频道推荐列表id', dataIndex: 'tvCVId', key: 'tvCVId', width: 80, },
-            // { title: '推荐节目id', dataIndex: 'programId', key: 'programId', width: 80, },
             {
                 title: '自定义封面图', dataIndex: 'cover', key: 'cover', width: 200,
                 render: (rowValue, row, index) => {

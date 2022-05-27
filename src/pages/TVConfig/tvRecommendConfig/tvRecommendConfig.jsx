@@ -230,6 +230,8 @@ export default class tvRecommendConfig extends Component {
                     )
                 }
             },
+            
+            {title: '排序', dataIndex: 'sortOrder', key: 'sortOrder', width: 100,},
 
             {
                 title: '操作', dataIndex: 'action', key: 'action', fixed: 'right', width: 80,

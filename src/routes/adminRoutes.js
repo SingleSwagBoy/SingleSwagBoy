@@ -98,6 +98,7 @@ const OfflineProgram = lazy(() => import('pages/offlineManage/program/index.jsx'
 const OfflineProgramDetail = lazy(() => import('pages/offlineManage/program/detailIndex.jsx'))      //下线节目
 const RiskControl = lazy(() => import('pages/offlineManage/riskControl/index.jsx'))      //风险设备控制
 const ArmourList = lazy(() => import('pages/armourPackage/armourList/index.jsx'))      //马甲包管理
+const ArmourInstall = lazy(() => import('pages/armourPackage/armourInstall/index.jsx'))      //马甲包安装后台
 
 const LivePreview = lazy(() => import('pages/configManage/livePreview/index.jsx'))
 const MangoConfig = lazy(() => import('pages/configManage/MangoConfig/index.jsx'));
@@ -268,6 +269,7 @@ const adminRoutes = [
     { name: '风险设备控制', icon: UnorderedListOutlined, path: '/mms/offline/riskControl', component: RiskControl, code: "offlineManage", sub_code: 'riskControl' },
     //马甲包管理
     { name: '马甲包管理', icon: UnorderedListOutlined, path: '/mms/armourPackage/armourList', component: ArmourList, code: "armourPackage", sub_code: 'armourList' },
+    { name: '马甲包安装', icon: UnorderedListOutlined, path: '/mms/armourPackage/armourInstall', component: ArmourInstall, code: "armourPackage", sub_code: 'armourInstall' },
     //电视节目单配置
     //{ name: '电视节目单配置', icon: UnorderedListOutlined, path: '/mms/programApp/programAppConfig', component: ProgramAppConfig, code: "programApp", sub_code: 'programAppConfig' },
     //其他

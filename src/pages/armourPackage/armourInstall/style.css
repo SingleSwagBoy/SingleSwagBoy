@@ -1,0 +1,26 @@
+.backDoor{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.backDoor >div{
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-left: 0;
+    cursor: pointer;
+}
+.backDoor>div:nth-child(1){
+    border-left: 1px solid #ccc !important;
+}
+.backDoor >div:hover{
+    border: 1px solid #1890ff;
+    color: #1890ff;
+}
+.base-input-type{
+    width: 160px !important;
+}

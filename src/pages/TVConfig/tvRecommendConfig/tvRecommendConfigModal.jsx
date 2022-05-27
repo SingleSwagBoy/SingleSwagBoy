@@ -141,6 +141,10 @@ export default class recommendModal extends Component {
                                     </Select>
                                 </Form.Item>
 
+                                <Form.Item label="排序" name='sortOrder'>
+                                    <Input className="base-input-wrapper" placeholder='请输入排序号' type='number' />
+                                </Form.Item>
+
                                 {/* <Form.Item label="是否长期" name='isTimeless'>
                                     <Select placeholder='请选择是否长期' className="base-input-wrapper">
                                         {dictIsTimeless.map((item, index) => {
@@ -551,7 +555,7 @@ export default class recommendModal extends Component {
         }
         // }
 
-        let contentData = obj.content;
+        let contentData = obj.content || [];
         if (contentData.length <= 0) {
             message.error("请新建推荐关联");
             return;
@@ -603,6 +607,7 @@ export default class recommendModal extends Component {
         //整合关联关系
         obj.content = JSON.stringify(contentData);
 
+        obj.sortOrder = Number(obj.sortOrder)
         for (let key in obj) {
             let item = obj[key]
             if (!item) delete obj[key];
